@@ -10,8 +10,17 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::get('/', fn () => Inertia::render('Admin/Dashboard'))
+            ->name('dashboard');
+    });
+
+Route::middleware(['auth', 'verified'])
+    ->get('/dashboard', fn () => redirect()->route('admin.dashboard'))
+    ->name('dashboard');
 
 require __DIR__.'/settings.php';
+require __DIR__.'/permissions.php';

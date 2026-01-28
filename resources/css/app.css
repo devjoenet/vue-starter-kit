@@ -86,6 +86,8 @@
             'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
             'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
             'Noto Color Emoji';
+        background: var(--md-bg);
+        color: var(--md-text);
     }
 }
 
@@ -124,6 +126,38 @@
     --sidebar-border: hsl(0 0% 91%);
     --sidebar-ring: hsl(217.2 91.2% 59.8%);
     --sidebar: hsl(0 0% 98%);
+
+    /* Core */
+    --sc-base: #1e293b;
+    --sc-primary: #3abdf7;
+    --sc-secondary: #818cf8;
+    --sc-accent: #f471b5;
+
+    /* Light surface system */
+    --md-bg: #f8fafc;
+    --md-surface: #ffffff;
+    --md-surface-2: #f1f5f9;
+    --md-text: #0f172a;
+    --md-outline: rgba(15, 23, 42, 0.18);
+
+    /* Semantic */
+    --md-error: #ef4444;
+    --md-success: #22c55e;
+
+    /* MD3-ish shape/elevation */
+    --md-radius: 16px;
+    --md-radius-sm: 12px;
+    --md-e1: 0 1px 2px rgba(2, 6, 23, 0.08);
+    --md-e2: 0 6px 14px rgba(2, 6, 23, 0.12);
+    --md-e3: 0 14px 28px rgba(2, 6, 23, 0.16);
+
+    /* Component tokens */
+    --md-field-bg: rgba(30, 41, 59, 0.04);
+    --md-field-text: var(--md-text);
+    --md-field-label: rgba(15, 23, 42, 0.65);
+    --md-field-focus: var(--sc-primary);
+
+    --md-ripple: rgba(58, 189, 247, 0.22);
 }
 
 .dark {
@@ -160,6 +194,15 @@
     --sidebar-border: hsl(0 0% 15.9%);
     --sidebar-ring: hsl(217.2 91.2% 59.8%);
     --sidebar: hsl(240 5.9% 10%);
+    --md-bg: #0b1220;
+    --md-surface: #0f172a;
+    --md-surface-2: #111c35;
+    --md-text: #e2e8f0;
+    --md-outline: rgba(226, 232, 240, 0.18);
+
+    --md-field-bg: rgba(248, 250, 252, 0.06);
+    --md-field-label: rgba(226, 232, 240, 0.72);
+    --md-ripple: rgba(58, 189, 247, 0.18);
 }
 
 @layer base {
@@ -168,5 +211,158 @@
     }
     body {
         @apply bg-background text-foreground;
+    }
+
+    /* -------------------------
+   Autofill override
+   ------------------------- */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill {
+        -webkit-text-fill-color: var(--md-field-text);
+        -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
+        transition: background-color 99999s ease-in-out 0s;
+    }
+
+    .dark input:-webkit-autofill,
+    .dark textarea:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
+    }
+
+    /* -------------------------
+   MD3-ish components
+   ------------------------- */
+    .md3-card {
+        border-radius: var(--md-radius);
+        background: var(--md-surface);
+        padding: 16px;
+        box-shadow: var(--md-e1);
+    }
+
+    .md3-card--e0 {
+        box-shadow: none;
+    }
+    .md3-card--e1 {
+        box-shadow: var(--md-e1);
+    }
+    .md3-card--e2 {
+        box-shadow: var(--md-e2);
+    }
+    .md3-card--e3 {
+        box-shadow: var(--md-e3);
+    }
+
+    .md3-btn {
+        position: relative;
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        user-select: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .md3-btn--filled {
+        background: var(--sc-primary);
+        color: #08111f;
+    }
+
+    .md3-btn--tonal {
+        background: rgba(58, 189, 247, 0.14);
+        color: var(--md-text);
+    }
+
+    .md3-btn--outlined {
+        border: 1px solid var(--md-outline);
+        color: var(--md-text);
+        background: transparent;
+    }
+
+    .md3-btn--text {
+        color: var(--md-text);
+        background: transparent;
+    }
+
+    /* Ripple element */
+    .md3-ripple {
+        position: absolute;
+        border-radius: 999px;
+        transform: scale(0);
+        background: var(--md-ripple);
+        animation: md3-ripple 520ms ease-out;
+        pointer-events: none;
+    }
+
+    @keyframes md3-ripple {
+        to {
+            transform: scale(1);
+            opacity: 0;
+        }
+    }
+
+    /* Floating label field */
+    .md3-field {
+        position: relative;
+        border-radius: var(--md-radius-sm);
+    }
+
+    .md3-field__input {
+        width: 100%;
+        border-radius: var(--md-radius-sm);
+        padding: 18px 14px 10px;
+        outline: none;
+        background: var(--md-field-bg);
+        color: var(--md-field-text);
+        border: 1px solid transparent;
+    }
+
+    .md3-field--outlined .md3-field__input {
+        background: transparent;
+        border: 1px solid var(--md-outline);
+    }
+
+    .md3-field__label {
+        position: absolute;
+        left: 14px;
+        top: 14px;
+        font-size: 14px;
+        color: var(--md-field-label);
+        transform-origin: left top;
+        transition:
+            transform 160ms ease,
+            top 160ms ease,
+            color 160ms ease;
+        pointer-events: none;
+    }
+
+    /* Float on focus or when there is content (placeholder is " ") */
+    .md3-field__input:focus + .md3-field__label,
+    .md3-field__input:not(:placeholder-shown) + .md3-field__label {
+        top: 6px;
+        transform: scale(0.85);
+    }
+
+    .md3-field__input:focus {
+        border-color: var(--md-field-focus);
+    }
+
+    .md3-field--error .md3-field__input {
+        border-color: var(--md-error);
+    }
+    .md3-field--error .md3-field__label {
+        color: var(--md-error);
+    }
+    .md3-field--success .md3-field__input {
+        border-color: var(--md-success);
+    }
+    .md3-field--success .md3-field__label {
+        color: var(--md-success);
+    }
+
+    .md3-field__message {
+        opacity: 0.8;
     }
 }
