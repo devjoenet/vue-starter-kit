@@ -1,14 +1,19 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "devjoenet/vue-starter-kit",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "My skeleton application for new Laravel projects.",
     "keywords": [
-        "laravel",
-        "framework"
+      "laravel",
+      "framework",
+      "starter-kit",
+      "vue",
+      "inertiajs",
+      "tailwindcss"
     ],
     "license": "MIT",
     "require": {
+        "ext-pdo": "*",
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.30",
@@ -23,6 +28,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/boost": "^2.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
@@ -30,7 +36,10 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.3",
-        "pestphp/pest-plugin-laravel": "^4.0"
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "pestphp/pest-plugin-type-coverage": "^4.0",
+        "rector/rector": "^2.2",
+        "spatie/boost-spatie-guidelines": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -45,12 +54,20 @@
         }
     },
     "scripts": {
+      "format": [
+        "./vendor/bin/rector",
+        "./vendor/bin/pint",
+        "npm run format"
+      ],
+      "ide": [
+        "@php artisan ide-helper:generate --write_mixins --helpers",
+        "@php artisan ide-helper:models --nowrite --reset --phpstorm-noinspections",
+        "@php artisan ide-helper:meta",
+        "rm -f AGENTS.md GEMINI.md CLAUDE.md",
+        "@php artisan boost:update --ansi"
+      ],
         "types:generate": [
             "php artisan typescript:transform"
-        ],
-        "ide:generate": [
-            "php artisan ide-helper:generate",
-            "php artisan ide-helper:models --nowrite"
         ],
         "setup": [
             "composer install",
@@ -58,7 +75,9 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
-            "npm run build"
+            "npm run build",
+            "@ide",
+            "@format"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",

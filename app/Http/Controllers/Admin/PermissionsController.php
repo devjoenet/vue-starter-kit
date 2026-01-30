@@ -41,7 +41,7 @@ final class PermissionsController
         ]);
 
         $permission = Permission::query()->create([
-            'name' => trim($data->name),
+            'name' => mb_trim($data->name),
             'group' => $data->group,
             'guard_name' => 'web',
         ]);
@@ -72,7 +72,7 @@ final class PermissionsController
         ]);
 
         $permission->forceFill([
-            'name' => trim($data->name),
+            'name' => mb_trim($data->name),
             'group' => $data->group,
         ])->save();
 

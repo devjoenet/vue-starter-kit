@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3'
-import { computed } from 'vue'
-import Button from '@/components/md3/Button.vue'
-import Card from '@/components/md3/Card.vue'
-import { useAbility } from '@/composables/useAbility'
-import AdminLayout from '@/layouts/AdminLayout.vue'
-import {create, edit, destroy} from '@/routes/admin/permissions'
+  import { Link, useForm } from "@inertiajs/vue3";
+  import { computed } from "vue";
+  import Button from "@/components/md3/Button.vue";
+  import Card from "@/components/md3/Card.vue";
+  import { useAbility } from "@/composables/useAbility";
+  import AdminLayout from "@/layouts/AdminLayout.vue";
+  import { create, edit, destroy } from "@/routes/admin/permissions";
 
-const props = defineProps<{
-  permissionsByGroup: Record<string, { id: number; name: string; group: string }[]>
-}>()
+  const props = defineProps<{
+    permissionsByGroup: Record<string, { id: number; name: string; group: string }[]>;
+  }>();
 
-const { can } = useAbility()
-const canCreate = computed(() => can('permissions.create'))
-const canUpdate = computed(() => can('permissions.update'))
-const canDelete = computed(() => can('permissions.delete'))
+  const { can } = useAbility();
+  const canCreate = computed(() => can("permissions.create"));
+  const canUpdate = computed(() => can("permissions.update"));
+  const canDelete = computed(() => can("permissions.delete"));
 
-const del = useForm({})
+  const del = useForm({});
 
-const destroyPermission = (id: number) => {
-  if (!canDelete.value) return
-  if (!confirm('Delete this permission?')) return
-  del.delete(destroy.url(id))
-}
+  const destroyPermission = (id: number) => {
+    if (!canDelete.value) return;
+    if (!confirm("Delete this permission?")) return;
+    del.delete(destroy.url(id));
+  };
 </script>
 
 <template>
@@ -42,11 +42,7 @@ const destroyPermission = (id: number) => {
         </div>
 
         <div class="mt-4 space-y-2">
-          <div
-            v-for="p in items"
-            :key="p.id"
-            class="flex items-center justify-between rounded-xl border border-black/5 p-3 dark:border-white/10"
-          >
+          <div v-for="p in items" :key="p.id" class="flex items-center justify-between rounded-xl border border-black/5 p-3 dark:border-white/10">
             <div class="text-sm font-medium">{{ p.name }}</div>
 
             <div class="flex items-center gap-2">
@@ -54,9 +50,7 @@ const destroyPermission = (id: number) => {
                 <Button variant="text">Edit</Button>
               </Link>
 
-              <Button v-if="canDelete" variant="text" @click="destroyPermission(p.id)">
-                Delete
-              </Button>
+              <Button v-if="canDelete" variant="text" @click="destroyPermission(p.id)"> Delete </Button>
             </div>
           </div>
         </div>

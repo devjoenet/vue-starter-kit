@@ -1,7 +1,10 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  elevation?: 0 | 1 | 2 | 3
-}>(), { elevation: 1 })
+  withDefaults(
+    defineProps<{
+      elevation?: 0 | 1 | 2 | 3;
+    }>(),
+    { elevation: 1 },
+  );
 </script>
 
 <template>

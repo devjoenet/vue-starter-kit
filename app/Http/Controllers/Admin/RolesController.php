@@ -33,7 +33,7 @@ final class RolesController
     {
         $data = RoleUpsertData::validateAndCreate(request());
 
-        $name = trim($data->name);
+        $name = mb_trim($data->name);
 
         request()->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')],
@@ -78,7 +78,7 @@ final class RolesController
             ],
         ]);
 
-        $role->forceFill(['name' => trim($data->name)])->save();
+        $role->forceFill(['name' => mb_trim($data->name)])->save();
 
         return back()->with('success', 'Role updated.');
     }

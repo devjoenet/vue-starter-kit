@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import 'tw-animate-css';
+@import "tw-animate-css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,57 +8,54 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans:
-        Instrument Sans, ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+  --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
 
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
 
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
-    --color-sidebar: var(--sidebar-background);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 /*
@@ -70,299 +67,296 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
 @layer utilities {
-    body,
-    html {
-        --font-sans:
-            'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-            'Noto Color Emoji';
-        background: var(--md-bg);
-        color: var(--md-text);
-    }
+  body,
+  html {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    background: var(--md-bg);
+    color: var(--md-text);
+  }
 }
 
 :root {
-    --background: hsl(0 0% 100%);
-    --foreground: hsl(0 0% 3.9%);
-    --card: hsl(0 0% 100%);
-    --card-foreground: hsl(0 0% 3.9%);
-    --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(0 0% 3.9%);
-    --primary: hsl(0 0% 9%);
-    --primary-foreground: hsl(0 0% 98%);
-    --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: hsl(0 0% 9%);
-    --muted: hsl(0 0% 96.1%);
-    --muted-foreground: hsl(0 0% 45.1%);
-    --accent: hsl(0 0% 96.1%);
-    --accent-foreground: hsl(0 0% 9%);
-    --destructive: hsl(0 84.2% 60.2%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 92.8%);
-    --input: hsl(0 0% 89.8%);
-    --ring: hsl(0 0% 3.9%);
-    --chart-1: hsl(12 76% 61%);
-    --chart-2: hsl(173 58% 39%);
-    --chart-3: hsl(197 37% 24%);
-    --chart-4: hsl(43 74% 66%);
-    --chart-5: hsl(27 87% 67%);
-    --radius: 0.5rem;
-    --sidebar-background: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(0 0% 10%);
-    --sidebar-primary-foreground: hsl(0 0% 98%);
-    --sidebar-accent: hsl(0 0% 94%);
-    --sidebar-accent-foreground: hsl(0 0% 30%);
-    --sidebar-border: hsl(0 0% 91%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(0 0% 98%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(0 0% 3.9%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(0 0% 3.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(0 0% 3.9%);
+  --primary: hsl(0 0% 9%);
+  --primary-foreground: hsl(0 0% 98%);
+  --secondary: hsl(0 0% 92.1%);
+  --secondary-foreground: hsl(0 0% 9%);
+  --muted: hsl(0 0% 96.1%);
+  --muted-foreground: hsl(0 0% 45.1%);
+  --accent: hsl(0 0% 96.1%);
+  --accent-foreground: hsl(0 0% 9%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 92.8%);
+  --input: hsl(0 0% 89.8%);
+  --ring: hsl(0 0% 3.9%);
+  --chart-1: hsl(12 76% 61%);
+  --chart-2: hsl(173 58% 39%);
+  --chart-3: hsl(197 37% 24%);
+  --chart-4: hsl(43 74% 66%);
+  --chart-5: hsl(27 87% 67%);
+  --radius: 0.5rem;
+  --sidebar-background: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(0 0% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(0 0% 94%);
+  --sidebar-accent-foreground: hsl(0 0% 30%);
+  --sidebar-border: hsl(0 0% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar: hsl(0 0% 98%);
 
-    /* Core */
-    --sc-base: #1e293b;
-    --sc-primary: #3abdf7;
-    --sc-secondary: #818cf8;
-    --sc-accent: #f471b5;
+  /* Core */
+  --sc-base: #1e293b;
+  --sc-primary: #3abdf7;
+  --sc-secondary: #818cf8;
+  --sc-accent: #f471b5;
 
-    /* Light surface system */
-    --md-bg: #f8fafc;
-    --md-surface: #ffffff;
-    --md-surface-2: #f1f5f9;
-    --md-text: #0f172a;
-    --md-outline: rgba(15, 23, 42, 0.18);
+  /* Light surface system */
+  --md-bg: #f8fafc;
+  --md-surface: #ffffff;
+  --md-surface-2: #f1f5f9;
+  --md-text: #0f172a;
+  --md-outline: rgba(15, 23, 42, 0.18);
 
-    /* Semantic */
-    --md-error: #ef4444;
-    --md-success: #22c55e;
+  /* Semantic */
+  --md-error: #ef4444;
+  --md-success: #22c55e;
 
-    /* MD3-ish shape/elevation */
-    --md-radius: 16px;
-    --md-radius-sm: 12px;
-    --md-e1: 0 1px 2px rgba(2, 6, 23, 0.08);
-    --md-e2: 0 6px 14px rgba(2, 6, 23, 0.12);
-    --md-e3: 0 14px 28px rgba(2, 6, 23, 0.16);
+  /* MD3-ish shape/elevation */
+  --md-radius: 16px;
+  --md-radius-sm: 12px;
+  --md-e1: 0 1px 2px rgba(2, 6, 23, 0.08);
+  --md-e2: 0 6px 14px rgba(2, 6, 23, 0.12);
+  --md-e3: 0 14px 28px rgba(2, 6, 23, 0.16);
 
-    /* Component tokens */
-    --md-field-bg: rgba(30, 41, 59, 0.04);
-    --md-field-text: var(--md-text);
-    --md-field-label: rgba(15, 23, 42, 0.65);
-    --md-field-focus: var(--sc-primary);
+  /* Component tokens */
+  --md-field-bg: rgba(30, 41, 59, 0.04);
+  --md-field-text: var(--md-text);
+  --md-field-label: rgba(15, 23, 42, 0.65);
+  --md-field-focus: var(--sc-primary);
 
-    --md-ripple: rgba(58, 189, 247, 0.22);
+  --md-ripple: rgba(58, 189, 247, 0.22);
 }
 
 .dark {
-    --background: hsl(0 0% 3.9%);
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(0 0% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(0 0% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(0 0% 9%);
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
-    --muted-foreground: hsl(0 0% 63.9%);
-    --accent: hsl(0 0% 14.9%);
-    --accent-foreground: hsl(0 0% 98%);
-    --destructive: hsl(0 84% 60%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 14.9%);
-    --input: hsl(0 0% 14.9%);
-    --ring: hsl(0 0% 83.1%);
-    --chart-1: hsl(220 70% 50%);
-    --chart-2: hsl(160 60% 45%);
-    --chart-3: hsl(30 80% 55%);
-    --chart-4: hsl(280 65% 60%);
-    --chart-5: hsl(340 75% 55%);
-    --sidebar-background: hsl(0 0% 7%);
-    --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: hsl(360, 100%, 100%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(0 0% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(240 5.9% 10%);
-    --md-bg: #0b1220;
-    --md-surface: #0f172a;
-    --md-surface-2: #111c35;
-    --md-text: #e2e8f0;
-    --md-outline: rgba(226, 232, 240, 0.18);
+  --background: hsl(0 0% 3.9%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(0 0% 3.9%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(0 0% 3.9%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 9%);
+  --secondary: hsl(0 0% 14.9%);
+  --secondary-foreground: hsl(0 0% 98%);
+  --muted: hsl(0 0% 16.08%);
+  --muted-foreground: hsl(0 0% 63.9%);
+  --accent: hsl(0 0% 14.9%);
+  --accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(0 0% 14.9%);
+  --input: hsl(0 0% 14.9%);
+  --ring: hsl(0 0% 83.1%);
+  --chart-1: hsl(220 70% 50%);
+  --chart-2: hsl(160 60% 45%);
+  --chart-3: hsl(30 80% 55%);
+  --chart-4: hsl(280 65% 60%);
+  --chart-5: hsl(340 75% 55%);
+  --sidebar-background: hsl(0 0% 7%);
+  --sidebar-foreground: hsl(0 0% 95.9%);
+  --sidebar-primary: hsl(360, 100%, 100%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(0 0% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(0 0% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar: hsl(240 5.9% 10%);
+  --md-bg: #0b1220;
+  --md-surface: #0f172a;
+  --md-surface-2: #111c35;
+  --md-text: #e2e8f0;
+  --md-outline: rgba(226, 232, 240, 0.18);
 
-    --md-field-bg: rgba(248, 250, 252, 0.06);
-    --md-field-label: rgba(226, 232, 240, 0.72);
-    --md-ripple: rgba(58, 189, 247, 0.18);
+  --md-field-bg: rgba(248, 250, 252, 0.06);
+  --md-field-label: rgba(226, 232, 240, 0.72);
+  --md-ripple: rgba(58, 189, 247, 0.18);
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 
-    /* -------------------------
+  /* -------------------------
    Autofill override
    ------------------------- */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill {
-        -webkit-text-fill-color: var(--md-field-text);
-        -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
-        transition: background-color 99999s ease-in-out 0s;
-    }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: var(--md-field-text);
+    -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
+    transition: background-color 99999s ease-in-out 0s;
+  }
 
-    .dark input:-webkit-autofill,
-    .dark textarea:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
-    }
+  .dark input:-webkit-autofill,
+  .dark textarea:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--md-surface) inset;
+  }
 
-    /* -------------------------
+  /* -------------------------
    MD3-ish components
    ------------------------- */
-    .md3-card {
-        border-radius: var(--md-radius);
-        background: var(--md-surface);
-        padding: 16px;
-        box-shadow: var(--md-e1);
-    }
+  .md3-card {
+    border-radius: var(--md-radius);
+    background: var(--md-surface);
+    padding: 16px;
+    box-shadow: var(--md-e1);
+  }
 
-    .md3-card--e0 {
-        box-shadow: none;
-    }
-    .md3-card--e1 {
-        box-shadow: var(--md-e1);
-    }
-    .md3-card--e2 {
-        box-shadow: var(--md-e2);
-    }
-    .md3-card--e3 {
-        box-shadow: var(--md-e3);
-    }
+  .md3-card--e0 {
+    box-shadow: none;
+  }
+  .md3-card--e1 {
+    box-shadow: var(--md-e1);
+  }
+  .md3-card--e2 {
+    box-shadow: var(--md-e2);
+  }
+  .md3-card--e3 {
+    box-shadow: var(--md-e3);
+  }
 
-    .md3-btn {
-        position: relative;
-        border-radius: 999px;
-        padding: 10px 14px;
-        font-size: 14px;
-        font-weight: 600;
-        user-select: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
+  .md3-btn {
+    position: relative;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-    .md3-btn--filled {
-        background: var(--sc-primary);
-        color: #08111f;
-    }
+  .md3-btn--filled {
+    background: var(--sc-primary);
+    color: #08111f;
+  }
 
-    .md3-btn--tonal {
-        background: rgba(58, 189, 247, 0.14);
-        color: var(--md-text);
-    }
+  .md3-btn--tonal {
+    background: rgba(58, 189, 247, 0.14);
+    color: var(--md-text);
+  }
 
-    .md3-btn--outlined {
-        border: 1px solid var(--md-outline);
-        color: var(--md-text);
-        background: transparent;
-    }
+  .md3-btn--outlined {
+    border: 1px solid var(--md-outline);
+    color: var(--md-text);
+    background: transparent;
+  }
 
-    .md3-btn--text {
-        color: var(--md-text);
-        background: transparent;
-    }
+  .md3-btn--text {
+    color: var(--md-text);
+    background: transparent;
+  }
 
-    /* Ripple element */
-    .md3-ripple {
-        position: absolute;
-        border-radius: 999px;
-        transform: scale(0);
-        background: var(--md-ripple);
-        animation: md3-ripple 520ms ease-out;
-        pointer-events: none;
-    }
+  /* Ripple element */
+  .md3-ripple {
+    position: absolute;
+    border-radius: 999px;
+    transform: scale(0);
+    background: var(--md-ripple);
+    animation: md3-ripple 520ms ease-out;
+    pointer-events: none;
+  }
 
-    @keyframes md3-ripple {
-        to {
-            transform: scale(1);
-            opacity: 0;
-        }
+  @keyframes md3-ripple {
+    to {
+      transform: scale(1);
+      opacity: 0;
     }
+  }
 
-    /* Floating label field */
-    .md3-field {
-        position: relative;
-        border-radius: var(--md-radius-sm);
-    }
+  /* Floating label field */
+  .md3-field {
+    position: relative;
+    border-radius: var(--md-radius-sm);
+  }
 
-    .md3-field__input {
-        width: 100%;
-        border-radius: var(--md-radius-sm);
-        padding: 18px 14px 10px;
-        outline: none;
-        background: var(--md-field-bg);
-        color: var(--md-field-text);
-        border: 1px solid transparent;
-    }
+  .md3-field__input {
+    width: 100%;
+    border-radius: var(--md-radius-sm);
+    padding: 18px 14px 10px;
+    outline: none;
+    background: var(--md-field-bg);
+    color: var(--md-field-text);
+    border: 1px solid transparent;
+  }
 
-    .md3-field--outlined .md3-field__input {
-        background: transparent;
-        border: 1px solid var(--md-outline);
-    }
+  .md3-field--outlined .md3-field__input {
+    background: transparent;
+    border: 1px solid var(--md-outline);
+  }
 
-    .md3-field__label {
-        position: absolute;
-        left: 14px;
-        top: 14px;
-        font-size: 14px;
-        color: var(--md-field-label);
-        transform-origin: left top;
-        transition:
-            transform 160ms ease,
-            top 160ms ease,
-            color 160ms ease;
-        pointer-events: none;
-    }
+  .md3-field__label {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    font-size: 14px;
+    color: var(--md-field-label);
+    transform-origin: left top;
+    transition:
+      transform 160ms ease,
+      top 160ms ease,
+      color 160ms ease;
+    pointer-events: none;
+  }
 
-    /* Float on focus or when there is content (placeholder is " ") */
-    .md3-field__input:focus + .md3-field__label,
-    .md3-field__input:not(:placeholder-shown) + .md3-field__label {
-        top: 6px;
-        transform: scale(0.85);
-    }
+  /* Float on focus or when there is content (placeholder is " ") */
+  .md3-field__input:focus + .md3-field__label,
+  .md3-field__input:not(:placeholder-shown) + .md3-field__label {
+    top: 6px;
+    transform: scale(0.85);
+  }
 
-    .md3-field__input:focus {
-        border-color: var(--md-field-focus);
-    }
+  .md3-field__input:focus {
+    border-color: var(--md-field-focus);
+  }
 
-    .md3-field--error .md3-field__input {
-        border-color: var(--md-error);
-    }
-    .md3-field--error .md3-field__label {
-        color: var(--md-error);
-    }
-    .md3-field--success .md3-field__input {
-        border-color: var(--md-success);
-    }
-    .md3-field--success .md3-field__label {
-        color: var(--md-success);
-    }
+  .md3-field--error .md3-field__input {
+    border-color: var(--md-error);
+  }
+  .md3-field--error .md3-field__label {
+    color: var(--md-error);
+  }
+  .md3-field--success .md3-field__input {
+    border-color: var(--md-success);
+  }
+  .md3-field--success .md3-field__label {
+    color: var(--md-success);
+  }
 
-    .md3-field__message {
-        opacity: 0.8;
-    }
+  .md3-field__message {
+    opacity: 0.8;
+  }
 }
