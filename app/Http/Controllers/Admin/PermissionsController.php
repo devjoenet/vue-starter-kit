@@ -15,20 +15,16 @@ final class PermissionsController
 {
     public function index(): Response
     {
-        return Inertia::render('Admin/Permissions/Index', [
-            'permissionsByGroup' => Permission::query()
-                ->select(['id', 'name', 'group'])
-                ->orderBy('group')
-                ->orderBy('name')
-                ->get()
-                ->groupBy('group')
-                ->map(fn ($items) => $items->values()),
-        ]);
+        return $this->renderIndex();
     }
 
     public function create(): Response
     {
-        return Inertia::render('Admin/Permissions/Create');
+        return $this->renderIndex([
+            'modal' => [
+                'mode' => 'create',
+            ],
+        ]);
     }
 
     public function store(): RedirectResponse
@@ -52,8 +48,11 @@ final class PermissionsController
 
     public function edit(Permission $permission): Response
     {
-        return Inertia::render('Admin/Permissions/Edit', [
-            'permission' => $permission->only(['id', 'name', 'group']),
+        return $this->renderIndex([
+            'modal' => [
+                'mode' => 'edit',
+                'permission' => $permission->only(['id', 'name', 'group']),
+            ],
         ]);
     }
 
@@ -85,5 +84,22 @@ final class PermissionsController
 
         return redirect()->route('admin.permissions.index')
             ->with('success', 'Permission deleted.');
+    }
+
+    /**
+     * @param  array<string, mixed>  $extra
+     */
+    private function renderIndex(array $extra = []): Response
+    {
+        return Inertia::render('Admin/Permissions/Index', [
+            'permissionsByGroup' => Permission::query()
+                ->select(['id', 'name', 'group'])
+                ->orderBy('group')
+                ->orderBy('name')
+                ->get()
+                ->groupBy('group')
+                ->map(fn ($items) => $items->values()),
+            ...$extra,
+        ]);
     }
 }

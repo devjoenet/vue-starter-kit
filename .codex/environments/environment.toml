@@ -9,7 +9,7 @@ set -e
 
 echo "Running Codex setup script"
 
-composer codex
+composer seup
 
 echo "Setup complete!"
 '''

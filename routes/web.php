@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -16,8 +19,13 @@ Route::middleware(['auth', 'verified'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
-        Route::get('/', fn () => Inertia::render('Admin/Dashboard'))
-            ->name('dashboard');
+        Route::get('/', fn () => Inertia::render('Admin/Dashboard', [
+            'counts' => [
+                'users' => User::query()->count(),
+                'roles' => Role::query()->count(),
+                'permissions' => Permission::query()->count(),
+            ],
+        ]))->name('dashboard');
     });
 
 Route::middleware(['auth', 'verified'])

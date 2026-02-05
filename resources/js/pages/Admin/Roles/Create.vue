@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
   import { computed } from "vue";
-  import Button from "@/components/md3/Button.vue";
-  import Card from "@/components/md3/Card.vue";
-  import TextField from "@/components/md3/TextField.vue";
+  import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
+  import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AdminLayout from "@/layouts/AdminLayout.vue";
   import { store } from "@/routes/admin/roles";
@@ -23,9 +23,9 @@
   <AdminLayout title="Create Role">
     <h1 class="text-2xl font-semibold">Create role</h1>
 
-    <Card class="mt-6" :elevation="1">
+    <Card class="mt-6 px-6">
       <form class="space-y-4" @submit.prevent="submit">
-        <TextField v-model="form.name" label="Role name" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" :disabled="!canCreate" variant="outlined" />
+        <Input id="create-role-name" v-model="form.name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
         <div class="flex justify-end">
           <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>

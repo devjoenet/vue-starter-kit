@@ -22,11 +22,13 @@
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
       html {
-        background-color: oklch(1 0 0);
+        background-color: #f8fafc;
+        color: #0f172a;
       }
 
       html.dark {
-        background-color: oklch(0.145 0 0);
+        background-color: oklch(18.312% 0.03092 263.398);
+        color: oklch(92.876% 0.01272 255.643);
       }
     </style>
 
@@ -42,7 +44,7 @@
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     @inertiaHead
   </head>
-  <body class="font-sans antialiased">
+  <body class="bg-background text-foreground font-sans antialiased">
     @inertia
   </body>
 </html>

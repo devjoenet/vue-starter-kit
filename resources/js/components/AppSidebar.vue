@@ -1,13 +1,20 @@
 <script setup lang="ts">
   import { Link } from "@inertiajs/vue3";
-  import { BookOpen, Folder, LayoutGrid } from "lucide-vue-next";
+  import { BookOpen, Folder, KeyRound, LayoutGrid, Shield, Users } from "lucide-vue-next";
+  import { computed } from "vue";
   import NavFooter from "@/components/NavFooter.vue";
   import NavMain from "@/components/NavMain.vue";
   import NavUser from "@/components/NavUser.vue";
   import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+  import { useAbility } from "@/composables/useAbility";
   import { dashboard } from "@/routes";
+  import { index as adminPermissionsIndex } from "@/routes/admin/permissions";
+  import { index as adminRolesIndex } from "@/routes/admin/roles";
+  import { index as adminUsersIndex } from "@/routes/admin/users";
   import { type NavItem } from "@/types";
   import AppLogo from "./AppLogo.vue";
+
+  const { can } = useAbility();
 
   const mainNavItems: NavItem[] = [
     {
@@ -16,6 +23,38 @@
       icon: LayoutGrid,
     },
   ];
+
+  const adminNavItems = computed<NavItem[]>(() => {
+    return [
+      ...(can("users.view")
+        ? [
+            {
+              title: "Users",
+              href: adminUsersIndex(),
+              icon: Users,
+            },
+          ]
+        : []),
+      ...(can("roles.view")
+        ? [
+            {
+              title: "Roles",
+              href: adminRolesIndex(),
+              icon: Shield,
+            },
+          ]
+        : []),
+      ...(can("permissions.view")
+        ? [
+            {
+              title: "Permissions",
+              href: adminPermissionsIndex(),
+              icon: KeyRound,
+            },
+          ]
+        : []),
+    ];
+  });
 
   const footerNavItems: NavItem[] = [
     {
@@ -46,7 +85,8 @@
     </SidebarHeader>
 
     <SidebarContent>
-      <NavMain :items="mainNavItems" />
+      <NavMain :items="mainNavItems" label="Platform" />
+      <NavMain v-if="adminNavItems.length" :items="adminNavItems" label="Admin" />
     </SidebarContent>
 
     <SidebarFooter>

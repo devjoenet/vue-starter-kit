@@ -1,9 +1,18 @@
 <script setup lang="ts">
   import { Head } from "@inertiajs/vue3";
+  import AdminQuickLinks from "@/components/admin/AdminQuickLinks.vue";
   import PlaceholderPattern from "@/components/PlaceholderPattern.vue";
   import AppLayout from "@/layouts/AppLayout.vue";
   import { dashboard } from "@/routes";
   import { type BreadcrumbItem } from "@/types";
+
+  defineProps<{
+    counts: {
+      users: number;
+      roles: number;
+      permissions: number;
+    };
+  }>();
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,6 +41,8 @@
       <div class="relative min-h-screen flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
         <PlaceholderPattern />
       </div>
+
+      <AdminQuickLinks :counts="counts" />
     </div>
   </AppLayout>
 </template>

@@ -16,19 +16,15 @@ final class UsersController
 {
     public function index(): Response
     {
-        return Inertia::render('Admin/Users/Index', [
-            'users' => User::query()
-                ->select(['id', 'name', 'email', 'created_at'])
-                ->latest()
-                ->paginate(15)
-                ->withQueryString(),
-        ]);
+        return $this->renderIndex();
     }
 
     public function create(): Response
     {
-        return Inertia::render('Admin/Users/Create', [
-            'roles' => Role::query()->orderBy('name')->get(['id', 'name']),
+        return $this->renderIndex([
+            'modal' => [
+                'mode' => 'create',
+            ],
         ]);
     }
 
@@ -48,10 +44,13 @@ final class UsersController
 
     public function edit(User $user): Response
     {
-        return Inertia::render('Admin/Users/Edit', [
-            'user' => $user->only(['id', 'name', 'email']),
+        return $this->renderIndex([
+            'modal' => [
+                'mode' => 'edit',
+                'user' => $user->only(['id', 'name', 'email']),
+                'userRoles' => $user->getRoleNames(),
+            ],
             'roles' => Role::query()->orderBy('name')->get(['id', 'name']),
-            'userRoles' => $user->getRoleNames(),
         ]);
     }
 
@@ -89,5 +88,20 @@ final class UsersController
         $user->syncRoles($roleNames);
 
         return back()->with('success', 'Roles updated.');
+    }
+
+    /**
+     * @param  array<string, mixed>  $extra
+     */
+    private function renderIndex(array $extra = []): Response
+    {
+        return Inertia::render('Admin/Users/Index', [
+            'users' => User::query()
+                ->select(['id', 'name', 'email', 'created_at'])
+                ->latest()
+                ->paginate(15)
+                ->withQueryString(),
+            ...$extra,
+        ]);
     }
 }

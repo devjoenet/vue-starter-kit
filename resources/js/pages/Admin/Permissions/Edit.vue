@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
   import { computed } from "vue";
-  import Button from "@/components/md3/Button.vue";
-  import Card from "@/components/md3/Card.vue";
-  import TextField from "@/components/md3/TextField.vue";
+  import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
+  import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AdminLayout from "@/layouts/AdminLayout.vue";
   import { update, destroy } from "@/routes/admin/permissions";
@@ -40,18 +40,20 @@
       <Button variant="text" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
     </div>
 
-    <Card class="mt-6" :elevation="1">
+    <Card class="mt-6 px-6">
       <form class="space-y-4" @submit.prevent="updatePermission">
-        <TextField v-model="form.name" label="Permission name" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" :disabled="!canUpdate" variant="outlined" />
+        <Input id="edit-permission-name" v-model="form.name" name="name" label="Permission name" variant="outlined" :disabled="!canUpdate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
         <div class="space-y-1">
           <div class="text-sm font-medium opacity-80">Group</div>
-          <select v-model="form.group" class="w-full rounded-xl border border-black/10 bg-(--md-surface) p-3 text-sm dark:border-white/10" :disabled="!canUpdate">
+          <select v-model="form.group" class="h-14 w-full rounded-[var(--radius-sm)] border border-[color:var(--outline)] bg-[var(--field-bg)] px-4 text-sm text-[var(--field-text)]" :disabled="!canUpdate">
             <option value="users">users</option>
             <option value="roles">roles</option>
             <option value="permissions">permissions</option>
           </select>
-          <p v-if="form.errors.group" class="text-xs opacity-80">{{ form.errors.group }}</p>
+          <p v-if="form.errors.group" class="text-xs text-[var(--error)]">
+            {{ form.errors.group }}
+          </p>
         </div>
 
         <div class="flex justify-end">

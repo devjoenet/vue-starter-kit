@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
   import { computed } from "vue";
+  import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
+  import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AdminLayout from "@/layouts/AdminLayout.vue";
   import { update, destroy } from "@/routes/admin/users";
   import { sync } from "@/routes/admin/users/roles";
-  import Button from "@/components/md3/Button.vue";
-  import Card from "@/components/md3/Card.vue";
-  import TextField from "@/components/md3/TextField.vue";
 
   const props = defineProps<{
     user: { id: number; name: string; email: string };
@@ -67,15 +67,15 @@
     </div>
 
     <div class="mt-6 grid gap-6 lg:grid-cols-2">
-      <Card :elevation="1">
+      <Card class="px-6">
         <h2 class="text-lg font-semibold">Details</h2>
 
         <form class="mt-4 space-y-4" @submit.prevent="updateUser">
-          <TextField v-model="userForm.name" label="Name" :state="userForm.errors.name ? 'error' : 'default'" :message="userForm.errors.name" :disabled="!canUpdate" variant="outlined" />
+          <Input id="edit-user-name" v-model="userForm.name" name="name" label="Name" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.name ? 'error' : 'default'" :message="userForm.errors.name" />
 
-          <TextField v-model="userForm.email" label="Email" type="email" :state="userForm.errors.email ? 'error' : 'default'" :message="userForm.errors.email" :disabled="!canUpdate" variant="outlined" />
+          <Input id="edit-user-email" v-model="userForm.email" type="email" name="email" label="Email" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.email ? 'error' : 'default'" :message="userForm.errors.email" />
 
-          <TextField v-model="userForm.password" label="New password (optional)" type="password" :state="userForm.errors.password ? 'error' : 'default'" :message="userForm.errors.password" :disabled="!canUpdate" variant="filled" />
+          <Input id="edit-user-password" v-model="userForm.password" type="password" name="password" label="New password (optional)" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.password ? 'error' : 'default'" :message="userForm.errors.password" />
 
           <div class="flex justify-end">
             <Button variant="filled" type="submit" :disabled="!canUpdate || userForm.processing"> Save </Button>
@@ -83,7 +83,7 @@
         </form>
       </Card>
 
-      <Card :elevation="1">
+      <Card class="px-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold">Roles</h2>
           <Button variant="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>

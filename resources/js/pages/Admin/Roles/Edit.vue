@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
   import { computed } from "vue";
-  import Button from "@/components/md3/Button.vue";
-  import Card from "@/components/md3/Card.vue";
-  import TextField from "@/components/md3/TextField.vue";
+  import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
+  import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AdminLayout from "@/layouts/AdminLayout.vue";
   import { update, destroy } from "@/routes/admin/roles";
@@ -54,11 +54,11 @@
     </div>
 
     <div class="mt-6 grid gap-6 lg:grid-cols-2">
-      <Card :elevation="1">
+      <Card class="px-6">
         <h2 class="text-lg font-semibold">Details</h2>
 
         <form class="mt-4 space-y-4" @submit.prevent="updateRole">
-          <TextField v-model="roleForm.name" label="Role name" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" :disabled="!canUpdate" variant="outlined" />
+          <Input id="edit-role-name" v-model="roleForm.name" name="name" label="Role name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
 
           <div class="flex justify-end">
             <Button variant="filled" type="submit" :disabled="!canUpdate || roleForm.processing"> Save </Button>
@@ -66,7 +66,7 @@
         </form>
       </Card>
 
-      <Card :elevation="1">
+      <Card class="px-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold">Permissions</h2>
           <Button variant="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
