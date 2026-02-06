@@ -8,8 +8,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -79,118 +77,116 @@
 @layer utilities {
   body,
   html {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    background: var(--background);
-    color: var(--foreground);
+    --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-display: "League Spartan", sans-serif, ui-sans-serif, system-ui, sans-serif;
   }
 }
 
 :root {
-  /* Core */
-  --sc-base: oklch(27.95% 0.0368 260);
-  --sc-primary: oklch(75.35% 0.1375 232.4);
-  --sc-secondary: oklch(68.01% 0.1583 276.9);
-  --sc-accent: oklch(72.36% 0.1762 350);
-
-  /* Surface system */
-  --surface: oklch(100% 0 0);
-  --surface-2: oklch(96.83% 0.0069 247.9);
-  --outline: rgba(15, 23, 42, 0.18);
-
-  /* Semantic */
-  --error: oklch(63.68% 0.2078 25.3);
-  --success: oklch(72.27% 0.192 149.6);
-
-  /* Shape/elevation */
-  --radius-lg: 16px;
-  --radius-sm: 12px;
-  --elevation-1: 0 1px 2px rgba(2, 6, 23, 0.08);
-  --elevation-2: 0 6px 14px rgba(2, 6, 23, 0.12);
-  --elevation-3: 0 14px 28px rgba(2, 6, 23, 0.16);
-
-  /* Field tokens */
-  --field-bg: rgba(30, 41, 59, 0.04);
-  --field-text: oklch(20.77% 0.0398 265.8);
-  --field-label: rgba(15, 23, 42, 0.65);
-  --field-focus: var(--sc-primary);
-
-  --background: oklch(98.415% 0.00352 248.585);
-  --foreground: oklch(20.77% 0.0398 265.8);
-  --card: oklch(100% 0 0);
-  --card-foreground: oklch(20.77% 0.0398 265.8);
-  --popover: oklch(20.77% 0.0398 265.8);
-  --popover-foreground: oklch(100% 0 0);
-  --primary: oklch(75.35% 0.1375 232.4);
-  --primary-foreground: oklch(20.77% 0.0398 265.8);
-  --secondary: oklch(68.01% 0.1583 276.9);
-  --secondary-foreground: oklch(20.77% 0.0398 265.8);
-  --muted: oklch(27.95% 0.0368 260);
-  --muted-foreground: oklch(98.415% 0.00352 248.585);
-  --accent: oklch(72.36% 0.1762 350);
-  --accent-foreground: oklch(20.77% 0.0398 265.8);
-  --destructive: oklch(63.68% 0.2078 25.3);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 92.8%);
-  --input: hsl(0 0% 89.8%);
-  --ring: hsl(0 0% 3.9%);
-  --chart-1: hsl(12 76% 61%);
-  --chart-2: hsl(173 58% 39%);
-  --chart-3: hsl(197 37% 24%);
-  --chart-4: hsl(43 74% 66%);
-  --chart-5: hsl(27 87% 67%);
+  --brand-ink: #294360;
+  --brand-sky: #1c96ce;
+  --brand-violet: #a666db;
+  --brand-rose: #f25a87;
+  --brand-mint: #65d787;
+  --surface: color-mix(in srgb, var(--brand-ink) 4%, white);
+  --surface-2: color-mix(in srgb, var(--brand-sky) 8%, white);
+  --outline: color-mix(in srgb, var(--brand-ink) 22%, white);
+  --field-bg: color-mix(in srgb, var(--brand-ink) 10%, white);
+  --field-text: var(--brand-ink);
+  --field-label: color-mix(in srgb, var(--brand-ink) 60%, white);
+  --field-focus: var(--brand-sky);
+  --sc-primary: var(--brand-sky);
+  --error: var(--brand-rose);
+  --elevation-1: 0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.08);
+  --elevation-2: 0 10px 16px -12px rgb(15 23 42 / 0.2);
+  --elevation-3: 0 18px 28px -18px rgb(15 23 42 / 0.28);
+  --background: color-mix(in srgb, var(--brand-ink) 6%, white);
+  --foreground: var(--brand-ink);
+  --card: color-mix(in srgb, var(--brand-ink) 4%, white);
+  --card-foreground: var(--brand-ink);
+  --popover: color-mix(in srgb, var(--brand-ink) 5%, white);
+  --popover-foreground: var(--brand-ink);
+  --primary: var(--brand-sky);
+  --primary-foreground: white;
+  --secondary: color-mix(in srgb, var(--brand-ink) 12%, white);
+  --secondary-foreground: var(--brand-ink);
+  --muted: color-mix(in srgb, var(--brand-ink) 8%, white);
+  --muted-foreground: color-mix(in srgb, var(--brand-ink) 70%, white);
+  --accent: var(--brand-violet);
+  --accent-foreground: white;
+  --destructive: var(--brand-rose);
+  --destructive-foreground: white;
+  --border: color-mix(in srgb, var(--brand-ink) 18%, white);
+  --input: color-mix(in srgb, var(--brand-ink) 12%, white);
+  --ring: var(--brand-sky);
+  --chart-1: var(--brand-sky);
+  --chart-2: var(--brand-violet);
+  --chart-3: var(--brand-rose);
+  --chart-4: var(--brand-mint);
+  --chart-5: var(--brand-ink);
   --radius: 0.5rem;
-  --sidebar-background: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(0 0% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(0 0% 94%);
-  --sidebar-accent-foreground: hsl(0 0% 30%);
-  --sidebar-border: hsl(0 0% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
-  --sidebar: hsl(0 0% 98%);
+  --sidebar-background: color-mix(in srgb, var(--brand-ink) 6%, white);
+  --sidebar-foreground: var(--brand-ink);
+  --sidebar-primary: var(--brand-sky);
+  --sidebar-primary-foreground: white;
+  --sidebar-accent: color-mix(in srgb, var(--brand-violet) 18%, white);
+  --sidebar-accent-foreground: var(--brand-ink);
+  --sidebar-border: color-mix(in srgb, var(--brand-ink) 18%, white);
+  --sidebar-ring: var(--brand-sky);
+  --sidebar: var(--sidebar-background);
 }
 
 .dark {
-  --background: oklch(20.768% 0.03985 265.767);
-  --foreground: oklch(92.876% 0.01272 255.643);
-  --card: oklch(20.768% 0.03985 265.767);
-  --card-foreground: oklch(92.876% 0.01272 255.643);
-  --popover: hsl(222, 51%, 14%);
-  --popover-foreground: oklch(92.876% 0.01272 255.643);
-  --primary: oklch(75.35% 0.1375 232.4);
-  --primary-foreground: oklch(20.77% 0.0398 265.8);
-  --secondary: oklch(68.01% 0.1583 276.9);
-  --secondary-foreground: oklch(20.77% 0.0398 265.8);
-  --muted: oklch(27.95% 0.0368 260);
-  --muted-foreground: oklch(98.415% 0.00352 248.585);
-  --accent: oklch(72.36% 0.1762 350);
-  --accent-foreground: oklch(20.77% 0.0398 265.8);
-  --destructive: oklch(63.68% 0.2078 25.3);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: rgba(226, 232, 240, 0.18);
-  --input: rgba(226, 232, 240, 0.18);
-  --ring: hsl(0 0% 83.1%);
-  --chart-1: hsl(220 70% 50%);
-  --chart-2: hsl(160 60% 45%);
-  --chart-3: hsl(30 80% 55%);
-  --chart-4: hsl(280 65% 60%);
-  --chart-5: hsl(340 75% 55%);
-  --sidebar-background: oklch(20.768% 0.03985 265.767);
-  --sidebar-foreground: oklch(92.876% 0.01272 255.643);
-  --sidebar-primary: oklch(75.35% 0.1375 232.4);
-  --sidebar-primary-foreground: oklch(20.77% 0.0398 265.8);
-  --sidebar-accent: oklch(72.36% 0.1762 350);
-  --sidebar-accent-foreground: oklch(20.77% 0.0398 265.8);
-  --sidebar-border: oklch(92.876% 0.01272 255.643 / 0.18);
-  --sidebar-ring: oklch(92.876% 0.01272 255.643 / 0.18);
-  --sidebar: oklab(98.41499999999999% -0.00128 -0.00327 / 0.06);
-  --surface: hsl(222, 51%, 14%);
-  --surface-2: hsl(220, 49%, 8%);
-  --outline: oklch(92.876% 0.01272 255.643 / 0.18);
-
-  --field-bg: oklch(98.415% 0.00352 248.585 / 0.06);
-  --field-text: var(--foreground);
-  --field-label: oklch(92.876% 0.01272 255.643 / 0.72);
+  --brand-ink: #294360;
+  --brand-sky: #1c96ce;
+  --brand-violet: #a666db;
+  --brand-rose: #f25a87;
+  --brand-mint: #65d787;
+  --surface: color-mix(in srgb, black 72%, var(--brand-ink) 28%);
+  --surface-2: color-mix(in srgb, black 66%, var(--brand-ink) 34%);
+  --outline: color-mix(in srgb, black 54%, var(--brand-ink) 46%);
+  --field-bg: color-mix(in srgb, black 62%, var(--brand-ink) 38%);
+  --field-text: color-mix(in srgb, white 90%, var(--brand-sky) 10%);
+  --field-label: color-mix(in srgb, white 65%, var(--brand-ink) 35%);
+  --field-focus: var(--brand-mint);
+  --sc-primary: var(--brand-sky);
+  --error: var(--brand-rose);
+  --elevation-1: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --elevation-2: 0 12px 20px -12px rgb(0 0 0 / 0.6);
+  --elevation-3: 0 20px 32px -18px rgb(0 0 0 / 0.7);
+  --background: color-mix(in srgb, black 82%, var(--brand-ink) 18%);
+  --foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
+  --card: color-mix(in srgb, black 74%, var(--brand-ink) 26%);
+  --card-foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
+  --popover: color-mix(in srgb, black 70%, var(--brand-ink) 30%);
+  --popover-foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
+  --primary: var(--brand-sky);
+  --primary-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
+  --secondary: color-mix(in srgb, black 65%, var(--brand-ink) 35%);
+  --secondary-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
+  --muted: color-mix(in srgb, black 68%, var(--brand-ink) 32%);
+  --muted-foreground: color-mix(in srgb, white 70%, var(--brand-ink) 30%);
+  --accent: var(--brand-violet);
+  --accent-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
+  --destructive: var(--brand-rose);
+  --destructive-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
+  --border: color-mix(in srgb, black 55%, var(--brand-ink) 45%);
+  --input: color-mix(in srgb, black 60%, var(--brand-ink) 40%);
+  --ring: var(--brand-mint);
+  --chart-1: var(--brand-sky);
+  --chart-2: var(--brand-violet);
+  --chart-3: var(--brand-rose);
+  --chart-4: var(--brand-mint);
+  --chart-5: var(--brand-ink);
+  --sidebar-background: color-mix(in srgb, black 78%, var(--brand-ink) 22%);
+  --sidebar-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
+  --sidebar-primary: var(--brand-sky);
+  --sidebar-primary-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
+  --sidebar-accent: color-mix(in srgb, black 60%, var(--brand-violet) 40%);
+  --sidebar-accent-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
+  --sidebar-border: color-mix(in srgb, black 55%, var(--brand-ink) 45%);
+  --sidebar-ring: var(--brand-mint);
+  --sidebar: var(--sidebar-background);
 }
 
 @layer base {
@@ -198,23 +194,19 @@
     @apply border-border outline-ring/50;
   }
   body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
     @apply bg-background text-foreground;
   }
-
-  /* -------------------------
-   Autofill override
-   ------------------------- */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  textarea:-webkit-autofill {
-    -webkit-text-fill-color: var(--field-text);
-    -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
-    transition: background-color 99999s ease-in-out 0s;
-  }
-
-  .dark input:-webkit-autofill,
-  .dark textarea:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 }

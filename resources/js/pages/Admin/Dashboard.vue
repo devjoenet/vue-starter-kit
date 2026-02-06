@@ -26,19 +26,20 @@
   <Head title="Dashboard" />
 
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-      <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+    <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl bg-gradient-to-br from-background via-background to-muted/60 p-4">
+      <div class="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,_rgb(28_150_206_/_0.12),_transparent_55%)]" />
+      <div class="relative grid auto-rows-min gap-4 md:grid-cols-3">
+        <div class="relative aspect-video overflow-hidden rounded-xl border border-border/70 bg-card shadow-[var(--elevation-1)]">
           <PlaceholderPattern />
         </div>
-        <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+        <div class="relative aspect-video overflow-hidden rounded-xl border border-border/70 bg-card shadow-[var(--elevation-1)]">
           <PlaceholderPattern />
         </div>
-        <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+        <div class="relative aspect-video overflow-hidden rounded-xl border border-border/70 bg-card shadow-[var(--elevation-1)]">
           <PlaceholderPattern />
         </div>
       </div>
-      <div class="relative min-h-screen flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
+      <div class="relative min-h-screen flex-1 rounded-xl border border-border/70 bg-card shadow-[var(--elevation-1)] md:min-h-min">
         <PlaceholderPattern />
       </div>
 

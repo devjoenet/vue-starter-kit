@@ -22,13 +22,13 @@
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
       html {
-        background-color: #f8fafc;
-        color: #0f172a;
+        background-color: color-mix(in srgb, #294360 6%, white);
+        color: #294360;
       }
 
       html.dark {
-        background-color: oklch(18.312% 0.03092 263.398);
-        color: oklch(92.876% 0.01272 255.643);
+        background-color: color-mix(in srgb, black 82%, #294360 18%);
+        color: color-mix(in srgb, white 92%, #1c96ce 8%);
       }
     </style>
 
@@ -37,9 +37,8 @@
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=league-spartan:600|open-sans:300,400,600" rel="stylesheet" />
 
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     @inertiaHead
