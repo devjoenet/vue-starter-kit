@@ -13,10 +13,7 @@
 </script>
 
 <template>
-  <svg :class="props.className" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Southeast Code">
-    <rect x="6" y="6" width="52" height="52" rx="14" fill="var(--surface)" />
-    <path d="M23 22c0-3 2.4-5 6-5h10c3.6 0 6 2 6 5s-2.4 5-6 5H29c-3.6 0-6 2-6 5s2.4 5 6 5h10" stroke="var(--sc-primary)" stroke-width="4" stroke-linecap="round" />
-    <path d="M24 38l-6-6 6-6" stroke="var(--sc-secondary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M40 26l6 6-6 6" stroke="var(--sc-accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91 91">
+    <path :class="props.className" fill-rule="evenodd" d="M47 91V71h44v20H47Zm24-44h20v19H71V47Zm0-23h20v19H71V24ZM47 0h44v19H47V0ZM0 0h43v19H0V0Zm19 43H0V24h19v19Zm0 23H0V47h19v19Zm5-42h42v42H24V24Zm19 67H0V71h43v20Z"/>
   </svg>
 </template>
