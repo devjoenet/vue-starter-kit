@@ -6,9 +6,11 @@
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
   import { create, destroy, edit, index, store, update } from "@/routes/admin/users";
   import { sync } from "@/routes/admin/users/roles";
+  import { type BreadcrumbItem } from "@/types";
 
   type Role = { id: number; name: string };
   type UserModal = { mode: "create" } | { mode: "edit"; user: { id: number; name: string; email: string }; userRoles: string[] };
@@ -30,6 +32,17 @@
   const canUpdate = computed(() => can("users.update"));
   const canAssignRoles = computed(() => can("users.assignRoles"));
   const canDelete = computed(() => can("users.delete"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Users",
+      href: index.url(),
+    },
+  ];
 
   const createForm = useForm({
     name: "",
@@ -113,7 +126,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Users">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Users</h1>
 
@@ -212,5 +225,5 @@
         </div>
       </DialogContent>
     </Dialog>
-  </AdminLayout>
+  </AppLayout>
 </template>

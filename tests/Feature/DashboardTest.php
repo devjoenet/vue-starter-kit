@@ -26,5 +26,10 @@ test('authenticated users can visit the admin dashboard', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('Admin/Dashboard')
+            ->has('counts', fn (Assert $counts) => $counts
+                ->has('users')
+                ->has('roles')
+                ->has('permissions')
+            )
         );
 });

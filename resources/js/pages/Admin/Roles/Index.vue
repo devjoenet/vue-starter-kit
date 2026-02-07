@@ -6,9 +6,11 @@
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
   import { create, destroy, edit, index, store, update } from "@/routes/admin/roles";
   import { sync } from "@/routes/admin/roles/permissions";
+  import { type BreadcrumbItem } from "@/types";
 
   type RoleModal = { mode: "create" } | { mode: "edit"; role: { id: number; name: string } };
 
@@ -24,6 +26,17 @@
   const canUpdate = computed(() => can("roles.update"));
   const canDelete = computed(() => can("roles.delete"));
   const canAssign = computed(() => can("roles.assignPermissions"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Roles",
+      href: index.url(),
+    },
+  ];
 
   const isCreate = computed(() => props.modal?.mode === "create");
   const isEdit = computed(() => props.modal?.mode === "edit");
@@ -96,7 +109,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Roles">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Roles</h1>
 
@@ -170,5 +183,5 @@
         </div>
       </DialogContent>
     </Dialog>
-  </AdminLayout>
+  </AppLayout>
 </template>

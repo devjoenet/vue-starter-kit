@@ -5,9 +5,11 @@
   import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
-  import { update, destroy } from "@/routes/admin/users";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
+  import { destroy, edit, index, update } from "@/routes/admin/users";
   import { sync } from "@/routes/admin/users/roles";
+  import { type BreadcrumbItem } from "@/types";
 
   const props = defineProps<{
     user: { id: number; name: string; email: string };
@@ -20,6 +22,21 @@
   const canUpdate = computed(() => can("users.update"));
   const canAssignRoles = computed(() => can("users.assignRoles"));
   const canDelete = computed(() => can("users.delete"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Users",
+      href: index.url(),
+    },
+    {
+      title: "Edit",
+      href: edit.url(props.user.id),
+    },
+  ];
 
   const userForm = useForm({
     name: props.user.name,
@@ -59,7 +76,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Edit User">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Edit user</h1>
 
@@ -101,5 +118,5 @@
         </p>
       </Card>
     </div>
-  </AdminLayout>
+  </AppLayout>
 </template>

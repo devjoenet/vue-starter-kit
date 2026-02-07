@@ -5,11 +5,28 @@
   import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
-  import { store } from "@/routes/admin/roles";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
+  import { create, index, store } from "@/routes/admin/roles";
+  import { type BreadcrumbItem } from "@/types";
 
   const { can } = useAbility();
   const canCreate = computed(() => can("roles.create"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Roles",
+      href: index.url(),
+    },
+    {
+      title: "Create",
+      href: create.url(),
+    },
+  ];
 
   const form = useForm({ name: "" });
 
@@ -20,7 +37,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Create Role">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <h1 class="text-2xl font-semibold">Create role</h1>
 
     <Card class="mt-6 px-6">
@@ -32,5 +49,5 @@
         </div>
       </form>
     </Card>
-  </AdminLayout>
+  </AppLayout>
 </template>

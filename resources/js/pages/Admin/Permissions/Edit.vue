@@ -5,8 +5,10 @@
   import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
-  import { update, destroy } from "@/routes/admin/permissions";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
+  import { destroy, edit, index, update } from "@/routes/admin/permissions";
+  import { type BreadcrumbItem } from "@/types";
 
   const props = defineProps<{
     permission: { id: number; name: string; group: string };
@@ -15,6 +17,21 @@
   const { can } = useAbility();
   const canUpdate = computed(() => can("permissions.update"));
   const canDelete = computed(() => can("permissions.delete"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Permissions",
+      href: index.url(),
+    },
+    {
+      title: "Edit",
+      href: edit.url(props.permission.id),
+    },
+  ];
 
   const form = useForm({
     name: props.permission.name,
@@ -34,7 +51,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Edit Permission">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Edit permission</h1>
       <Button variant="text" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
@@ -61,5 +78,5 @@
         </div>
       </form>
     </Card>
-  </AdminLayout>
+  </AppLayout>
 </template>

@@ -5,9 +5,11 @@
   import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
-  import { update, destroy } from "@/routes/admin/roles";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
+  import { destroy, edit, index, update } from "@/routes/admin/roles";
   import { sync } from "@/routes/admin/roles/permissions";
+  import { type BreadcrumbItem } from "@/types";
 
   const props = defineProps<{
     role: { id: number; name: string };
@@ -19,6 +21,21 @@
   const canUpdate = computed(() => can("roles.update"));
   const canDelete = computed(() => can("roles.delete"));
   const canAssign = computed(() => can("roles.assignPermissions"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Roles",
+      href: index.url(),
+    },
+    {
+      title: "Edit",
+      href: edit.url(props.role.id),
+    },
+  ];
 
   const roleForm = useForm({ name: props.role.name });
   const permsForm = useForm({ permissions: [...props.rolePermissions] });
@@ -47,7 +64,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Edit Role">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Edit role</h1>
       <Button variant="text" :disabled="!canDelete" @click="destroyRole">Delete</Button>
@@ -84,5 +101,5 @@
         </div>
       </Card>
     </div>
-  </AdminLayout>
+  </AppLayout>
 </template>

@@ -6,8 +6,10 @@
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
-  import AdminLayout from "@/layouts/AdminLayout.vue";
+  import AppLayout from "@/layouts/AppLayout.vue";
+  import { dashboard } from "@/routes/admin";
   import { create, destroy, edit, index, store, update } from "@/routes/admin/permissions";
+  import { type BreadcrumbItem } from "@/types";
 
   type PermissionModal = { mode: "create" } | { mode: "edit"; permission: { id: number; name: string; group: string } };
 
@@ -20,6 +22,17 @@
   const canCreate = computed(() => can("permissions.create"));
   const canUpdate = computed(() => can("permissions.update"));
   const canDelete = computed(() => can("permissions.delete"));
+
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      title: "Dashboard",
+      href: dashboard.url(),
+    },
+    {
+      title: "Permissions",
+      href: index.url(),
+    },
+  ];
 
   const del = useForm({});
   const form = useForm({
@@ -87,7 +100,7 @@
 </script>
 
 <template>
-  <AdminLayout title="Permissions">
+  <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Permissions</h1>
 
@@ -173,5 +186,5 @@
         </Card>
       </DialogContent>
     </Dialog>
-  </AdminLayout>
+  </AppLayout>
 </template>
