@@ -119,7 +119,7 @@
   const hasSuccess = computed(() => props.state === "success");
   const showAsterisk = computed(() => props.required && !props.noAsterisk);
 
-  const placeholderValue = computed(() => (props.label ? props.placeholder ?? " " : props.placeholder));
+  const placeholderValue = computed(() => (props.label ? (props.placeholder ?? " ") : props.placeholder));
   const supportingText = computed(() => {
     if (hasError.value) {
       return props.errorText ?? props.message ?? props.supportingText;
@@ -138,9 +138,7 @@
       hasLabel.value ? "pt-6 pb-2" : "py-4",
       leftPadding.value,
       rightPadding.value,
-      isOutlined.value
-        ? "border border-[color:var(--outline)] bg-transparent"
-        : "border-b border-[color:var(--outline)] bg-[var(--field-bg)]",
+      isOutlined.value ? "border border-[color:var(--outline)] bg-transparent" : "border-b border-[color:var(--outline)] bg-[var(--field-bg)]",
       "focus-visible:border-[color:var(--field-focus)] focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]",
       hasError.value ? "border-[color:var(--error)] ring-[color:var(--error)]" : "",
       hasSuccess.value ? "border-[color:var(--brand-mint)]" : "",
@@ -162,37 +160,20 @@
     ),
   );
 
-  const assistiveTextClasses = computed(() =>
-    cn(
-      "text-xs",
-      hasError.value ? "text-[var(--error)]" : "text-[var(--field-label)]",
-      hasSuccess.value ? "text-[color:var(--brand-mint)]" : "",
-    ),
-  );
+  const assistiveTextClasses = computed(() => cn("text-xs", hasError.value ? "text-[var(--error)]" : "text-[var(--field-label)]", hasSuccess.value ? "text-[color:var(--brand-mint)]" : ""));
 </script>
 
 <template>
   <div class="w-full">
     <div class="relative">
-      <span
-        v-if="hasLeadingIcon"
-      class="absolute left-4 top-1/2 flex -translate-y-1/2 items-center text-[var(--field-label)] transition-colors duration-150 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60"
-      >
+      <span v-if="hasLeadingIcon" class="absolute left-4 top-1/2 flex -translate-y-1/2 items-center text-[var(--field-label)] transition-colors duration-150 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60">
         <slot name="leading-icon">
           <component v-if="leadingIcon && typeof leadingIcon !== 'string'" :is="leadingIcon" class="size-5" />
           <span v-else-if="leadingIcon" class="text-sm font-medium">{{ leadingIcon }}</span>
         </slot>
       </span>
 
-      <span
-        v-if="hasPrefix"
-        :class="
-          cn(
-            'absolute top-1/2 flex -translate-y-1/2 items-center text-sm text-[var(--field-label)] peer-disabled:opacity-60',
-            prefixOffset,
-          )
-        "
-      >
+      <span v-if="hasPrefix" :class="cn('absolute top-1/2 flex -translate-y-1/2 items-center text-sm text-[var(--field-label)] peer-disabled:opacity-60', prefixOffset)">
         <slot name="prefix">
           {{ prefixText }}
         </slot>
@@ -217,25 +198,14 @@
         v-bind="attrs"
       />
 
-      <span
-        v-if="hasTrailingIcon"
-      class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center text-[var(--field-label)] transition-colors duration-150 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60"
-      >
+      <span v-if="hasTrailingIcon" class="absolute right-4 top-1/2 flex -translate-y-1/2 items-center text-[var(--field-label)] transition-colors duration-150 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60">
         <slot name="trailing-icon">
           <component v-if="trailingIcon && typeof trailingIcon !== 'string'" :is="trailingIcon" class="size-5" />
           <span v-else-if="trailingIcon" class="text-sm font-medium">{{ trailingIcon }}</span>
         </slot>
       </span>
 
-      <span
-        v-if="hasSuffix"
-        :class="
-          cn(
-            'absolute top-1/2 flex -translate-y-1/2 items-center text-sm text-[var(--field-label)] peer-disabled:opacity-60',
-            suffixOffset,
-          )
-        "
-      >
+      <span v-if="hasSuffix" :class="cn('absolute top-1/2 flex -translate-y-1/2 items-center text-sm text-[var(--field-label)] peer-disabled:opacity-60', suffixOffset)">
         <slot name="suffix">
           {{ suffixText }}
         </slot>

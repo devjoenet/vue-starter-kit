@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @import "tw-animate-css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,28 +7,26 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  /* Tailwind v4 token bridge (don’t rename these) */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
@@ -57,12 +54,8 @@
 }
 
 /*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+  Tailwind v4 border default compatibility:
+  keep until you’ve explicitly set border colors everywhere you rely on defaults.
 */
 @layer base {
   *,
@@ -77,115 +70,134 @@
 @layer utilities {
   body,
   html {
-    --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-display: "League Spartan", sans-serif, ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 }
 
+/* =========================================
+   Southeast Code palette (Option B) in OKLCH
+   Punchy, bold, modern, still professional
+   Primary: aqua
+   Secondary: violet-indigo
+   ========================================= */
+
 :root {
-  --brand-ink: #294360;
-  --brand-sky: #1c96ce;
-  --brand-violet: #a666db;
-  --brand-rose: #f25a87;
-  --brand-mint: #65d787;
-  --surface: color-mix(in srgb, var(--brand-ink) 4%, white);
-  --surface-2: color-mix(in srgb, var(--brand-sky) 8%, white);
-  --outline: color-mix(in srgb, var(--brand-ink) 22%, white);
-  --field-bg: color-mix(in srgb, var(--brand-ink) 10%, white);
-  --field-text: var(--brand-ink);
-  --field-label: color-mix(in srgb, var(--brand-ink) 60%, white);
-  --field-focus: var(--brand-sky);
-  --sc-primary: var(--brand-sky);
-  --error: var(--brand-rose);
-  --elevation-1: 0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.08);
-  --elevation-2: 0 10px 16px -12px rgb(15 23 42 / 0.2);
-  --elevation-3: 0 18px 28px -18px rgb(15 23 42 / 0.28);
-  --background: color-mix(in srgb, var(--brand-ink) 6%, white);
-  --foreground: var(--brand-ink);
-  --card: color-mix(in srgb, var(--brand-ink) 4%, white);
-  --card-foreground: var(--brand-ink);
-  --popover: color-mix(in srgb, var(--brand-ink) 5%, white);
-  --popover-foreground: var(--brand-ink);
-  --primary: var(--brand-sky);
-  --primary-foreground: white;
-  --secondary: color-mix(in srgb, var(--brand-ink) 12%, white);
-  --secondary-foreground: var(--brand-ink);
-  --muted: color-mix(in srgb, var(--brand-ink) 8%, white);
-  --muted-foreground: color-mix(in srgb, var(--brand-ink) 70%, white);
-  --accent: var(--brand-violet);
-  --accent-foreground: white;
-  --destructive: var(--brand-rose);
-  --destructive-foreground: white;
-  --border: color-mix(in srgb, var(--brand-ink) 18%, white);
-  --input: color-mix(in srgb, var(--brand-ink) 12%, white);
-  --ring: var(--brand-sky);
-  --chart-1: var(--brand-sky);
-  --chart-2: var(--brand-violet);
-  --chart-3: var(--brand-rose);
-  --chart-4: var(--brand-mint);
-  --chart-5: var(--brand-ink);
+  /* Surfaces */
+  --background: oklch(98.66% 0.0282 27.5);
+  --foreground: oklch(20.73% 0.0298 229);
+
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(20.73% 0.0298 229);
+
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(20.73% 0.0298 229);
+
+  /* Brand */
+  --primary: oklch(80.09% 0.1139 201.1);
+  --primary-foreground: oklch(20.73% 0.0298 229);
+
+  --secondary: oklch(56.49% 0.1696 238.7);
+  --secondary-foreground: oklch(100% 0 0);
+
+  --accent: oklch(67.12% 0.1722 357.2);
+  --accent-foreground: oklch(20.73% 0.0298 229);
+
+  /* Neutrals */
+  --muted: oklch(96.22% 0.0255 25.8);
+  --muted-foreground: oklch(47.95% 0.0206 232.8);
+
+  /* Feedback */
+  --destructive: oklch(61.12% 0.2209 17);
+  --destructive-foreground: oklch(98% 0 0);
+
+  /* Lines / focus */
+  --border: oklch(88.88% 0.0186 19.1);
+  --input: oklch(87.22% 0.0169 16.4);
+  --ring: oklch(78.99% 0.1178 202);
+
+  /* Data viz */
+  --chart-1: oklch(80.09% 0.1139 201.1);
+  --chart-2: oklch(56.49% 0.1696 238.7);
+  --chart-3: oklch(67.12% 0.1722 357.2);
+  --chart-4: oklch(79.11% 0.154 39.7);
+  --chart-5: oklch(68.06% 0.074 149.3);
+
+  /* Radius */
   --radius: 0.5rem;
-  --sidebar-background: color-mix(in srgb, var(--brand-ink) 6%, white);
-  --sidebar-foreground: var(--brand-ink);
-  --sidebar-primary: var(--brand-sky);
-  --sidebar-primary-foreground: white;
-  --sidebar-accent: color-mix(in srgb, var(--brand-violet) 18%, white);
-  --sidebar-accent-foreground: var(--brand-ink);
-  --sidebar-border: color-mix(in srgb, var(--brand-ink) 18%, white);
-  --sidebar-ring: var(--brand-sky);
+
+  /* Sidebar */
+  --sidebar-background: oklch(96.99% 0.0258 25.8);
+  --sidebar-foreground: oklch(20.73% 0.0298 229);
+  --sidebar-primary: oklch(80.09% 0.1139 201.1);
+  --sidebar-primary-foreground: oklch(20.73% 0.0298 229);
+  --sidebar-accent: oklch(93.73% 0.0225 23.2);
+  --sidebar-accent-foreground: oklch(20.73% 0.0298 229);
+  --sidebar-border: oklch(87.22% 0.0169 16.4);
+  --sidebar-ring: oklch(78.99% 0.1178 202);
+
   --sidebar: var(--sidebar-background);
 }
 
 .dark {
-  --brand-ink: #294360;
-  --brand-sky: #1c96ce;
-  --brand-violet: #a666db;
-  --brand-rose: #f25a87;
-  --brand-mint: #65d787;
-  --surface: color-mix(in srgb, black 72%, var(--brand-ink) 28%);
-  --surface-2: color-mix(in srgb, black 66%, var(--brand-ink) 34%);
-  --outline: color-mix(in srgb, black 54%, var(--brand-ink) 46%);
-  --field-bg: color-mix(in srgb, black 62%, var(--brand-ink) 38%);
-  --field-text: color-mix(in srgb, white 90%, var(--brand-sky) 10%);
-  --field-label: color-mix(in srgb, white 65%, var(--brand-ink) 35%);
-  --field-focus: var(--brand-mint);
-  --sc-primary: var(--brand-sky);
-  --error: var(--brand-rose);
-  --elevation-1: 0 1px 2px 0 rgb(0 0 0 / 0.5);
-  --elevation-2: 0 12px 20px -12px rgb(0 0 0 / 0.6);
-  --elevation-3: 0 20px 32px -18px rgb(0 0 0 / 0.7);
-  --background: color-mix(in srgb, black 82%, var(--brand-ink) 18%);
-  --foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
-  --card: color-mix(in srgb, black 74%, var(--brand-ink) 26%);
-  --card-foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
-  --popover: color-mix(in srgb, black 70%, var(--brand-ink) 30%);
-  --popover-foreground: color-mix(in srgb, white 92%, var(--brand-sky) 8%);
-  --primary: var(--brand-sky);
-  --primary-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
-  --secondary: color-mix(in srgb, black 65%, var(--brand-ink) 35%);
-  --secondary-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
-  --muted: color-mix(in srgb, black 68%, var(--brand-ink) 32%);
-  --muted-foreground: color-mix(in srgb, white 70%, var(--brand-ink) 30%);
-  --accent: var(--brand-violet);
-  --accent-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
-  --destructive: var(--brand-rose);
-  --destructive-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
-  --border: color-mix(in srgb, black 55%, var(--brand-ink) 45%);
-  --input: color-mix(in srgb, black 60%, var(--brand-ink) 40%);
-  --ring: var(--brand-mint);
-  --chart-1: var(--brand-sky);
-  --chart-2: var(--brand-violet);
-  --chart-3: var(--brand-rose);
-  --chart-4: var(--brand-mint);
-  --chart-5: var(--brand-ink);
-  --sidebar-background: color-mix(in srgb, black 78%, var(--brand-ink) 22%);
-  --sidebar-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
-  --sidebar-primary: var(--brand-sky);
-  --sidebar-primary-foreground: color-mix(in srgb, black 85%, var(--brand-ink) 15%);
-  --sidebar-accent: color-mix(in srgb, black 60%, var(--brand-violet) 40%);
-  --sidebar-accent-foreground: color-mix(in srgb, white 90%, var(--brand-ink) 10%);
-  --sidebar-border: color-mix(in srgb, black 55%, var(--brand-ink) 45%);
-  --sidebar-ring: var(--brand-mint);
+  /* More navy, more separation between layers */
+  --background: oklch(14.5% 0.035 252);
+  --foreground: oklch(97.8% 0.01 255);
+
+  /* Cards/panels get an actual surface (depth comes from contrast) */
+  --card: oklch(18.5% 0.04 252);
+  --card-foreground: oklch(97.8% 0.01 255);
+
+  --popover: oklch(18.5% 0.04 252);
+  --popover-foreground: oklch(97.8% 0.01 255);
+
+  /* Brand stays bold */
+  --primary: oklch(82% 0.125 195); /* aqua, punchy */
+  --primary-foreground: oklch(19% 0.02 255); /* dark text on bright aqua */
+
+  --secondary: oklch(68% 0.135 278); /* violet-indigo */
+  --secondary-foreground: oklch(19% 0.02 255);
+
+  /*
+    IMPORTANT:
+    In shadcn-style tokens, --accent is commonly used for hover backgrounds.
+    You wanted ALL menu hovers to match the sidebar hover style, not pink.
+    So we make accent a "navy lift" tint, not magenta.
+  */
+  --accent: oklch(23% 0.055 240);
+  --accent-foreground: oklch(97.8% 0.01 255);
+
+  /* Neutrals: enough contrast so outlines/buttons don’t disappear */
+  --muted: oklch(21% 0.03 252);
+  --muted-foreground: oklch(77.5% 0.015 255);
+
+  --border: oklch(28.5% 0.03 252);
+  --input: oklch(28.5% 0.03 252);
+  --ring: oklch(82% 0.125 195);
+
+  /* Feedback */
+  --destructive: oklch(63.5% 0.21 16);
+  --destructive-foreground: oklch(98% 0 0);
+
+  /* Data viz keeps the magenta vibe so your UI still has color */
+  --chart-1: oklch(82% 0.125 195);
+  --chart-2: oklch(68% 0.135 278);
+  --chart-3: oklch(70% 0.17 356); /* magenta lives here now */
+  --chart-4: oklch(80% 0.15 40);
+  --chart-5: oklch(77% 0.085 150);
+
+  /* Sidebar tuned to match the new navy stack */
+  --sidebar-background: oklch(16.5% 0.04 252);
+  --sidebar-foreground: oklch(96.8% 0.012 255);
+  --sidebar-primary: oklch(82% 0.125 195);
+  --sidebar-primary-foreground: oklch(19% 0.02 255);
+
+  /* Make sidebar hover == accent hover everywhere */
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+
+  --sidebar-border: oklch(28.5% 0.03 252);
+  --sidebar-ring: oklch(82% 0.125 195);
+
   --sidebar: var(--sidebar-background);
 }
 
@@ -193,20 +205,8 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.7;
     @apply bg-background text-foreground;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.015em;
   }
 }
