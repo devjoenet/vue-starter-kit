@@ -17,37 +17,38 @@ beforeEach(function () {
     $this->actingAs($user);
 });
 
-test('users create route renders index modal', function () {
+test('users create route renders create page', function () {
     $this->get(route('admin.users.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Users/Index')
-            ->where('modal.mode', 'create')
+            ->component('Admin/Users/Create')
         );
 });
 
-test('users edit route renders index modal', function () {
+test('users edit route renders edit page', function () {
     $target = User::factory()->create();
 
     $this->get(route('admin.users.edit', $target))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Users/Index')
-            ->where('modal.mode', 'edit')
-            ->where('modal.user.id', $target->id)
+            ->component('Admin/Users/Edit')
+            ->where('user.id', $target->id)
+            ->where('user.name', $target->name)
+            ->where('user.email', $target->email)
+            ->has('roles')
+            ->has('userRoles')
         );
 });
 
-test('roles create route renders index modal', function () {
+test('roles create route renders create page', function () {
     $this->get(route('admin.roles.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Roles/Index')
-            ->where('modal.mode', 'create')
+            ->component('Admin/Roles/Create')
         );
 });
 
-test('roles edit route renders index modal', function () {
+test('roles edit route renders edit page', function () {
     $role = Role::query()->create([
         'name' => 'editor',
         'guard_name' => 'web',
@@ -56,22 +57,23 @@ test('roles edit route renders index modal', function () {
     $this->get(route('admin.roles.edit', $role))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Roles/Index')
-            ->where('modal.mode', 'edit')
-            ->where('modal.role.id', $role->id)
+            ->component('Admin/Roles/Edit')
+            ->where('role.id', $role->id)
+            ->where('role.name', $role->name)
+            ->has('permissionsByGroup')
+            ->has('rolePermissions')
         );
 });
 
-test('permissions create route renders index modal', function () {
+test('permissions create route renders create page', function () {
     $this->get(route('admin.permissions.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Permissions/Index')
-            ->where('modal.mode', 'create')
+            ->component('Admin/Permissions/Create')
         );
 });
 
-test('permissions edit route renders index modal', function () {
+test('permissions edit route renders edit page', function () {
     $permission = Permission::query()->create([
         'name' => 'custom.view',
         'group' => 'users',
@@ -81,8 +83,9 @@ test('permissions edit route renders index modal', function () {
     $this->get(route('admin.permissions.edit', $permission))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Permissions/Index')
-            ->where('modal.mode', 'edit')
-            ->where('modal.permission.id', $permission->id)
+            ->component('Admin/Permissions/Edit')
+            ->where('permission.id', $permission->id)
+            ->where('permission.name', $permission->name)
+            ->where('permission.group', $permission->group)
         );
 });

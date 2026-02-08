@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
+  import { ChevronDown } from "lucide-vue-next";
   import { computed } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
   import { Checkbox } from "@/components/ui/checkbox";
+  import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
@@ -91,17 +93,28 @@
             <Button variant="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
           </div>
 
-          <div class="mt-4 space-y-5">
-            <div v-for="(items, group) in permissionsByGroup" :key="group" class="space-y-2">
-              <div class="text-sm font-semibold capitalize">{{ group }}</div>
+          <div class="mt-4 space-y-3">
+            <Collapsible v-for="(items, group) in permissionsByGroup" :key="group" v-slot="{ open }" :default-open="true" class="rounded-xl border border-black/5 px-3 py-2 dark:border-white/10">
+              <div class="flex items-center justify-between gap-3">
+                <div class="text-sm font-semibold capitalize">{{ group }}</div>
 
-              <div class="space-y-2 -mx-3">
-                <label v-for="p in items" :key="p.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssign ? 'opacity-60' : ''">
-                  <Checkbox :disabled="!canAssign" :model-value="permsForm.permissions.includes(p.name)" @update:model-value="() => togglePermission(p.name)" />
-                  <span class="text-sm">{{ p.name }}</span>
-                </label>
+                <CollapsibleTrigger as-child>
+                  <Button variant="text" size="sm" class="gap-2">
+                    <span>{{ open ? "Collapse" : "Expand" }}</span>
+                    <ChevronDown class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" />
+                  </Button>
+                </CollapsibleTrigger>
               </div>
-            </div>
+
+              <CollapsibleContent class="mt-2">
+                <div class="space-y-2">
+                  <label v-for="p in items" :key="p.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssign ? 'opacity-60' : ''">
+                    <Checkbox :disabled="!canAssign" :model-value="permsForm.permissions.includes(p.name)" @update:model-value="() => togglePermission(p.name)" />
+                    <span class="text-sm">{{ p.name }}</span>
+                  </label>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </Card>
       </div>

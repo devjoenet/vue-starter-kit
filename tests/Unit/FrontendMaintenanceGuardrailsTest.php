@@ -48,7 +48,6 @@ it('reuses the shared permission group field component across admin permission p
     $permissionPages = [
         'resources/js/pages/Admin/Permissions/Create.vue',
         'resources/js/pages/Admin/Permissions/Edit.vue',
-        'resources/js/pages/Admin/Permissions/Index.vue',
     ];
 
     foreach ($permissionPages as $permissionPage) {
@@ -56,4 +55,28 @@ it('reuses the shared permission group field component across admin permission p
 
         expect($contents)->toContain('PermissionGroupSelect');
     }
+});
+
+it('uses dedicated create and edit pages for admin CRUD forms', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $indexPages = [
+        'resources/js/pages/Admin/Users/Index.vue',
+        'resources/js/pages/Admin/Roles/Index.vue',
+        'resources/js/pages/Admin/Permissions/Index.vue',
+    ];
+
+    foreach ($indexPages as $indexPage) {
+        $contents = file_get_contents($projectRoot.'/'.$indexPage);
+
+        expect($contents)->not->toContain('DialogScrollContent');
+        expect($contents)->not->toContain('DialogHeader');
+    }
+});
+
+it('uses collapsible permission groups in the role management edit page', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Admin/Roles/Edit.vue');
+
+    expect($contents)->toContain('Collapsible');
+    expect($contents)->toContain('CollapsibleTrigger');
+    expect($contents)->toContain(':default-open="true"');
 });

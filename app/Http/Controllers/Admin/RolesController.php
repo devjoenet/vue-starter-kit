@@ -16,16 +16,17 @@ final class RolesController
 {
     public function index(): Response
     {
-        return $this->renderIndex();
+        return Inertia::render('Admin/Roles/Index', [
+            'roles' => Role::query()
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->get(),
+        ]);
     }
 
     public function create(): Response
     {
-        return $this->renderIndex([
-            'modal' => [
-                'mode' => 'create',
-            ],
-        ]);
+        return Inertia::render('Admin/Roles/Create');
     }
 
     public function store(): RedirectResponse
@@ -57,11 +58,8 @@ final class RolesController
             ->groupBy('group')
             ->map(fn ($items) => $items->values());
 
-        return $this->renderIndex([
-            'modal' => [
-                'mode' => 'edit',
-                'role' => $role->only(['id', 'name']),
-            ],
+        return Inertia::render('Admin/Roles/Edit', [
+            'role' => $role->only(['id', 'name']),
             'permissionsByGroup' => $permissions,
             'rolePermissions' => $role->permissions()->pluck('name')->values(),
         ]);
@@ -110,19 +108,5 @@ final class RolesController
         $role->syncPermissions($existing);
 
         return back()->with('success', 'Permissions updated.');
-    }
-
-    /**
-     * @param  array<string, mixed>  $extra
-     */
-    private function renderIndex(array $extra = []): Response
-    {
-        return Inertia::render('Admin/Roles/Index', [
-            'roles' => Role::query()
-                ->select(['id', 'name'])
-                ->orderBy('name')
-                ->get(),
-            ...$extra,
-        ]);
     }
 }

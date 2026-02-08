@@ -1,48 +1,23 @@
 <script setup lang="ts">
-  import { Link, router, useForm, usePage } from "@inertiajs/vue3";
-  import { computed, watch } from "vue";
+  import { Link, usePage } from "@inertiajs/vue3";
+  import { computed } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
-  import { Checkbox } from "@/components/ui/checkbox";
-  import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-  import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
   import { dashboard } from "@/routes/admin/index";
-  import { create, destroy, edit, index, store, update } from "@/routes/admin/users";
-  import { sync } from "@/routes/admin/users/roles";
+  import { create, destroy, edit, index } from "@/routes/admin/users";
   import { type BreadcrumbItem } from "@/types";
-
-  type Role = { id: number; name: string };
-  type UserModal = { mode: "create" } | { mode: "edit"; user: { id: number; name: string; email: string }; userRoles: string[] };
 
   const props = defineProps<{
     users: any;
-    modal?: UserModal;
-    roles?: Role[];
   }>();
 
   const { can } = useAbility();
   const page = usePage();
 
-  const isCreate = computed(() => props.modal?.mode === "create");
-  const isEdit = computed(() => props.modal?.mode === "edit");
-  const isOpen = computed(() => Boolean(props.modal));
-  const modalKey = computed(() => {
-    if (!props.modal) {
-      return null;
-    }
-
-    if (props.modal.mode === "edit") {
-      return `edit:${props.modal.user.id}`;
-    }
-
-    return "create";
-  });
-
   const canCreate = computed(() => can("users.create"));
   const canUpdate = computed(() => can("users.update"));
-  const canAssignRoles = computed(() => can("users.assignRoles"));
   const canDelete = computed(() => can("users.delete"));
 
   const breadcrumbs: BreadcrumbItem[] = [
@@ -55,88 +30,6 @@
       href: index.url(),
     },
   ];
-
-  const createForm = useForm({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const editForm = useForm({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const rolesForm = useForm({
-    roles: [] as string[],
-  });
-
-  const submitCreate = () => {
-    if (!canCreate.value) return;
-    createForm.post(store.url());
-  };
-
-  const submitEdit = () => {
-    if (!canUpdate.value) return;
-    if (!props.modal || props.modal.mode !== "edit") return;
-    editForm.put(update.url(props.modal.user.id), { preserveScroll: true });
-  };
-
-  const syncRoles = () => {
-    if (!canAssignRoles.value) return;
-    if (!props.modal || props.modal.mode !== "edit") return;
-    rolesForm.put(sync.url(props.modal.user.id), { preserveScroll: true });
-  };
-
-  const destroyUser = () => {
-    if (!canDelete.value) return;
-    if (!props.modal || props.modal.mode !== "edit") return;
-    if (!confirm("Delete this user? This is not reversible.")) return;
-    editForm.delete(destroy.url(props.modal.user.id));
-  };
-
-  const closeModal = () => {
-    router.visit(index.url(), { preserveScroll: true, preserveState: true });
-  };
-
-  const handleOpenChange = (value: boolean) => {
-    if (!value) {
-      closeModal();
-    }
-  };
-
-  const toggleRole = (roleName: string) => {
-    const idx = rolesForm.roles.indexOf(roleName);
-    if (idx >= 0) rolesForm.roles.splice(idx, 1);
-    else rolesForm.roles.push(roleName);
-  };
-
-  watch(
-    modalKey,
-    (key) => {
-      if (!key || !props.modal) {
-        return;
-      }
-
-      if (props.modal.mode === "create") {
-        createForm.reset();
-        createForm.clearErrors();
-        rolesForm.reset();
-        rolesForm.clearErrors();
-        return;
-      }
-
-      editForm.name = props.modal.user.name;
-      editForm.email = props.modal.user.email;
-      editForm.password = "";
-      editForm.clearErrors();
-
-      rolesForm.roles = [...props.modal.userRoles];
-      rolesForm.clearErrors();
-    },
-    { immediate: true },
-  );
 </script>
 
 <template>
@@ -181,67 +74,5 @@
         </table>
       </Card>
     </div>
-
-    <Dialog :open="isOpen" @update:open="handleOpenChange">
-      <DialogContent class="sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>{{ isEdit ? "Edit User" : "Create User" }}</DialogTitle>
-          <DialogDescription>
-            {{ isEdit ? "Update user details and roles." : "Add a new user to the system." }}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div class="space-y-6">
-          <Card variant="glass" class="px-6">
-            <h2 class="text-lg font-semibold">Details</h2>
-
-            <form v-if="isEdit" class="mt-4 space-y-4" @submit.prevent="submitEdit">
-              <Input id="edit-user-name" v-model="editForm.name" name="name" label="Name" variant="outlined" :disabled="!canUpdate" :state="editForm.errors.name ? 'error' : 'default'" :message="editForm.errors.name" />
-
-              <Input id="edit-user-email" v-model="editForm.email" type="email" name="email" label="Email" variant="outlined" :disabled="!canUpdate" :state="editForm.errors.email ? 'error' : 'default'" :message="editForm.errors.email" />
-
-              <Input id="edit-user-password" v-model="editForm.password" type="password" name="password" label="New password (optional)" variant="outlined" :disabled="!canUpdate" :state="editForm.errors.password ? 'error' : 'default'" :message="editForm.errors.password" />
-
-              <div class="flex items-center justify-between">
-                <Button variant="text" :disabled="!canDelete" @click="destroyUser"> Delete </Button>
-                <div class="flex flex-1 justify-end">
-                  <Button variant="filled" type="submit" :disabled="!canUpdate || editForm.processing"> Save </Button>
-                </div>
-              </div>
-            </form>
-
-            <form v-else class="mt-4 space-y-4" @submit.prevent="submitCreate">
-              <Input id="create-user-name" v-model="createForm.name" name="name" label="Name" variant="outlined" :disabled="!canCreate" :state="createForm.errors.name ? 'error' : 'default'" :message="createForm.errors.name" />
-
-              <Input id="create-user-email" v-model="createForm.email" type="email" name="email" label="Email" variant="outlined" :disabled="!canCreate" :state="createForm.errors.email ? 'error' : 'default'" :message="createForm.errors.email" />
-
-              <Input id="create-user-password" v-model="createForm.password" type="password" name="password" label="Password" variant="outlined" :disabled="!canCreate" :state="createForm.errors.password ? 'error' : 'default'" :message="createForm.errors.password" />
-
-              <div class="flex justify-end">
-                <Button variant="filled" type="submit" :disabled="!canCreate || createForm.processing"> Create </Button>
-              </div>
-            </form>
-          </Card>
-
-          <Card v-if="isEdit" variant="glass" class="px-6">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Roles</h2>
-              <Button variant="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>
-            </div>
-
-            <div class="mt-4 space-y-2 -mx-3">
-              <label v-for="r in props.roles ?? []" :key="r.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssignRoles ? 'opacity-60' : ''">
-                <Checkbox :disabled="!canAssignRoles" :model-value="rolesForm.roles.includes(r.name)" @update:model-value="() => toggleRole(r.name)" />
-                <span class="text-sm">{{ r.name }}</span>
-              </label>
-            </div>
-
-            <p v-if="rolesForm.errors.roles" class="mt-2 text-xs opacity-80">
-              {{ rolesForm.errors.roles }}
-            </p>
-          </Card>
-        </div>
-      </DialogContent>
-    </Dialog>
   </AppLayout>
 </template>
