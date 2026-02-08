@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { Form, Head } from "@inertiajs/vue3";
   import { computed, ref } from "vue";
-  import InputError from "@/components/InputError.vue";
+  import { Alert, AlertDescription } from "@/components/ui/alert";
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
   import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -52,7 +52,9 @@
                 </InputOTPGroup>
               </InputOTP>
             </div>
-            <InputError :message="errors.code" />
+            <Alert v-if="errors.code" variant="destructive" class="w-full text-left">
+              <AlertDescription>{{ errors.code }}</AlertDescription>
+            </Alert>
           </div>
           <Button type="submit" class="w-full" :disabled="processing">Continue</Button>
           <div class="text-center text-sm text-muted-foreground">
@@ -66,8 +68,7 @@
 
       <template v-else>
         <Form v-bind="store.form()" class="space-y-4" reset-on-error #default="{ errors, processing, clearErrors }">
-          <Input name="recovery_code" type="text" placeholder="Enter recovery code" :autofocus="showRecoveryInput" required />
-          <InputError :message="errors.recovery_code" />
+          <Input name="recovery_code" type="text" placeholder="Enter recovery code" :autofocus="showRecoveryInput" required :state="errors.recovery_code ? 'destructive' : 'default'" :message="errors.recovery_code" />
           <Button type="submit" class="w-full" :disabled="processing">Continue</Button>
 
           <div class="text-center text-sm text-muted-foreground">

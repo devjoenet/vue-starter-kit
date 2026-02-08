@@ -7,7 +7,7 @@ import { toUrl } from "@/lib/utils";
 export type UseCurrentUrlReturn = {
   currentUrl: DeepReadonly<ComputedRef<string>>;
   isCurrentUrl: (urlToCheck: NonNullable<InertiaLinkProps["href"]>, currentUrl?: string) => boolean;
-  whenCurrentUrl: <T, F = null>(urlToCheck: NonNullable<InertiaLinkProps["href"]>, ifTrue: T, ifFalse?: F) => T | F;
+  whenCurrentUrl: <T, F = null>(urlToCheck: NonNullable<InertiaLinkProps["href"]>, ifTrue: T, ifFalse?: F) => T | F | undefined;
 };
 
 const page = usePage();
@@ -31,7 +31,7 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
     }
   }
 
-  function whenCurrentUrl(urlToCheck: NonNullable<InertiaLinkProps["href"]>, ifTrue: any, ifFalse: any = null) {
+  function whenCurrentUrl<T, F = null>(urlToCheck: NonNullable<InertiaLinkProps["href"]>, ifTrue: T, ifFalse?: F): T | F | undefined {
     return isCurrentUrl(urlToCheck) ? ifTrue : ifFalse;
   }
 

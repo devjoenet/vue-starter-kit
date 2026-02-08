@@ -1,16 +1,18 @@
 <script setup lang="ts">
   import { Form } from "@inertiajs/vue3";
   import { Eye, EyeOff, LockKeyhole, RefreshCw } from "lucide-vue-next";
-  import { nextTick, onMounted, ref, useTemplateRef } from "vue";
-  import AlertError from "@/components/AlertError.vue";
+  import { computed, nextTick, onMounted, ref, useTemplateRef } from "vue";
+  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
   import { Button } from "@/components/ui/button";
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
   import { useTwoFactorAuth } from "@/composables/useTwoFactorAuth";
+  import { normalizeErrorMessages } from "@/lib/errors";
   import { regenerateRecoveryCodes } from "@/routes/two-factor";
 
   const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
   const isRecoveryCodesVisible = ref<boolean>(false);
   const recoveryCodeSectionRef = useTemplateRef("recoveryCodeSectionRef");
+  const errorMessages = computed(() => normalizeErrorMessages(errors.value));
 
   const toggleRecoveryCodesVisibility = async () => {
     if (!isRecoveryCodesVisible.value && !recoveryCodesList.value.length) {
@@ -50,8 +52,17 @@
         </Form>
       </div>
       <div :class="['relative overflow-hidden transition-all duration-300', isRecoveryCodesVisible ? 'h-auto opacity-100' : 'h-0 opacity-0']">
-        <div v-if="errors?.length" class="mt-6">
-          <AlertError :errors="errors" />
+        <div v-if="errorMessages.length" class="mt-6">
+          <Alert variant="destructive">
+            <LockKeyhole class="size-4" />
+            <AlertTitle>Unable to load recovery codes</AlertTitle>
+            <AlertDescription>
+              <p v-if="errorMessages.length === 1" class="text-sm">{{ errorMessages[0] }}</p>
+              <ul v-else class="list-inside list-disc text-sm">
+                <li v-for="(message, index) in errorMessages" :key="`${message}-${index}`">{{ message }}</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
         </div>
         <div v-else class="mt-3 space-y-3">
           <div ref="recoveryCodeSectionRef" class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm">

@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { Form, Head } from "@inertiajs/vue3";
-  import InputError from "@/components/InputError.vue";
   import TextLink from "@/components/TextLink.vue";
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
@@ -19,26 +18,22 @@
       <div class="grid gap-6">
         <div class="grid gap-2">
           <Label for="name">Name</Label>
-          <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Full name" />
-          <InputError :message="errors.name" />
+          <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Full name" :state="errors.name ? 'destructive' : 'default'" :message="errors.name" />
         </div>
 
         <div class="grid gap-2">
           <Label for="email">Email address</Label>
-          <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" />
-          <InputError :message="errors.email" />
+          <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
         </div>
 
         <div class="grid gap-2">
           <Label for="password">Password</Label>
-          <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="Password" />
-          <InputError :message="errors.password" />
+          <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
         </div>
 
         <div class="grid gap-2">
           <Label for="password_confirmation">Confirm password</Label>
-          <Input id="password_confirmation" type="password" required :tabindex="4" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" />
-          <InputError :message="errors.password_confirmation" />
+          <Input id="password_confirmation" type="password" required :tabindex="4" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
         </div>
 
         <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="processing" data-test="register-user-button">

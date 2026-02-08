@@ -3,7 +3,6 @@
   import { useTemplateRef } from "vue";
   import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileController";
   import Heading from "@/components/Heading.vue";
-  import InputError from "@/components/InputError.vue";
   import { Button } from "@/components/ui/button";
   import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
@@ -42,8 +41,7 @@
 
             <div class="grid gap-2">
               <Label for="password" class="sr-only">Password</Label>
-              <Input id="password" type="password" name="password" ref="passwordInput" placeholder="Password" />
-              <InputError :message="errors.password" />
+              <Input id="password" ref="passwordInput" type="password" name="password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
             </div>
 
             <DialogFooter class="gap-2">

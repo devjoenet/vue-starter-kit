@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
+  import { skeletonVariants } from ".";
 
   interface SkeletonProps {
     class?: HTMLAttributes["class"];
@@ -10,5 +11,5 @@
 </script>
 
 <template>
-  <div data-slot="skeleton" :class="cn('animate-pulse rounded-md bg-primary/10', props.class)" />
+  <div data-slot="skeleton" :class="cn(skeletonVariants(), props.class)" />
 </template>

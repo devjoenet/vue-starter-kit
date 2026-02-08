@@ -2,6 +2,7 @@
   import type { HTMLAttributes } from "vue";
   import { Loader2Icon } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
+  import { spinnerVariants } from ".";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];
@@ -9,5 +10,5 @@
 </script>
 
 <template>
-  <Loader2Icon role="status" aria-label="Loading" :class="cn('size-4 animate-spin', props.class)" />
+  <Loader2Icon role="status" aria-label="Loading" :class="cn(spinnerVariants(), props.class)" />
 </template>

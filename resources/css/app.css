@@ -32,6 +32,12 @@
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
 
   --color-border: var(--border);
   --color-input: var(--input);
@@ -109,6 +115,12 @@
   /* Feedback */
   --destructive: oklch(61.12% 0.2209 17);
   --destructive-foreground: oklch(98% 0 0);
+  --info: oklch(64.5% 0.142 235);
+  --info-foreground: oklch(100% 0 0);
+  --warning: oklch(82.31% 0.166 86.4);
+  --warning-foreground: oklch(20.73% 0.0298 229);
+  --success: oklch(70.12% 0.149 152.4);
+  --success-foreground: oklch(20.73% 0.0298 229);
 
   /* Lines / focus */
   --border: oklch(88.88% 0.0186 19.1);
@@ -158,6 +170,13 @@
   --elevation-1: 0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.06);
   --elevation-2: 0 12px 24px -16px rgb(15 23 42 / 0.22), 0 8px 16px -12px rgb(15 23 42 / 0.18);
   --elevation-3: 0 24px 48px -28px rgb(15 23 42 / 0.3), 0 16px 28px -20px rgb(15 23 42 / 0.24);
+
+  /* Liquid glass */
+  --glass-surface: oklch(98.5% 0.015 30 / 0.7);
+  --glass-surface-hover: oklch(99.5% 0.01 30 / 0.82);
+  --glass-border: oklch(100% 0 0 / 0.55);
+  --glass-highlight: oklch(100% 0 0 / 0.85);
+  --glass-shadow: 0 24px 40px -32px rgb(15 23 42 / 0.35), 0 12px 24px -16px rgb(15 23 42 / 0.24);
 }
 
 .dark {
@@ -199,6 +218,12 @@
   /* Feedback */
   --destructive: oklch(63.5% 0.21 16);
   --destructive-foreground: oklch(98% 0 0);
+  --info: oklch(78% 0.11 222);
+  --info-foreground: oklch(19% 0.02 255);
+  --warning: oklch(84% 0.145 92);
+  --warning-foreground: oklch(19% 0.02 255);
+  --success: oklch(80% 0.125 150);
+  --success-foreground: oklch(19% 0.02 255);
 
   /* Data viz keeps the magenta vibe so your UI still has color */
   --chart-1: oklch(82% 0.125 195);
@@ -243,6 +268,13 @@
   --elevation-1: 0 1px 2px 0 rgb(0 0 0 / 0.45), 0 8px 16px -12px rgb(0 0 0 / 0.4);
   --elevation-2: 0 16px 32px -20px rgb(0 0 0 / 0.55), 0 12px 20px -16px rgb(0 0 0 / 0.5);
   --elevation-3: 0 28px 60px -32px rgb(0 0 0 / 0.6), 0 18px 30px -20px rgb(0 0 0 / 0.52);
+
+  /* Liquid glass */
+  --glass-surface: oklch(22% 0.03 252 / 0.5);
+  --glass-surface-hover: oklch(26% 0.03 252 / 0.6);
+  --glass-border: oklch(100% 0 0 / 0.12);
+  --glass-highlight: oklch(100% 0 0 / 0.2);
+  --glass-shadow: 0 24px 40px -32px rgb(2 6 23 / 0.7), 0 12px 24px -16px rgb(2 6 23 / 0.6);
 }
 
 @layer base {

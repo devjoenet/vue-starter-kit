@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import { AlertCircle } from "lucide-vue-next";
   import { computed } from "vue";
+  import { normalizeErrorMessages } from "@/lib/errors";
   import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
   type Props = {
-    errors: string[];
+    errors?: unknown;
     title?: string;
   };
 
@@ -12,15 +13,18 @@
     title: "Something went wrong.",
   });
 
-  const uniqueErrors = computed(() => Array.from(new Set(props.errors)));
+  const uniqueErrors = computed(() => normalizeErrorMessages(props.errors));
 </script>
 
 <template>
-  <Alert variant="destructive">
+  <Alert v-if="uniqueErrors.length" variant="destructive">
     <AlertCircle class="size-4" />
     <AlertTitle>{{ title }}</AlertTitle>
     <AlertDescription>
-      <ul class="list-inside list-disc text-sm">
+      <p v-if="uniqueErrors.length === 1" class="text-sm">
+        {{ uniqueErrors[0] }}
+      </p>
+      <ul v-else class="list-inside list-disc text-sm">
         <li v-for="(error, index) in uniqueErrors" :key="index">
           {{ error }}
         </li>

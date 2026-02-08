@@ -62,7 +62,7 @@
         </div>
 
         <div v-else class="flex flex-col items-start justify-start space-y-4">
-          <Badge variant="default">Enabled</Badge>
+          <Badge variant="success">Enabled</Badge>
 
           <p class="text-muted-foreground">With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.</p>
 

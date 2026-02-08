@@ -3,11 +3,12 @@
   import { computed, watch } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
+  import { Checkbox } from "@/components/ui/checkbox";
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
-  import { dashboard } from "@/routes/admin";
+  import { dashboard } from "@/routes/admin/index";
   import { create, destroy, edit, index, store, update } from "@/routes/admin/users";
   import { sync } from "@/routes/admin/users/roles";
   import { type BreadcrumbItem } from "@/types";
@@ -27,6 +28,17 @@
   const isCreate = computed(() => props.modal?.mode === "create");
   const isEdit = computed(() => props.modal?.mode === "edit");
   const isOpen = computed(() => Boolean(props.modal));
+  const modalKey = computed(() => {
+    if (!props.modal) {
+      return null;
+    }
+
+    if (props.modal.mode === "edit") {
+      return `edit:${props.modal.user.id}`;
+    }
+
+    return "create";
+  });
 
   const canCreate = computed(() => can("users.create"));
   const canUpdate = computed(() => can("users.update"));
@@ -101,24 +113,26 @@
   };
 
   watch(
-    () => props.modal,
-    (modal) => {
-      if (!modal) {
+    modalKey,
+    (key) => {
+      if (!key || !props.modal) {
         return;
       }
 
-      if (modal.mode === "create") {
+      if (props.modal.mode === "create") {
         createForm.reset();
         createForm.clearErrors();
+        rolesForm.reset();
+        rolesForm.clearErrors();
         return;
       }
 
-      editForm.name = modal.user.name;
-      editForm.email = modal.user.email;
+      editForm.name = props.modal.user.name;
+      editForm.email = props.modal.user.email;
       editForm.password = "";
       editForm.clearErrors();
 
-      rolesForm.roles = [...modal.userRoles];
+      rolesForm.roles = [...props.modal.userRoles];
       rolesForm.clearErrors();
     },
     { immediate: true },
@@ -127,42 +141,46 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">Users</h1>
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-semibold">Users</h1>
 
-      <Button v-if="canCreate" variant="filled" as-child>
-        <Link :href="create.url()">New user</Link>
-      </Button>
+        <Button v-if="canCreate" variant="glass" as-child>
+          <Link :href="create.url()">New user</Link>
+        </Button>
+      </div>
+
+      <Card variant="glass" class="overflow-hidden py-0">
+        <table class="w-full text-sm">
+          <thead class="text-left text-xs font-semibold uppercase tracking-wide opacity-60">
+            <tr>
+              <th class="px-6 py-4">Name</th>
+              <th class="px-6 py-4">Email</th>
+              <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="u in users.data" :key="u.id" class="border-t border-black/5 dark:border-white/10">
+              <td class="px-6 py-4 font-medium">{{ u.name }}</td>
+              <td class="px-6 py-4 text-sm opacity-80">{{ u.email }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-end gap-2">
+                  <Button v-if="canUpdate" variant="text" size="sm" as-child>
+                    <Link :href="edit.url(u.id)">Edit</Link>
+                  </Button>
+
+                  <form v-if="canDelete" class="inline-flex" method="post" :action="destroy.url(u.id)">
+                    <input type="hidden" name="_method" value="delete" />
+                    <input type="hidden" name="_token" :value="page.props.csrf_token" />
+                    <Button type="submit" variant="text" size="sm">Delete</Button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
     </div>
-
-    <Card class="mt-6 overflow-hidden py-0">
-      <table class="w-full text-sm">
-        <thead class="opacity-70">
-          <tr>
-            <th class="p-3 text-left">Name</th>
-            <th class="p-3 text-left">Email</th>
-            <th class="p-3 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="u in users.data" :key="u.id" class="border-t border-black/5 dark:border-white/10">
-            <td class="p-3">{{ u.name }}</td>
-            <td class="p-3">{{ u.email }}</td>
-            <td class="p-3 text-right">
-              <Button v-if="canUpdate" variant="text" size="sm" as-child>
-                <Link :href="edit.url(u.id)">Edit</Link>
-              </Button>
-
-              <form v-if="canDelete" class="inline" method="post" :action="destroy.url(u.id)">
-                <input type="hidden" name="_method" value="delete" />
-                <input type="hidden" name="_token" :value="page.props.csrf_token" />
-                <Button type="submit" variant="text" size="sm">Delete</Button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </Card>
 
     <Dialog :open="isOpen" @update:open="handleOpenChange">
       <DialogContent class="sm:max-w-3xl">
@@ -174,7 +192,7 @@
         </DialogHeader>
 
         <div class="space-y-6">
-          <Card class="px-6">
+          <Card variant="glass" class="px-6">
             <h2 class="text-lg font-semibold">Details</h2>
 
             <form v-if="isEdit" class="mt-4 space-y-4" @submit.prevent="submitEdit">
@@ -205,15 +223,15 @@
             </form>
           </Card>
 
-          <Card v-if="isEdit" class="px-6">
+          <Card v-if="isEdit" variant="glass" class="px-6">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-semibold">Roles</h2>
               <Button variant="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>
             </div>
 
-            <div class="mt-4 space-y-2">
+            <div class="mt-4 space-y-2 -mx-3">
               <label v-for="r in props.roles ?? []" :key="r.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssignRoles ? 'opacity-60' : ''">
-                <input type="checkbox" class="h-4 w-4" :disabled="!canAssignRoles" :checked="rolesForm.roles.includes(r.name)" @change="toggleRole(r.name)" />
+                <Checkbox :disabled="!canAssignRoles" :model-value="rolesForm.roles.includes(r.name)" @update:model-value="() => toggleRole(r.name)" />
                 <span class="text-sm">{{ r.name }}</span>
               </label>
             </div>

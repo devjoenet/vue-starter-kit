@@ -2,7 +2,6 @@
   import { Form, Head } from "@inertiajs/vue3";
   import PasswordController from "@/actions/App/Http/Controllers/Settings/PasswordController";
   import Heading from "@/components/Heading.vue";
-  import InputError from "@/components/InputError.vue";
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
   import { Label } from "@/components/ui/label";
@@ -41,20 +40,17 @@
         >
           <div class="grid gap-2">
             <Label for="current_password">Current password</Label>
-            <Input id="current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" placeholder="Current password" />
-            <InputError :message="errors.current_password" />
+            <Input id="current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" placeholder="Current password" :state="errors.current_password ? 'destructive' : 'default'" :message="errors.current_password" />
           </div>
 
           <div class="grid gap-2">
             <Label for="password">New password</Label>
-            <Input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="New password" />
-            <InputError :message="errors.password" />
+            <Input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="New password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
           </div>
 
           <div class="grid gap-2">
             <Label for="password_confirmation">Confirm password</Label>
-            <Input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="Confirm password" />
-            <InputError :message="errors.password_confirmation" />
+            <Input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
           </div>
 
           <div class="flex items-center gap-4">

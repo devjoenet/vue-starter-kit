@@ -6,7 +6,7 @@
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
-  import { dashboard } from "@/routes/admin";
+  import { dashboard } from "@/routes/admin/index";
   import { create, index, store } from "@/routes/admin/roles";
   import { type BreadcrumbItem } from "@/types";
 
@@ -38,16 +38,20 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <h1 class="text-2xl font-semibold">Create role</h1>
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-semibold">Create role</h1>
+      </div>
 
-    <Card class="mt-6 px-6">
-      <form class="space-y-4" @submit.prevent="submit">
-        <Input id="create-role-name" v-model="form.name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
+      <Card variant="glass" class="px-6">
+        <form class="space-y-4" @submit.prevent="submit">
+          <Input id="create-role-name" v-model="form.name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
-        <div class="flex justify-end">
-          <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
-        </div>
-      </form>
-    </Card>
+          <div class="flex justify-end">
+            <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
+          </div>
+        </form>
+      </Card>
+    </div>
   </AppLayout>
 </template>

@@ -3,14 +3,14 @@
   import { useClipboard } from "@vueuse/core";
   import { Check, Copy, ScanLine } from "lucide-vue-next";
   import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
-  import AlertError from "@/components/AlertError.vue";
-  import InputError from "@/components/InputError.vue";
+  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
   import { Button } from "@/components/ui/button";
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
   import { Spinner } from "@/components/ui/spinner";
   import { useAppearance } from "@/composables/useAppearance";
   import { useTwoFactorAuth } from "@/composables/useTwoFactorAuth";
+  import { normalizeErrorMessages } from "@/lib/errors";
   import { confirm } from "@/routes/two-factor";
   import type { TwoFactorConfigContent } from "@/types";
 
@@ -26,6 +26,7 @@
 
   const { copy, copied } = useClipboard();
   const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } = useTwoFactorAuth();
+  const setupErrorMessages = computed(() => normalizeErrorMessages(errors.value));
 
   const showVerificationStep = ref(false);
   const code = ref<string>("");
@@ -118,7 +119,16 @@
 
       <div class="relative flex w-auto flex-col items-center justify-center space-y-5">
         <template v-if="!showVerificationStep">
-          <AlertError v-if="errors?.length" :errors="errors" />
+          <Alert v-if="setupErrorMessages.length" variant="destructive">
+            <ScanLine class="size-4" />
+            <AlertTitle>Unable to prepare two-factor setup</AlertTitle>
+            <AlertDescription>
+              <p v-if="setupErrorMessages.length === 1" class="text-sm">{{ setupErrorMessages[0] }}</p>
+              <ul v-else class="list-inside list-disc text-sm">
+                <li v-for="(message, index) in setupErrorMessages" :key="`${message}-${index}`">{{ message }}</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
           <template v-else>
             <div class="relative mx-auto flex max-w-md items-center overflow-hidden">
               <div class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border">
@@ -175,7 +185,11 @@
                     <InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" />
                   </InputOTPGroup>
                 </InputOTP>
-                <InputError :message="errors?.confirmTwoFactorAuthentication?.code" />
+                <Alert v-if="errors.code" variant="destructive" class="w-full">
+                  <AlertDescription class="w-full">
+                    <p class="text-sm">{{ errors.code }}</p>
+                  </AlertDescription>
+                </Alert>
               </div>
 
               <div class="flex w-full items-center space-x-5">

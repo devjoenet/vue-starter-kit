@@ -4,6 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogDescription } from "reka-ui";
   import { cn } from "@/lib/utils";
+  import { sheetDescriptionVariants } from ".";
 
   const props = defineProps<DialogDescriptionProps & { class?: HTMLAttributes["class"] }>();
 
@@ -11,7 +12,7 @@
 </script>
 
 <template>
-  <DialogDescription data-slot="sheet-description" :class="cn('text-muted-foreground text-sm', props.class)" v-bind="delegatedProps">
+  <DialogDescription data-slot="sheet-description" :class="cn(sheetDescriptionVariants(), props.class)" v-bind="delegatedProps">
     <slot />
   </DialogDescription>
 </template>

@@ -2,7 +2,7 @@
   import { Link } from "@inertiajs/vue3";
   import { computed } from "vue";
   import { useAbility } from "@/composables/useAbility";
-  import { dashboard } from "@/routes/admin";
+  import { dashboard } from "@/routes/admin/index";
   import AppLogoIcon from "@/components/AppLogoIcon.vue";
   import { index as adminPermissionsIndex } from "@/routes/admin/permissions";
   import { index as adminRolesIndex } from "@/routes/admin/roles";
@@ -16,7 +16,7 @@
     return [
       { label: "Dashboard", href: dashboard.url() },
       ...(can("users.view") ? [{ label: "Users", href: adminUsersIndex.url() }] : []),
-      ...(can("users.view") ? [{ label: "Roles", href: adminRolesIndex.url() }] : []),
+      ...(can("roles.view") ? [{ label: "Roles", href: adminRolesIndex.url() }] : []),
       ...(can("permissions.view") ? [{ label: "Permissions", href: adminPermissionsIndex.url() }] : []),
     ];
   });

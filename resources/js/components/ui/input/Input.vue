@@ -3,9 +3,8 @@
   import { computed, useAttrs, useSlots } from "vue";
   import { useVModel } from "@vueuse/core";
   import { cn } from "@/lib/utils";
-
-  type Variant = "filled" | "outlined";
-  type State = "default" | "error" | "success";
+  import type { InputVariants } from ".";
+  import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from ".";
 
   const props = withDefaults(
     defineProps<{
@@ -16,8 +15,8 @@
       supportingText?: string;
       errorText?: string;
       message?: string;
-      variant?: Variant;
-      state?: State;
+      variant?: InputVariants["variant"];
+      state?: InputVariants["state"];
       error?: boolean;
       required?: boolean;
       noAsterisk?: boolean;
@@ -55,7 +54,6 @@
     defaultValue: props.defaultValue,
   });
 
-  const isOutlined = computed(() => props.variant === "outlined");
   const isMultiline = computed(() => props.multiline || props.type === "textarea");
   const hasLabel = computed(() => Boolean(props.label));
 
@@ -115,9 +113,34 @@
   const prefixOffset = computed(() => (hasLeadingIcon.value ? "left-12" : "left-4"));
   const suffixOffset = computed(() => (hasTrailingIcon.value ? "right-12" : "right-4"));
 
-  const hasError = computed(() => props.state === "error" || props.error);
+  const hasError = computed(() => props.state === "error" || props.state === "destructive" || props.error);
+  const hasInfo = computed(() => props.state === "info");
+  const hasWarning = computed(() => props.state === "warning");
   const hasSuccess = computed(() => props.state === "success");
   const showAsterisk = computed(() => props.required && !props.noAsterisk);
+  const fieldState = computed(() => {
+    if (hasError.value) {
+      if (props.state === "destructive") {
+        return "destructive";
+      }
+
+      return "error";
+    }
+
+    if (hasInfo.value) {
+      return "info";
+    }
+
+    if (hasWarning.value) {
+      return "warning";
+    }
+
+    if (hasSuccess.value) {
+      return "success";
+    }
+
+    return "default";
+  });
 
   const placeholderValue = computed(() => (props.label ? (props.placeholder ?? " ") : props.placeholder));
   const supportingText = computed(() => {
@@ -134,33 +157,35 @@
 
   const baseFieldClasses = computed(() =>
     cn(
-      "peer w-full min-w-0 rounded-[var(--radius-sm)] text-base leading-6 text-[var(--field-text)] transition-[border-color,box-shadow,background-color,color] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-      hasLabel.value ? "pt-6 pb-2" : "py-4",
+      inputVariants({
+        variant: props.variant,
+        state: fieldState.value,
+        multiline: isMultiline.value,
+        label: hasLabel.value,
+      }),
       leftPadding.value,
       rightPadding.value,
-      isOutlined.value ? "border border-[color:var(--outline)] bg-transparent" : "border-b border-[color:var(--outline)] bg-[var(--field-bg)]",
-      "focus-visible:border-[color:var(--field-focus)] focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]",
-      hasError.value ? "border-[color:var(--error)] ring-[color:var(--error)]" : "",
-      hasSuccess.value ? "border-[color:var(--brand-mint)]" : "",
-      isMultiline.value ? "min-h-[3.5rem] resize-y" : "h-14",
       props.class,
     ),
   );
 
   const labelClasses = computed(() =>
     cn(
-      "absolute top-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top,background-color] duration-150",
+      inputLabelVariants({
+        variant: props.variant,
+        state: fieldState.value,
+      }),
       labelOffset.value,
-      "peer-placeholder-shown:top-4 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:scale-90 peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:scale-90",
-      "peer-focus:text-[var(--field-focus)]",
-      "peer-disabled:opacity-60",
-      isOutlined.value ? "bg-[var(--surface)] px-1" : "bg-[var(--field-bg)] px-1",
-      hasError.value ? "text-[var(--error)] peer-focus:text-[var(--error)]" : "",
-      hasSuccess.value ? "text-[color:var(--brand-mint)] peer-focus:text-[color:var(--brand-mint)]" : "",
     ),
   );
 
-  const assistiveTextClasses = computed(() => cn("text-xs", hasError.value ? "text-[var(--error)]" : "text-[var(--field-label)]", hasSuccess.value ? "text-[color:var(--brand-mint)]" : ""));
+  const assistiveTextClasses = computed(() =>
+    cn(
+      inputAssistiveTextVariants({
+        state: fieldState.value,
+      }),
+    ),
+  );
 </script>
 
 <template>

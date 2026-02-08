@@ -4,6 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogTitle, useForwardProps } from "reka-ui";
   import { cn } from "@/lib/utils";
+  import { dialogTitleVariants } from ".";
 
   const props = defineProps<DialogTitleProps & { class?: HTMLAttributes["class"] }>();
 
@@ -13,7 +14,7 @@
 </script>
 
 <template>
-  <DialogTitle data-slot="dialog-title" v-bind="forwardedProps" :class="cn('text-lg leading-none font-semibold', props.class)">
+  <DialogTitle data-slot="dialog-title" v-bind="forwardedProps" :class="cn(dialogTitleVariants(), props.class)">
     <slot />
   </DialogTitle>
 </template>

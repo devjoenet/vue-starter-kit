@@ -4,6 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogTitle } from "reka-ui";
   import { cn } from "@/lib/utils";
+  import { sheetTitleVariants } from ".";
 
   const props = defineProps<DialogTitleProps & { class?: HTMLAttributes["class"] }>();
 
@@ -11,7 +12,7 @@
 </script>
 
 <template>
-  <DialogTitle data-slot="sheet-title" :class="cn('text-foreground font-semibold', props.class)" v-bind="delegatedProps">
+  <DialogTitle data-slot="sheet-title" :class="cn(sheetTitleVariants(), props.class)" v-bind="delegatedProps">
     <slot />
   </DialogTitle>
 </template>

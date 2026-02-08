@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { Form, Head } from "@inertiajs/vue3";
-  import InputError from "@/components/InputError.vue";
   import TextLink from "@/components/TextLink.vue";
   import { Button } from "@/components/ui/button";
   import { Checkbox } from "@/components/ui/checkbox";
@@ -31,8 +30,7 @@
       <div class="grid gap-6">
         <div class="grid gap-2">
           <Label for="email">Email address</Label>
-          <Input id="email" type="email" name="email" required autofocus :tabindex="1" autocomplete="email" placeholder="email@example.com" />
-          <InputError :message="errors.email" />
+          <Input id="email" type="email" name="email" required autofocus :tabindex="1" autocomplete="email" placeholder="email@example.com" :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
         </div>
 
         <div class="grid gap-2">
@@ -40,8 +38,7 @@
             <Label for="password">Password</Label>
             <TextLink v-if="canResetPassword" :href="request()" class="text-sm" :tabindex="5"> Forgot password? </TextLink>
           </div>
-          <Input id="password" type="password" name="password" required :tabindex="2" autocomplete="current-password" placeholder="Password" />
-          <InputError :message="errors.password" />
+          <Input id="password" type="password" name="password" required :tabindex="2" autocomplete="current-password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
         </div>
 
         <div class="flex items-center justify-between">

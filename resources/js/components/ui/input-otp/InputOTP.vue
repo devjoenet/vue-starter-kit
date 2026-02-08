@@ -5,6 +5,7 @@
   import { useForwardPropsEmits } from "reka-ui";
   import { OTPInput } from "vue-input-otp";
   import { cn } from "@/lib/utils";
+  import { inputOtpContainerVariants } from ".";
 
   const props = defineProps<OTPInputProps & { class?: HTMLAttributes["class"] }>();
 
@@ -16,7 +17,7 @@
 </script>
 
 <template>
-  <OTPInput v-slot="slotProps" v-bind="forwarded" :container-class="cn('flex items-center gap-2 has-disabled:opacity-50', props.class)" data-slot="input-otp" class="disabled:cursor-not-allowed">
+  <OTPInput v-slot="slotProps" v-bind="forwarded" :container-class="cn(inputOtpContainerVariants(), props.class)" data-slot="input-otp" class="disabled:cursor-not-allowed">
     <slot v-bind="slotProps" />
   </OTPInput>
 </template>

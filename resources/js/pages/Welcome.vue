@@ -20,7 +20,7 @@
   <div class="flex min-h-screen flex-col items-center bg-background p-6 text-foreground lg:justify-center lg:p-8">
     <header class="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
       <nav class="flex items-center justify-end gap-4">
-        <Link v-if="$page.props.auth.user" :href="dashboard()" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Dashboard </Link>
+        <Link v-if="$page.props.auth?.user" :href="dashboard()" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Dashboard </Link>
         <template v-else>
           <Link :href="login()" class="inline-flex items-center rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-foreground transition hover:border-primary/60 hover:text-primary"> Log in </Link>
           <Link v-if="canRegister" :href="register()" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Register </Link>

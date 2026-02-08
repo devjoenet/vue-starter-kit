@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { Form, Head } from "@inertiajs/vue3";
   import { ref } from "vue";
-  import InputError from "@/components/InputError.vue";
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
   import { Label } from "@/components/ui/label";
@@ -25,20 +24,17 @@
       <div class="grid gap-6">
         <div class="grid gap-2">
           <Label for="email">Email</Label>
-          <Input id="email" type="email" name="email" autocomplete="email" v-model="inputEmail" class="mt-1 block w-full" readonly />
-          <InputError :message="errors.email" class="mt-2" />
+          <Input id="email" v-model="inputEmail" type="email" name="email" autocomplete="email" class="mt-1 block w-full" readonly :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
         </div>
 
         <div class="grid gap-2">
           <Label for="password">Password</Label>
-          <Input id="password" type="password" name="password" autocomplete="new-password" class="mt-1 block w-full" autofocus placeholder="Password" />
-          <InputError :message="errors.password" />
+          <Input id="password" type="password" name="password" autocomplete="new-password" class="mt-1 block w-full" autofocus placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
         </div>
 
         <div class="grid gap-2">
           <Label for="password_confirmation"> Confirm Password </Label>
-          <Input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" class="mt-1 block w-full" placeholder="Confirm password" />
-          <InputError :message="errors.password_confirmation" />
+          <Input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" class="mt-1 block w-full" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
         </div>
 
         <Button type="submit" class="mt-4 w-full" :disabled="processing" data-test="reset-password-button">

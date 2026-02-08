@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { Form, Head } from "@inertiajs/vue3";
-  import InputError from "@/components/InputError.vue";
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
   import { Label } from "@/components/ui/label";
@@ -17,9 +16,7 @@
       <div class="space-y-6">
         <div class="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" name="password" class="mt-1 block w-full" required autocomplete="current-password" autofocus />
-
-          <InputError :message="errors.password" />
+          <Input id="password" type="password" name="password" class="mt-1 block w-full" required autocomplete="current-password" autofocus :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
         </div>
 
         <div class="flex items-center">

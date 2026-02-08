@@ -3,6 +3,7 @@
   import { PanelLeftClose, PanelLeftOpen } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
   import { Button } from "@/components/ui/button";
+  import { sidebarTriggerVariants } from ".";
   import { useSidebar } from "./utils";
 
   const props = defineProps<{
@@ -13,7 +14,7 @@
 </script>
 
 <template>
-  <Button data-sidebar="trigger" data-slot="sidebar-trigger" variant="ghost" size="icon" :class="cn('h-7 w-7', props.class)" @click="toggleSidebar">
+  <Button data-sidebar="trigger" data-slot="sidebar-trigger" variant="ghost" size="icon" :class="cn(sidebarTriggerVariants(), props.class)" @click="toggleSidebar">
     <PanelLeftOpen v-if="isMobile || state === 'collapsed'" />
     <PanelLeftClose v-else />
     <span class="sr-only">Toggle Sidebar</span>

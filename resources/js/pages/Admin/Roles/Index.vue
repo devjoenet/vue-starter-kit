@@ -3,11 +3,12 @@
   import { computed, watch } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
+  import { Checkbox } from "@/components/ui/checkbox";
   import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
-  import { dashboard } from "@/routes/admin";
+  import { dashboard } from "@/routes/admin/index";
   import { create, destroy, edit, index, store, update } from "@/routes/admin/roles";
   import { sync } from "@/routes/admin/roles/permissions";
   import { type BreadcrumbItem } from "@/types";
@@ -41,6 +42,17 @@
   const isCreate = computed(() => props.modal?.mode === "create");
   const isEdit = computed(() => props.modal?.mode === "edit");
   const isOpen = computed(() => Boolean(props.modal));
+  const modalKey = computed(() => {
+    if (!props.modal) {
+      return null;
+    }
+
+    if (props.modal.mode === "edit") {
+      return `edit:${props.modal.role.id}`;
+    }
+
+    return "create";
+  });
 
   const roleForm = useForm({ name: "" });
   const permsForm = useForm({ permissions: [] as string[] });
@@ -86,20 +98,21 @@
   };
 
   watch(
-    () => props.modal,
-    (modal) => {
-      if (!modal) {
+    modalKey,
+    (key) => {
+      if (!key || !props.modal) {
         return;
       }
 
-      if (modal.mode === "create") {
+      if (props.modal.mode === "create") {
         roleForm.reset();
         roleForm.clearErrors();
         permsForm.reset();
+        permsForm.clearErrors();
         return;
       }
 
-      roleForm.name = modal.role.name;
+      roleForm.name = props.modal.role.name;
       roleForm.clearErrors();
       permsForm.permissions = [...(props.rolePermissions ?? [])];
       permsForm.clearErrors();
@@ -110,25 +123,27 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">Roles</h1>
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-semibold">Roles</h1>
 
-      <Button v-if="canCreate" variant="filled" as-child>
-        <Link :href="create.url()">New role</Link>
-      </Button>
-    </div>
-
-    <Card class="mt-6 px-6">
-      <div class="space-y-2">
-        <div v-for="r in props.roles" :key="r.id" class="flex items-center justify-between rounded-xl border border-black/5 p-3 dark:border-white/10">
-          <div class="text-sm font-medium">{{ r.name }}</div>
-
-          <Button v-if="canUpdate" variant="text" size="sm" as-child>
-            <Link :href="edit.url(r.id)">Edit</Link>
-          </Button>
-        </div>
+        <Button v-if="canCreate" variant="glass" as-child>
+          <Link :href="create.url()">New role</Link>
+        </Button>
       </div>
-    </Card>
+
+      <Card variant="glass" class="px-6">
+        <div class="space-y-2 -mx-3">
+          <div v-for="r in props.roles" :key="r.id" class="flex items-center justify-between gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10">
+            <div class="text-sm font-medium">{{ r.name }}</div>
+
+            <Button v-if="canUpdate" variant="text" size="sm" as-child>
+              <Link :href="edit.url(r.id)">Edit</Link>
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </div>
 
     <Dialog :open="isOpen" @update:open="handleOpenChange">
       <DialogContent class="sm:max-w-3xl">
@@ -140,7 +155,7 @@
         </DialogHeader>
 
         <div class="space-y-6">
-          <Card class="px-6">
+          <Card variant="glass" class="px-6">
             <h2 class="text-lg font-semibold">Details</h2>
 
             <form v-if="isEdit" class="mt-4 space-y-4" @submit.prevent="submitEdit">
@@ -163,7 +178,7 @@
             </form>
           </Card>
 
-          <Card v-if="isEdit" class="px-6">
+          <Card v-if="isEdit" variant="glass" class="px-6">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-semibold">Permissions</h2>
               <Button variant="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
@@ -173,10 +188,12 @@
               <div v-for="(items, group) in props.permissionsByGroup ?? {}" :key="group" class="space-y-2">
                 <div class="text-sm font-semibold capitalize">{{ group }}</div>
 
-                <label v-for="p in items" :key="p.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssign ? 'opacity-60' : ''">
-                  <input type="checkbox" class="h-4 w-4" :disabled="!canAssign" :checked="permsForm.permissions.includes(p.name)" @change="togglePermission(p.name)" />
-                  <span class="text-sm">{{ p.name }}</span>
-                </label>
+                <div class="space-y-2 -mx-3">
+                  <label v-for="p in items" :key="p.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssign ? 'opacity-60' : ''">
+                    <Checkbox :disabled="!canAssign" :model-value="permsForm.permissions.includes(p.name)" @update:model-value="() => togglePermission(p.name)" />
+                    <span class="text-sm">{{ p.name }}</span>
+                  </label>
+                </div>
               </div>
             </div>
           </Card>
