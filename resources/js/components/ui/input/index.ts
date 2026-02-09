@@ -42,8 +42,8 @@ export const inputLabelVariants = cva(
   {
     variants: {
       variant: {
-        filled: "bg-[var(--field-bg)] px-1",
-        outlined: "bg-[var(--surface)] px-1",
+        filled: "bg-[var(--field-bg)] px-1 peer-placeholder-shown:bg-transparent peer-placeholder-shown:px-0",
+        outlined: "bg-[var(--surface)] px-1 peer-placeholder-shown:bg-transparent peer-placeholder-shown:px-0",
       },
       state: {
         default: "",

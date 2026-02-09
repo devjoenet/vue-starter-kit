@@ -44,7 +44,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Permissions</h1>
 
-        <Button v-if="canCreate" variant="glass" as-child>
+        <Button v-if="canCreate" appearance="glass" as-child>
           <Link :href="create.url()">New permission</Link>
         </Button>
       </div>
@@ -60,11 +60,11 @@
               <div class="text-sm font-medium">{{ p.name }}</div>
 
               <div class="flex items-center gap-2">
-                <Button v-if="canUpdate" variant="text" size="sm" as-child>
+                <Button v-if="canUpdate" appearance="text" size="sm" as-child>
                   <Link :href="edit.url(p.id)">Edit</Link>
                 </Button>
 
-                <Button v-if="canDelete" variant="text" size="sm" @click="destroyPermission(p.id)"> Delete </Button>
+                <Button v-if="canDelete" appearance="text" size="sm" @click="destroyPermission(p.id)"> Delete </Button>
               </div>
             </div>
           </div>

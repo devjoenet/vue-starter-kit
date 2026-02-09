@@ -38,7 +38,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Users</h1>
 
-        <Button v-if="canCreate" variant="glass" as-child>
+        <Button v-if="canCreate" appearance="glass" as-child>
           <Link :href="create.url()">New user</Link>
         </Button>
       </div>
@@ -58,14 +58,14 @@
               <td class="px-6 py-4 text-sm opacity-80">{{ u.email }}</td>
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-2">
-                  <Button v-if="canUpdate" variant="text" size="sm" as-child>
+                  <Button v-if="canUpdate" appearance="text" size="sm" as-child>
                     <Link :href="edit.url(u.id)">Edit</Link>
                   </Button>
 
                   <form v-if="canDelete" class="inline-flex" method="post" :action="destroy.url(u.id)">
                     <input type="hidden" name="_method" value="delete" />
                     <input type="hidden" name="_token" :value="page.props.csrf_token" />
-                    <Button type="submit" variant="text" size="sm">Delete</Button>
+                    <Button type="submit" appearance="text" size="sm">Delete</Button>
                   </form>
                 </div>
               </td>

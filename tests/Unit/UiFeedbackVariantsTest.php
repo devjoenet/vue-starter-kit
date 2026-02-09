@@ -47,6 +47,10 @@ it('forwards feedback variants through vue wrappers', function () {
             'tooltipContentVariants({ variant: props.variant })',
             'tooltipArrowVariants({ variant: props.variant })',
         ],
+        'resources/js/components/ui/button/Button.vue' => [
+            'appearance?: ButtonVariants["appearance"]',
+            'buttonVariants({ appearance, variant, size, rounded })',
+        ],
     ];
 
     foreach ($wrapperExpectations as $wrapperFile => $expectedStrings) {
@@ -56,4 +60,18 @@ it('forwards feedback variants through vue wrappers', function () {
             expect($contents)->toContain($expectedString);
         }
     }
+});
+
+it('separates button style from semantic color variants', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/index.ts');
+
+    expect($contents)
+        ->toContain('appearance: {')
+        ->toContain('variant: {')
+        ->toContain('filled')
+        ->toContain('glass')
+        ->toContain('muted')
+        ->toContain('primary')
+        ->toContain('secondary')
+        ->toContain('destructive');
 });

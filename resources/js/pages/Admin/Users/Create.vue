@@ -56,7 +56,7 @@
           <Input id="create-user-password" v-model="form.password" type="password" name="password" label="Password" variant="outlined" :disabled="!canCreate" :state="form.errors.password ? 'error' : 'default'" :message="form.errors.password" />
 
           <div class="flex justify-end">
-            <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
+            <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
           </div>
         </form>
       </Card>

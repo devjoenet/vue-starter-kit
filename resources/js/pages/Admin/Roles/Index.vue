@@ -35,7 +35,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Roles</h1>
 
-        <Button v-if="canCreate" variant="glass" as-child>
+        <Button v-if="canCreate" appearance="glass" as-child>
           <Link :href="create.url()">New role</Link>
         </Button>
       </div>
@@ -45,7 +45,7 @@
           <div v-for="r in props.roles" :key="r.id" class="flex items-center justify-between gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10">
             <div class="text-sm font-medium">{{ r.name }}</div>
 
-            <Button v-if="canUpdate" variant="text" size="sm" as-child>
+            <Button v-if="canUpdate" appearance="text" size="sm" as-child>
               <Link :href="edit.url(r.id)">Edit</Link>
             </Button>
           </div>

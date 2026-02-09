@@ -25,5 +25,7 @@ it('matches the material input variants structure', function () {
     expect($indexContents)
         ->toContain('variant')
         ->toContain('outlined')
-        ->toContain('filled');
+        ->toContain('filled')
+        ->toContain('peer-placeholder-shown:bg-transparent')
+        ->toContain('peer-placeholder-shown:px-0');
 });

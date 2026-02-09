@@ -82,7 +82,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Edit user</h1>
 
-        <Button variant="text" :disabled="!canDelete" @click="destroyUser"> Delete </Button>
+        <Button appearance="text" :disabled="!canDelete" @click="destroyUser"> Delete </Button>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-2">
@@ -97,7 +97,7 @@
             <Input id="edit-user-password" v-model="userForm.password" type="password" name="password" label="New password (optional)" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.password ? 'error' : 'default'" :message="userForm.errors.password" />
 
             <div class="flex justify-end">
-              <Button variant="filled" type="submit" :disabled="!canUpdate || userForm.processing"> Save </Button>
+              <Button appearance="filled" type="submit" :disabled="!canUpdate || userForm.processing"> Save </Button>
             </div>
           </form>
         </Card>
@@ -105,7 +105,7 @@
         <Card variant="glass" class="px-6">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Roles</h2>
-            <Button variant="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>
+            <Button appearance="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>
           </div>
 
           <div class="mt-4 space-y-2 -mx-3">

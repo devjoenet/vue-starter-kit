@@ -193,7 +193,7 @@
               </div>
 
               <div class="flex w-full items-center space-x-5">
-                <Button type="button" variant="outline" class="w-auto flex-1" @click="showVerificationStep = false" :disabled="processing"> Back </Button>
+                <Button type="button" appearance="outline" class="w-auto flex-1" @click="showVerificationStep = false" :disabled="processing"> Back </Button>
                 <Button type="submit" class="w-auto flex-1" :disabled="processing || code.length < 6"> Confirm </Button>
               </div>
             </div>

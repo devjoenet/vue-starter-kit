@@ -71,7 +71,7 @@
     <div class="space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Edit role</h1>
-        <Button variant="text" :disabled="!canDelete" @click="destroyRole">Delete</Button>
+        <Button appearance="text" :disabled="!canDelete" @click="destroyRole">Delete</Button>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-2">
@@ -82,7 +82,7 @@
             <Input id="edit-role-name" v-model="roleForm.name" name="name" label="Role name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
 
             <div class="flex justify-end">
-              <Button variant="filled" type="submit" :disabled="!canUpdate || roleForm.processing"> Save </Button>
+              <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing"> Save </Button>
             </div>
           </form>
         </Card>
@@ -90,7 +90,7 @@
         <Card variant="glass" class="px-6">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Permissions</h2>
-            <Button variant="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
+            <Button appearance="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
           </div>
 
           <div class="mt-4 space-y-3">
@@ -99,7 +99,7 @@
                 <div class="text-sm font-semibold capitalize">{{ group }}</div>
 
                 <CollapsibleTrigger as-child>
-                  <Button variant="text" size="sm" class="gap-2">
+                  <Button appearance="text" size="sm" class="gap-2">
                     <span>{{ open ? "Collapse" : "Expand" }}</span>
                     <ChevronDown class="h-4 w-4 transition-transform" :class="open ? 'rotate-180' : ''" />
                   </Button>

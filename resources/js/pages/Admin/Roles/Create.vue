@@ -48,7 +48,7 @@
           <Input id="create-role-name" v-model="form.name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
           <div class="flex justify-end">
-            <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
+            <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
           </div>
         </form>
       </Card>

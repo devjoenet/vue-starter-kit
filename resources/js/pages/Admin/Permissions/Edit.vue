@@ -56,7 +56,7 @@
     <div class="space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Edit permission</h1>
-        <Button variant="text" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
+        <Button appearance="text" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
       </div>
 
       <Card variant="glass" class="px-6">
@@ -66,7 +66,7 @@
           <PermissionGroupSelect id="edit-permission-group" v-model="form.group" :disabled="!canUpdate" :error="form.errors.group" />
 
           <div class="flex justify-end">
-            <Button variant="filled" type="submit" :disabled="!canUpdate || form.processing"> Save </Button>
+            <Button appearance="filled" type="submit" :disabled="!canUpdate || form.processing"> Save </Button>
           </div>
         </form>
       </Card>

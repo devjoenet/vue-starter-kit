@@ -54,7 +54,7 @@
           <PermissionGroupSelect id="create-permission-group" v-model="form.group" :disabled="!canCreate" :error="form.errors.group" />
 
           <div class="flex justify-end">
-            <Button variant="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
+            <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
           </div>
         </form>
       </Card>
