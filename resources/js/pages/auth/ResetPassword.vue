@@ -2,8 +2,8 @@
   import { Form, Head } from "@inertiajs/vue3";
   import { ref } from "vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
-  import { Label } from "@/components/ui/label";
   import { Spinner } from "@/components/ui/spinner";
   import AuthLayout from "@/layouts/AuthLayout.vue";
   import { update } from "@/routes/password";
@@ -20,28 +20,19 @@
   <AuthLayout title="Reset password" description="Please enter your new password below">
     <Head title="Reset password" />
 
-    <Form v-bind="update.form()" :transform="(data) => ({ ...data, token, email })" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }">
-      <div class="grid gap-6">
-        <div class="grid gap-2">
-          <Label for="email">Email</Label>
-          <Input id="email" v-model="inputEmail" type="email" name="email" autocomplete="email" class="mt-1 block w-full" readonly :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
-        </div>
+    <Card variant="glass" class="px-6">
+      <Form v-bind="update.form()" :transform="(data) => ({ ...data, token, email })" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }" class="space-y-4">
+        <Input id="email" v-model="inputEmail" type="email" name="email" label="Email" variant="outlined" autocomplete="email" readonly :state="errors.email ? 'error' : 'default'" :message="errors.email" />
 
-        <div class="grid gap-2">
-          <Label for="password">Password</Label>
-          <Input id="password" type="password" name="password" autocomplete="new-password" class="mt-1 block w-full" autofocus placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
-        </div>
+        <Input id="password" type="password" name="password" label="Password" variant="outlined" autocomplete="new-password" autofocus :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
-        <div class="grid gap-2">
-          <Label for="password_confirmation"> Confirm Password </Label>
-          <Input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" class="mt-1 block w-full" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
-        </div>
+        <Input id="password_confirmation" type="password" name="password_confirmation" label="Confirm password" variant="outlined" autocomplete="new-password" :state="errors.password_confirmation ? 'error' : 'default'" :message="errors.password_confirmation" />
 
-        <Button type="submit" class="mt-4 w-full" :disabled="processing" data-test="reset-password-button">
+        <Button type="submit" appearance="filled" class="w-full" :disabled="processing" data-test="reset-password-button">
           <Spinner v-if="processing" />
           Reset password
         </Button>
-      </div>
-    </Form>
+      </Form>
+    </Card>
   </AuthLayout>
 </template>

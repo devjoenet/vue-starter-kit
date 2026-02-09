@@ -3,8 +3,8 @@
   import PasswordController from "@/actions/App/Http/Controllers/Settings/PasswordController";
   import Heading from "@/components/Heading.vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
-  import { Label } from "@/components/ui/label";
   import AppLayout from "@/layouts/AppLayout.vue";
   import SettingsLayout from "@/layouts/settings/Layout.vue";
   import { edit } from "@/routes/user-password";
@@ -25,43 +25,36 @@
     <h1 class="sr-only">Password Settings</h1>
 
     <SettingsLayout>
-      <div class="space-y-6">
-        <Heading variant="small" title="Update password" description="Ensure your account is using a long, random password to stay secure" />
+      <Card variant="glass" class="px-6">
+        <div class="space-y-4">
+          <Heading variant="small" title="Update password" description="Ensure your account is using a long, random password to stay secure" />
 
-        <Form
-          v-bind="PasswordController.update.form()"
-          :options="{
-            preserveScroll: true,
-          }"
-          reset-on-success
-          :reset-on-error="['password', 'password_confirmation', 'current_password']"
-          class="space-y-6"
-          v-slot="{ errors, processing, recentlySuccessful }"
-        >
-          <div class="grid gap-2">
-            <Label for="current_password">Current password</Label>
-            <Input id="current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" placeholder="Current password" :state="errors.current_password ? 'destructive' : 'default'" :message="errors.current_password" />
-          </div>
+          <Form
+            v-bind="PasswordController.update.form()"
+            :options="{
+              preserveScroll: true,
+            }"
+            reset-on-success
+            :reset-on-error="['password', 'password_confirmation', 'current_password']"
+            class="space-y-4"
+            v-slot="{ errors, processing, recentlySuccessful }"
+          >
+            <Input id="current_password" name="current_password" type="password" label="Current password" variant="outlined" autocomplete="current-password" :state="errors.current_password ? 'error' : 'default'" :message="errors.current_password" />
 
-          <div class="grid gap-2">
-            <Label for="password">New password</Label>
-            <Input id="password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="New password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
-          </div>
+            <Input id="password" name="password" type="password" label="New password" variant="outlined" autocomplete="new-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
-          <div class="grid gap-2">
-            <Label for="password_confirmation">Confirm password</Label>
-            <Input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
-          </div>
+            <Input id="password_confirmation" name="password_confirmation" type="password" label="Confirm password" variant="outlined" autocomplete="new-password" :state="errors.password_confirmation ? 'error' : 'default'" :message="errors.password_confirmation" />
 
-          <div class="flex items-center gap-4">
-            <Button :disabled="processing" data-test="update-password-button">Save password</Button>
+            <div class="flex items-center gap-4">
+              <Button appearance="filled" :disabled="processing" data-test="update-password-button">Save password</Button>
 
-            <Transition enter-active-class="transition ease-in-out" enter-from-class="opacity-0" leave-active-class="transition ease-in-out" leave-to-class="opacity-0">
-              <p v-show="recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
-            </Transition>
-          </div>
-        </Form>
-      </div>
+              <Transition enter-active-class="transition ease-in-out" enter-from-class="opacity-0" leave-active-class="transition ease-in-out" leave-to-class="opacity-0">
+                <p v-show="recentlySuccessful" class="text-sm text-success">Saved.</p>
+              </Transition>
+            </div>
+          </Form>
+        </div>
+      </Card>
     </SettingsLayout>
   </AppLayout>
 </template>

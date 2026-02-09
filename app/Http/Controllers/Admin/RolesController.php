@@ -16,7 +16,7 @@ final class RolesController
 {
     public function index(): Response
     {
-        return Inertia::render('Admin/Roles/Index', [
+        return Inertia::render('admin/Roles/Index', [
             'roles' => Role::query()
                 ->select(['id', 'name'])
                 ->orderBy('name')
@@ -26,7 +26,7 @@ final class RolesController
 
     public function create(): Response
     {
-        return Inertia::render('Admin/Roles/Create');
+        return Inertia::render('admin/Roles/Create');
     }
 
     public function store(): RedirectResponse
@@ -58,7 +58,7 @@ final class RolesController
             ->groupBy('group')
             ->map(fn ($items) => $items->values());
 
-        return Inertia::render('Admin/Roles/Edit', [
+        return Inertia::render('admin/Roles/Edit', [
             'role' => $role->only(['id', 'name']),
             'permissionsByGroup' => $permissions,
             'rolePermissions' => $role->permissions()->pluck('name')->values(),

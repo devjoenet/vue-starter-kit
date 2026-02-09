@@ -2,6 +2,7 @@
   import { Head } from "@inertiajs/vue3";
   import AppearanceTabs from "@/components/AppearanceTabs.vue";
   import Heading from "@/components/Heading.vue";
+  import { Card } from "@/components/ui/card";
   import AppLayout from "@/layouts/AppLayout.vue";
   import SettingsLayout from "@/layouts/settings/Layout.vue";
   import { edit } from "@/routes/appearance";
@@ -22,10 +23,12 @@
     <h1 class="sr-only">Appearance Settings</h1>
 
     <SettingsLayout>
-      <div class="space-y-6">
-        <Heading variant="small" title="Appearance settings" description="Update your account's appearance settings" />
-        <AppearanceTabs />
-      </div>
+      <Card variant="glass" class="px-6">
+        <div class="space-y-4">
+          <Heading variant="small" title="Appearance settings" description="Update your account's appearance settings" />
+          <AppearanceTabs />
+        </div>
+      </Card>
     </SettingsLayout>
   </AppLayout>
 </template>

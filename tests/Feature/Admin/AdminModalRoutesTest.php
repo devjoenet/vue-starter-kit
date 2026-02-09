@@ -21,7 +21,7 @@ test('users create route renders create page', function () {
     $this->get(route('admin.users.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Users/Create')
+            ->component('admin/Users/Create')
         );
 });
 
@@ -31,7 +31,7 @@ test('users edit route renders edit page', function () {
     $this->get(route('admin.users.edit', $target))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Users/Edit')
+            ->component('admin/Users/Edit')
             ->where('user.id', $target->id)
             ->where('user.name', $target->name)
             ->where('user.email', $target->email)
@@ -44,7 +44,7 @@ test('roles create route renders create page', function () {
     $this->get(route('admin.roles.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Roles/Create')
+            ->component('admin/Roles/Create')
         );
 });
 
@@ -57,7 +57,7 @@ test('roles edit route renders edit page', function () {
     $this->get(route('admin.roles.edit', $role))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Roles/Edit')
+            ->component('admin/Roles/Edit')
             ->where('role.id', $role->id)
             ->where('role.name', $role->name)
             ->has('permissionsByGroup')
@@ -69,7 +69,7 @@ test('permissions create route renders create page', function () {
     $this->get(route('admin.permissions.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Permissions/Create')
+            ->component('admin/Permissions/Create')
         );
 });
 
@@ -83,7 +83,7 @@ test('permissions edit route renders edit page', function () {
     $this->get(route('admin.permissions.edit', $permission))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Permissions/Edit')
+            ->component('admin/Permissions/Edit')
             ->where('permission.id', $permission->id)
             ->where('permission.name', $permission->name)
             ->where('permission.group', $permission->group)

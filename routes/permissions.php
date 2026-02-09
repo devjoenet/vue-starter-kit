@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
-        Route::get('/', fn () => Inertia::render('Admin/Dashboard', [
+        Route::get('/', fn () => Inertia::render('admin/Dashboard', [
             'counts' => [
                 'users' => User::query()->count(),
                 'roles' => Role::query()->count(),

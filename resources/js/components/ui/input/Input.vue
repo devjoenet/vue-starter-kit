@@ -6,6 +6,10 @@
   import type { InputVariants } from ".";
   import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from ".";
 
+  defineOptions({
+    inheritAttrs: false,
+  });
+
   const props = withDefaults(
     defineProps<{
       defaultValue?: string | number;

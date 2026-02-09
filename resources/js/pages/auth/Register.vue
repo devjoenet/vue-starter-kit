@@ -2,8 +2,8 @@
   import { Form, Head } from "@inertiajs/vue3";
   import TextLink from "@/components/TextLink.vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
-  import { Label } from "@/components/ui/label";
   import { Spinner } from "@/components/ui/spinner";
   import AuthBase from "@/layouts/AuthLayout.vue";
   import { login } from "@/routes";
@@ -14,38 +14,26 @@
   <AuthBase title="Create an account" description="Enter your details below to create your account">
     <Head title="Register" />
 
-    <Form v-bind="store.form()" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }" class="flex flex-col gap-6">
-      <div class="grid gap-6">
-        <div class="grid gap-2">
-          <Label for="name">Name</Label>
-          <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Full name" :state="errors.name ? 'destructive' : 'default'" :message="errors.name" />
-        </div>
+    <Card variant="glass" class="px-6">
+      <Form v-bind="store.form()" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }" class="space-y-4">
+        <Input id="name" type="text" name="name" label="Name" variant="outlined" required autofocus :tabindex="1" autocomplete="name" :state="errors.name ? 'error' : 'default'" :message="errors.name" />
 
-        <div class="grid gap-2">
-          <Label for="email">Email address</Label>
-          <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
-        </div>
+        <Input id="email" type="email" name="email" label="Email address" variant="outlined" required :tabindex="2" autocomplete="email" :state="errors.email ? 'error' : 'default'" :message="errors.email" />
 
-        <div class="grid gap-2">
-          <Label for="password">Password</Label>
-          <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
-        </div>
+        <Input id="password" type="password" name="password" label="Password" variant="outlined" required :tabindex="3" autocomplete="new-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
-        <div class="grid gap-2">
-          <Label for="password_confirmation">Confirm password</Label>
-          <Input id="password_confirmation" type="password" required :tabindex="4" autocomplete="new-password" name="password_confirmation" placeholder="Confirm password" :state="errors.password_confirmation ? 'destructive' : 'default'" :message="errors.password_confirmation" />
-        </div>
+        <Input id="password_confirmation" type="password" name="password_confirmation" label="Confirm password" variant="outlined" required :tabindex="4" autocomplete="new-password" :state="errors.password_confirmation ? 'error' : 'default'" :message="errors.password_confirmation" />
 
-        <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="processing" data-test="register-user-button">
+        <Button type="submit" appearance="filled" class="w-full" tabindex="5" :disabled="processing" data-test="register-user-button">
           <Spinner v-if="processing" />
           Create account
         </Button>
-      </div>
+      </Form>
+    </Card>
 
-      <div class="text-center text-sm text-muted-foreground">
-        Already have an account?
-        <TextLink :href="login()" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
-      </div>
-    </Form>
+    <div class="text-center text-sm text-muted-foreground">
+      Already have an account?
+      <TextLink :href="login()" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
+    </div>
   </AuthBase>
 </template>

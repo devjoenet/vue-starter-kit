@@ -25,7 +25,7 @@ test('authenticated users can visit the admin dashboard', function () {
     $this->get(route('admin.dashboard'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Admin/Dashboard')
+            ->component('admin/Dashboard')
             ->has('counts', fn (Assert $counts) => $counts
                 ->has('users')
                 ->has('roles')

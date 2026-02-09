@@ -2,30 +2,28 @@
 
 declare(strict_types=1);
 
-it('uses dropdown menu primitives instead of a native select', function () {
+it('uses the shared select component instead of a native select', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionGroupSelect.vue');
 
     expect($contents)
         ->not->toContain('<select')
-        ->toContain('<DropdownMenu>')
-        ->toContain('<DropdownMenuTrigger as-child>')
-        ->toContain('<DropdownMenuRadioGroup v-model="modelValue">')
-        ->toContain('<DropdownMenuRadioItem');
+        ->toContain('import { Select } from "@/components/ui/select";')
+        ->toContain('<Select')
+        ->toContain(':options="groupOptions"');
 });
 
-it('supports styling trigger and options via component props', function () {
+it('passes through select styling props', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionGroupSelect.vue');
 
     expect($contents)
-        ->toContain('triggerAppearance?: ButtonVariants["appearance"]')
-        ->toContain('optionVariant?: PermissionGroupOptionVariant')
+        ->toContain('variant?: InputVariants["variant"]')
+        ->toContain('optionVariant?: SelectOptionVariant')
         ->toContain('optionClass?: HTMLAttributes["class"]')
         ->toContain('contentClass?: HTMLAttributes["class"]')
-        ->toContain(':appearance="triggerAppearance"')
-        ->toContain('const optionVariantClasses: Record<PermissionGroupOptionVariant, string>')
-        ->toContain('const optionStateClasses = computed(() => optionVariantClasses[props.optionVariant])')
-        ->toContain('[&>span:first-child]:hidden')
-        ->toContain(':class="cn(\'cursor-pointer rounded-md px-3 py-2 pl-3 text-sm font-medium [&>span:first-child]:hidden\', optionStateClasses, optionClass)"')
-        ->not->toContain('data-[state=checked]:bg-')
-        ->not->toContain('data-[state=checked]:text-');
+        ->toContain(':variant="variant"')
+        ->toContain(':option-variant="optionVariant"')
+        ->toContain(':option-class="optionClass"')
+        ->toContain(':content-class="contentClass"')
+        ->not->toContain('<DropdownMenu')
+        ->not->toContain('<DropdownMenuRadioItem');
 });

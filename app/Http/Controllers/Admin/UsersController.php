@@ -16,7 +16,7 @@ final class UsersController
 {
     public function index(): Response
     {
-        return Inertia::render('Admin/Users/Index', [
+        return Inertia::render('admin/Users/Index', [
             'users' => User::query()
                 ->select(['id', 'name', 'email', 'created_at'])
                 ->latest()
@@ -27,7 +27,7 @@ final class UsersController
 
     public function create(): Response
     {
-        return Inertia::render('Admin/Users/Create');
+        return Inertia::render('admin/Users/Create');
     }
 
     public function store(): RedirectResponse
@@ -46,7 +46,7 @@ final class UsersController
 
     public function edit(User $user): Response
     {
-        return Inertia::render('Admin/Users/Edit', [
+        return Inertia::render('admin/Users/Edit', [
             'user' => $user->only(['id', 'name', 'email']),
             'roles' => Role::query()->orderBy('name')->get(['id', 'name']),
             'userRoles' => $user->getRoleNames()->values(),

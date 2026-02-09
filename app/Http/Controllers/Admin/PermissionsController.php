@@ -15,7 +15,7 @@ final class PermissionsController
 {
     public function index(): Response
     {
-        return Inertia::render('Admin/Permissions/Index', [
+        return Inertia::render('admin/Permissions/Index', [
             'permissionsByGroup' => Permission::query()
                 ->select(['id', 'name', 'group'])
                 ->orderBy('group')
@@ -28,7 +28,7 @@ final class PermissionsController
 
     public function create(): Response
     {
-        return Inertia::render('Admin/Permissions/Create');
+        return Inertia::render('admin/Permissions/Create');
     }
 
     public function store(): RedirectResponse
@@ -52,7 +52,7 @@ final class PermissionsController
 
     public function edit(Permission $permission): Response
     {
-        return Inertia::render('Admin/Permissions/Edit', [
+        return Inertia::render('admin/Permissions/Edit', [
             'permission' => $permission->only(['id', 'name', 'group']),
         ]);
     }

@@ -2,6 +2,7 @@
   import { Form, Head } from "@inertiajs/vue3";
   import TextLink from "@/components/TextLink.vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Spinner } from "@/components/ui/spinner";
   import AuthLayout from "@/layouts/AuthLayout.vue";
   import { logout } from "@/routes";
@@ -16,15 +17,17 @@
   <AuthLayout title="Verify email" description="Please verify your email address by clicking on the link we just emailed to you.">
     <Head title="Email verification" />
 
-    <div v-if="status === 'verification-link-sent'" class="mb-4 text-center text-sm font-medium text-green-600">A new verification link has been sent to the email address you provided during registration.</div>
+    <Card variant="glass" class="px-6">
+      <Form v-bind="send.form()" class="space-y-4 text-center" v-slot="{ processing }">
+        <p v-if="status === 'verification-link-sent'" class="text-sm font-medium text-success">A new verification link has been sent to the email address you provided during registration.</p>
 
-    <Form v-bind="send.form()" class="space-y-6 text-center" v-slot="{ processing }">
-      <Button :disabled="processing" variant="secondary">
-        <Spinner v-if="processing" />
-        Resend verification email
-      </Button>
+        <Button appearance="filled" class="w-full" :disabled="processing">
+          <Spinner v-if="processing" />
+          Resend verification email
+        </Button>
 
-      <TextLink :href="logout()" as="button" class="mx-auto block text-sm"> Log out </TextLink>
-    </Form>
+        <TextLink :href="logout()" as="button" class="mx-auto block text-sm"> Log out </TextLink>
+      </Form>
+    </Card>
   </AuthLayout>
 </template>

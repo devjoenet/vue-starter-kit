@@ -2,9 +2,9 @@
   import { Form, Head } from "@inertiajs/vue3";
   import TextLink from "@/components/TextLink.vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Checkbox } from "@/components/ui/checkbox";
   import { Input } from "@/components/ui/input";
-  import { Label } from "@/components/ui/label";
   import { Spinner } from "@/components/ui/spinner";
   import AuthBase from "@/layouts/AuthLayout.vue";
   import { register } from "@/routes";
@@ -22,42 +22,39 @@
   <AuthBase title="Log in to your account" description="Enter your email and password below to log in">
     <Head title="Log in" />
 
-    <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
-      {{ status }}
-    </div>
+    <Card variant="glass" class="px-6">
+      <div class="space-y-4">
+        <p v-if="status" class="text-center text-sm font-medium text-success">
+          {{ status }}
+        </p>
 
-    <Form v-bind="store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="flex flex-col gap-6">
-      <div class="grid gap-6">
-        <div class="grid gap-2">
-          <Label for="email">Email address</Label>
-          <Input id="email" type="email" name="email" required autofocus :tabindex="1" autocomplete="email" placeholder="email@example.com" :state="errors.email ? 'destructive' : 'default'" :message="errors.email" />
-        </div>
+        <Form v-bind="store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="space-y-4">
+          <Input id="email" type="email" name="email" label="Email address" variant="outlined" required autofocus :tabindex="1" autocomplete="email" :state="errors.email ? 'error' : 'default'" :message="errors.email" />
 
-        <div class="grid gap-2">
-          <div class="flex items-center justify-between">
-            <Label for="password">Password</Label>
-            <TextLink v-if="canResetPassword" :href="request()" class="text-sm" :tabindex="5"> Forgot password? </TextLink>
+          <div class="space-y-2">
+            <div class="flex justify-end">
+              <TextLink v-if="canResetPassword" :href="request()" class="text-sm" :tabindex="5"> Forgot password? </TextLink>
+            </div>
+
+            <Input id="password" type="password" name="password" label="Password" variant="outlined" required :tabindex="2" autocomplete="current-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
           </div>
-          <Input id="password" type="password" name="password" required :tabindex="2" autocomplete="current-password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
-        </div>
 
-        <div class="flex items-center justify-between">
-          <Label for="remember" class="flex items-center space-x-3">
+          <label for="remember" class="flex items-center gap-3 text-sm">
             <Checkbox id="remember" name="remember" :tabindex="3" />
             <span>Remember me</span>
-          </Label>
-        </div>
+          </label>
 
-        <Button type="submit" class="mt-4 w-full" :tabindex="4" :disabled="processing" data-test="login-button">
-          <Spinner v-if="processing" />
-          Log in
-        </Button>
+          <Button type="submit" appearance="filled" class="w-full" :tabindex="4" :disabled="processing" data-test="login-button">
+            <Spinner v-if="processing" />
+            Log in
+          </Button>
+        </Form>
       </div>
+    </Card>
 
-      <div class="text-center text-sm text-muted-foreground" v-if="canRegister">
-        Don't have an account?
-        <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
-      </div>
-    </Form>
+    <div class="text-center text-sm text-muted-foreground" v-if="canRegister">
+      Don't have an account?
+      <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+    </div>
   </AuthBase>
 </template>

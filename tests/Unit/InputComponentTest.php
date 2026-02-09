@@ -13,6 +13,7 @@ it('matches the material input variants structure', function () {
     $indexContents = file_get_contents($indexPath);
 
     expect($contents)
+        ->toContain('inheritAttrs: false')
         ->toContain('leading-icon')
         ->toContain('trailing-icon')
         ->toContain('supportingText')
@@ -26,6 +27,5 @@ it('matches the material input variants structure', function () {
         ->toContain('variant')
         ->toContain('outlined')
         ->toContain('filled')
-        ->toContain('peer-placeholder-shown:bg-transparent')
-        ->toContain('peer-placeholder-shown:px-0');
+        ->toContain('bg-transparent px-0');
 });

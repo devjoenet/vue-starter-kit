@@ -4,25 +4,25 @@
   import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileController";
   import Heading from "@/components/Heading.vue";
   import { Button } from "@/components/ui/button";
+  import { Card } from "@/components/ui/card";
   import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
-  import { Label } from "@/components/ui/label";
 
   const passwordInput = useTemplateRef("passwordInput");
 </script>
 
 <template>
-  <div class="space-y-6">
-    <Heading variant="small" title="Delete account" description="Delete your account and all of its resources" />
-    <div class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
-      <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-        <p class="font-medium">Warning</p>
-        <p class="text-sm">Please proceed with caution, this cannot be undone.</p>
-      </div>
+  <Card variant="destructive" class="px-6">
+    <div class="space-y-4">
+      <Heading variant="small" title="Delete account" description="Delete your account and all of its resources" />
+
+      <p class="text-sm text-destructive">Please proceed with caution. This action cannot be undone.</p>
+
       <Dialog>
         <DialogTrigger as-child>
-          <Button variant="destructive" data-test="delete-user-button">Delete account</Button>
+          <Button appearance="filled" variant="destructive" data-test="delete-user-button">Delete account</Button>
         </DialogTrigger>
+
         <DialogContent>
           <Form
             v-bind="ProfileController.destroy.form()"
@@ -31,7 +31,7 @@
             :options="{
               preserveScroll: true,
             }"
-            class="space-y-6"
+            class="space-y-4"
             v-slot="{ errors, processing, reset, clearErrors }"
           >
             <DialogHeader class="space-y-3">
@@ -39,15 +39,13 @@
               <DialogDescription> Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account. </DialogDescription>
             </DialogHeader>
 
-            <div class="grid gap-2">
-              <Label for="password" class="sr-only">Password</Label>
-              <Input id="password" ref="passwordInput" type="password" name="password" placeholder="Password" :state="errors.password ? 'destructive' : 'default'" :message="errors.password" />
-            </div>
+            <Input id="password" ref="passwordInput" type="password" name="password" label="Password" variant="outlined" placeholder="Password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
             <DialogFooter class="gap-2">
               <DialogClose as-child>
                 <Button
-                  variant="secondary"
+                  appearance="outline"
+                  variant="muted"
                   @click="
                     () => {
                       clearErrors();
@@ -59,11 +57,11 @@
                 </Button>
               </DialogClose>
 
-              <Button type="submit" variant="destructive" :disabled="processing" data-test="confirm-delete-user-button"> Delete account </Button>
+              <Button type="submit" appearance="filled" variant="destructive" :disabled="processing" data-test="confirm-delete-user-button"> Delete account </Button>
             </DialogFooter>
           </Form>
         </DialogContent>
       </Dialog>
     </div>
-  </div>
+  </Card>
 </template>
