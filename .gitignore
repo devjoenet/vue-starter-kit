@@ -16,6 +16,9 @@
 /.zed
 /.ai/**/*.*
 /.agents/**/*.*
+/.claude/**/*.*
+/.gemini/**/*.*
+/.codex/**/*.*
 /auth.json
 /node_modules
 /public/build
