@@ -31,8 +31,6 @@ Thumbs.db
 .phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php
-./AGENTS.md
 ./GEMINI.md
-AGENTS.md
 GEMINI.md
 resources/js/types/generated.d.ts
