@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('matches the material input variants structure', function () {
+it('matches the enhanced input variants structure', function () {
     $path = dirname(__DIR__, 2).'/resources/js/components/ui/input/Input.vue';
     $indexPath = dirname(__DIR__, 2).'/resources/js/components/ui/input/index.ts';
 
@@ -14,18 +14,19 @@ it('matches the material input variants structure', function () {
 
     expect($contents)
         ->toContain('inheritAttrs: false')
-        ->toContain('leading-icon')
-        ->toContain('trailing-icon')
-        ->toContain('supportingText')
-        ->toContain('maxLength')
-        ->toContain('inputVariants')
-        ->toContain('inputLabelVariants')
-        ->toContain('inputAssistiveTextVariants')
+        ->toContain('clearable?: boolean')
+        ->toContain('preventAutoFill?: boolean')
+        ->toContain('handleCompositionStart')
+        ->toContain('handleCompositionEnd')
+        ->toContain('normalizeNumberValue')
+        ->toContain('slot name="clear-icon"')
+        ->toContain('defineExpose')
         ->toContain('textarea');
 
     expect($indexContents)
         ->toContain('variant')
         ->toContain('outlined')
         ->toContain('filled')
+        ->toContain('rounded-b-none')
         ->toContain('bg-transparent px-0');
 });

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from "vue";
+  import type { Component, HTMLAttributes } from "vue";
   import { computed, ref, useId, watch } from "vue";
   import { useVModel } from "@vueuse/core";
-  import { ChevronDown } from "lucide-vue-next";
+  import { ChevronDown, CircleX } from "lucide-vue-next";
   import type { InputVariants } from "@/components/ui/input";
   import { inputAssistiveTextVariants, inputVariants } from "@/components/ui/input";
   import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -34,17 +34,27 @@
       optionVariant?: SelectOptionVariant;
       optionClass?: HTMLAttributes["class"];
       contentClass?: HTMLAttributes["class"];
+      clearable?: boolean;
+      leadingIcon?: Component | string;
+      trailingIcon?: Component | string;
+      clearIcon?: Component;
     }>(),
     {
       variant: "filled",
       state: "default",
       placeholder: "Select an option",
       optionVariant: "primary",
+      clearable: false,
     },
   );
 
   const emit = defineEmits<{
     (event: "update:modelValue", value: string): void;
+    (event: "change", value: string): void;
+    (event: "clear", value: string): void;
+    (event: "focus", eventPayload: FocusEvent): void;
+    (event: "blur", eventPayload: FocusEvent): void;
+    (event: "openChange", isOpen: boolean): void;
   }>();
 
   const generatedId = useId();
@@ -63,6 +73,10 @@
       }
     },
   );
+
+  watch(open, (value) => {
+    emit("openChange", value);
+  });
 
   const hasLabel = computed(() => Boolean(props.label));
   const showAsterisk = computed(() => props.required && !props.noAsterisk);
@@ -132,6 +146,42 @@
     return props.supportingText ?? props.message;
   });
 
+  const hasLeadingIcon = computed(() => Boolean(props.leadingIcon));
+  const hasTrailingIcon = computed(() => Boolean(props.trailingIcon));
+  const hasClearControl = computed(() => props.clearable && hasValue.value && !props.disabled && !props.readonly);
+
+  const leftPadding = computed(() => (hasLeadingIcon.value ? "pl-12" : "pl-4"));
+
+  const rightDecorators = computed(() => {
+    let count = 1;
+
+    if (hasTrailingIcon.value) {
+      count += 1;
+    }
+
+    if (hasClearControl.value) {
+      count += 1;
+    }
+
+    return count;
+  });
+
+  const rightPadding = computed(() => {
+    if (rightDecorators.value >= 3) {
+      return "pr-20";
+    }
+
+    if (rightDecorators.value === 2) {
+      return "pr-14";
+    }
+
+    return "pr-10";
+  });
+
+  const arrowOffset = computed(() => "right-3");
+  const trailingOffset = computed(() => (hasClearControl.value ? "right-16" : "right-10"));
+  const clearOffset = computed(() => "right-10");
+
   const triggerClasses = computed(() =>
     cn(
       inputVariants({
@@ -140,7 +190,9 @@
         multiline: false,
         label: hasLabel.value,
       }),
-      "flex items-center justify-between gap-3 text-left",
+      "group relative flex w-full items-center text-left",
+      leftPadding.value,
+      rightPadding.value,
       !hasValue.value && "text-[var(--field-label)]",
       props.class,
       props.triggerClass,
@@ -172,6 +224,47 @@
   );
 
   const chevronClasses = computed(() => cn("size-4 shrink-0 text-[var(--field-label)] transition-transform duration-150", open.value && "rotate-180", hasError.value && "text-[var(--error)]"));
+
+  function handleSelectionChange(value: string): void {
+    modelValue.value = value;
+    emit("change", value);
+
+    if (open.value) {
+      open.value = false;
+    }
+  }
+
+  function clearValue(): void {
+    if (!hasClearControl.value) {
+      return;
+    }
+
+    modelValue.value = "";
+    emit("clear", "");
+  }
+
+  function handleTriggerKeydown(event: KeyboardEvent): void {
+    if (props.disabled || props.readonly) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      open.value = !open.value;
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      open.value = true;
+      return;
+    }
+
+    if (event.key === "Escape" && open.value) {
+      event.preventDefault();
+      open.value = false;
+    }
+  }
 </script>
 
 <template>
@@ -194,14 +287,64 @@
             :aria-required="required ? 'true' : undefined"
             :aria-readonly="readonly ? 'true' : undefined"
             :class="triggerClasses"
+            @keydown="handleTriggerKeydown"
+            @focus="(event) => emit('focus', event)"
+            @blur="(event) => emit('blur', event)"
           >
-            <span class="truncate text-left">{{ selectedLabel }}</span>
-            <ChevronDown :class="chevronClasses" />
+            <span v-if="hasLeadingIcon" class="absolute left-4 top-1/2 z-10 flex -translate-y-1/2 items-center text-[var(--field-label)]">
+              <slot name="leading-icon">
+                <slot name="prepend-icon">
+                  <component v-if="leadingIcon && typeof leadingIcon !== 'string'" :is="leadingIcon" class="size-5" />
+                  <span v-else-if="leadingIcon" class="text-sm font-medium">{{ leadingIcon }}</span>
+                </slot>
+              </slot>
+            </span>
+
+            <span class="truncate text-left">
+              <slot name="selected" :option="selectedOption" :value="modelValue">
+                {{ selectedLabel }}
+              </slot>
+            </span>
+
+            <span
+              v-if="hasClearControl"
+              :class="
+                cn(
+                  'absolute top-1/2 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-[var(--field-label)] transition-colors duration-150 hover:text-[var(--field-focus)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]',
+                  clearOffset,
+                )
+              "
+              role="button"
+              tabindex="0"
+              aria-label="Clear selection"
+              @click.stop="clearValue"
+              @keydown.enter.prevent="clearValue"
+              @keydown.space.prevent="clearValue"
+            >
+              <slot name="clear-icon" :clear="clearValue">
+                <component :is="clearIcon ?? CircleX" class="size-4" />
+              </slot>
+            </span>
+
+            <span v-if="hasTrailingIcon" :class="cn('absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-[var(--field-label)]', trailingOffset)">
+              <slot name="trailing-icon">
+                <slot name="append-icon">
+                  <component v-if="trailingIcon && typeof trailingIcon !== 'string'" :is="trailingIcon" class="size-5" />
+                  <span v-else-if="trailingIcon" class="text-sm font-medium">{{ trailingIcon }}</span>
+                </slot>
+              </slot>
+            </span>
+
+            <span :class="cn('absolute top-1/2 z-10 -translate-y-1/2', arrowOffset)">
+              <slot name="arrow-icon" :open="open">
+                <ChevronDown :class="chevronClasses" />
+              </slot>
+            </span>
           </button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent :id="menuId" align="start" :side-offset="4" :class="cn('max-h-70 w-(--reka-dropdown-menu-trigger-width) border-border/60 p-1 shadow-(--elevation-2)', contentClass)">
-          <DropdownMenuRadioGroup v-model="modelValue">
+        <DropdownMenuContent :id="menuId" align="start" :side-offset="4" :class="cn('max-h-70 w-(--reka-dropdown-menu-trigger-width) overflow-y-auto border-border/60 p-1 shadow-(--elevation-2)', contentClass)">
+          <DropdownMenuRadioGroup :model-value="modelValue" @update:model-value="handleSelectionChange">
             <DropdownMenuRadioItem v-for="option in options" :key="option.value" :value="option.value" :disabled="option.disabled" :class="cn('min-h-11 cursor-pointer rounded-sm px-3 py-2 pl-3 text-sm font-medium [&>span:first-child]:hidden', optionStateClasses, optionClass)">
               {{ option.label }}
             </DropdownMenuRadioItem>
@@ -211,7 +354,7 @@
 
       <label v-if="label" :for="fieldId" :class="labelClasses">
         {{ label }}
-        <span v-if="showAsterisk" class="text-(--error)"> *</span>
+        <span v-if="showAsterisk" class="text-[var(--error)]"> *</span>
       </label>
     </div>
 

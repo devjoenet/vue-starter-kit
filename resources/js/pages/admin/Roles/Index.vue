@@ -31,7 +31,7 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="space-y-6">
+    <div class="space-y-6 px-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Roles</h1>
 

@@ -40,7 +40,7 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="space-y-6">
+    <div class="space-y-6 px-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Permissions</h1>
 
@@ -49,7 +49,7 @@
         </Button>
       </div>
 
-      <div class="space-y-6">
+      <div class="space-y-6 px-4">
         <Card v-for="(items, group) in props.permissionsByGroup" :key="group" variant="glass" class="px-6">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold capitalize">{{ group }}</h2>

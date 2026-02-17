@@ -4,27 +4,27 @@ import { cva } from "class-variance-authority";
 export { default as Input } from "./Input.vue";
 
 export const inputVariants = cva(
-  "peer w-full min-w-0 rounded-[var(--radius-sm)] text-base leading-6 text-[var(--field-text)] transition-[border-color,box-shadow,background-color,color] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-[color:var(--field-focus)] focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]",
+  "peer w-full min-w-0 rounded-[var(--radius-sm)] text-base leading-6 text-[var(--field-text)] transition-[border-color,box-shadow,background-color,color] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55 focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]/30",
   {
     variants: {
       variant: {
-        filled: "border-b border-[color:var(--outline)] bg-[var(--field-bg)]",
-        outlined: "border border-[color:var(--outline)] bg-transparent",
+        filled: "border border-transparent border-b-[color:var(--outline)] rounded-t-[var(--radius-sm)] rounded-b-none bg-[var(--field-bg)]/90 hover:bg-[var(--field-bg)] focus-visible:border-b-[color:var(--field-focus)]",
+        outlined: "border border-[color:var(--outline)] bg-transparent hover:border-[color:var(--field-focus)]/50 focus-visible:border-[color:var(--field-focus)]",
       },
       state: {
         default: "",
-        error: "border-[color:var(--error)] ring-[color:var(--error)]",
-        destructive: "border-destructive ring-destructive",
-        info: "border-info ring-info",
-        warning: "border-warning ring-warning",
-        success: "border-success ring-success",
+        error: "border-[color:var(--error)] ring-[color:var(--error)]/30",
+        destructive: "border-destructive ring-destructive/30",
+        info: "border-info ring-info/30",
+        warning: "border-warning ring-warning/30",
+        success: "border-success ring-success/30",
       },
       multiline: {
-        true: "min-h-[3.5rem] resize-y",
+        true: "min-h-[3.5rem] py-4",
         false: "h-14",
       },
       label: {
-        true: "pt-6 pb-2",
+        true: "pt-6 pb-2 placeholder:text-transparent",
         false: "py-4",
       },
     },
@@ -38,7 +38,7 @@ export const inputVariants = cva(
 );
 
 export const inputLabelVariants = cva(
-  "absolute top-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top,background-color] duration-150 peer-placeholder-shown:top-4 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:scale-90 peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:scale-90 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60",
+  "pointer-events-none absolute top-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top] duration-150 peer-placeholder-shown:top-4 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:scale-90 peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:scale-90 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60",
   {
     variants: {
       variant: {

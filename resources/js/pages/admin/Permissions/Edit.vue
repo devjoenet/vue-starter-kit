@@ -53,8 +53,8 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="space-y-6">
-      <div class="flex flex-wrap items-center justify-between gap-3">
+    <div class="space-y-6 px-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
         <h1 class="text-2xl font-semibold">Edit permission</h1>
         <Button appearance="text" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
       </div>

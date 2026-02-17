@@ -15,7 +15,8 @@
   import { type BreadcrumbItem } from "@/types";
 
   const props = defineProps<{
-    role: { id: number; name: string };
+    roleId: number;
+    roleName: string;
     permissionsByGroup: Record<string, { id: number; name: string; group: string }[]>;
     rolePermissions: string[];
   }>();
@@ -36,15 +37,15 @@
     },
     {
       title: "Edit",
-      href: edit.url(props.role.id),
+      href: edit.url(props.roleId),
     },
   ];
 
-  const roleForm = useForm({ name: "" });
+  const roleForm = useForm({ name: props.roleName });
   const permsForm = useForm({ permissions: [...props.rolePermissions] });
 
   watch(
-    () => props.role.name,
+    () => props.roleName,
     (roleName) => {
       roleForm.name = roleName;
     },
@@ -53,18 +54,18 @@
 
   const updateRole = () => {
     if (!canUpdate.value) return;
-    roleForm.put(update.url(props.role.id), { preserveScroll: true });
+    roleForm.put(update.url(props.roleId), { preserveScroll: true });
   };
 
   const syncPermissions = () => {
     if (!canAssign.value) return;
-    permsForm.put(sync.url(props.role.id), { preserveScroll: true });
+    permsForm.put(sync.url(props.roleId), { preserveScroll: true });
   };
 
   const destroyRole = () => {
     if (!canDelete.value) return;
     if (!confirm("Delete this role?")) return;
-    router.delete(destroy.url(props.role.id));
+    router.delete(destroy.url(props.roleId));
   };
 
   const togglePermission = (name: string) => {
@@ -76,7 +77,7 @@
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="space-y-6">
+    <div class="space-y-6 px-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Edit role</h1>
         <Button appearance="text" :disabled="!canDelete" @click="destroyRole">Delete</Button>
@@ -87,7 +88,7 @@
           <h2 class="text-lg font-semibold">Details</h2>
 
           <form class="mt-4 space-y-4" @submit.prevent="updateRole">
-            <Input id="edit-role-name" v-model="roleForm.name" name="name" label="Role name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
+            <Input id="edit-role-name" :default-value="roleForm.name" v-model="roleForm.name" name="name" label="Role name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
 
             <div class="flex justify-end">
               <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing"> Save </Button>

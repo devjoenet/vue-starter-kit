@@ -59,7 +59,8 @@ final class RolesController
             ->map(fn ($items) => $items->values());
 
         return Inertia::render('admin/Roles/Edit', [
-            'role' => $role->only(['id', 'name']),
+            'roleId' => $role->id,
+            'roleName' => $role->name,
             'permissionsByGroup' => $permissions,
             'rolePermissions' => $role->permissions()->pluck('name')->values(),
         ]);
