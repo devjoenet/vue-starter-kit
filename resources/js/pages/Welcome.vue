@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { Head, Link } from "@inertiajs/vue3";
   import { dashboard, login, register } from "@/routes";
+  import { Button } from "@/components/ui/button";
 
   withDefaults(
     defineProps<{
@@ -18,24 +19,25 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
   </Head>
   <div class="flex min-h-screen flex-col items-center bg-background p-6 text-foreground lg:justify-center lg:p-8">
-    <header class="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
+    <header class="mb-6 w-full max-w-83.75 text-sm not-has-[nav]:hidden lg:max-w-4xl">
       <nav class="flex items-center justify-end gap-4">
-        <Link v-if="$page.props.auth?.user" :href="dashboard()" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Dashboard </Link>
+        <Button as="a" appearance="outline" v-if="$page.props.auth?.user" :href="dashboard()">Dashboard</Button>
+        <Link v-if="$page.props.auth?.user" :href="dashboard().url" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Dashboard </Link>
         <template v-else>
-          <Link :href="login()" class="inline-flex items-center rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-foreground transition hover:border-primary/60 hover:text-primary"> Log in </Link>
-          <Link v-if="canRegister" :href="register()" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Register </Link>
+          <Button as="a" :href="login().url" appearance="outline" variant="primary">Login</Button>
+          <Button as="a" v-if="canRegister" :href="register().url" variant="primary" appearance="filled">Register</Button>
         </template>
       </nav>
     </header>
     <div class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-      <main class="flex w-full max-w-[335px] flex-col-reverse overflow-hidden rounded-lg border border-border bg-card lg:max-w-4xl lg:flex-row">
-        <div class="flex-1 rounded-br-lg rounded-bl-lg bg-card p-6 pb-12 text-[13px] leading-[20px] text-card-foreground lg:rounded-tl-lg lg:rounded-br-none lg:p-20">
+      <main class="flex w-full max-w-83.75lex-col-reverse overflow-hidden rounded-lg border border-border bg-card lg:max-w-4xl lg:flex-row">
+        <div class="flex-1 rounded-br-lg rounded-bl-lg bg-card p-6 pb-12 text-[13px] leading-5 text-card-foreground lg:rounded-tl-lg lg:rounded-br-none lg:p-20">
           <h1 class="mb-1 font-semibold text-foreground">Let's get started</h1>
           <p class="mb-2 text-muted-foreground">Laravel has an incredibly rich ecosystem. <br />We suggest starting with the following.</p>
           <ul class="mb-4 flex flex-col lg:mb-6">
             <li class="relative flex items-center gap-4 py-2 before:absolute before:top-1/2 before:bottom-0 before:left-[0.4rem] before:border-l before:border-border">
               <span class="relative bg-card py-1">
-                <span class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-border bg-background shadow-[0px_0px_1px_0px_rgb(0_0_0_/_0.04),0px_1px_2px_0px_rgb(0_0_0_/_0.08)]">
+                <span class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-border bg-background shadow-[0px_0px_1px_0px_rgb(0_0_0/0.04),0px_1px_2px_0px_rgb(0_0_0/0.08)]">
                   <span class="h-1.5 w-1.5 rounded-full bg-primary" />
                 </span>
               </span>
@@ -51,7 +53,7 @@
             </li>
             <li class="relative flex items-center gap-4 py-2 before:absolute before:top-0 before:bottom-1/2 before:left-[0.4rem] before:border-l before:border-border">
               <span class="relative bg-card py-1">
-                <span class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-border bg-background shadow-[0px_0px_1px_0px_rgb(0_0_0_/_0.04),0px_1px_2px_0px_rgb(0_0_0_/_0.08)]">
+                <span class="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-border bg-background shadow-[0px_0px_1px_0px_rgb(0_0_0/0.04),0px_1px_2px_0px_rgb(0_0_0/0.08)]">
                   <span class="h-1.5 w-1.5 rounded-full bg-accent" />
                 </span>
               </span>
@@ -72,7 +74,7 @@
             </li>
           </ul>
         </div>
-        <div class="relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-lg bg-gradient-to-br from-primary/10 via-background to-accent/20 lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-[438px] lg:rounded-t-none lg:rounded-r-lg">
+        <div class="relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-lg bg-linear-to-br from-primary/10 via-background to-accent/20 lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-109.5 lg:rounded-t-none lg:rounded-r-lg">
           <svg class="w-full max-w-none translate-y-0 text-primary opacity-100 transition-all duration-750 starting:translate-y-6 starting:opacity-0" viewBox="0 0 438 104" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.2036 -3H0V102.197H49.5189V86.7187H17.2036V-3Z" fill="currentColor" />
             <path
@@ -91,7 +93,7 @@
               fill="currentColor"
             />
           </svg>
-          <svg class="relative -mt-[4.9rem] -ml-8 w-[448px] max-w-none lg:-mt-[6.6rem] lg:ml-0 dark:hidden" viewBox="0 0 440 376" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="relative -mt-[4.9rem] -ml-8 w-md max-w-none lg:-mt-[6.6rem] lg:ml-0 dark:hidden" viewBox="0 0 440 376" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g class="translate-y-0 opacity-100 transition-all delay-300 duration-750 starting:translate-y-4 starting:opacity-0">
               <path
                 d="M188.263 355.73L188.595 355.73C195.441 348.845 205.766 339.761 219.569 328.477C232.93 317.193 242.978 308.205 249.714 301.511C256.34 294.626 260.867 287.358 263.296 279.708C265.725 272.058 264.565 264.121 259.816 255.896C254.516 246.716 247.062 239.352 237.454 233.805C227.957 228.067 217.908 225.198 207.307 225.198C196.927 225.197 190.136 227.97 186.934 233.516C183.621 238.872 184.726 246.331 190.247 255.894L125.647 255.891C116.371 239.825 112.395 225.481 113.72 212.858C115.265 200.235 121.559 190.481 132.602 183.596C143.754 176.52 158.607 172.982 177.159 172.983C196.594 172.984 215.863 176.523 234.968 183.6C253.961 190.486 271.299 200.241 286.98 212.864C302.661 225.488 315.14 239.833 324.416 255.899C333.03 270.817 336.841 283.918 335.847 295.203C335.075 306.487 331.376 316.336 324.75 324.751C318.346 333.167 308.408 343.494 294.936 355.734L377.094 355.737L405.917 405.656L217.087 405.649L188.263 355.73Z"
@@ -199,7 +201,7 @@
               <path d="M67.41 125.402L44.5515 125.401L15.5625 75.1953L101.364 75.1985L233.886 304.712L170.942 304.71L67.41 125.402Z" stroke="var(--brand-ink)" stroke-width="1" />
             </g>
           </svg>
-          <svg class="relative -mt-[4.9rem] -ml-8 hidden w-[448px] max-w-none lg:-mt-[6.6rem] lg:ml-0 dark:block" viewBox="0 0 440 376" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="relative -mt-[4.9rem] -ml-8 hidden w-md max-w-none lg:-mt-[6.6rem] lg:ml-0 dark:block" viewBox="0 0 440 376" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g class="translate-y-0 opacity-100 transition-all delay-300 duration-750 starting:translate-y-4 starting:opacity-0">
               <path
                 d="M188.263 355.73L188.595 355.73C195.441 348.845 205.766 339.761 219.569 328.477C232.93 317.193 242.978 308.205 249.714 301.511C256.34 294.626 260.867 287.358 263.296 279.708C265.725 272.058 264.565 264.121 259.816 255.896C254.516 246.716 247.062 239.352 237.454 233.805C227.957 228.067 217.908 225.198 207.307 225.198C196.927 225.197 190.136 227.97 186.934 233.516C183.621 238.872 184.726 246.331 190.247 255.894L125.647 255.891C116.371 239.825 112.395 225.481 113.72 212.858C115.265 200.235 121.559 190.481 132.602 183.596C143.754 176.52 158.607 172.982 177.159 172.983C196.594 172.984 215.863 176.523 234.968 183.6C253.961 190.486 271.299 200.241 286.98 212.864C302.661 225.488 315.14 239.833 324.416 255.899C333.03 270.817 336.841 283.918 335.847 295.203C335.075 306.487 331.376 316.336 324.75 324.751C318.346 333.167 308.408 343.494 294.936 355.734L377.094 355.737L405.917 405.656L217.087 405.649L188.263 355.73Z"
@@ -302,7 +304,7 @@
               <path d="M67.41 125.402L44.5515 125.401L15.5625 75.1953L101.364 75.1985L233.886 304.712L170.942 304.71L67.41 125.402Z" stroke="var(--brand-sky)" stroke-width="1" />
             </g>
           </svg>
-          <div class="absolute inset-0 rounded-t-lg shadow-[inset_0px_0px_0px_1px_rgb(0_0_0_/_0.08)] lg:overflow-hidden lg:rounded-t-none lg:rounded-r-lg" />
+          <div class="absolute inset-0 rounded-t-lg shadow-[inset_0px_0px_0px_1px_rgb(0_0_0/0.08)] lg:overflow-hidden lg:rounded-t-none lg:rounded-r-lg" />
         </div>
       </main>
     </div>

@@ -9,12 +9,12 @@ type ButtonVariantName = "muted" | "primary" | "secondary" | "info" | "warning" 
 const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVariantName, string>> = {
   filled: {
     muted: "bg-muted text-foreground hover:bg-muted/80",
-    primary: "bg-primary text-primary-foreground hover:bg-primary/50",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/50",
-    info: "bg-info text-info-foreground hover:bg-info/50",
-    warning: "bg-warning text-warning-foreground hover:bg-warning/50",
-    success: "bg-success text-success-foreground hover:bg-success/50",
-    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/50",
+    primary: "bg-primary text-primary-foreground hover:bg-primary/80",
+    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+    info: "bg-info text-info-foreground hover:bg-info/80",
+    warning: "bg-warning text-warning-foreground hover:bg-warning/80",
+    success: "bg-success text-success-foreground hover:bg-success/80",
+    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
   },
   tonal: {
     muted: "border-border/40 bg-muted/75 text-foreground hover:bg-muted",
@@ -26,13 +26,13 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     destructive: "border-destructive/30 bg-destructive/15 text-destructive hover:bg-destructive/22",
   },
   outline: {
-    muted: "border-border/70 text-foreground hover:bg-muted/50",
-    primary: "border-primary/40 text-primary hover:bg-primary/10",
-    secondary: "border-secondary/40 text-secondary hover:bg-secondary/10",
-    info: "border-info/40 text-info hover:bg-info/10",
-    warning: "border-warning/40 text-warning hover:bg-warning/10",
-    success: "border-success/40 text-success hover:bg-success/10",
-    destructive: "border-destructive/40 text-destructive hover:bg-destructive/10",
+    muted: "border-border text-foreground hover:bg-muted hover:text-muted-foreground",
+    primary: "border-primary text-primary hover:bg-primary hover:text-primary-foreground",
+    secondary: "border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground",
+    info: "border-info text-info hover:bg-info ",
+    warning: "border-warning text-warning hover:bg-warning hover:text-warning-foreground",
+    success: "border-success text-success hover:bg-success hover:text-success-foreground",
+    destructive: "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground",
   },
   elevated: {
     muted: "border-border/60 bg-card text-foreground hover:bg-muted/50",
@@ -72,12 +72,12 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
   },
   glass: {
     muted: "border-[color:var(--glass-border)] bg-[color:var(--glass-surface)] text-foreground hover:bg-[color:var(--glass-surface-hover)]",
-    primary: "border-primary/25 bg-primary/20 text-primary-foreground hover:bg-primary/28",
-    secondary: "border-secondary/25 bg-secondary/20 text-secondary-foreground hover:bg-secondary/28",
-    info: "border-info/25 bg-info/20 text-info-foreground hover:bg-info/28",
-    warning: "border-warning/25 bg-warning/20 text-warning-foreground hover:bg-warning/28",
-    success: "border-success/25 bg-success/20 text-success-foreground hover:bg-success/28",
-    destructive: "border-destructive/25 bg-destructive/20 text-destructive-foreground hover:bg-destructive/28",
+    primary: "border-primary bg-primary text-primary-foreground hover:bg-primary",
+    secondary: "border-secondary bg-secondary text-secondary-foreground hover:bg-secondary",
+    info: "border-info bg-info text-info-foreground hover:bg-info",
+    warning: "border-warning bg-warning text-warning-foreground hover:bg-warning",
+    success: "border-success bg-success text-success-foreground hover:bg-success",
+    destructive: "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive",
   },
 };
 

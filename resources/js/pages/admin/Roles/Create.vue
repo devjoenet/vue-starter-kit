@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useForm } from "@inertiajs/vue3";
+  import { Form } from "@inertiajs/vue3";
   import { computed } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
@@ -27,13 +27,6 @@
       href: create.url(),
     },
   ];
-
-  const form = useForm({ name: "" });
-
-  const submit = () => {
-    if (!canCreate.value) return;
-    form.post(store.url());
-  };
 </script>
 
 <template>
@@ -44,13 +37,13 @@
       </div>
 
       <Card variant="glass" class="px-6">
-        <form class="space-y-4" @submit.prevent="submit">
-          <Input id="create-role-name" v-model="form.name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
+        <Form v-bind="store.form()" class="space-y-4" #default="{ errors, processing }">
+          <Input id="create-role-name" name="name" label="Role name" variant="outlined" :disabled="!canCreate" :state="errors.name ? 'error' : 'default'" :message="errors.name" />
 
           <div class="flex justify-end">
-            <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>
+            <Button appearance="filled" type="submit" :disabled="!canCreate || processing"> Create </Button>
           </div>
-        </form>
+        </Form>
       </Card>
     </div>
   </AppLayout>

@@ -78,5 +78,22 @@ it('uses collapsible permission groups in the role management edit page', functi
 
     expect($contents)->toContain('Collapsible');
     expect($contents)->toContain('CollapsibleTrigger');
-    expect($contents)->toContain(':default-open="true"');
+    expect($contents)->toContain(':default-open="false"');
+});
+
+it('prefills the role name in the role management edit page details form', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+
+    expect($contents)->toContain('v-model="roleForm.name"');
+    expect($contents)->toContain('() => props.role.name');
+    expect($contents)->toContain('{ immediate: true }');
+});
+
+it('syncs input default values across inertial page navigations when not using v-model', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input/Input.vue');
+
+    expect($contents)->toContain('watch(');
+    expect($contents)->toContain('() => props.defaultValue');
+    expect($contents)->toContain('if (props.modelValue !== undefined)');
+    expect($contents)->toContain('modelValue.value = value ?? ""');
 });

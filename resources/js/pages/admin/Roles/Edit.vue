@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { useForm } from "@inertiajs/vue3";
+  import { router, useForm } from "@inertiajs/vue3";
   import { ChevronDown } from "lucide-vue-next";
-  import { computed } from "vue";
+  import { computed, watch } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
   import { Checkbox } from "@/components/ui/checkbox";
@@ -40,8 +40,16 @@
     },
   ];
 
-  const roleForm = useForm({ name: props.role.name });
+  const roleForm = useForm({ name: "" });
   const permsForm = useForm({ permissions: [...props.rolePermissions] });
+
+  watch(
+    () => props.role.name,
+    (roleName) => {
+      roleForm.name = roleName;
+    },
+    { immediate: true },
+  );
 
   const updateRole = () => {
     if (!canUpdate.value) return;
@@ -56,7 +64,7 @@
   const destroyRole = () => {
     if (!canDelete.value) return;
     if (!confirm("Delete this role?")) return;
-    roleForm.delete(destroy.url(props.role.id));
+    router.delete(destroy.url(props.role.id));
   };
 
   const togglePermission = (name: string) => {
@@ -94,7 +102,7 @@
           </div>
 
           <div class="mt-4 space-y-3">
-            <Collapsible v-for="(items, group) in permissionsByGroup" :key="group" v-slot="{ open }" :default-open="true" class="rounded-xl border border-black/5 px-3 py-2 dark:border-white/10">
+            <Collapsible v-for="(items, group) in permissionsByGroup" :key="group" v-slot="{ open }" :default-open="false" class="rounded-xl border border-black/5 px-3 py-2 dark:border-white/10">
               <div class="flex items-center justify-between gap-3">
                 <div class="text-sm font-semibold capitalize">{{ group }}</div>
 

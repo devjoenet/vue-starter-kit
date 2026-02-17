@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { Component, HTMLAttributes } from "vue";
-  import { computed, useAttrs, useSlots } from "vue";
+  import { computed, useAttrs, useSlots, watch } from "vue";
   import { useVModel } from "@vueuse/core";
   import { cn } from "@/lib/utils";
   import type { InputVariants } from ".";
@@ -57,6 +57,17 @@
     passive: true,
     defaultValue: props.defaultValue,
   });
+
+  watch(
+    () => props.defaultValue,
+    (value) => {
+      if (props.modelValue !== undefined) {
+        return;
+      }
+
+      modelValue.value = value ?? "";
+    },
+  );
 
   const isMultiline = computed(() => props.multiline || props.type === "textarea");
   const hasLabel = computed(() => Boolean(props.label));
