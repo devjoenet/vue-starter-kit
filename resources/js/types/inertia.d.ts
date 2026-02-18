@@ -11,6 +11,8 @@ declare module "@inertiajs/core" {
     flash?: {
       success?: string;
       error?: string;
+      warning?: string;
+      info?: string;
     };
   }
 }

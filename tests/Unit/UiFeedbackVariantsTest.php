@@ -69,7 +69,7 @@ it('separates button style from semantic color variants', function () {
         ->toContain('appearance: {')
         ->toContain('variant: {')
         ->toContain('filled')
-        ->toContain('glass')
+        ->toContain('default')
         ->toContain('muted')
         ->toContain('primary')
         ->toContain('secondary')

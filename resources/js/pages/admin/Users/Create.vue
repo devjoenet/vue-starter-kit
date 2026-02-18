@@ -32,6 +32,7 @@
     name: "",
     email: "",
     password: "",
+    password_confirmation: "",
   });
 
   const submit = () => {
@@ -47,13 +48,24 @@
         <h1 class="text-2xl font-semibold">Create user</h1>
       </div>
 
-      <Card variant="glass" class="px-6">
+      <Card variant="default" class="px-6">
         <form class="space-y-4" @submit.prevent="submit">
           <Input id="create-user-name" v-model="form.name" name="name" label="Name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
           <Input id="create-user-email" v-model="form.email" type="email" name="email" label="Email" variant="outlined" :disabled="!canCreate" :state="form.errors.email ? 'error' : 'default'" :message="form.errors.email" />
 
           <Input id="create-user-password" v-model="form.password" type="password" name="password" label="Password" variant="outlined" :disabled="!canCreate" :state="form.errors.password ? 'error' : 'default'" :message="form.errors.password" />
+          <Input
+            id="create-user-password-confirmation"
+            v-model="form.password_confirmation"
+            type="password"
+            name="password_confirmation"
+            label="Confirm password"
+            variant="outlined"
+            :disabled="!canCreate"
+            :state="form.errors.password_confirmation ? 'error' : 'default'"
+            :message="form.errors.password_confirmation"
+          />
 
           <div class="flex justify-end">
             <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>

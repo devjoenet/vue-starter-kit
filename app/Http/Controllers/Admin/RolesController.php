@@ -6,7 +6,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\RoleUpsertData;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,6 +21,7 @@ final class RolesController
         return Inertia::render('admin/Roles/Index', [
             'roles' => Role::query()
                 ->select(['id', 'name'])
+                ->withCount('users')
                 ->orderBy('name')
                 ->get(),
         ]);
@@ -26,23 +29,37 @@ final class RolesController
 
     public function create(): Response
     {
-        return Inertia::render('admin/Roles/Create');
+        return Inertia::render('admin/Roles/Create', [
+            'users' => User::query()
+                ->select(['id', 'name', 'email'])
+                ->orderBy('name')
+                ->orderBy('email')
+                ->get(),
+        ]);
     }
 
     public function store(): RedirectResponse
     {
         $data = RoleUpsertData::validateAndCreate(request());
 
-        $name = mb_trim($data->name);
+        $name = Str::of($data->name)->squish()->kebab()->toString();
+
+        request()->merge([
+            'name' => $name,
+        ]);
 
         request()->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')],
+            'user_ids' => ['array'],
+            'user_ids.*' => ['integer', 'distinct', Rule::exists('users', 'id')],
         ]);
 
         $role = Role::query()->create([
             'name' => $name,
             'guard_name' => 'web',
         ]);
+
+        $role->users()->sync(request()->input('user_ids', []));
 
         return redirect()->route('admin.roles.edit', $role)
             ->with('success', 'Role created.');
@@ -70,6 +87,12 @@ final class RolesController
     {
         $data = RoleUpsertData::validateAndCreate(request());
 
+        $name = Str::of($data->name)->squish()->kebab()->toString();
+
+        request()->merge([
+            'name' => $name,
+        ]);
+
         request()->validate([
             'name' => [
                 'required',
@@ -79,7 +102,7 @@ final class RolesController
             ],
         ]);
 
-        $role->forceFill(['name' => mb_trim($data->name)])->save();
+        $role->forceFill(['name' => $name])->save();
 
         return back()->with('success', 'Role updated.');
     }

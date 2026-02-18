@@ -17,8 +17,7 @@ export const cardVariants = cva("flex flex-col gap-6 rounded-[var(--radius-lg)] 
       info: "border-info/35 bg-info/8 shadow-[var(--elevation-1)]",
       warning: "border-warning/35 bg-warning/10 shadow-[var(--elevation-1)]",
       success: "border-success/35 bg-success/8 shadow-[var(--elevation-1)]",
-      glass:
-        "relative overflow-hidden border border-[color:var(--glass-border)] bg-[color:var(--glass-surface)] shadow-[var(--glass-shadow)] backdrop-blur-xl before:pointer-events-none before:absolute before:inset-0 before:rounded-[var(--radius-lg)] before:bg-[radial-gradient(120%_120%_at_50%_-20%,_var(--glass-highlight)_0%,_transparent_55%)] before:opacity-80",
+      glass: "liquid-glass liquid-glass-hover",
     },
   },
   defaultVariants: {

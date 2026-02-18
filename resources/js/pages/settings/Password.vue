@@ -25,7 +25,7 @@
     <h1 class="sr-only">Password Settings</h1>
 
     <SettingsLayout>
-      <Card variant="glass" class="px-6">
+      <Card variant="default" class="px-6">
         <div class="space-y-4">
           <Heading variant="small" title="Update password" description="Ensure your account is using a long, random password to stay secure" />
 

@@ -12,7 +12,7 @@
   <AuthLayout title="Confirm your password" description="This is a secure area of the application. Please confirm your password before continuing.">
     <Head title="Confirm password" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <Form v-bind="store.form()" reset-on-success v-slot="{ errors, processing }" class="space-y-4">
         <Input id="password" type="password" name="password" label="Password" variant="outlined" required autocomplete="current-password" autofocus :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 

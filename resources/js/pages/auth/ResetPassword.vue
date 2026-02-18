@@ -20,7 +20,7 @@
   <AuthLayout title="Reset password" description="Please enter your new password below">
     <Head title="Reset password" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <Form v-bind="update.form()" :transform="(data) => ({ ...data, token, email })" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }" class="space-y-4">
         <Input id="email" v-model="inputEmail" type="email" name="email" label="Email" variant="outlined" autocomplete="email" readonly :state="errors.email ? 'error' : 'default'" :message="errors.email" />
 

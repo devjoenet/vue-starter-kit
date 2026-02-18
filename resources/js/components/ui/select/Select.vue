@@ -119,8 +119,23 @@
     return "default";
   });
 
-  const selectedOption = computed(() => props.options.find((option) => option.value === modelValue.value));
-  const hasValue = computed(() => Boolean(selectedOption.value) || Boolean(modelValue.value));
+  const hasSelectedValue = computed(() => {
+    if (modelValue.value === null || modelValue.value === undefined) {
+      return false;
+    }
+
+    return String(modelValue.value).length > 0;
+  });
+
+  const selectedOption = computed(() => {
+    if (!hasSelectedValue.value) {
+      return undefined;
+    }
+
+    return props.options.find((option) => option.value === modelValue.value);
+  });
+
+  const hasValue = computed(() => hasSelectedValue.value);
 
   const selectedLabel = computed(() => {
     if (selectedOption.value) {
@@ -129,6 +144,10 @@
 
     if (modelValue.value) {
       return modelValue.value;
+    }
+
+    if (hasLabel.value) {
+      return "";
     }
 
     return props.placeholder;

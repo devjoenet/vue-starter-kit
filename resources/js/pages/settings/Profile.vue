@@ -39,7 +39,7 @@
 
     <SettingsLayout>
       <div v-if="user" class="space-y-6">
-        <Card variant="glass" class="px-6">
+        <Card variant="default" class="px-6">
           <div class="space-y-4">
             <Heading variant="small" title="Profile information" description="Update your name and email address" />
 

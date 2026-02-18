@@ -46,7 +46,7 @@
     <h1 class="sr-only">Two-Factor Authentication Settings</h1>
 
     <SettingsLayout>
-      <Card variant="glass" class="px-6">
+      <Card variant="default" class="px-6">
         <div class="space-y-4">
           <Heading variant="small" title="Two-Factor Authentication" description="Manage your two-factor authentication settings" />
 

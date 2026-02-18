@@ -22,7 +22,7 @@
   <AuthBase title="Log in to your account" description="Enter your email and password below to log in">
     <Head title="Log in" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <div class="space-y-4">
         <p v-if="status" class="text-center text-sm font-medium text-success">
           {{ status }}

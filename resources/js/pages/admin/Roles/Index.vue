@@ -3,14 +3,17 @@
   import { computed } from "vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
+  import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
+  import { toTitleCase } from "@/lib/utils";
   import { dashboard } from "@/routes/admin/index";
   import { create, edit, index } from "@/routes/admin/roles";
   import { type BreadcrumbItem } from "@/types";
+  import { SquarePenIcon } from "lucide-vue-next";
 
   const props = defineProps<{
-    roles: { id: number; name: string }[];
+    roles: { id: number; name: string; users_count: number }[];
   }>();
 
   const { can } = useAbility();
@@ -35,21 +38,36 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-semibold">Roles</h1>
 
-        <Button v-if="canCreate" appearance="glass" as-child>
-          <Link :href="create.url()">New role</Link>
+        <Button v-if="canCreate" appearance="outline" as-child>
+          <Link :href="create.url()">Create New Role</Link>
         </Button>
       </div>
 
-      <Card variant="glass" class="px-6">
-        <div class="space-y-2 -mx-3">
-          <div v-for="r in props.roles" :key="r.id" class="flex items-center justify-between gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10">
-            <div class="text-sm font-medium">{{ r.name }}</div>
-
-            <Button v-if="canUpdate" appearance="text" size="sm" as-child>
-              <Link :href="edit.url(r.id)">Edit</Link>
-            </Button>
-          </div>
-        </div>
+      <Card variant="default" class="overflow-hidden py-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Display Name</TableHead>
+              <TableHead>Slug</TableHead>
+              <TableHead>Users</TableHead>
+              <TableHead class="w-[1%] text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="role in props.roles" :key="role.id">
+              <TableCell class="font-medium">{{ toTitleCase(role.name) }}</TableCell>
+              <TableCell class="text-muted-foreground text-xs font-medium italic">{{ role.name }}</TableCell>
+              <TableCell class="text-muted-foreground">{{ role.users_count }}</TableCell>
+              <TableCell class="text-right">
+                <Button v-if="canUpdate" appearance="outline" size="sm" as-child>
+                  <Link :href="edit.url(role.id)">
+                    <SquarePenIcon />
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Card>
     </div>
   </AppLayout>

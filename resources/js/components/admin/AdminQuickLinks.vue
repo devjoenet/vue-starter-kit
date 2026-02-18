@@ -97,7 +97,7 @@
           </div>
 
           <div>
-            <Button appearance="glass" variant="primary" size="sm" as-child class="w-fit shadow-(--elevation-1) transition-all hover:bg-primary/90 hover:shadow-(--elevation-2)">
+            <Button appearance="outline" variant="primary" size="sm" as-child class="w-fit shadow-(--elevation-1) transition-all hover:bg-primary/90 hover:shadow-(--elevation-2)">
               <Link :href="item.href">Open</Link>
             </Button>
           </div>

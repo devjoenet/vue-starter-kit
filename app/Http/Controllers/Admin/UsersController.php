@@ -19,8 +19,16 @@ final class UsersController
         return Inertia::render('admin/Users/Index', [
             'users' => User::query()
                 ->select(['id', 'name', 'email', 'created_at'])
+                ->with(['roles:id,name'])
                 ->latest()
                 ->paginate(15)
+                ->through(fn (User $user): array => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at,
+                    'roles' => $user->roles->pluck('name')->values(),
+                ])
                 ->withQueryString(),
         ]);
     }

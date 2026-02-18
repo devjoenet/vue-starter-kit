@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data\Admin;
 
+use Spatie\LaravelData\Attributes\Validation\Confirmed;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
@@ -18,7 +19,7 @@ final class UserUpsertData extends Data
         #[Email, Max(255)]
         public string $email,
 
-        #[Min(8)]
+        #[Min(8), Confirmed]
         public ?string $password,
     ) {}
 }
