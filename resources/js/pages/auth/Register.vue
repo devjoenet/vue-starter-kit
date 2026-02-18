@@ -14,7 +14,7 @@
   <AuthBase title="Create an account" description="Enter your details below to create your account">
     <Head title="Register" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <Form v-bind="store.form()" :reset-on-success="['password', 'password_confirmation']" v-slot="{ errors, processing }" class="space-y-4">
         <Input id="name" type="text" name="name" label="Name" variant="outlined" required autofocus :tabindex="1" autocomplete="name" :state="errors.name ? 'error' : 'default'" :message="errors.name" />
 

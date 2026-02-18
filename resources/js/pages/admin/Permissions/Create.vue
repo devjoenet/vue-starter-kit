@@ -1,15 +1,20 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
-  import { computed } from "vue";
+  import { computed, watch } from "vue";
   import PermissionGroupSelect from "@/components/admin/PermissionGroupSelect.vue";
   import { Button } from "@/components/ui/button";
   import { Card } from "@/components/ui/card";
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
+  import { toCamelCase, toSnakeCase } from "@/lib/utils";
   import { dashboard } from "@/routes/admin/index";
   import { create, index, store } from "@/routes/admin/permissions";
   import { type BreadcrumbItem } from "@/types";
+
+  const props = defineProps<{
+    groups: string[];
+  }>();
 
   const { can } = useAbility();
   const canCreate = computed(() => can("permissions.create"));
@@ -30,12 +35,64 @@
   ];
 
   const form = useForm({
-    name: "",
+    name: "users.",
     group: "users",
   });
 
+  const prefixWithGroup = (group: string, actionSegment = "") => {
+    const normalizedGroup = toSnakeCase(group);
+    const normalizedAction = toCamelCase(actionSegment);
+    return normalizedAction ? `${normalizedGroup}.${normalizedAction}` : `${normalizedGroup}.`;
+  };
+
+  const extractActionSegment = (permissionName: string, group: string) => {
+    const normalizedGroup = toSnakeCase(group);
+    const rawValue = permissionName.trim();
+
+    if (!rawValue) {
+      return "";
+    }
+
+    if (rawValue.startsWith(`${normalizedGroup}.`)) {
+      return rawValue.slice(normalizedGroup.length + 1);
+    }
+
+    const segments = rawValue
+      .split(".")
+      .map((segment) => segment.trim())
+      .filter(Boolean);
+    if (segments.length > 1) {
+      return segments[segments.length - 1];
+    }
+
+    return rawValue;
+  };
+
+  const normalizePermissionInput = (permissionName: string) => {
+    const action = extractActionSegment(permissionName, form.group);
+    return prefixWithGroup(form.group, action);
+  };
+
+  watch(
+    () => form.group,
+    (nextGroup, previousGroup) => {
+      const normalizedGroup = toSnakeCase(nextGroup);
+      if (normalizedGroup !== nextGroup) {
+        form.group = normalizedGroup;
+        return;
+      }
+
+      const action = extractActionSegment(form.name, previousGroup || normalizedGroup);
+      form.name = prefixWithGroup(normalizedGroup, action);
+    },
+    { immediate: true },
+  );
+
   const submit = () => {
     if (!canCreate.value) return;
+
+    form.group = toSnakeCase(form.group);
+    form.name = normalizePermissionInput(form.name);
     form.post(store.url());
   };
 </script>
@@ -47,11 +104,11 @@
         <h1 class="text-2xl font-semibold">Create permission</h1>
       </div>
 
-      <Card variant="glass" class="px-6">
+      <Card variant="default" class="px-6">
         <form class="space-y-4" @submit.prevent="submit">
-          <Input id="create-permission-name" v-model="form.name" name="name" label="Permission name (e.g. users.view)" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
+          <PermissionGroupSelect id="create-permission-group" v-model="form.group" :groups="props.groups" :disabled="!canCreate" :error="form.errors.group" />
 
-          <PermissionGroupSelect id="create-permission-group" v-model="form.group" :disabled="!canCreate" :error="form.errors.group" />
+          <Input id="create-permission-name" v-model="form.name" name="name" label="Permission Name" variant="outlined" :disabled="!canCreate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
 
           <div class="flex justify-end">
             <Button appearance="filled" type="submit" :disabled="!canCreate || form.processing"> Create </Button>

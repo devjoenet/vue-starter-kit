@@ -21,8 +21,7 @@
   <div class="flex min-h-screen flex-col items-center bg-background p-6 text-foreground lg:justify-center lg:p-8">
     <header class="mb-6 w-full max-w-83.75 text-sm not-has-[nav]:hidden lg:max-w-4xl">
       <nav class="flex items-center justify-end gap-4">
-        <Button as="a" appearance="outline" v-if="$page.props.auth?.user" :href="dashboard()">Dashboard</Button>
-        <Link v-if="$page.props.auth?.user" :href="dashboard().url" class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"> Dashboard </Link>
+        <Button as="a" appearance="outline" v-if="$page.props.auth?.user" :href="dashboard().url">Dashboard</Button>
         <template v-else>
           <Button as="a" :href="login().url" appearance="outline" variant="primary">Login</Button>
           <Button as="a" v-if="canRegister" :href="register().url" variant="primary" appearance="filled">Register</Button>

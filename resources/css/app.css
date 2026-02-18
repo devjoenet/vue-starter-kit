@@ -172,11 +172,13 @@
   --elevation-3: 0 24px 48px -28px rgb(15 23 42 / 0.3), 0 16px 28px -20px rgb(15 23 42 / 0.24);
 
   /* Liquid glass */
-  --glass-surface: oklch(98.5% 0.015 30 / 0.7);
-  --glass-surface-hover: oklch(99.5% 0.01 30 / 0.82);
-  --glass-border: oklch(100% 0 0 / 0.55);
-  --glass-highlight: oklch(100% 0 0 / 0.85);
+  --glass-surface: oklch(98.5% 0.015 30 / 0.58);
+  --glass-surface-hover: oklch(99.5% 0.01 30 / 0.72);
+  --glass-border: oklch(100% 0 0 / 0.58);
+  --glass-highlight: oklch(100% 0 0 / 0.88);
+  --glass-rim: inset 2px 2px 0 -2px rgb(255 255 255 / 0.78), inset 0 0 3px 1px rgb(255 255 255 / 0.62);
   --glass-shadow: 0 24px 40px -32px rgb(15 23 42 / 0.35), 0 12px 24px -16px rgb(15 23 42 / 0.24);
+  --glass-backdrop: blur(0px) saturate(155%);
 }
 
 .dark {
@@ -270,11 +272,13 @@
   --elevation-3: 0 28px 60px -32px rgb(0 0 0 / 0.6), 0 18px 30px -20px rgb(0 0 0 / 0.52);
 
   /* Liquid glass */
-  --glass-surface: oklch(22% 0.03 252 / 0.5);
-  --glass-surface-hover: oklch(26% 0.03 252 / 0.6);
-  --glass-border: oklch(100% 0 0 / 0.12);
-  --glass-highlight: oklch(100% 0 0 / 0.2);
+  --glass-surface: oklch(22% 0.03 252 / 0.45);
+  --glass-surface-hover: oklch(26% 0.03 252 / 0.58);
+  --glass-border: oklch(100% 0 0 / 0.18);
+  --glass-highlight: oklch(100% 0 0 / 0.26);
+  --glass-rim: inset 2px 2px 0 -2px rgb(255 255 255 / 0.18), inset 0 0 3px 1px rgb(255 255 255 / 0.15);
   --glass-shadow: 0 24px 40px -32px rgb(2 6 23 / 0.7), 0 12px 24px -16px rgb(2 6 23 / 0.6);
+  --glass-backdrop: blur(0px) saturate(145%);
 }
 
 @layer base {
@@ -284,5 +288,43 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .liquid-glass {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-surface);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: var(--glass-backdrop);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+  }
+
+  .liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--glass-rim);
+    background: radial-gradient(120% 120% at 50% -20%, var(--glass-highlight) 0%, transparent 58%), linear-gradient(180deg, rgb(255 255 255 / 0.08) 0%, transparent 28%, rgb(255 255 255 / 0.03) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .liquid-glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    filter: url(#liquid-glass-surface);
+    pointer-events: none;
+  }
+
+  .liquid-glass-hover:hover {
+    background: var(--glass-surface-hover);
   }
 }

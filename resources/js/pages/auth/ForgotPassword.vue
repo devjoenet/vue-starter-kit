@@ -18,7 +18,7 @@
   <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
     <Head title="Forgot password" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <div class="space-y-4">
         <p v-if="status" class="text-center text-sm font-medium text-success">
           {{ status }}

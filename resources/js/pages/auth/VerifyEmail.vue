@@ -17,7 +17,7 @@
   <AuthLayout title="Verify email" description="Please verify your email address by clicking on the link we just emailed to you.">
     <Head title="Email verification" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <Form v-bind="send.form()" class="space-y-4 text-center" v-slot="{ processing }">
         <p v-if="status === 'verification-link-sent'" class="text-sm font-medium text-success">A new verification link has been sent to the email address you provided during registration.</p>
 

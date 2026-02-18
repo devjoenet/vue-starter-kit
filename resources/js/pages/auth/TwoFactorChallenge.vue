@@ -41,7 +41,7 @@
   <AuthLayout :title="authConfigContent.title" :description="authConfigContent.description">
     <Head title="Two-Factor Authentication" />
 
-    <Card variant="glass" class="px-6">
+    <Card variant="default" class="px-6">
       <div class="space-y-4">
         <template v-if="!showRecoveryInput">
           <Form v-bind="store.form()" class="space-y-4" reset-on-error @error="code = ''" #default="{ errors, processing, clearErrors }">

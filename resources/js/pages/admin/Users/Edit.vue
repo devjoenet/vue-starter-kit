@@ -11,6 +11,7 @@
   import { destroy, edit, index, update } from "@/routes/admin/users";
   import { sync } from "@/routes/admin/users/roles";
   import { type BreadcrumbItem } from "@/types";
+  import { toTitleCase } from "../../../lib/utils";
 
   const props = defineProps<{
     user: { id: number; name: string; email: string };
@@ -43,6 +44,7 @@
     name: props.user.name,
     email: props.user.email,
     password: "",
+    password_confirmation: "",
   });
 
   const rolesForm = useForm({
@@ -80,13 +82,13 @@
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="space-y-6 px-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <h1 class="text-2xl font-semibold">Edit user</h1>
+        <h1 class="text-2xl font-semibold">Edit {{ toTitleCase(props.user.name) }}</h1>
 
-        <Button appearance="text" :disabled="!canDelete" @click="destroyUser"> Delete </Button>
+        <Button appearance="outline" variant="destructive" :disabled="!canDelete" @click="destroyUser">Delete {{ toTitleCase(props.user.name) }}</Button>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-2">
-        <Card variant="glass" class="px-6">
+        <Card variant="default" class="px-6">
           <h2 class="text-lg font-semibold">Details</h2>
 
           <form class="mt-4 space-y-4" @submit.prevent="updateUser">
@@ -95,17 +97,28 @@
             <Input id="edit-user-email" v-model="userForm.email" type="email" name="email" label="Email" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.email ? 'error' : 'default'" :message="userForm.errors.email" />
 
             <Input id="edit-user-password" v-model="userForm.password" type="password" name="password" label="New password (optional)" variant="outlined" :disabled="!canUpdate" :state="userForm.errors.password ? 'error' : 'default'" :message="userForm.errors.password" />
+            <Input
+              id="edit-user-password-confirmation"
+              v-model="userForm.password_confirmation"
+              type="password"
+              name="password_confirmation"
+              label="Confirm new password"
+              variant="outlined"
+              :disabled="!canUpdate"
+              :state="userForm.errors.password_confirmation ? 'error' : 'default'"
+              :message="userForm.errors.password_confirmation"
+            />
 
             <div class="flex justify-end">
-              <Button appearance="filled" type="submit" :disabled="!canUpdate || userForm.processing"> Save </Button>
+              <Button appearance="filled" type="submit" :disabled="!canUpdate || userForm.processing">Save {{ toTitleCase(props.user.name) }}</Button>
             </div>
           </form>
         </Card>
 
-        <Card variant="glass" class="px-6">
+        <Card variant="default" class="px-6">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Roles</h2>
-            <Button appearance="tonal" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles"> Update roles </Button>
+            <Button appearance="filled" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles">Refresh Roles</Button>
           </div>
 
           <div class="mt-4 space-y-2 -mx-3">

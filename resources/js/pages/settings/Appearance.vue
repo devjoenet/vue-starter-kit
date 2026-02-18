@@ -23,7 +23,7 @@
     <h1 class="sr-only">Appearance Settings</h1>
 
     <SettingsLayout>
-      <Card variant="glass" class="px-6">
+      <Card variant="default" class="px-6">
         <div class="space-y-4">
           <Heading variant="small" title="Appearance settings" description="Update your account's appearance settings" />
           <AppearanceTabs />

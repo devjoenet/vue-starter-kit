@@ -71,13 +71,13 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     destructive: "text-destructive hover:text-destructive/80",
   },
   glass: {
-    muted: "border-[color:var(--glass-border)] bg-[color:var(--glass-surface)] text-foreground hover:bg-[color:var(--glass-surface-hover)]",
-    primary: "border-primary bg-primary text-primary-foreground hover:bg-primary",
-    secondary: "border-secondary bg-secondary text-secondary-foreground hover:bg-secondary",
-    info: "border-info bg-info text-info-foreground hover:bg-info",
-    warning: "border-warning bg-warning text-warning-foreground hover:bg-warning",
-    success: "border-success bg-success text-success-foreground hover:bg-success",
-    destructive: "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive",
+    muted: "text-foreground",
+    primary: "border-primary/35 bg-primary/15 text-primary hover:bg-primary/24",
+    secondary: "border-secondary/35 bg-secondary/15 text-secondary hover:bg-secondary/24",
+    info: "border-info/35 bg-info/15 text-info hover:bg-info/24",
+    warning: "border-warning/35 bg-warning/15 text-warning hover:bg-warning/24",
+    success: "border-success/35 bg-success/15 text-success hover:bg-success/24",
+    destructive: "border-destructive/35 bg-destructive/15 text-destructive hover:bg-destructive/24",
   },
 };
 
@@ -93,7 +93,7 @@ export const buttonVariants = cva(
         elevated: "border shadow-[var(--elevation-2)] hover:shadow-[var(--elevation-3)]",
         ghost: "border border-transparent bg-transparent shadow-none",
         link: "border border-transparent bg-transparent shadow-none underline-offset-4 hover:underline",
-        glass: "relative overflow-hidden backdrop-blur-xl shadow-[var(--glass-shadow)] before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(120%_120%_at_50%_-20%,_var(--glass-highlight)_0%,_transparent_55%)] before:opacity-80",
+        glass: "liquid-glass liquid-glass-hover",
       },
       variant: {
         muted: "",

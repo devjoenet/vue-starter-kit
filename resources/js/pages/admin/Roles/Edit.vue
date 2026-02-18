@@ -9,6 +9,7 @@
   import { Input } from "@/components/ui/input";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
+  import { toKebabCase, toTitleCase } from "@/lib/utils";
   import { dashboard } from "@/routes/admin/index";
   import { destroy, edit, index, update } from "@/routes/admin/roles";
   import { sync } from "@/routes/admin/roles/permissions";
@@ -54,6 +55,8 @@
 
   const updateRole = () => {
     if (!canUpdate.value) return;
+
+    roleForm.name = toKebabCase(roleForm.name);
     roleForm.put(update.url(props.roleId), { preserveScroll: true });
   };
 
@@ -79,27 +82,27 @@
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="space-y-6 px-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <h1 class="text-2xl font-semibold">Edit role</h1>
-        <Button appearance="text" :disabled="!canDelete" @click="destroyRole">Delete</Button>
+        <h1 class="text-2xl font-semibold">Edit {{ toTitleCase(props.roleName) }}</h1>
+        <Button appearance="outline" variant="destructive" :disabled="!canDelete" @click="destroyRole">Delete Role</Button>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-2">
-        <Card variant="glass" class="px-6">
-          <h2 class="text-lg font-semibold">Details</h2>
+        <Card variant="default" class="px-6">
+          <h2 class="text-lg font-semibold">Role Details</h2>
 
           <form class="mt-4 space-y-4" @submit.prevent="updateRole">
-            <Input id="edit-role-name" :default-value="roleForm.name" v-model="roleForm.name" name="name" label="Role name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
+            <Input id="edit-role-name" :default-value="roleForm.name" v-model="roleForm.name" name="name" label="Role Name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
 
             <div class="flex justify-end">
-              <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing"> Save </Button>
+              <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing">Save Role</Button>
             </div>
           </form>
         </Card>
 
-        <Card variant="glass" class="px-6">
+        <Card variant="default" class="px-6">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold">Permissions</h2>
-            <Button appearance="tonal" :disabled="!canAssign || permsForm.processing" @click="syncPermissions"> Update permissions </Button>
+            <Button appearance="filled" :disabled="!canAssign || permsForm.processing" @click="syncPermissions">Refresh Permissions</Button>
           </div>
 
           <div class="mt-4 space-y-3">
