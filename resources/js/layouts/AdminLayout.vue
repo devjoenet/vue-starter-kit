@@ -4,7 +4,7 @@
   import { useAbility } from "@/composables/useAbility";
   import { dashboard } from "@/routes/admin/index";
   import AppLogoIcon from "@/components/AppLogoIcon.vue";
-  import { index as adminPermissionsIndex } from "@/routes/admin/permissions/permissions";
+  import { index as adminPermissionsIndex } from "@/routes/admin/permissions";
   import { index as adminRolesIndex } from "@/routes/admin/roles";
   import { index as adminUsersIndex } from "@/routes/admin/users";
 

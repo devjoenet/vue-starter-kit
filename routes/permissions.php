@@ -90,28 +90,28 @@ Route::middleware(['auth', 'verified'])
         Route::prefix('permissions')
             ->name('permissions.')
             ->group(function (): void {
-                Route::get('/permissions', [PermissionsController::class, 'index'])
+                Route::get('/', [PermissionsController::class, 'index'])
                     ->middleware('can:permissions.view')
-                    ->name('permissions.index');
+                    ->name('index');
 
-                Route::get('/permissions/create', [PermissionsController::class, 'create'])
+                Route::get('/create', [PermissionsController::class, 'create'])
                     ->middleware('can:permissions.create')
-                    ->name('permissions.create');
+                    ->name('create');
 
-                Route::post('/permissions', [PermissionsController::class, 'store'])
+                Route::post('/', [PermissionsController::class, 'store'])
                     ->middleware('can:permissions.create')
-                    ->name('permissions.store');
+                    ->name('store');
 
-                Route::get('/permissions/{permission}/edit', [PermissionsController::class, 'edit'])
+                Route::get('/{permission}/edit', [PermissionsController::class, 'edit'])
                     ->middleware('can:permissions.update')
-                    ->name('permissions.edit');
+                    ->name('edit');
 
-                Route::put('/permissions/{permission}', [PermissionsController::class, 'update'])
+                Route::put('/{permission}', [PermissionsController::class, 'update'])
                     ->middleware('can:permissions.update')
-                    ->name('permissions.update');
+                    ->name('update');
 
-                Route::delete('/permissions/{permission}', [PermissionsController::class, 'destroy'])
+                Route::delete('/{permission}', [PermissionsController::class, 'destroy'])
                     ->middleware('can:permissions.delete')
-                    ->name('permissions.destroy');
+                    ->name('destroy');
             });
     });

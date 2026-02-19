@@ -9,7 +9,7 @@
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
   import { dashboard } from "@/routes/admin/index";
-  import { create, destroy, edit, index } from "@/routes/admin/permissions/permissions";
+  import { create, destroy, edit, index } from "@/routes/admin/permissions";
   import { type BreadcrumbItem } from "@/types";
   import { TrashIcon, SquarePenIcon } from "lucide-vue-next";
   import { toTitleCase } from "@/lib/utils";

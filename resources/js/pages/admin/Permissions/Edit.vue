@@ -9,7 +9,7 @@
   import AppLayout from "@/layouts/AppLayout.vue";
   import { toCamelCase, toSnakeCase } from "@/lib/utils";
   import { dashboard } from "@/routes/admin/index";
-  import { destroy, edit, index, update } from "@/routes/admin/permissions/permissions";
+  import { destroy, edit, index, update } from "@/routes/admin/permissions";
   import { type BreadcrumbItem } from "@/types";
 
   const props = defineProps<{
