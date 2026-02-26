@@ -8,7 +8,9 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 
 class Permission extends SpatiePermission
 {
-    /** @var array<int, string> */
+    public string $group;
+
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'guard_name',

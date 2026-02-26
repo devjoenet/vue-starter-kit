@@ -23,86 +23,95 @@ Route::middleware(['auth', 'verified'])
             ],
         ]))->name('dashboard');
 
-        // Users
-        Route::get('/users', [UsersController::class, 'index'])
-            ->middleware('can:users.view')
-            ->name('users.index');
+        Route::prefix('users')
+            ->name('users.')
+            ->group(function (): void {
+                Route::get('/', [UsersController::class, 'index'])
+                    ->middleware('can:users.view')
+                    ->name('index');
 
-        Route::get('/users/create', [UsersController::class, 'create'])
-            ->middleware('can:users.create')
-            ->name('users.create');
+                Route::get('/create', [UsersController::class, 'create'])
+                    ->middleware('can:users.create')
+                    ->name('create');
 
-        Route::post('/users', [UsersController::class, 'store'])
-            ->middleware('can:users.create')
-            ->name('users.store');
+                Route::post('/', [UsersController::class, 'store'])
+                    ->middleware('can:users.create')
+                    ->name('store');
 
-        Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
-            ->middleware('can:users.update')
-            ->name('users.edit');
+                Route::get('/{user}/edit', [UsersController::class, 'edit'])
+                    ->middleware('can:users.update')
+                    ->name('edit');
 
-        Route::put('/users/{user}', [UsersController::class, 'update'])
-            ->middleware('can:users.update')
-            ->name('users.update');
+                Route::put('/{user}', [UsersController::class, 'update'])
+                    ->middleware('can:users.update')
+                    ->name('update');
 
-        Route::delete('/users/{user}', [UsersController::class, 'destroy'])
-            ->middleware('can:users.delete')
-            ->name('users.destroy');
+                Route::delete('/{user}', [UsersController::class, 'destroy'])
+                    ->middleware('can:users.delete')
+                    ->name('destroy');
 
-        Route::put('/users/{user}/roles', [UsersController::class, 'syncRoles'])
-            ->middleware('can:users.assignRoles')
-            ->name('users.roles.sync');
+                Route::put('/{user}/roles', [UsersController::class, 'syncRoles'])
+                    ->middleware('can:users.assignRoles')
+                    ->name('roles.sync');
+            });
 
-        // Roles
-        Route::get('/roles', [RolesController::class, 'index'])
-            ->middleware('can:roles.view')
-            ->name('roles.index');
+        Route::prefix('roles')
+            ->name('roles.')
+            ->group(function (): void {
+                Route::get('/', [RolesController::class, 'index'])
+                    ->middleware('can:roles.view')
+                    ->name('index');
 
-        Route::get('/roles/create', [RolesController::class, 'create'])
-            ->middleware('can:roles.create')
-            ->name('roles.create');
+                Route::get('/create', [RolesController::class, 'create'])
+                    ->middleware('can:roles.create')
+                    ->name('create');
 
-        Route::post('/roles', [RolesController::class, 'store'])
-            ->middleware('can:roles.create')
-            ->name('roles.store');
+                Route::post('/', [RolesController::class, 'store'])
+                    ->middleware('can:roles.create')
+                    ->name('store');
 
-        Route::get('/roles/{role}/edit', [RolesController::class, 'edit'])
-            ->middleware('can:roles.update')
-            ->name('roles.edit');
+                Route::get('/{role}/edit', [RolesController::class, 'edit'])
+                    ->middleware('can:roles.update')
+                    ->name('edit');
 
-        Route::put('/roles/{role}', [RolesController::class, 'update'])
-            ->middleware('can:roles.update')
-            ->name('roles.update');
+                Route::put('/{role}', [RolesController::class, 'update'])
+                    ->middleware('can:roles.update')
+                    ->name('update');
 
-        Route::delete('/roles/{role}', [RolesController::class, 'destroy'])
-            ->middleware('can:roles.delete')
-            ->name('roles.destroy');
+                Route::delete('/{role}', [RolesController::class, 'destroy'])
+                    ->middleware('can:roles.delete')
+                    ->name('destroy');
 
-        Route::put('/roles/{role}/permissions', [RolesController::class, 'syncPermissions'])
-            ->middleware('can:roles.assignPermissions')
-            ->name('roles.permissions.sync');
+                Route::put('/{role}/permissions', [RolesController::class, 'syncPermissions'])
+                    ->middleware('can:roles.assignPermissions')
+                    ->name('permissions.sync');
+            });
 
-        // Permissions
-        Route::get('/permissions', [PermissionsController::class, 'index'])
-            ->middleware('can:permissions.view')
-            ->name('permissions.index');
+        Route::prefix('permissions')
+            ->name('permissions.')
+            ->group(function (): void {
+                Route::get('/', [PermissionsController::class, 'index'])
+                    ->middleware('can:permissions.view')
+                    ->name('index');
 
-        Route::get('/permissions/create', [PermissionsController::class, 'create'])
-            ->middleware('can:permissions.create')
-            ->name('permissions.create');
+                Route::get('/create', [PermissionsController::class, 'create'])
+                    ->middleware('can:permissions.create')
+                    ->name('create');
 
-        Route::post('/permissions', [PermissionsController::class, 'store'])
-            ->middleware('can:permissions.create')
-            ->name('permissions.store');
+                Route::post('/', [PermissionsController::class, 'store'])
+                    ->middleware('can:permissions.create')
+                    ->name('store');
 
-        Route::get('/permissions/{permission}/edit', [PermissionsController::class, 'edit'])
-            ->middleware('can:permissions.update')
-            ->name('permissions.edit');
+                Route::get('/{permission}/edit', [PermissionsController::class, 'edit'])
+                    ->middleware('can:permissions.update')
+                    ->name('edit');
 
-        Route::put('/permissions/{permission}', [PermissionsController::class, 'update'])
-            ->middleware('can:permissions.update')
-            ->name('permissions.update');
+                Route::put('/{permission}', [PermissionsController::class, 'update'])
+                    ->middleware('can:permissions.update')
+                    ->name('update');
 
-        Route::delete('/permissions/{permission}', [PermissionsController::class, 'destroy'])
-            ->middleware('can:permissions.delete')
-            ->name('permissions.destroy');
+                Route::delete('/{permission}', [PermissionsController::class, 'destroy'])
+                    ->middleware('can:permissions.delete')
+                    ->name('destroy');
+            });
     });
