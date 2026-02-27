@@ -2,8 +2,8 @@
   import type { HTMLAttributes } from "vue";
   import { computed } from "vue";
   import { cn } from "@/lib/utils";
-  import { Skeleton } from "@/components/ui/skeleton";
-  import { sidebarMenuSkeletonVariants } from ".";
+  import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
+  import { sidebarMenuSkeletonVariants } from "./styles";
 
   const props = defineProps<{
     showIcon?: boolean;

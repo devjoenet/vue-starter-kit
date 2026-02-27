@@ -1,7 +1,6 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
-import type { Appearance, ResolvedAppearance } from "@/types";
-
+import type { Appearance, ResolvedAppearance } from "@/types/ui";
 export type { Appearance, ResolvedAppearance };
 
 export type UseAppearanceReturn = {

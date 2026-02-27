@@ -5,7 +5,7 @@
   import { computed } from "vue";
   import { useVueOTPContext } from "vue-input-otp";
   import { cn } from "@/lib/utils";
-  import { inputOtpSlotVariants } from ".";
+  import { inputOtpSlotVariants } from "./styles";
 
   const props = defineProps<{ index: number; class?: HTMLAttributes["class"] }>();
 

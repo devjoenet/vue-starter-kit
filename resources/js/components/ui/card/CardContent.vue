@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
-  import { cardContentVariants } from ".";
+  import { cardContentVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

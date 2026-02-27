@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 it('matches the enhanced select variants structure', function () {
     $path = dirname(__DIR__, 2).'/resources/js/components/ui/select/Select.vue';
-    $indexPath = dirname(__DIR__, 2).'/resources/js/components/ui/select/index.ts';
+    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/select/styles.ts';
 
     expect(file_exists($path))->toBeTrue();
-    expect(file_exists($indexPath))->toBeTrue();
+    expect(file_exists($stylesPath))->toBeTrue();
 
     $contents = file_get_contents($path);
-    $indexContents = file_get_contents($indexPath);
+    $stylesContents = file_get_contents($stylesPath);
 
     expect($contents)
         ->toContain('clearable?: boolean')
@@ -22,7 +22,7 @@ it('matches the enhanced select variants structure', function () {
         ->toContain('DropdownMenuRadioGroup')
         ->toContain('role="combobox"');
 
-    expect($indexContents)
+    expect($stylesContents)
         ->toContain('selectLabelVariants')
         ->toContain('selectOptionVariants')
         ->toContain('primary')

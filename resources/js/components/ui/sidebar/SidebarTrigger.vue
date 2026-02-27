@@ -2,8 +2,8 @@
   import type { HTMLAttributes } from "vue";
   import { PanelLeftClose, PanelLeftOpen } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
-  import { Button } from "@/components/ui/button";
-  import { sidebarTriggerVariants } from ".";
+  import Button from "@/components/ui/button/Button.vue";
+  import { sidebarTriggerVariants } from "./styles";
   import { useSidebar } from "./utils";
 
   const props = defineProps<{

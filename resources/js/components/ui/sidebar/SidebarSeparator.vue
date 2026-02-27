@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
-  import { Separator } from "@/components/ui/separator";
-  import { sidebarSeparatorVariants } from ".";
+  import Separator from "@/components/ui/separator/Separator.vue";
+  import { sidebarSeparatorVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

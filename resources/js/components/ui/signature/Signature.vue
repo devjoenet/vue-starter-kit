@@ -3,12 +3,12 @@
   import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
   import { useVModel } from "@vueuse/core";
   import { Check, Eraser } from "lucide-vue-next";
-  import { Button } from "@/components/ui/button";
-  import type { InputVariants } from "@/components/ui/input";
-  import { inputAssistiveTextVariants } from "@/components/ui/input";
+  import Button from "@/components/ui/button/Button.vue";
+  import type { InputVariants } from "@/components/ui/input/variants";
+  import { inputAssistiveTextVariants } from "@/components/ui/input/variants";
   import { cn } from "@/lib/utils";
-  import type { SignatureDataUrlType } from ".";
-  import { signatureSurfaceVariants } from ".";
+  import type { SignatureDataUrlType } from "./styles";
+  import { signatureSurfaceVariants } from "./styles";
 
   defineOptions({
     inheritAttrs: false,

@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
-  import { Input } from "@/components/ui/input";
-  import { sidebarInputVariants } from ".";
+  import Input from "@/components/ui/input/Input.vue";
+  import { sidebarInputVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

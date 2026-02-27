@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import type { TooltipContentEmits, TooltipContentProps } from "reka-ui";
   import type { HTMLAttributes } from "vue";
-  import type { TooltipContentVariants } from ".";
+  import type { TooltipContentVariants } from "./styles";
   import { reactiveOmit } from "@vueuse/core";
   import { TooltipArrow, TooltipContent, TooltipPortal, useForwardPropsEmits } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { tooltipArrowVariants, tooltipContentVariants } from ".";
+  import { tooltipArrowVariants, tooltipContentVariants } from "./styles";
 
   defineOptions({
     inheritAttrs: false,

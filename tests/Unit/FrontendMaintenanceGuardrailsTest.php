@@ -85,8 +85,8 @@ it('prefills the role name in the role management edit page details form', funct
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
 
     expect($contents)->toContain('v-model="roleForm.name"');
-    expect($contents)->toContain('() => props.role.name');
-    expect($contents)->toContain('{ immediate: true }');
+    expect($contents)->toContain('() => props.roleName');
+    expect($contents)->toContain('{ immediate: true },');
 });
 
 it('syncs input default values across inertial page navigations when not using v-model', function () {

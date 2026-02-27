@@ -3,11 +3,13 @@
   import { computed, ref, useId, watch } from "vue";
   import { useVModel } from "@vueuse/core";
   import { CalendarDays, ChevronLeft, ChevronRight, CircleX } from "lucide-vue-next";
-  import type { InputVariants } from "@/components/ui/input";
-  import { inputAssistiveTextVariants, inputVariants } from "@/components/ui/input";
-  import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+  import type { InputVariants } from "@/components/ui/input/variants";
+  import { inputAssistiveTextVariants, inputVariants } from "@/components/ui/input/variants";
+  import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
+  import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
+  import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
   import { cn } from "@/lib/utils";
-  import { datePickerDayVariants } from ".";
+  import { datePickerDayVariants } from "./styles";
 
   const props = withDefaults(
     defineProps<{

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Data\Admin\RoleUpsertData;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\SyncRolePermissionsRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -38,28 +38,17 @@ final class RolesController
         ]);
     }
 
-    public function store(): RedirectResponse
+    public function store(StoreRoleRequest $request): RedirectResponse
     {
-        $data = RoleUpsertData::validateAndCreate(request());
-
-        $name = Str::of($data->name)->squish()->kebab()->toString();
-
-        request()->merge([
-            'name' => $name,
-        ]);
-
-        request()->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')],
-            'user_ids' => ['array'],
-            'user_ids.*' => ['integer', 'distinct', Rule::exists('users', 'id')],
-        ]);
+        $validated = $request->validated();
+        $name = $validated['name'];
 
         $role = Role::query()->create([
             'name' => $name,
             'guard_name' => 'web',
         ]);
 
-        $role->users()->sync(request()->input('user_ids', []));
+        $role->users()->sync($validated['user_ids'] ?? []);
 
         return redirect()->route('admin.roles.edit', $role)
             ->with('success', 'Role created.');
@@ -83,24 +72,10 @@ final class RolesController
         ]);
     }
 
-    public function update(Role $role): RedirectResponse
+    public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
-        $data = RoleUpsertData::validateAndCreate(request());
-
-        $name = Str::of($data->name)->squish()->kebab()->toString();
-
-        request()->merge([
-            'name' => $name,
-        ]);
-
-        request()->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('roles', 'name')->ignore($role->id),
-            ],
-        ]);
+        $validated = $request->validated();
+        $name = $validated['name'];
 
         $role->forceFill(['name' => $name])->save();
 
@@ -115,14 +90,9 @@ final class RolesController
             ->with('success', 'Role deleted.');
     }
 
-    public function syncPermissions(Role $role): RedirectResponse
+    public function syncPermissions(SyncRolePermissionsRequest $request, Role $role): RedirectResponse
     {
-        $validated = request()->validate([
-            'permissions' => ['array'],
-            'permissions.*' => ['string', 'max:255'],
-        ]);
-
-        $permissionNames = $validated['permissions'] ?? [];
+        $permissionNames = $request->validated('permissions', []);
 
         $existing = Permission::query()
             ->whereIn('name', $permissionNames)

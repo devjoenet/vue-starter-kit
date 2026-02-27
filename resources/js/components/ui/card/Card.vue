@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
-  import type { CardVariants } from ".";
+  import type { CardVariants } from "./styles";
   import { cn } from "@/lib/utils";
-  import { cardVariants } from ".";
+  import { cardVariants } from "./styles";
 
   const props = withDefaults(
     defineProps<{

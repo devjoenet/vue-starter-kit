@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogTitle, useForwardProps } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { dialogTitleVariants } from ".";
+  import { dialogTitleVariants } from "./styles";
 
   const props = defineProps<DialogTitleProps & { class?: HTMLAttributes["class"] }>();
 

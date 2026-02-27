@@ -3,12 +3,16 @@
   import { computed, ref, useId, watch } from "vue";
   import { useVModel } from "@vueuse/core";
   import { ChevronDown, CircleX } from "lucide-vue-next";
-  import type { InputVariants } from "@/components/ui/input";
-  import { inputAssistiveTextVariants, inputVariants } from "@/components/ui/input";
-  import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+  import type { InputVariants } from "@/components/ui/input/variants";
+  import { inputAssistiveTextVariants, inputVariants } from "@/components/ui/input/variants";
+  import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
+  import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
+  import DropdownMenuRadioGroup from "@/components/ui/dropdown-menu/DropdownMenuRadioGroup.vue";
+  import DropdownMenuRadioItem from "@/components/ui/dropdown-menu/DropdownMenuRadioItem.vue";
+  import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
   import { cn } from "@/lib/utils";
-  import type { SelectOption, SelectOptionVariant } from ".";
-  import { selectLabelVariants, selectOptionVariants } from ".";
+  import type { SelectOption, SelectOptionVariant } from "./styles";
+  import { selectLabelVariants, selectOptionVariants } from "./styles";
 
   const props = withDefaults(
     defineProps<{
@@ -244,9 +248,17 @@
 
   const chevronClasses = computed(() => cn("size-4 shrink-0 text-[var(--field-label)] transition-transform duration-150", open.value && "rotate-180", hasError.value && "text-[var(--error)]"));
 
-  function handleSelectionChange(value: string): void {
-    modelValue.value = value;
-    emit("change", value);
+  function handleSelectionChange(value: unknown): void {
+    if (value === null) {
+      modelValue.value = "";
+      emit("change", "");
+      return;
+    }
+
+    const normalizedValue = String(value);
+
+    modelValue.value = normalizedValue;
+    emit("change", normalizedValue);
 
     if (open.value) {
       open.value = false;

@@ -5,7 +5,7 @@
   import { useForwardPropsEmits } from "reka-ui";
   import { OTPInput } from "vue-input-otp";
   import { cn } from "@/lib/utils";
-  import { inputOtpContainerVariants } from ".";
+  import { inputOtpContainerVariants } from "./styles";
 
   const props = defineProps<OTPInputProps & { class?: HTMLAttributes["class"] }>();
 

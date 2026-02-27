@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogOverlay } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { dialogOverlayVariants } from ".";
+  import { dialogOverlayVariants } from "./styles";
 
   const props = defineProps<DialogOverlayProps & { class?: HTMLAttributes["class"] }>();
 

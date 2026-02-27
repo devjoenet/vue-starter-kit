@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Data\Admin\PermissionUpsertData;
+use App\Http\Requests\Admin\StorePermissionRequest;
+use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Models\Permission;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,26 +46,13 @@ final class PermissionsController
         ]);
     }
 
-    public function store(): RedirectResponse
+    public function store(StorePermissionRequest $request): RedirectResponse
     {
-        $data = PermissionUpsertData::validateAndCreate(request());
-
-        $group = $this->normalizePermissionGroup($data->group);
-        $name = $this->normalizePermissionName($group, $data->name);
-
-        request()->merge([
-            'name' => $name,
-            'group' => $group,
-        ]);
-
-        request()->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('permissions', 'name')],
-            'group' => ['required', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $permission = Permission::query()->create([
-            'name' => $name,
-            'group' => $group,
+            'name' => $validated['name'],
+            'group' => $validated['group'],
             'guard_name' => 'web',
         ]);
 
@@ -90,31 +76,13 @@ final class PermissionsController
         ]);
     }
 
-    public function update(Permission $permission): RedirectResponse
+    public function update(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
     {
-        $data = PermissionUpsertData::validateAndCreate(request());
-
-        $group = $this->normalizePermissionGroup($data->group);
-        $name = $this->normalizePermissionName($group, $data->name);
-
-        request()->merge([
-            'name' => $name,
-            'group' => $group,
-        ]);
-
-        request()->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('permissions', 'name')->ignore($permission->id),
-            ],
-            'group' => ['required', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $permission->forceFill([
-            'name' => $name,
-            'group' => $group,
+            'name' => $validated['name'],
+            'group' => $validated['group'],
         ])->save();
 
         return back()->with('success', 'Permission updated.');
@@ -126,33 +94,5 @@ final class PermissionsController
 
         return redirect()->route('admin.permissions.index')
             ->with('success', 'Permission deleted.');
-    }
-
-    private function normalizePermissionName(string $group, string $name): string
-    {
-        $segment = mb_trim($name);
-
-        if (str_contains($segment, '.')) {
-            $parts = array_values(array_filter(explode('.', $segment)));
-            $segment = (string) (end($parts) ?: '');
-        }
-
-        $action = Str::of($segment)->squish()->camel()->toString();
-
-        if ($action === '') {
-            return '';
-        }
-
-        return sprintf('%s.%s', $group, $action);
-    }
-
-    private function normalizePermissionGroup(string $group): string
-    {
-        return Str::of($group)
-            ->trim()
-            ->replaceMatches('/[^A-Za-z0-9]+/', '_')
-            ->lower()
-            ->trim('_')
-            ->toString();
     }
 }

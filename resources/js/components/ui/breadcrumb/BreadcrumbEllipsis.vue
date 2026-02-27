@@ -2,7 +2,7 @@
   import type { HTMLAttributes } from "vue";
   import { MoreHorizontal } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
-  import { breadcrumbEllipsisVariants } from ".";
+  import { breadcrumbEllipsisVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

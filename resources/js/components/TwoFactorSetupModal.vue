@@ -3,17 +3,24 @@
   import { useClipboard } from "@vueuse/core";
   import { Check, Copy, ScanLine } from "lucide-vue-next";
   import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
-  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-  import { Button } from "@/components/ui/button";
-  import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-  import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-  import { Spinner } from "@/components/ui/spinner";
+  import Alert from "@/components/ui/alert/Alert.vue";
+  import AlertDescription from "@/components/ui/alert/AlertDescription.vue";
+  import AlertTitle from "@/components/ui/alert/AlertTitle.vue";
+  import Button from "@/components/ui/button/Button.vue";
+  import Dialog from "@/components/ui/dialog/Dialog.vue";
+  import DialogContent from "@/components/ui/dialog/DialogContent.vue";
+  import DialogDescription from "@/components/ui/dialog/DialogDescription.vue";
+  import DialogHeader from "@/components/ui/dialog/DialogHeader.vue";
+  import DialogTitle from "@/components/ui/dialog/DialogTitle.vue";
+  import InputOTP from "@/components/ui/input-otp/InputOTP.vue";
+  import InputOTPGroup from "@/components/ui/input-otp/InputOTPGroup.vue";
+  import InputOTPSlot from "@/components/ui/input-otp/InputOTPSlot.vue";
+  import Spinner from "@/components/ui/spinner/Spinner.vue";
   import { useAppearance } from "@/composables/useAppearance";
   import { useTwoFactorAuth } from "@/composables/useTwoFactorAuth";
   import { normalizeErrorMessages } from "@/lib/errors";
   import { confirm } from "@/routes/two-factor";
-  import type { TwoFactorConfigContent } from "@/types";
-
+  import type { TwoFactorConfigContent } from "@/types/auth";
   type Props = {
     requiresConfirmation: boolean;
     twoFactorEnabled: boolean;

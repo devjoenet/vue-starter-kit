@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 it('matches the enhanced signature structure', function () {
     $path = dirname(__DIR__, 2).'/resources/js/components/ui/signature/Signature.vue';
-    $indexPath = dirname(__DIR__, 2).'/resources/js/components/ui/signature/index.ts';
+    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/signature/styles.ts';
 
     expect(file_exists($path))->toBeTrue();
-    expect(file_exists($indexPath))->toBeTrue();
+    expect(file_exists($stylesPath))->toBeTrue();
 
     $contents = file_get_contents($path);
-    $indexContents = file_get_contents($indexPath);
+    $stylesContents = file_get_contents($stylesPath);
 
     expect($contents)
         ->toContain('lineWidth?: number')
@@ -23,7 +23,7 @@ it('matches the enhanced signature structure', function () {
         ->toContain('defineExpose')
         ->toContain('@pointerdown="handlePointerDown"');
 
-    expect($indexContents)
+    expect($stylesContents)
         ->toContain('SignatureDataUrlType')
         ->toContain('signatureSurfaceVariants')
         ->toContain('error')

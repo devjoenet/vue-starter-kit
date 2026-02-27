@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed } from "vue";
-  import { inputAssistiveTextVariants } from "@/components/ui/input";
+  import { inputAssistiveTextVariants } from "@/components/ui/input/variants";
   import { normalizeErrorMessages } from "@/lib/errors";
   import { cn } from "@/lib/utils";
 

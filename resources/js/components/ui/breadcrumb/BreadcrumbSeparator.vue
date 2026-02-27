@@ -2,7 +2,7 @@
   import type { HTMLAttributes } from "vue";
   import { ChevronRight } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
-  import { breadcrumbSeparatorVariants } from ".";
+  import { breadcrumbSeparatorVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

@@ -2,7 +2,7 @@
   import { Link } from "@inertiajs/vue3";
   import { computed } from "vue";
   import { useAbility } from "@/composables/useAbility";
-  import { dashboard } from "@/routes/admin/index";
+  import { dashboard } from "@/routes/admin";
   import AppLogoIcon from "@/components/AppLogoIcon.vue";
   import { index as adminPermissionsIndex } from "@/routes/admin/permissions";
   import { index as adminRolesIndex } from "@/routes/admin/roles";

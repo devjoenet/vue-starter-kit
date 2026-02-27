@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { Label } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { labelVariants } from ".";
+  import { labelVariants } from "./styles";
 
   const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>();
 

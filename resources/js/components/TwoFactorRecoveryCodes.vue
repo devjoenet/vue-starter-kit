@@ -2,9 +2,15 @@
   import { Form } from "@inertiajs/vue3";
   import { Eye, EyeOff, LockKeyhole, RefreshCw } from "lucide-vue-next";
   import { computed, nextTick, onMounted, ref, useTemplateRef } from "vue";
-  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-  import { Button } from "@/components/ui/button";
-  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+  import Alert from "@/components/ui/alert/Alert.vue";
+  import AlertDescription from "@/components/ui/alert/AlertDescription.vue";
+  import AlertTitle from "@/components/ui/alert/AlertTitle.vue";
+  import Button from "@/components/ui/button/Button.vue";
+  import Card from "@/components/ui/card/Card.vue";
+  import CardContent from "@/components/ui/card/CardContent.vue";
+  import CardDescription from "@/components/ui/card/CardDescription.vue";
+  import CardHeader from "@/components/ui/card/CardHeader.vue";
+  import CardTitle from "@/components/ui/card/CardTitle.vue";
   import { useTwoFactorAuth } from "@/composables/useTwoFactorAuth";
   import { normalizeErrorMessages } from "@/lib/errors";
   import { regenerateRecoveryCodes } from "@/routes/two-factor";

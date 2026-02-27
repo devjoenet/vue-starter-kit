@@ -5,14 +5,14 @@ declare(strict_types=1);
 it('supports feedback variants across shared ui components', function () {
     $projectRoot = dirname(__DIR__, 2);
     $variantFiles = [
-        'resources/js/components/ui/alert/index.ts',
-        'resources/js/components/ui/badge/index.ts',
-        'resources/js/components/ui/button/index.ts',
-        'resources/js/components/ui/card/index.ts',
-        'resources/js/components/ui/checkbox/index.ts',
-        'resources/js/components/ui/input/index.ts',
-        'resources/js/components/ui/dialog/index.ts',
-        'resources/js/components/ui/tooltip/index.ts',
+        'resources/js/components/ui/alert/styles.ts',
+        'resources/js/components/ui/badge/styles.ts',
+        'resources/js/components/ui/button/styles.ts',
+        'resources/js/components/ui/card/styles.ts',
+        'resources/js/components/ui/checkbox/styles.ts',
+        'resources/js/components/ui/input/variants.ts',
+        'resources/js/components/ui/dialog/styles.ts',
+        'resources/js/components/ui/tooltip/styles.ts',
     ];
 
     foreach ($variantFiles as $variantFile) {
@@ -63,7 +63,7 @@ it('forwards feedback variants through vue wrappers', function () {
 });
 
 it('separates button style from semantic color variants', function () {
-    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/index.ts');
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/styles.ts');
 
     expect($contents)
         ->toContain('appearance: {')
