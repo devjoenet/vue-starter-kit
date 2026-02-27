@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { computed } from "vue";
-  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+  import Avatar from "@/components/ui/avatar/Avatar.vue";
+  import AvatarFallback from "@/components/ui/avatar/AvatarFallback.vue";
+  import AvatarImage from "@/components/ui/avatar/AvatarImage.vue";
   import { useInitials } from "@/composables/useInitials";
-  import type { User } from "@/types";
-
+  import type { User } from "@/types/auth";
   type Props = {
     user: User;
     showEmail?: boolean;

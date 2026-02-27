@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { AvatarFallback } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { avatarFallbackVariants } from ".";
+  import { avatarFallbackVariants } from "./styles";
 
   const props = defineProps<AvatarFallbackProps & { class?: HTMLAttributes["class"] }>();
 

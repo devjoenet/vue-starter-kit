@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { NavigationMenuLink, useForwardPropsEmits } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { navigationMenuLinkVariants } from ".";
+  import { navigationMenuLinkVariants } from "./styles";
 
   const props = defineProps<NavigationMenuLinkProps & { class?: HTMLAttributes["class"] }>();
   const emits = defineEmits<NavigationMenuLinkEmits>();

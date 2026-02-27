@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, ref, watch } from "vue";
-  import { Input } from "@/components/ui/input";
-  import type { InputVariants } from "@/components/ui/input";
+  import Input from "@/components/ui/input/Input.vue";
+  import type { InputVariants } from "@/components/ui/input/variants";
   import { toSnakeCase, toTitleCase } from "@/lib/utils";
 
   const defaultGroups = [
@@ -73,9 +73,11 @@
     isOpen.value = false;
   };
 
-  const handleInputUpdate = (value: string) => {
-    modelValue.value = value;
-    searchQuery.value = value;
+  const handleInputUpdate = (value: string | number) => {
+    const normalizedValue = String(value);
+
+    modelValue.value = normalizedValue;
+    searchQuery.value = normalizedValue;
     isOpen.value = true;
   };
 

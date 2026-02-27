@@ -30,6 +30,7 @@ return [
 
     'transformers' => [
         Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,
+        App\Support\TypeScript\FormRequestRulesTransformer::class,
         // Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
         // Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class,
         Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class,

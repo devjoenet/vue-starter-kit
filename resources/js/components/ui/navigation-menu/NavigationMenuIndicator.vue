@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { NavigationMenuIndicator, useForwardProps } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { navigationMenuIndicatorCaretVariants, navigationMenuIndicatorVariants } from ".";
+  import { navigationMenuIndicatorCaretVariants, navigationMenuIndicatorVariants } from "./styles";
 
   const props = defineProps<NavigationMenuIndicatorProps & { class?: HTMLAttributes["class"] }>();
 

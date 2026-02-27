@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
-  import type { AlertVariants } from ".";
+  import type { AlertVariants } from "./styles";
   import { cn } from "@/lib/utils";
-  import { alertVariants } from ".";
+  import { alertVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

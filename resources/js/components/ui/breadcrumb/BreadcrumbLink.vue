@@ -3,7 +3,7 @@
   import type { HTMLAttributes } from "vue";
   import { Primitive } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { breadcrumbLinkVariants } from ".";
+  import { breadcrumbLinkVariants } from "./styles";
 
   const props = withDefaults(defineProps<PrimitiveProps & { class?: HTMLAttributes["class"] }>(), {
     as: "a",

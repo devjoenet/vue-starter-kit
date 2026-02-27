@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { Separator } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { separatorVariants } from ".";
+  import { separatorVariants } from "./styles";
 
   const props = withDefaults(defineProps<SeparatorProps & { class?: HTMLAttributes["class"] }>(), {
     orientation: "horizontal",

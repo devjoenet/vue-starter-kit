@@ -5,7 +5,7 @@
   import { X } from "lucide-vue-next";
   import { DialogClose, DialogContent, DialogPortal, useForwardPropsEmits } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { sheetCloseVariants, sheetContentVariants } from ".";
+  import { sheetCloseVariants, sheetContentVariants } from "./styles";
   import SheetOverlay from "./SheetOverlay.vue";
 
   interface SheetContentProps extends DialogContentProps {

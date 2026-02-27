@@ -1,7 +1,12 @@
 <script setup lang="ts">
   import { Link } from "@inertiajs/vue3";
-  import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-  import type { BreadcrumbItem as BreadcrumbItemType } from "@/types";
+  import Breadcrumb from "@/components/ui/breadcrumb/Breadcrumb.vue";
+  import BreadcrumbItem from "@/components/ui/breadcrumb/BreadcrumbItem.vue";
+  import BreadcrumbLink from "@/components/ui/breadcrumb/BreadcrumbLink.vue";
+  import BreadcrumbList from "@/components/ui/breadcrumb/BreadcrumbList.vue";
+  import BreadcrumbPage from "@/components/ui/breadcrumb/BreadcrumbPage.vue";
+  import BreadcrumbSeparator from "@/components/ui/breadcrumb/BreadcrumbSeparator.vue";
+  import type { BreadcrumbItem as BreadcrumbItemType } from "@/types/navigation";
 
   type Props = {
     breadcrumbs: BreadcrumbItemType[];

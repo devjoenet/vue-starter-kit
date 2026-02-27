@@ -2,8 +2,13 @@
   import { usePage } from "@inertiajs/vue3";
   import { ChevronsUpDown } from "lucide-vue-next";
   import { computed } from "vue";
-  import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-  import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+  import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
+  import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
+  import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
+  import SidebarMenu from "@/components/ui/sidebar/SidebarMenu.vue";
+  import SidebarMenuButton from "@/components/ui/sidebar/SidebarMenuButton.vue";
+  import SidebarMenuItem from "@/components/ui/sidebar/SidebarMenuItem.vue";
+  import { useSidebar } from "@/components/ui/sidebar/utils";
   import UserInfo from "@/components/UserInfo.vue";
   import UserMenuContent from "./UserMenuContent.vue";
 

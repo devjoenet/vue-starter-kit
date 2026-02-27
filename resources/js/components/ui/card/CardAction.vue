@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
-  import { cardActionVariants } from ".";
+  import { cardActionVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

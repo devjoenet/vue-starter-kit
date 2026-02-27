@@ -2,8 +2,8 @@
   import { Link } from "@inertiajs/vue3";
   import { computed } from "vue";
   import Heading from "@/components/Heading.vue";
-  import { Button } from "@/components/ui/button";
-  import { Card } from "@/components/ui/card";
+  import Button from "@/components/ui/button/Button.vue";
+  import Card from "@/components/ui/card/Card.vue";
   import { useAbility } from "@/composables/useAbility";
   import { index as adminPermissionsIndex } from "@/routes/admin/permissions";
   import { index as adminRolesIndex } from "@/routes/admin/roles";

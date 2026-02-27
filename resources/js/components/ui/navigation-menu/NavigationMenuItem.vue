@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { NavigationMenuItem } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { navigationMenuItemVariants } from ".";
+  import { navigationMenuItemVariants } from "./styles";
 
   const props = defineProps<NavigationMenuItemProps & { class?: HTMLAttributes["class"] }>();
 

@@ -3,7 +3,7 @@
   import type { HTMLAttributes } from "vue";
   import { Primitive } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { sidebarMenuSubButtonVariants } from ".";
+  import { sidebarMenuSubButtonVariants } from "./styles";
 
   const props = withDefaults(
     defineProps<

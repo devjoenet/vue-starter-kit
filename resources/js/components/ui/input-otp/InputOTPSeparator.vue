@@ -4,7 +4,7 @@
   import { MinusIcon } from "lucide-vue-next";
   import { useForwardProps } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { inputOtpSeparatorVariants } from ".";
+  import { inputOtpSeparatorVariants } from "./styles";
 
   const props = defineProps<{ class?: HTMLAttributes["class"] }>();
 

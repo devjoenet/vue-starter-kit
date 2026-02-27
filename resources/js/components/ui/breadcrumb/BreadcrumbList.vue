@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import type { HTMLAttributes } from "vue";
   import { cn } from "@/lib/utils";
-  import { breadcrumbListVariants } from ".";
+  import { breadcrumbListVariants } from "./styles";
 
   const props = defineProps<{
     class?: HTMLAttributes["class"];

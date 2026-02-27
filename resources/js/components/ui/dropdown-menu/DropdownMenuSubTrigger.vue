@@ -5,7 +5,7 @@
   import { ChevronRight } from "lucide-vue-next";
   import { DropdownMenuSubTrigger, useForwardProps } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { dropdownMenuSubTriggerVariants } from ".";
+  import { dropdownMenuSubTriggerVariants } from "./styles";
 
   const props = defineProps<DropdownMenuSubTriggerProps & { class?: HTMLAttributes["class"]; inset?: boolean }>();
 

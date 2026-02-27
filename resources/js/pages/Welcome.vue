@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { Head, Link } from "@inertiajs/vue3";
   import { dashboard, login, register } from "@/routes";
-  import { Button } from "@/components/ui/button";
-
+  import Button from "@/components/ui/button/Button.vue";
   withDefaults(
     defineProps<{
       canRegister: boolean;

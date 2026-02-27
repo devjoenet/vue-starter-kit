@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { DialogDescription } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { sheetDescriptionVariants } from ".";
+  import { sheetDescriptionVariants } from "./styles";
 
   const props = defineProps<DialogDescriptionProps & { class?: HTMLAttributes["class"] }>();
 

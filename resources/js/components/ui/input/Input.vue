@@ -4,8 +4,8 @@
   import { useVModel } from "@vueuse/core";
   import { CircleX } from "lucide-vue-next";
   import { cn } from "@/lib/utils";
-  import type { InputVariants } from ".";
-  import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from ".";
+  import type { InputVariants } from "./styles";
+  import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from "./styles";
 
   defineOptions({
     inheritAttrs: false,

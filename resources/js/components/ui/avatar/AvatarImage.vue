@@ -4,7 +4,7 @@
   import { reactiveOmit } from "@vueuse/core";
   import { AvatarImage } from "reka-ui";
   import { cn } from "@/lib/utils";
-  import { avatarImageVariants } from ".";
+  import { avatarImageVariants } from "./styles";
 
   const props = defineProps<AvatarImageProps & { class?: HTMLAttributes["class"] }>();
 

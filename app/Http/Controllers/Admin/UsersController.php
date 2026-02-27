@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Data\Admin\UserUpsertData;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\SyncUserRolesRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -38,14 +40,14 @@ final class UsersController
         return Inertia::render('admin/Users/Create');
     }
 
-    public function store(): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $data = UserUpsertData::validateAndCreate(request());
+        $validated = $request->validated();
 
         $user = User::query()->create([
-            'name' => $data->name,
-            'email' => $data->email,
-            'password' => Hash::make($data->password ?? str()->password(16)),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         return redirect()->route('admin.users.edit', $user)
@@ -61,19 +63,17 @@ final class UsersController
         ]);
     }
 
-    public function update(User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $data = UserUpsertData::validateAndCreate(
-            request()->merge(['password' => request()->string('password')->toString() ?: null])
-        );
+        $validated = $request->validated();
 
         $user->forceFill([
-            'name' => $data->name,
-            'email' => $data->email,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
         ]);
 
-        if ($data->password) {
-            $user->forceFill(['password' => Hash::make($data->password)]);
+        if (($validated['password'] ?? null) !== null) {
+            $user->forceFill(['password' => Hash::make($validated['password'])]);
         }
 
         $user->save();
@@ -89,9 +89,9 @@ final class UsersController
             ->with('success', 'User deleted.');
     }
 
-    public function syncRoles(User $user): RedirectResponse
+    public function syncRoles(SyncUserRolesRequest $request, User $user): RedirectResponse
     {
-        $roleNames = request()->input('roles', []);
+        $roleNames = $request->validated('roles', []);
         $user->syncRoles($roleNames);
 
         return back()->with('success', 'Roles updated.');

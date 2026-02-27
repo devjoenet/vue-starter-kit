@@ -1,17 +1,26 @@
 <script setup lang="ts">
   import { useForm } from "@inertiajs/vue3";
-  import { computed, watch } from "vue";
+  import { h, computed, watch } from "vue";
   import PermissionGroupSelect from "@/components/admin/PermissionGroupSelect.vue";
-  import { Button } from "@/components/ui/button";
-  import { Card } from "@/components/ui/card";
-  import { Input } from "@/components/ui/input";
+  import Button from "@/components/ui/button/Button.vue";
+  import Card from "@/components/ui/card/Card.vue";
+  import Input from "@/components/ui/input/Input.vue";
   import { useAbility } from "@/composables/useAbility";
   import AppLayout from "@/layouts/AppLayout.vue";
   import { toCamelCase, toSnakeCase } from "@/lib/utils";
-  import { dashboard } from "@/routes/admin/index";
-  import { destroy, edit, index, update } from "@/routes/admin/permissions";
-  import { type BreadcrumbItem } from "@/types";
-
+  import { dashboard } from "@/routes/admin";
+  import { destroy, index, update } from "@/routes/admin/permissions";
+  import type { App } from "@/wayfinder/types";
+  defineOptions({
+    layout: (_: unknown, page: unknown) =>
+      h(
+        AppLayout,
+        {
+          breadcrumbs: [{ title: "Dashboard", href: dashboard.url() }, { title: "Permissions", href: index.url() }, { title: "Edit" }],
+        },
+        () => page,
+      ),
+  });
   const props = defineProps<{
     permission: { id: number; name: string; group: string };
     groups: string[];
@@ -20,21 +29,6 @@
   const { can } = useAbility();
   const canUpdate = computed(() => can("permissions.update"));
   const canDelete = computed(() => can("permissions.delete"));
-
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      title: "Dashboard",
-      href: dashboard.url(),
-    },
-    {
-      title: "Permissions",
-      href: index.url(),
-    },
-    {
-      title: "Edit",
-      href: edit.url(props.permission.id),
-    },
-  ];
 
   const extractActionSegment = (permissionName: string, group: string) => {
     const normalizedGroup = toSnakeCase(group);
@@ -65,7 +59,7 @@
     return normalizedAction ? `${normalizedGroup}.${normalizedAction}` : `${normalizedGroup}.`;
   };
 
-  const form = useForm({
+  const form = useForm<App["Forms"]["Admin"]["Permissions"]["Update"]>({
     name: props.permission.name,
     group: props.permission.group,
   });
@@ -106,24 +100,22 @@
 </script>
 
 <template>
-  <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="space-y-6 px-4">
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
-        <h1 class="text-2xl font-semibold">Edit permission</h1>
-        <Button appearance="outline" variant="destructive" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
-      </div>
-
-      <Card variant="default" class="px-6">
-        <form class="space-y-4" @submit.prevent="updatePermission">
-          <PermissionGroupSelect id="edit-permission-group" v-model="form.group" :groups="props.groups" :disabled="!canUpdate" :error="form.errors.group" />
-
-          <Input id="edit-permission-name" v-model="form.name" name="name" label="Permission name" variant="outlined" :disabled="!canUpdate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
-
-          <div class="flex justify-end">
-            <Button appearance="filled" type="submit" :disabled="!canUpdate || form.processing"> Save </Button>
-          </div>
-        </form>
-      </Card>
+  <div class="space-y-6 px-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
+      <h1 class="text-2xl font-semibold">Edit permission</h1>
+      <Button appearance="outline" variant="destructive" :disabled="!canDelete" @click="destroyPermission">Delete</Button>
     </div>
-  </AppLayout>
+
+    <Card variant="default" class="px-6">
+      <form class="space-y-4" @submit.prevent="updatePermission">
+        <PermissionGroupSelect id="edit-permission-group" v-model="form.group" :groups="props.groups" :disabled="!canUpdate" :error="form.errors.group" />
+
+        <Input id="edit-permission-name" v-model="form.name" name="name" label="Permission name" variant="outlined" :disabled="!canUpdate" :state="form.errors.name ? 'error' : 'default'" :message="form.errors.name" />
+
+        <div class="flex justify-end">
+          <Button appearance="filled" type="submit" :disabled="!canUpdate || form.processing"> Save </Button>
+        </div>
+      </form>
+    </Card>
+  </div>
 </template>

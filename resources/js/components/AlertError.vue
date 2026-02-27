@@ -2,8 +2,9 @@
   import { AlertCircle } from "lucide-vue-next";
   import { computed } from "vue";
   import { normalizeErrorMessages } from "@/lib/errors";
-  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
+  import Alert from "@/components/ui/alert/Alert.vue";
+  import AlertDescription from "@/components/ui/alert/AlertDescription.vue";
+  import AlertTitle from "@/components/ui/alert/AlertTitle.vue";
   type Props = {
     errors?: unknown;
     title?: string;

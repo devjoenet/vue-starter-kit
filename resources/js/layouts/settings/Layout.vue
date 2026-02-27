@@ -1,16 +1,15 @@
 <script setup lang="ts">
   import { Link } from "@inertiajs/vue3";
   import Heading from "@/components/Heading.vue";
-  import { Button } from "@/components/ui/button";
-  import { Separator } from "@/components/ui/separator";
+  import Button from "@/components/ui/button/Button.vue";
+  import Separator from "@/components/ui/separator/Separator.vue";
   import { useCurrentUrl } from "@/composables/useCurrentUrl";
   import { toUrl } from "@/lib/utils";
   import { edit as editAppearance } from "@/routes/appearance";
   import { edit as editProfile } from "@/routes/profile";
   import { show } from "@/routes/two-factor";
   import { edit as editPassword } from "@/routes/user-password";
-  import { type NavItem } from "@/types";
-
+  import type { NavItem } from "@/types/navigation";
   const sidebarNavItems: NavItem[] = [
     {
       title: "Profile",

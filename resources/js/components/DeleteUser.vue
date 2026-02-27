@@ -3,11 +3,17 @@
   import { useTemplateRef } from "vue";
   import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileController";
   import Heading from "@/components/Heading.vue";
-  import { Button } from "@/components/ui/button";
-  import { Card } from "@/components/ui/card";
-  import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-  import { Input } from "@/components/ui/input";
-
+  import Button from "@/components/ui/button/Button.vue";
+  import Card from "@/components/ui/card/Card.vue";
+  import Dialog from "@/components/ui/dialog/Dialog.vue";
+  import DialogClose from "@/components/ui/dialog/DialogClose.vue";
+  import DialogContent from "@/components/ui/dialog/DialogContent.vue";
+  import DialogDescription from "@/components/ui/dialog/DialogDescription.vue";
+  import DialogFooter from "@/components/ui/dialog/DialogFooter.vue";
+  import DialogHeader from "@/components/ui/dialog/DialogHeader.vue";
+  import DialogTitle from "@/components/ui/dialog/DialogTitle.vue";
+  import DialogTrigger from "@/components/ui/dialog/DialogTrigger.vue";
+  import Input from "@/components/ui/input/Input.vue";
   const passwordInput = useTemplateRef("passwordInput");
 </script>
 
