@@ -12,7 +12,7 @@
   import { edit } from "@/routes/profile";
   import { send } from "@/routes/verification";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

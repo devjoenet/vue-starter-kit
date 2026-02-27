@@ -13,7 +13,7 @@
   import type { App } from "@/wayfinder/types";
   import { toTitleCase } from "../../../lib/utils";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {
@@ -66,10 +66,16 @@
     userForm.delete(destroy.url(props.user.id));
   };
 
-  const toggleRole = (roleName: string) => {
-    const idx = rolesForm.roles.indexOf(roleName);
-    if (idx >= 0) rolesForm.roles.splice(idx, 1);
-    else rolesForm.roles.push(roleName);
+  const toggleRole = (roleName: string, isChecked: boolean | "indeterminate") => {
+    const nextRoles = new Set(rolesForm.roles ?? []);
+
+    if (isChecked === true) {
+      nextRoles.add(roleName);
+    } else {
+      nextRoles.delete(roleName);
+    }
+
+    rolesForm.roles = [...nextRoles];
   };
 </script>
 
@@ -112,12 +118,12 @@
       <Card variant="default" class="px-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold">Roles</h2>
-          <Button appearance="filled" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles">Refresh Roles</Button>
+          <Button appearance="filled" :disabled="!canAssignRoles || rolesForm.processing" @click="syncRoles">Save Roles</Button>
         </div>
 
         <div class="mt-4 space-y-2 -mx-3">
           <label v-for="r in roles" :key="r.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssignRoles ? 'opacity-60' : ''">
-            <Checkbox :disabled="!canAssignRoles" :model-value="rolesForm.roles.includes(r.name)" @update:model-value="() => toggleRole(r.name)" />
+            <Checkbox :disabled="!canAssignRoles" :model-value="rolesForm.roles.includes(r.name)" @update:model-value="(value) => toggleRole(r.name, value)" />
             <span class="text-sm">{{ r.name }}</span>
           </label>
         </div>

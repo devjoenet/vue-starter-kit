@@ -13,7 +13,7 @@
   import { store } from "@/routes/two-factor/login";
   import type { TwoFactorConfigContent } from "@/types/auth";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AuthLayout,
         {

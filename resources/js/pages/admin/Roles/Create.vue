@@ -12,7 +12,7 @@
   import { create, index, store } from "@/routes/admin/roles";
   import type { App } from "@/wayfinder/types";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {
@@ -44,14 +44,16 @@
     form.post(store.url());
   };
 
-  const toggleUser = (userId: number) => {
-    const index = form.user_ids.indexOf(userId);
-    if (index >= 0) {
-      form.user_ids.splice(index, 1);
-      return;
+  const toggleUser = (userId: number, isChecked: boolean | "indeterminate") => {
+    const nextUserIds = new Set(form.user_ids ?? []);
+
+    if (isChecked === true) {
+      nextUserIds.add(userId);
+    } else {
+      nextUserIds.delete(userId);
     }
 
-    form.user_ids.push(userId);
+    form.user_ids = [...nextUserIds];
   };
 </script>
 
@@ -76,7 +78,7 @@
 
           <div class="mt-4 space-y-2 -mx-3 max-h-72 overflow-y-auto px-3">
             <label v-for="user in props.users" :key="user.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canCreate ? 'opacity-60' : ''">
-              <Checkbox :disabled="!canCreate" :model-value="form.user_ids.includes(user.id)" @update:model-value="() => toggleUser(user.id)" />
+              <Checkbox :disabled="!canCreate" :model-value="form.user_ids.includes(user.id)" @update:model-value="(value) => toggleUser(user.id, value)" />
 
               <span class="min-w-0">
                 <span class="block truncate text-sm font-medium">{{ user.name }}</span>

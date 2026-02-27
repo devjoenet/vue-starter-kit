@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { router, useForm } from "@inertiajs/vue3";
   import { ChevronDown } from "lucide-vue-next";
-  import { h, computed, watch } from "vue";
+  import { h, computed, ref, watch } from "vue";
   import Button from "@/components/ui/button/Button.vue";
   import Card from "@/components/ui/card/Card.vue";
   import Checkbox from "@/components/ui/checkbox/Checkbox.vue";
@@ -17,7 +17,7 @@
   import { sync } from "@/routes/admin/roles/permissions";
   import type { App } from "@/wayfinder/types";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {
@@ -40,11 +40,22 @@
 
   const roleForm = useForm<App["Forms"]["Admin"]["Roles"]["Update"]>({ name: props.roleName });
   const permsForm = useForm<App["Forms"]["Admin"]["Roles"]["SyncPermissions"]>({ permissions: [...props.rolePermissions] });
+  const selectedPermissions = ref<string[]>([...props.rolePermissions]);
+  const permissionsSyncInFlight = ref(false);
 
   watch(
     () => props.roleName,
     (roleName) => {
       roleForm.name = roleName;
+    },
+    { immediate: true },
+  );
+
+  watch(
+    () => props.rolePermissions,
+    (permissions) => {
+      selectedPermissions.value = [...permissions];
+      permsForm.permissions = [...permissions];
     },
     { immediate: true },
   );
@@ -58,7 +69,21 @@
 
   const syncPermissions = () => {
     if (!canAssign.value) return;
-    permsForm.put(sync.url(props.roleId), { preserveScroll: true });
+    router.put(
+      sync.url(props.roleId),
+      {
+        permissions: [...selectedPermissions.value],
+      },
+      {
+        preserveScroll: true,
+        onStart: () => {
+          permissionsSyncInFlight.value = true;
+        },
+        onFinish: () => {
+          permissionsSyncInFlight.value = false;
+        },
+      },
+    );
   };
 
   const destroyRole = () => {
@@ -67,10 +92,17 @@
     router.delete(destroy.url(props.roleId));
   };
 
-  const togglePermission = (name: string) => {
-    const idx = permsForm.permissions.indexOf(name);
-    if (idx >= 0) permsForm.permissions.splice(idx, 1);
-    else permsForm.permissions.push(name);
+  const togglePermission = (name: string, isChecked: boolean | "indeterminate") => {
+    const nextSelectedPermissions = new Set(selectedPermissions.value);
+
+    if (isChecked === true) {
+      nextSelectedPermissions.add(name);
+    } else {
+      nextSelectedPermissions.delete(name);
+    }
+
+    selectedPermissions.value = [...nextSelectedPermissions];
+    permsForm.permissions = [...nextSelectedPermissions];
   };
 </script>
 
@@ -89,7 +121,7 @@
           <Input id="edit-role-name" :default-value="roleForm.name" v-model="roleForm.name" name="name" label="Role Name" variant="outlined" :disabled="!canUpdate" :state="roleForm.errors.name ? 'error' : 'default'" :message="roleForm.errors.name" />
 
           <div class="flex justify-end">
-            <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing">Save Role</Button>
+            <Button appearance="filled" type="submit" :disabled="!canUpdate || roleForm.processing">Save Role Name</Button>
           </div>
         </form>
       </Card>
@@ -97,7 +129,7 @@
       <Card variant="default" class="px-6">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold">Permissions</h2>
-          <Button appearance="filled" :disabled="!canAssign || permsForm.processing" @click="syncPermissions">Refresh Permissions</Button>
+          <Button appearance="filled" :disabled="!canAssign || permissionsSyncInFlight" @click="syncPermissions">Save Permissions</Button>
         </div>
 
         <div class="mt-4 space-y-3">
@@ -116,7 +148,7 @@
             <CollapsibleContent class="mt-2">
               <div class="space-y-2">
                 <label v-for="p in items" :key="p.id" class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10" :class="!canAssign ? 'opacity-60' : ''">
-                  <Checkbox :disabled="!canAssign" :model-value="permsForm.permissions.includes(p.name)" @update:model-value="() => togglePermission(p.name)" />
+                  <Checkbox :disabled="!canAssign" :model-value="selectedPermissions.includes(p.name)" @update:model-value="(value) => togglePermission(p.name, value)" />
                   <span class="text-sm">{{ p.name }}</span>
                 </label>
               </div>

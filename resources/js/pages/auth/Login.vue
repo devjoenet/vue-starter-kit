@@ -12,7 +12,7 @@
   import { store } from "@/routes/login";
   import { request } from "@/routes/password";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AuthLayout,
         {

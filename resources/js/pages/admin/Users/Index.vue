@@ -16,7 +16,7 @@
   import { create, destroy, edit, index } from "@/routes/admin/users";
   import { PenBoxIcon, TrashIcon } from "lucide-vue-next";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

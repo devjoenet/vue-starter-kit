@@ -8,7 +8,7 @@
   import AuthLayout from "@/layouts/AuthLayout.vue";
   import { update } from "@/routes/password";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AuthLayout,
         {

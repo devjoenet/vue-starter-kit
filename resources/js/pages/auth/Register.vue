@@ -10,7 +10,7 @@
   import { login } from "@/routes";
   import { store } from "@/routes/register";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AuthLayout,
         {

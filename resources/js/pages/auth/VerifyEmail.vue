@@ -9,7 +9,7 @@
   import { logout } from "@/routes";
   import { send } from "@/routes/verification";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AuthLayout,
         {

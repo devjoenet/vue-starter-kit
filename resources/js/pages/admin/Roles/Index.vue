@@ -16,7 +16,7 @@
   import { create, edit, index } from "@/routes/admin/roles";
   import { SquarePenIcon } from "lucide-vue-next";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

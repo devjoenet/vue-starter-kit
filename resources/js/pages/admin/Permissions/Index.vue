@@ -18,7 +18,7 @@
   import { TrashIcon, SquarePenIcon } from "lucide-vue-next";
   import { toTitleCase } from "@/lib/utils";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

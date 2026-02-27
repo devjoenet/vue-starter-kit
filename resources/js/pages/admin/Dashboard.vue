@@ -6,7 +6,7 @@
   import AppLayout from "@/layouts/AppLayout.vue";
   import { dashboard } from "@/routes";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

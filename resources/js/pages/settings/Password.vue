@@ -10,7 +10,7 @@
   import SettingsLayout from "@/layouts/settings/Layout.vue";
   import { edit } from "@/routes/user-password";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

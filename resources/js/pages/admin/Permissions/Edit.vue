@@ -12,7 +12,7 @@
   import { destroy, index, update } from "@/routes/admin/permissions";
   import type { App } from "@/wayfinder/types";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {

@@ -13,7 +13,7 @@
   import SettingsLayout from "@/layouts/settings/Layout.vue";
   import { disable, enable, show } from "@/routes/two-factor";
   defineOptions({
-    layout: (page: unknown) =>
+    layout: (_: unknown, page: unknown) =>
       h(
         AppLayout,
         {
