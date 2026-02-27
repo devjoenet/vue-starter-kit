@@ -25,8 +25,9 @@ class FormRequestRulesTransformer implements Transformer
         $request = $class->newInstanceWithoutConstructor();
         $request->setContainer(app());
         $request->setUserResolver(static fn (): object => (object) ['id' => 0]);
+
         $rulesMethod = $class->getMethod('rules');
-        $rulesMethod->setAccessible(true);
+
         $rules = $rulesMethod->invoke($request);
 
         if (! is_array($rules)) {
@@ -72,18 +73,18 @@ class FormRequestRulesTransformer implements Transformer
 
             $fields[$parentField] = [
                 'required' => $existing['required'],
-                'type' => "Array<{$itemType}>",
+                'type' => sprintf('Array<%s>', $itemType),
             ];
         }
 
         $properties = [];
 
         foreach ($fields as $field => $definition) {
-            $key = preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $field) ? $field : "'{$field}'";
+            $key = preg_match('/^[a-zA-Z_]\w*$/', $field) ? $field : sprintf("'%s'", $field);
             $properties[] = sprintf('    %s%s: %s;', $key, $definition['required'] ? '' : '?', $definition['type']);
         }
 
-        $transformed = empty($properties)
+        $transformed = $properties === []
             ? 'Record<string, never>'
             : "{\n".implode("\n", $properties)."\n}";
 
@@ -128,7 +129,7 @@ class FormRequestRulesTransformer implements Transformer
     /** @param  array<int, string>  $ruleNames */
     private function resolveType(array $ruleNames): string
     {
-        if (empty($ruleNames)) {
+        if ($ruleNames === []) {
             return 'unknown';
         }
 
@@ -196,9 +197,9 @@ class FormRequestRulesTransformer implements Transformer
             return null;
         }
 
-        $values = array_filter(array_map('trim', explode(',', $parts[1])));
+        $values = array_filter(array_map(trim(...), explode(',', $parts[1])));
 
-        if (empty($values)) {
+        if ($values === []) {
             return null;
         }
 
