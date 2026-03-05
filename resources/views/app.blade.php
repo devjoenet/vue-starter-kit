@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+  @class(['dark' => ($appearance ?? 'system') == 'dark'])>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +11,8 @@
         const appearance = '{{ $appearance ?? 'system' }}';
 
         if (appearance === 'system') {
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
+            .matches;
 
           if (prefersDark) {
             document.documentElement.classList.add('dark');
@@ -38,19 +40,25 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=league-spartan:600|open-sans:300,400,600" rel="stylesheet" />
+    <link
+      href="https://fonts.bunny.net/css?family=league-spartan:600|open-sans:300,400,600"
+      rel="stylesheet" />
 
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     @inertiaHead
   </head>
   <body class="bg-background text-foreground font-sans antialiased">
     @inertia
-    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden">
+    <svg aria-hidden="true"
+      style="position: absolute; width: 0; height: 0; overflow: hidden">
       <defs>
-        <filter id="liquid-default-surface" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+        <filter id="liquid-default-surface" x="-20%" y="-20%" width="140%"
+          height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008"
+            numOctaves="2" seed="92" result="noise" />
           <feGaussianBlur in="noise" stdDeviation="0.02" result="blur" />
-          <feDisplacementMap in="SourceGraphic" in2="blur" scale="26" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" in2="blur" scale="26"
+            xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
     </svg>

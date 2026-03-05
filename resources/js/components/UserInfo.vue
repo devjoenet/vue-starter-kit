@@ -1,23 +1,25 @@
 <script setup lang="ts">
-  import { computed } from "vue";
-  import Avatar from "@/components/ui/avatar/Avatar.vue";
-  import AvatarFallback from "@/components/ui/avatar/AvatarFallback.vue";
-  import AvatarImage from "@/components/ui/avatar/AvatarImage.vue";
-  import { useInitials } from "@/composables/useInitials";
-  import type { User } from "@/types/auth";
-  type Props = {
-    user: User;
-    showEmail?: boolean;
-  };
+import { computed } from 'vue';
+import Avatar from '@/components/ui/avatar/Avatar.vue';
+import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue';
+import AvatarImage from '@/components/ui/avatar/AvatarImage.vue';
+import { useInitials } from '@/composables/useInitials';
+import type { User } from '@/types/auth';
+type Props = {
+  user: User;
+  showEmail?: boolean;
+};
 
-  const props = withDefaults(defineProps<Props>(), {
-    showEmail: false,
-  });
+const props = withDefaults(defineProps<Props>(), {
+  showEmail: false,
+});
 
-  const { getInitials } = useInitials();
+const { getInitials } = useInitials();
 
-  // Compute whether we should show the avatar image
-  const showAvatar = computed(() => props.user.avatar && props.user.avatar !== "");
+// Compute whether we should show the avatar image
+const showAvatar = computed(
+  () => props.user.avatar && props.user.avatar !== '',
+);
 </script>
 
 <template>
@@ -30,6 +32,8 @@
 
   <div class="grid flex-1 text-left text-sm leading-tight">
     <span class="truncate font-medium">{{ user.name }}</span>
-    <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{ user.email }}</span>
+    <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
+      user.email
+    }}</span>
   </div>
 </template>

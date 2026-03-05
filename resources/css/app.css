@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,7 +7,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   /*--radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -76,7 +78,10 @@
 @layer utilities {
   body,
   html {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-sans:
+      'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+      'Noto Color Emoji';
   }
 }
 
@@ -167,17 +172,26 @@
   --brand-violet: var(--secondary);
 
   /* Elevation */
-  --elevation-1: 0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.06);
-  --elevation-2: 0 12px 24px -16px rgb(15 23 42 / 0.22), 0 8px 16px -12px rgb(15 23 42 / 0.18);
-  --elevation-3: 0 24px 48px -28px rgb(15 23 42 / 0.3), 0 16px 28px -20px rgb(15 23 42 / 0.24);
+  --elevation-1:
+    0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.06);
+  --elevation-2:
+    0 12px 24px -16px rgb(15 23 42 / 0.22),
+    0 8px 16px -12px rgb(15 23 42 / 0.18);
+  --elevation-3:
+    0 24px 48px -28px rgb(15 23 42 / 0.3),
+    0 16px 28px -20px rgb(15 23 42 / 0.24);
 
   /* Liquid glass */
   --glass-surface: oklch(98.5% 0.015 30 / 0.58);
   --glass-surface-hover: oklch(99.5% 0.01 30 / 0.72);
   --glass-border: oklch(100% 0 0 / 0.58);
   --glass-highlight: oklch(100% 0 0 / 0.88);
-  --glass-rim: inset 2px 2px 0 -2px rgb(255 255 255 / 0.78), inset 0 0 3px 1px rgb(255 255 255 / 0.62);
-  --glass-shadow: 0 24px 40px -32px rgb(15 23 42 / 0.35), 0 12px 24px -16px rgb(15 23 42 / 0.24);
+  --glass-rim:
+    inset 2px 2px 0 -2px rgb(255 255 255 / 0.78),
+    inset 0 0 3px 1px rgb(255 255 255 / 0.62);
+  --glass-shadow:
+    0 24px 40px -32px rgb(15 23 42 / 0.35),
+    0 12px 24px -16px rgb(15 23 42 / 0.24);
   --glass-backdrop: blur(0px) saturate(155%);
 }
 
@@ -267,17 +281,23 @@
   --brand-violet: var(--secondary);
 
   /* Elevation (slightly stronger for dark surfaces) */
-  --elevation-1: 0 1px 2px 0 rgb(0 0 0 / 0.45), 0 8px 16px -12px rgb(0 0 0 / 0.4);
-  --elevation-2: 0 16px 32px -20px rgb(0 0 0 / 0.55), 0 12px 20px -16px rgb(0 0 0 / 0.5);
-  --elevation-3: 0 28px 60px -32px rgb(0 0 0 / 0.6), 0 18px 30px -20px rgb(0 0 0 / 0.52);
+  --elevation-1:
+    0 1px 2px 0 rgb(0 0 0 / 0.45), 0 8px 16px -12px rgb(0 0 0 / 0.4);
+  --elevation-2:
+    0 16px 32px -20px rgb(0 0 0 / 0.55), 0 12px 20px -16px rgb(0 0 0 / 0.5);
+  --elevation-3:
+    0 28px 60px -32px rgb(0 0 0 / 0.6), 0 18px 30px -20px rgb(0 0 0 / 0.52);
 
   /* Liquid glass */
   --glass-surface: oklch(22% 0.03 252 / 0.45);
   --glass-surface-hover: oklch(26% 0.03 252 / 0.58);
   --glass-border: oklch(100% 0 0 / 0.18);
   --glass-highlight: oklch(100% 0 0 / 0.26);
-  --glass-rim: inset 2px 2px 0 -2px rgb(255 255 255 / 0.18), inset 0 0 3px 1px rgb(255 255 255 / 0.15);
-  --glass-shadow: 0 24px 40px -32px rgb(2 6 23 / 0.7), 0 12px 24px -16px rgb(2 6 23 / 0.6);
+  --glass-rim:
+    inset 2px 2px 0 -2px rgb(255 255 255 / 0.18),
+    inset 0 0 3px 1px rgb(255 255 255 / 0.15);
+  --glass-shadow:
+    0 24px 40px -32px rgb(2 6 23 / 0.7), 0 12px 24px -16px rgb(2 6 23 / 0.6);
   --glass-backdrop: blur(0px) saturate(145%);
 }
 
@@ -304,18 +324,29 @@
   }
 
   .liquid-glass::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     box-shadow: var(--glass-rim);
-    background: radial-gradient(120% 120% at 50% -20%, var(--glass-highlight) 0%, transparent 58%), linear-gradient(180deg, rgb(255 255 255 / 0.08) 0%, transparent 28%, rgb(255 255 255 / 0.03) 100%);
+    background:
+      radial-gradient(
+        120% 120% at 50% -20%,
+        var(--glass-highlight) 0%,
+        transparent 58%
+      ),
+      linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.08) 0%,
+        transparent 28%,
+        rgb(255 255 255 / 0.03) 100%
+      );
     pointer-events: none;
     z-index: 1;
   }
 
   .liquid-glass::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     z-index: -1;

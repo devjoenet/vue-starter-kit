@@ -1,18 +1,24 @@
 <script setup lang="ts">
-  import type { DialogOverlayProps } from "reka-ui";
-  import type { HTMLAttributes } from "vue";
-  import { reactiveOmit } from "@vueuse/core";
-  import { DialogOverlay } from "reka-ui";
-  import { cn } from "@/lib/utils";
-  import { dialogOverlayVariants } from "./styles";
+import type { DialogOverlayProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
+import { reactiveOmit } from '@vueuse/core';
+import { DialogOverlay } from 'reka-ui';
+import { cn } from '@/lib/utils';
+import { dialogOverlayVariants } from './styles';
 
-  const props = defineProps<DialogOverlayProps & { class?: HTMLAttributes["class"] }>();
+const props = defineProps<
+  DialogOverlayProps & { class?: HTMLAttributes['class'] }
+>();
 
-  const delegatedProps = reactiveOmit(props, "class");
+const delegatedProps = reactiveOmit(props, 'class');
 </script>
 
 <template>
-  <DialogOverlay data-slot="dialog-overlay" v-bind="delegatedProps" :class="cn(dialogOverlayVariants(), props.class)">
+  <DialogOverlay
+    data-slot="dialog-overlay"
+    v-bind="delegatedProps"
+    :class="cn(dialogOverlayVariants(), props.class)"
+  >
     <slot />
   </DialogOverlay>
 </template>

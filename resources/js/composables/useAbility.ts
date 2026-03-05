@@ -1,4 +1,4 @@
-import { usePage } from "@inertiajs/vue3";
+import { usePage } from '@inertiajs/vue3';
 
 export function useAbility() {
   const page = usePage();

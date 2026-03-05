@@ -1,29 +1,29 @@
 <script setup lang="ts">
-  import { Form, Head } from "@inertiajs/vue3";
-  import { h } from "vue";
-  import TextLink from "@/components/TextLink.vue";
-  import Button from "@/components/ui/button/Button.vue";
-  import Card from "@/components/ui/card/Card.vue";
-  import Input from "@/components/ui/input/Input.vue";
-  import Spinner from "@/components/ui/spinner/Spinner.vue";
-  import AuthLayout from "@/layouts/AuthLayout.vue";
-  import { login } from "@/routes";
-  import { email } from "@/routes/password";
-  defineOptions({
-    layout: (_: unknown, page: unknown) =>
-      h(
-        AuthLayout,
-        {
-          title: "Forgot password",
-          description: "Enter your email to receive a password reset link",
-        },
-        () => page,
-      ),
-  });
+import { Form, Head } from '@inertiajs/vue3';
+import { h } from 'vue';
+import TextLink from '@/components/TextLink.vue';
+import Button from '@/components/ui/button/Button.vue';
+import Card from '@/components/ui/card/Card.vue';
+import Input from '@/components/ui/input/Input.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
+import { login } from '@/routes';
+import { email } from '@/routes/password';
+defineOptions({
+  layout: (_: unknown, page: unknown) =>
+    h(
+      AuthLayout,
+      {
+        title: 'Forgot password',
+        description: 'Enter your email to receive a password reset link',
+      },
+      () => page,
+    ),
+});
 
-  defineProps<{
-    status?: string;
-  }>();
+defineProps<{
+  status?: string;
+}>();
 </script>
 
 <template>
@@ -35,10 +35,29 @@
         {{ status }}
       </p>
 
-      <Form v-bind="email.form()" v-slot="{ errors, processing }" class="space-y-4">
-        <Input id="email" type="email" name="email" label="Email address" variant="outlined" autocomplete="off" autofocus :state="errors.email ? 'error' : 'default'" :message="errors.email" />
+      <Form
+        v-bind="email.form()"
+        v-slot="{ errors, processing }"
+        class="space-y-4"
+      >
+        <Input
+          id="email"
+          type="email"
+          name="email"
+          label="Email address"
+          variant="outlined"
+          autocomplete="off"
+          autofocus
+          :state="errors.email ? 'error' : 'default'"
+          :message="errors.email"
+        />
 
-        <Button class="w-full" appearance="filled" :disabled="processing" data-test="email-password-reset-link-button">
+        <Button
+          class="w-full"
+          appearance="filled"
+          :disabled="processing"
+          data-test="email-password-reset-link-button"
+        >
           <Spinner v-if="processing" />
           Email password reset link
         </Button>

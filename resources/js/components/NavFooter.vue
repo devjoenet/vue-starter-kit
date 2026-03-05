@@ -1,26 +1,35 @@
 <script setup lang="ts">
-  import SidebarGroup from "@/components/ui/sidebar/SidebarGroup.vue";
-  import SidebarGroupContent from "@/components/ui/sidebar/SidebarGroupContent.vue";
-  import SidebarMenu from "@/components/ui/sidebar/SidebarMenu.vue";
-  import SidebarMenuButton from "@/components/ui/sidebar/SidebarMenuButton.vue";
-  import SidebarMenuItem from "@/components/ui/sidebar/SidebarMenuItem.vue";
-  import { toUrl } from "@/lib/utils";
-  import type { NavItem } from "@/types/navigation";
-  type Props = {
-    items: NavItem[];
-    class?: string;
-  };
+import SidebarGroup from '@/components/ui/sidebar/SidebarGroup.vue';
+import SidebarGroupContent from '@/components/ui/sidebar/SidebarGroupContent.vue';
+import SidebarMenu from '@/components/ui/sidebar/SidebarMenu.vue';
+import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue';
+import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue';
+import { toUrl } from '@/lib/utils';
+import type { NavItem } from '@/types/navigation';
+type Props = {
+  items: NavItem[];
+  class?: string;
+};
 
-  defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
-  <SidebarGroup :class="`group-data-[collapsible=icon]:p-0 ${$props.class || ''}`">
+  <SidebarGroup
+    :class="`group-data-[collapsible=icon]:p-0 ${$props.class || ''}`"
+  >
     <SidebarGroupContent>
       <SidebarMenu>
         <SidebarMenuItem v-for="item in items" :key="item.title">
-          <SidebarMenuButton class="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100" as-child>
-            <a :href="toUrl(item.href)" target="_blank" rel="noopener noreferrer">
+          <SidebarMenuButton
+            class="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
+            as-child
+          >
+            <a
+              :href="toUrl(item.href)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <component :is="item.icon" />
               <span>{{ item.title }}</span>
             </a>

@@ -1,31 +1,37 @@
 <script setup lang="ts">
-  import type { NavigationMenuRootEmits, NavigationMenuRootProps } from "reka-ui";
-  import type { HTMLAttributes } from "vue";
-  import { reactiveOmit } from "@vueuse/core";
-  import { NavigationMenuRoot, useForwardPropsEmits } from "reka-ui";
-  import { cn } from "@/lib/utils";
-  import { navigationMenuVariants } from "./styles";
-  import NavigationMenuViewport from "./NavigationMenuViewport.vue";
+import type { NavigationMenuRootEmits, NavigationMenuRootProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
+import { reactiveOmit } from '@vueuse/core';
+import { NavigationMenuRoot, useForwardPropsEmits } from 'reka-ui';
+import { cn } from '@/lib/utils';
+import { navigationMenuVariants } from './styles';
+import NavigationMenuViewport from './NavigationMenuViewport.vue';
 
-  const props = withDefaults(
-    defineProps<
-      NavigationMenuRootProps & {
-        class?: HTMLAttributes["class"];
-        viewport?: boolean;
-      }
-    >(),
-    {
-      viewport: true,
-    },
-  );
-  const emits = defineEmits<NavigationMenuRootEmits>();
+const props = withDefaults(
+  defineProps<
+    NavigationMenuRootProps & {
+      class?: HTMLAttributes['class'];
+      viewport?: boolean;
+    }
+  >(),
+  {
+    viewport: true,
+  },
+);
+const emits = defineEmits<NavigationMenuRootEmits>();
 
-  const delegatedProps = reactiveOmit(props, "class", "viewport");
-  const forwarded = useForwardPropsEmits(delegatedProps, emits);
+const delegatedProps = reactiveOmit(props, 'class', 'viewport');
+const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
-  <NavigationMenuRoot v-slot="slotProps" data-slot="navigation-menu" :data-viewport="viewport" v-bind="forwarded" :class="cn(navigationMenuVariants(), props.class)">
+  <NavigationMenuRoot
+    v-slot="slotProps"
+    data-slot="navigation-menu"
+    :data-viewport="viewport"
+    v-bind="forwarded"
+    :class="cn(navigationMenuVariants(), props.class)"
+  >
     <slot v-bind="slotProps" />
     <NavigationMenuViewport v-if="viewport" />
   </NavigationMenuRoot>

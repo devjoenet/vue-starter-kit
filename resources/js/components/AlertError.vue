@@ -1,20 +1,20 @@
 <script setup lang="ts">
-  import { AlertCircle } from "lucide-vue-next";
-  import { computed } from "vue";
-  import { normalizeErrorMessages } from "@/lib/errors";
-  import Alert from "@/components/ui/alert/Alert.vue";
-  import AlertDescription from "@/components/ui/alert/AlertDescription.vue";
-  import AlertTitle from "@/components/ui/alert/AlertTitle.vue";
-  type Props = {
-    errors?: unknown;
-    title?: string;
-  };
+import { AlertCircle } from 'lucide-vue-next';
+import { computed } from 'vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
+import { normalizeErrorMessages } from '@/lib/errors';
+type Props = {
+  errors?: unknown;
+  title?: string;
+};
 
-  const props = withDefaults(defineProps<Props>(), {
-    title: "Something went wrong.",
-  });
+const props = withDefaults(defineProps<Props>(), {
+  title: 'Something went wrong.',
+});
 
-  const uniqueErrors = computed(() => normalizeErrorMessages(props.errors));
+const uniqueErrors = computed(() => normalizeErrorMessages(props.errors));
 </script>
 
 <template>

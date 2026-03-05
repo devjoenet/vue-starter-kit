@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e257224bf41ef1746e7f279c10e5110f",
+    "content-hash": "04982252a120cbcca19fb3490ca89087",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2573,6 +2573,81 @@
                 }
             ],
             "time": "2026-01-15T06:54:53+00:00"
+        },
+        {
+            "name": "mehedi250/laravel-structure-kit",
+            "version": "v0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mehedi250/laravel-structure-kit.git",
+                "reference": "8a853f9b9755f0334a0646716b6ee935b46f3f00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mehedi250/laravel-structure-kit/zipball/8a853f9b9755f0334a0646716b6ee935b46f3f00",
+                "reference": "8a853f9b9755f0334a0646716b6ee935b46f3f00",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0|^12.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "StructureKit\\StructureKitServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "StructureKit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Md. Mehedi Hasan Shawon",
+                    "email": "mhshawon250@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A clean architecture and scalable file structure generator for Laravel projects (UI + CLI)",
+            "homepage": "https://github.com/mehedi250/laravel-structure-kit",
+            "keywords": [
+                "Best-Practices",
+                "artisan",
+                "backend",
+                "boilerplate",
+                "clean-architecture",
+                "cli",
+                "code-generator",
+                "ddd",
+                "developer-tools",
+                "domain-driven-design",
+                "folder-structure",
+                "generator",
+                "laravel",
+                "laravel-architecture",
+                "laravel-package",
+                "laravel-structure",
+                "laravel-tool",
+                "mvc",
+                "php",
+                "productivity",
+                "project-structure",
+                "scaffold",
+                "scaffolding"
+            ],
+            "support": {
+                "issues": "https://github.com/mehedi250/laravel-structure-kit/issues",
+                "source": "https://github.com/mehedi250/laravel-structure-kit"
+            },
+            "time": "2026-02-26T06:17:58+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -11649,8 +11724,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "ext-pdo": "*",
-        "php": "^8.2"
+        "php": "^8.2",
+        "ext-pdo": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
