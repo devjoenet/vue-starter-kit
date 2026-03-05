@@ -1,8 +1,8 @@
-import type { Component, DeepReadonly, Ref } from "vue";
-import { readonly, ref } from "vue";
+import type { Component, DeepReadonly, Ref } from 'vue';
+import { readonly, ref } from 'vue';
 
-export type ToastTone = "default" | "success" | "error" | "warning" | "info";
-export type ToastAppearance = "default" | "glass" | "outline" | "solid";
+export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info';
+export type ToastAppearance = 'default' | 'glass' | 'outline' | 'solid';
 
 export type ToastPayload = {
   message: string;
@@ -29,10 +29,22 @@ export type UseToastReturn = {
   pushToast: (payload: string | ToastPayload) => number | null;
   dismissToast: (id: number) => void;
   clearToasts: () => void;
-  success: (message: string, options?: Omit<ToastPayload, "message" | "tone">) => number | null;
-  error: (message: string, options?: Omit<ToastPayload, "message" | "tone">) => number | null;
-  info: (message: string, options?: Omit<ToastPayload, "message" | "tone">) => number | null;
-  warning: (message: string, options?: Omit<ToastPayload, "message" | "tone">) => number | null;
+  success: (
+    message: string,
+    options?: Omit<ToastPayload, 'message' | 'tone'>,
+  ) => number | null;
+  error: (
+    message: string,
+    options?: Omit<ToastPayload, 'message' | 'tone'>,
+  ) => number | null;
+  info: (
+    message: string,
+    options?: Omit<ToastPayload, 'message' | 'tone'>,
+  ) => number | null;
+  warning: (
+    message: string,
+    options?: Omit<ToastPayload, 'message' | 'tone'>,
+  ) => number | null;
 };
 
 const DEFAULT_DURATION = 4200;
@@ -43,7 +55,7 @@ const timeoutIds = new Map<number, ReturnType<typeof setTimeout>>();
 let nextToastId = 1;
 
 const normalizePayload = (payload: string | ToastPayload): ToastPayload => {
-  if (typeof payload === "string") {
+  if (typeof payload === 'string') {
     return {
       message: payload,
     };
@@ -73,8 +85,8 @@ const queueToast = (payload: string | ToastPayload): number | null => {
     id: nextToastId++,
     title: normalizedPayload.title,
     message: normalizedPayload.message,
-    tone: normalizedPayload.tone ?? "default",
-    appearance: normalizedPayload.appearance ?? "default",
+    tone: normalizedPayload.tone ?? 'default',
+    appearance: normalizedPayload.appearance ?? 'default',
     duration: normalizedPayload.duration ?? DEFAULT_DURATION,
     icon: normalizedPayload.icon,
     animate: false,
@@ -122,16 +134,16 @@ export function useToast(): UseToastReturn {
     dismissToast,
     clearToasts,
     success: (message, options) => {
-      return queueToast({ message, tone: "success", ...options });
+      return queueToast({ message, tone: 'success', ...options });
     },
     error: (message, options) => {
-      return queueToast({ message, tone: "error", ...options });
+      return queueToast({ message, tone: 'error', ...options });
     },
     info: (message, options) => {
-      return queueToast({ message, tone: "info", ...options });
+      return queueToast({ message, tone: 'info', ...options });
     },
     warning: (message, options) => {
-      return queueToast({ message, tone: "warning", ...options });
+      return queueToast({ message, tone: 'warning', ...options });
     },
   };
 }

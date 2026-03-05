@@ -1,10 +1,13 @@
 {
-  "printWidth": 285,
-  "bracketSameLine": false,
+  "semi": true,
+  "singleQuote": true,
   "singleAttributePerLine": false,
-  "vueIndentScriptAndStyle": true,
+  "htmlWhitespaceSensitivity": "css",
+  "printWidth": 80,
   "tabWidth": 2,
-  "plugins": ["@shufo/prettier-plugin-blade"],
+  "tailwindFunctions": ["clsx", "cn", "cva"],
+  "tailwindStylesheet": "resources/css/app.css",
+  "plugins": ["@shufo/prettier-plugin-blade", "prettier-plugin-tailwindcss"],
   "overrides": [
     {
       "files": ["*.blade.php"],

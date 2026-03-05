@@ -1,23 +1,23 @@
 <script setup lang="ts">
-  import { Link, router } from "@inertiajs/vue3";
-  import { LogOut, Settings } from "lucide-vue-next";
-  import DropdownMenuGroup from "@/components/ui/dropdown-menu/DropdownMenuGroup.vue";
-  import DropdownMenuItem from "@/components/ui/dropdown-menu/DropdownMenuItem.vue";
-  import DropdownMenuLabel from "@/components/ui/dropdown-menu/DropdownMenuLabel.vue";
-  import DropdownMenuSeparator from "@/components/ui/dropdown-menu/DropdownMenuSeparator.vue";
-  import UserInfo from "@/components/UserInfo.vue";
-  import { logout } from "@/routes";
-  import { edit } from "@/routes/profile";
-  import type { User } from "@/types/auth";
-  type Props = {
-    user: User;
-  };
+import { Link, router } from '@inertiajs/vue3';
+import { LogOut, Settings } from 'lucide-vue-next';
+import DropdownMenuGroup from '@/components/ui/dropdown-menu/DropdownMenuGroup.vue';
+import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue';
+import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue';
+import UserInfo from '@/components/UserInfo.vue';
+import { logout } from '@/routes';
+import { edit } from '@/routes/profile';
+import type { User } from '@/types/auth';
+type Props = {
+  user: User;
+};
 
-  const handleLogout = () => {
-    router.flushAll();
-  };
+const handleLogout = () => {
+  router.flushAll();
+};
 
-  defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
@@ -37,7 +37,13 @@
   </DropdownMenuGroup>
   <DropdownMenuSeparator />
   <DropdownMenuItem :as-child="true">
-    <Link class="block w-full cursor-pointer" :href="logout()" @click="handleLogout" as="button" data-test="logout-button">
+    <Link
+      class="block w-full cursor-pointer"
+      :href="logout()"
+      @click="handleLogout"
+      as="button"
+      data-test="logout-button"
+    >
       <LogOut class="mr-2 h-4 w-4" />
       Log out
     </Link>

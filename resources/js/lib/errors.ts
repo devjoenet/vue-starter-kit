@@ -7,7 +7,7 @@ export function normalizeErrorMessages(input: unknown): string[] {
 }
 
 function collectMessages(input: unknown): string[] {
-  if (typeof input === "string") {
+  if (typeof input === 'string') {
     return [input];
   }
 
@@ -15,7 +15,7 @@ function collectMessages(input: unknown): string[] {
     return input.flatMap((value) => collectMessages(value));
   }
 
-  if (input && typeof input === "object") {
+  if (input && typeof input === 'object') {
     return Object.values(input).flatMap((value) => collectMessages(value));
   }
 

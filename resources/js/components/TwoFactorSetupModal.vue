@@ -1,119 +1,134 @@
 <script setup lang="ts">
-  import { Form } from "@inertiajs/vue3";
-  import { useClipboard } from "@vueuse/core";
-  import { Check, Copy, ScanLine } from "lucide-vue-next";
-  import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
-  import Alert from "@/components/ui/alert/Alert.vue";
-  import AlertDescription from "@/components/ui/alert/AlertDescription.vue";
-  import AlertTitle from "@/components/ui/alert/AlertTitle.vue";
-  import Button from "@/components/ui/button/Button.vue";
-  import Dialog from "@/components/ui/dialog/Dialog.vue";
-  import DialogContent from "@/components/ui/dialog/DialogContent.vue";
-  import DialogDescription from "@/components/ui/dialog/DialogDescription.vue";
-  import DialogHeader from "@/components/ui/dialog/DialogHeader.vue";
-  import DialogTitle from "@/components/ui/dialog/DialogTitle.vue";
-  import InputOTP from "@/components/ui/input-otp/InputOTP.vue";
-  import InputOTPGroup from "@/components/ui/input-otp/InputOTPGroup.vue";
-  import InputOTPSlot from "@/components/ui/input-otp/InputOTPSlot.vue";
-  import Spinner from "@/components/ui/spinner/Spinner.vue";
-  import { useAppearance } from "@/composables/useAppearance";
-  import { useTwoFactorAuth } from "@/composables/useTwoFactorAuth";
-  import { normalizeErrorMessages } from "@/lib/errors";
-  import { confirm } from "@/routes/two-factor";
-  import type { TwoFactorConfigContent } from "@/types/auth";
-  type Props = {
-    requiresConfirmation: boolean;
-    twoFactorEnabled: boolean;
-  };
+import { Form } from '@inertiajs/vue3';
+import { useClipboard } from '@vueuse/core';
+import { Check, Copy, ScanLine } from 'lucide-vue-next';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
+import Button from '@/components/ui/button/Button.vue';
+import Dialog from '@/components/ui/dialog/Dialog.vue';
+import DialogContent from '@/components/ui/dialog/DialogContent.vue';
+import DialogDescription from '@/components/ui/dialog/DialogDescription.vue';
+import DialogHeader from '@/components/ui/dialog/DialogHeader.vue';
+import DialogTitle from '@/components/ui/dialog/DialogTitle.vue';
+import InputOTP from '@/components/ui/input-otp/InputOTP.vue';
+import InputOTPGroup from '@/components/ui/input-otp/InputOTPGroup.vue';
+import InputOTPSlot from '@/components/ui/input-otp/InputOTPSlot.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import { useAppearance } from '@/composables/useAppearance';
+import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
+import { normalizeErrorMessages } from '@/lib/errors';
+import { confirm } from '@/routes/two-factor';
+import type { TwoFactorConfigContent } from '@/types/auth';
+type Props = {
+  requiresConfirmation: boolean;
+  twoFactorEnabled: boolean;
+};
 
-  const { resolvedAppearance } = useAppearance();
+const { resolvedAppearance } = useAppearance();
 
-  const props = defineProps<Props>();
-  const isOpen = defineModel<boolean>("isOpen");
+const props = defineProps<Props>();
+const isOpen = defineModel<boolean>('isOpen');
 
-  const { copy, copied } = useClipboard();
-  const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } = useTwoFactorAuth();
-  const setupErrorMessages = computed(() => normalizeErrorMessages(errors.value));
+const { copy, copied } = useClipboard();
+const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } =
+  useTwoFactorAuth();
+const setupErrorMessages = computed(() => normalizeErrorMessages(errors.value));
 
-  const showVerificationStep = ref(false);
-  const code = ref<string>("");
+const showVerificationStep = ref(false);
+const code = ref<string>('');
 
-  const pinInputContainerRef = useTemplateRef("pinInputContainerRef");
+const pinInputContainerRef = useTemplateRef('pinInputContainerRef');
 
-  const modalConfig = computed<TwoFactorConfigContent>(() => {
-    if (props.twoFactorEnabled) {
-      return {
-        title: "Two-Factor Authentication Enabled",
-        description: "Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.",
-        buttonText: "Close",
-      };
-    }
-
-    if (showVerificationStep.value) {
-      return {
-        title: "Verify Authentication Code",
-        description: "Enter the 6-digit code from your authenticator app",
-        buttonText: "Continue",
-      };
-    }
-
+const modalConfig = computed<TwoFactorConfigContent>(() => {
+  if (props.twoFactorEnabled) {
     return {
-      title: "Enable Two-Factor Authentication",
-      description: "To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app",
-      buttonText: "Continue",
+      title: 'Two-Factor Authentication Enabled',
+      description:
+        'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
+      buttonText: 'Close',
     };
-  });
+  }
 
-  const handleModalNextStep = () => {
-    if (props.requiresConfirmation) {
-      showVerificationStep.value = true;
+  if (showVerificationStep.value) {
+    return {
+      title: 'Verify Authentication Code',
+      description: 'Enter the 6-digit code from your authenticator app',
+      buttonText: 'Continue',
+    };
+  }
 
-      nextTick(() => {
-        pinInputContainerRef.value?.querySelector("input")?.focus();
-      });
+  return {
+    title: 'Enable Two-Factor Authentication',
+    description:
+      'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
+    buttonText: 'Continue',
+  };
+});
 
+const handleModalNextStep = () => {
+  if (props.requiresConfirmation) {
+    showVerificationStep.value = true;
+
+    nextTick(() => {
+      pinInputContainerRef.value?.querySelector('input')?.focus();
+    });
+
+    return;
+  }
+
+  clearSetupData();
+  isOpen.value = false;
+};
+
+const resetModalState = () => {
+  if (props.twoFactorEnabled) {
+    clearSetupData();
+  }
+
+  showVerificationStep.value = false;
+  code.value = '';
+};
+
+watch(
+  () => isOpen.value,
+  async (isOpen) => {
+    if (!isOpen) {
+      resetModalState();
       return;
     }
 
-    clearSetupData();
-    isOpen.value = false;
-  };
-
-  const resetModalState = () => {
-    if (props.twoFactorEnabled) {
-      clearSetupData();
+    if (!qrCodeSvg.value) {
+      await fetchSetupData();
     }
-
-    showVerificationStep.value = false;
-    code.value = "";
-  };
-
-  watch(
-    () => isOpen.value,
-    async (isOpen) => {
-      if (!isOpen) {
-        resetModalState();
-        return;
-      }
-
-      if (!qrCodeSvg.value) {
-        await fetchSetupData();
-      }
-    },
-  );
+  },
+);
 </script>
 
 <template>
   <Dialog :open="isOpen" @update:open="isOpen = $event">
     <DialogContent class="sm:max-w-md">
       <DialogHeader class="flex items-center justify-center">
-        <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
-          <div class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">
+        <div
+          class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm"
+        >
+          <div
+            class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5"
+          >
             <div class="absolute inset-0 grid grid-cols-5 opacity-50">
-              <div v-for="i in 5" :key="`col-${i}`" class="border-r border-border last:border-r-0" />
+              <div
+                v-for="i in 5"
+                :key="`col-${i}`"
+                class="border-r border-border last:border-r-0"
+              />
             </div>
             <div class="absolute inset-0 grid grid-rows-5 opacity-50">
-              <div v-for="i in 5" :key="`row-${i}`" class="border-b border-border last:border-b-0" />
+              <div
+                v-for="i in 5"
+                :key="`row-${i}`"
+                class="border-b border-border last:border-b-0"
+              />
             </div>
             <ScanLine class="relative z-20 size-6 text-foreground" />
           </div>
@@ -124,22 +139,38 @@
         </DialogDescription>
       </DialogHeader>
 
-      <div class="relative flex w-auto flex-col items-center justify-center space-y-5">
+      <div
+        class="relative flex w-auto flex-col items-center justify-center space-y-5"
+      >
         <template v-if="!showVerificationStep">
           <Alert v-if="setupErrorMessages.length" variant="destructive">
             <ScanLine class="size-4" />
             <AlertTitle>Unable to prepare two-factor setup</AlertTitle>
             <AlertDescription>
-              <p v-if="setupErrorMessages.length === 1" class="text-sm">{{ setupErrorMessages[0] }}</p>
+              <p v-if="setupErrorMessages.length === 1" class="text-sm">
+                {{ setupErrorMessages[0] }}
+              </p>
               <ul v-else class="list-inside list-disc text-sm">
-                <li v-for="(message, index) in setupErrorMessages" :key="`${message}-${index}`">{{ message }}</li>
+                <li
+                  v-for="(message, index) in setupErrorMessages"
+                  :key="`${message}-${index}`"
+                >
+                  {{ message }}
+                </li>
               </ul>
             </AlertDescription>
           </Alert>
           <template v-else>
-            <div class="relative mx-auto flex max-w-md items-center overflow-hidden">
-              <div class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border">
-                <div v-if="!qrCodeSvg" class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background">
+            <div
+              class="relative mx-auto flex max-w-md items-center overflow-hidden"
+            >
+              <div
+                class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border"
+              >
+                <div
+                  v-if="!qrCodeSvg"
+                  class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background"
+                >
                   <Spinner class="size-6" />
                 </div>
                 <div v-else class="relative z-10 overflow-hidden border p-5">
@@ -147,7 +178,10 @@
                     v-html="qrCodeSvg"
                     class="flex aspect-square size-full items-center justify-center"
                     :style="{
-                      filter: resolvedAppearance === 'dark' ? 'invert(1) brightness(1.5)' : undefined,
+                      filter:
+                        resolvedAppearance === 'dark'
+                          ? 'invert(1) brightness(1.5)'
+                          : undefined,
                     }"
                   />
                 </div>
@@ -162,17 +196,32 @@
 
             <div class="relative flex w-full items-center justify-center">
               <div class="absolute inset-0 top-1/2 h-px w-full bg-border" />
-              <span class="relative bg-card px-2 py-1">or, enter the code manually</span>
+              <span class="relative bg-card px-2 py-1"
+                >or, enter the code manually</span
+              >
             </div>
 
             <div class="flex w-full items-center justify-center space-x-2">
-              <div class="flex w-full items-stretch overflow-hidden rounded-xl border border-border">
-                <div v-if="!manualSetupKey" class="flex h-full w-full items-center justify-center bg-muted p-3">
+              <div
+                class="flex w-full items-stretch overflow-hidden rounded-xl border border-border"
+              >
+                <div
+                  v-if="!manualSetupKey"
+                  class="flex h-full w-full items-center justify-center bg-muted p-3"
+                >
                   <Spinner />
                 </div>
                 <template v-else>
-                  <input type="text" readonly :value="manualSetupKey" class="h-full w-full bg-background p-3 text-foreground" />
-                  <button @click="copy(manualSetupKey || '')" class="relative block h-auto border-l border-border px-3 hover:bg-muted">
+                  <input
+                    type="text"
+                    readonly
+                    :value="manualSetupKey"
+                    class="h-full w-full bg-background p-3 text-foreground"
+                  />
+                  <button
+                    @click="copy(manualSetupKey || '')"
+                    class="relative block h-auto border-l border-border px-3 hover:bg-muted"
+                  >
                     <Check v-if="copied" class="w-4 text-green-500" />
                     <Copy v-else class="w-4" />
                   </button>
@@ -183,13 +232,30 @@
         </template>
 
         <template v-else>
-          <Form v-bind="confirm.form()" reset-on-error @finish="code = ''" @success="isOpen = false" v-slot="{ errors, processing }">
+          <Form
+            v-bind="confirm.form()"
+            reset-on-error
+            @finish="code = ''"
+            @success="isOpen = false"
+            v-slot="{ errors, processing }"
+          >
             <input type="hidden" name="code" :value="code" />
             <div ref="pinInputContainerRef" class="relative w-full space-y-3">
-              <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
-                <InputOTP id="otp" v-model="code" :maxlength="6" :disabled="processing">
+              <div
+                class="flex w-full flex-col items-center justify-center space-y-3 py-2"
+              >
+                <InputOTP
+                  id="otp"
+                  v-model="code"
+                  :maxlength="6"
+                  :disabled="processing"
+                >
                   <InputOTPGroup>
-                    <InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" />
+                    <InputOTPSlot
+                      v-for="index in 6"
+                      :key="index"
+                      :index="index - 1"
+                    />
                   </InputOTPGroup>
                 </InputOTP>
                 <Alert v-if="errors.code" variant="destructive" class="w-full">
@@ -200,8 +266,22 @@
               </div>
 
               <div class="flex w-full items-center space-x-5">
-                <Button type="button" appearance="outline" class="w-auto flex-1" @click="showVerificationStep = false" :disabled="processing"> Back </Button>
-                <Button type="submit" class="w-auto flex-1" :disabled="processing || code.length < 6"> Confirm </Button>
+                <Button
+                  type="button"
+                  appearance="outline"
+                  class="w-auto flex-1"
+                  @click="showVerificationStep = false"
+                  :disabled="processing"
+                >
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  class="w-auto flex-1"
+                  :disabled="processing || code.length < 6"
+                >
+                  Confirm
+                </Button>
               </div>
             </div>
           </Form>

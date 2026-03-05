@@ -1,16 +1,20 @@
-import { createInertiaApp } from "@inertiajs/vue3";
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import type { DefineComponent } from "vue";
-import { Fragment, createApp, h } from "vue";
-import AppToasts from "./components/AppToasts.vue";
-import "../css/app.css";
-import { initializeTheme } from "./composables/useAppearance";
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import type { DefineComponent } from 'vue';
+import { Fragment, createApp, h } from 'vue';
+import AppToasts from './components/AppToasts.vue';
+import '../css/app.css';
+import { initializeTheme } from './composables/useAppearance';
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
-  resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>("./pages/**/*.vue")),
+  resolve: (name) =>
+    resolvePageComponent(
+      `./pages/${name}.vue`,
+      import.meta.glob<DefineComponent>('./pages/**/*.vue'),
+    ),
   setup({ el, App, props, plugin }) {
     createApp({
       render: () => h(Fragment, [h(App, props), h(AppToasts)]),
@@ -19,7 +23,7 @@ createInertiaApp({
       .mount(el);
   },
   progress: {
-    color: "#4B5563",
+    color: '#4B5563',
   },
 });
 

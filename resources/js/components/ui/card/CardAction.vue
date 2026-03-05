@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from "vue";
-  import { cn } from "@/lib/utils";
-  import { cardActionVariants } from "./styles";
+import type { HTMLAttributes } from 'vue';
+import { cn } from '@/lib/utils';
+import { cardActionVariants } from './styles';
 
-  const props = defineProps<{
-    class?: HTMLAttributes["class"];
-  }>();
+const props = defineProps<{
+  class?: HTMLAttributes['class'];
+}>();
 </script>
 
 <template>

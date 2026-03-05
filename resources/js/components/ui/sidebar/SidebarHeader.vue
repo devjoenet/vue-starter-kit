@@ -1,15 +1,19 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from "vue";
-  import { cn } from "@/lib/utils";
-  import { sidebarHeaderVariants } from "./styles";
+import type { HTMLAttributes } from 'vue';
+import { cn } from '@/lib/utils';
+import { sidebarHeaderVariants } from './styles';
 
-  const props = defineProps<{
-    class?: HTMLAttributes["class"];
-  }>();
+const props = defineProps<{
+  class?: HTMLAttributes['class'];
+}>();
 </script>
 
 <template>
-  <div data-slot="sidebar-header" data-sidebar="header" :class="cn(sidebarHeaderVariants(), props.class)">
+  <div
+    data-slot="sidebar-header"
+    data-sidebar="header"
+    :class="cn(sidebarHeaderVariants(), props.class)"
+  >
     <slot />
   </div>
 </template>

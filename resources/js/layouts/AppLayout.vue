@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import AppLayout from "@/layouts/app/AppSidebarLayout.vue";
-  import type { BreadcrumbItem } from "@/types/navigation";
-  type Props = {
-    breadcrumbs?: BreadcrumbItem[];
-  };
+import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
+import type { BreadcrumbItem } from '@/types/navigation';
+type Props = {
+  breadcrumbs?: BreadcrumbItem[];
+};
 
-  withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
-  });
+withDefaults(defineProps<Props>(), {
+  breadcrumbs: () => [],
+});
 </script>
 
 <template>
