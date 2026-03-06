@@ -58,6 +58,7 @@
     "format": [
       "./vendor/bin/rector",
       "./vendor/bin/pint",
+      "npm run build",
       "npm run format"
     ],
     "ide": [
@@ -120,6 +121,7 @@
       "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
+      "npm update --save-dev",
       "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
       "@php artisan boost:update --ansi",
       "@ide",
