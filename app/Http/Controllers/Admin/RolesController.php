@@ -4,17 +4,28 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\Roles\CreateRole;
+use App\Actions\Admin\Roles\DeleteRole;
+use App\Actions\Admin\Roles\SyncRolePermissions;
+use App\Actions\Admin\Roles\UpdateRole;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\SyncRolePermissionsRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
-use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
+use App\Support\Data\Admin\Roles\AssignableUserData;
+use App\Support\Data\Admin\Roles\CreateRoleData;
+use App\Support\Data\Admin\Roles\EditableRoleData;
+use App\Support\Data\Admin\Roles\RoleListItemData;
+use App\Support\Data\Admin\Roles\SyncRolePermissionsData;
+use App\Support\Data\Admin\Roles\UpdateRoleData;
+use App\Support\GroupedPermissions;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
-final class RolesController
+final class RolesController extends Controller
 {
     public function index(): Response
     {
@@ -23,7 +34,9 @@ final class RolesController
                 ->select(['id', 'name'])
                 ->withCount('users')
                 ->orderBy('name')
-                ->get(),
+                ->get()
+                ->map(fn (Role $role): array => RoleListItemData::fromModel($role)->all())
+                ->all(),
         ]);
     }
 
@@ -34,73 +47,65 @@ final class RolesController
                 ->select(['id', 'name', 'email'])
                 ->orderBy('name')
                 ->orderBy('email')
-                ->get(),
+                ->get()
+                ->map(fn (User $user): array => AssignableUserData::fromModel($user)->all())
+                ->all(),
         ]);
     }
 
-    public function store(StoreRoleRequest $request): RedirectResponse
+    public function store(StoreRoleRequest $request, CreateRole $createRole): RedirectResponse
     {
-        $validated = $request->validated();
-        $name = $validated['name'];
+        /** @var list<int> $userIds */
+        $userIds = $request->validated('user_ids', []);
 
-        $role = Role::query()->create([
-            'name' => $name,
-            'guard_name' => 'web',
-        ]);
+        $role = $createRole->handle(new CreateRoleData(
+            name: (string) $request->validated('name'),
+            user_ids: $userIds,
+        ));
 
-        $role->users()->sync($validated['user_ids'] ?? []);
-
-        return redirect()->route('admin.roles.edit', $role)
-            ->with('success', 'Role created.');
+        return $this->redirectRouteWithSuccess('admin.roles.edit', $role, 'Role created.');
     }
 
-    public function edit(Role $role): Response
+    public function edit(Role $role, GroupedPermissions $groupedPermissions): Response
     {
-        $permissions = Permission::query()
-            ->select(['id', 'name', 'group'])
-            ->orderBy('group')
-            ->orderBy('name')
-            ->get()
-            ->groupBy('group')
-            ->map(fn ($items) => $items->values());
-
         return Inertia::render('admin/Roles/Edit', [
-            'roleId' => $role->id,
-            'roleName' => $role->name,
-            'permissionsByGroup' => $permissions,
-            'rolePermissions' => $role->permissions()->pluck('name')->values(),
+            'role' => EditableRoleData::fromModel($role)->all(),
+            'permissionsByGroup' => $groupedPermissions->allData(),
+            'rolePermissions' => $role->permissions()->pluck('name')->values()->all(),
         ]);
     }
 
-    public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
-    {
-        $validated = $request->validated();
-        $name = $validated['name'];
+    public function update(
+        UpdateRoleRequest $request,
+        Role $role,
+        UpdateRole $updateRole,
+    ): RedirectResponse {
+        $updateRole->handle($role, new UpdateRoleData(
+            name: (string) $request->validated('name'),
+        ));
 
-        $role->forceFill(['name' => $name])->save();
-
-        return back()->with('success', 'Role updated.');
+        return $this->backWithSuccess('Role updated.');
     }
 
-    public function destroy(Role $role): RedirectResponse
+    public function destroy(Role $role, DeleteRole $deleteRole): RedirectResponse
     {
-        $role->delete();
+        $deleteRole->handle($role);
 
-        return redirect()->route('admin.roles.index')
-            ->with('success', 'Role deleted.');
+        return $this->redirectRouteWithSuccess('admin.roles.index', [], 'Role deleted.');
     }
 
-    public function syncPermissions(SyncRolePermissionsRequest $request, Role $role): RedirectResponse
-    {
+    public function syncPermissions(
+        SyncRolePermissionsRequest $request,
+        Role $role,
+        SyncRolePermissions $syncRolePermissions,
+    ): RedirectResponse {
+        /** @var list<string> $permissionNames */
         $permissionNames = $request->validated('permissions', []);
 
-        $existing = Permission::query()
-            ->whereIn('name', $permissionNames)
-            ->pluck('name')
-            ->all();
+        $syncRolePermissions->handle($role, new SyncRolePermissionsData(
+            permissions: $permissionNames,
+        ));
 
-        $role->syncPermissions($existing);
-
-        return back()->with('success', 'Permissions updated.');
+        return $this->backWithSuccess('Permissions updated.');
     }
 }

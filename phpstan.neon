@@ -5,9 +5,15 @@ includes:
 parameters:
   level: 5
   ignoreErrors:
-        -
-            message: "#^Called 'env' outside of the config directory which returns null when the config is cached, use 'config'.$#"
-            path: *config/*.php
+    -
+      identifier: method.internalClass
+      path: tests/*
+    -
+      message: '#^Access to an undefined property Pest\\Mixins\\Expectation<.*>::\$not\.$#'
+      path: tests/*
+    -
+      message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase::(seed|actingAs|get|put|post|from|withSession|assertAuthenticated|assertGuest)\(\)\.$#'
+      path: tests/*
 
   paths:
     - app
@@ -15,6 +21,7 @@ parameters:
     - bootstrap
     - database/factories
     - routes
+    - tests
 
   excludePaths:
     - vendor/

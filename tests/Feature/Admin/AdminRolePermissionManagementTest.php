@@ -115,3 +115,20 @@ test('admin can create permissions with a new custom group', function () {
 
     $response->assertRedirect(route('admin.permissions.edit', $permission));
 });
+
+test('admin sees a validation error when syncing missing role permissions', function () {
+    $role = Role::query()->create([
+        'name' => 'reviewer',
+        'guard_name' => 'web',
+    ]);
+
+    $response = $this->from(route('admin.roles.edit', $role))
+        ->put(route('admin.roles.permissions.sync', $role), [
+            'permissions' => ['users.missingPermission'],
+        ]);
+
+    $response->assertRedirect(route('admin.roles.edit', $role));
+    $response->assertSessionHasErrors(['permissions']);
+
+    expect($role->fresh()?->permissions)->toHaveCount(0);
+});

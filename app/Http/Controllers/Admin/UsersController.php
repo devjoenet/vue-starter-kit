@@ -4,33 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\Users\CreateUser;
+use App\Actions\Admin\Users\DeleteUser;
+use App\Actions\Admin\Users\SyncUserRoles;
+use App\Actions\Admin\Users\UpdateUser;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\SyncUserRolesRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
+use App\Support\Data\Admin\Users\CreateUserData;
+use App\Support\Data\Admin\Users\EditableUserData;
+use App\Support\Data\Admin\Users\RoleOptionData;
+use App\Support\Data\Admin\Users\SyncUserRolesData;
+use App\Support\Data\Admin\Users\UpdateUserData;
+use App\Support\Data\Admin\Users\UserListItemData;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
-final class UsersController
+final class UsersController extends Controller
 {
     public function index(): Response
     {
         return Inertia::render('admin/Users/Index', [
             'users' => User::query()
-                ->select(['id', 'name', 'email', 'created_at'])
+                ->select(['id', 'name', 'email'])
                 ->with(['roles:id,name'])
                 ->latest()
                 ->paginate(15)
-                ->through(fn (User $user): array => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'created_at' => $user->created_at,
-                    'roles' => $user->roles->pluck('name')->values(),
-                ])
+                ->through(fn (User $user): array => UserListItemData::fromModel($user)->all())
                 ->withQueryString(),
         ]);
     }
@@ -40,60 +44,61 @@ final class UsersController
         return Inertia::render('admin/Users/Create');
     }
 
-    public function store(StoreUserRequest $request): RedirectResponse
+    public function store(StoreUserRequest $request, CreateUser $createUser): RedirectResponse
     {
-        $validated = $request->validated();
+        $user = $createUser->handle(new CreateUserData(
+            name: (string) $request->validated('name'),
+            email: (string) $request->validated('email'),
+            password: (string) $request->validated('password'),
+        ));
 
-        $user = User::query()->create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        return redirect()->route('admin.users.edit', $user)
-            ->with('success', 'User created.');
+        return $this->redirectRouteWithSuccess('admin.users.edit', $user, 'User created.');
     }
 
     public function edit(User $user): Response
     {
         return Inertia::render('admin/Users/Edit', [
-            'user' => $user->only(['id', 'name', 'email']),
-            'roles' => Role::query()->orderBy('name')->get(['id', 'name']),
-            'userRoles' => $user->getRoleNames()->values(),
+            'user' => EditableUserData::fromModel($user)->all(),
+            'roles' => Role::query()
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn (Role $role): array => RoleOptionData::fromModel($role)->all())
+                ->all(),
+            'userRoles' => $user->getRoleNames()->values()->all(),
         ]);
     }
 
-    public function update(UpdateUserRequest $request, User $user): RedirectResponse
-    {
-        $validated = $request->validated();
+    public function update(
+        UpdateUserRequest $request,
+        User $user,
+        UpdateUser $updateUser,
+    ): RedirectResponse {
+        $updateUser->handle($user, new UpdateUserData(
+            name: (string) $request->validated('name'),
+            email: (string) $request->validated('email'),
+            password: $request->validated('password'),
+        ));
 
-        $user->forceFill([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
-
-        if (($validated['password'] ?? null) !== null) {
-            $user->forceFill(['password' => Hash::make($validated['password'])]);
-        }
-
-        $user->save();
-
-        return back()->with('success', 'User updated.');
+        return $this->backWithSuccess('User updated.');
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $user, DeleteUser $deleteUser): RedirectResponse
     {
-        $user->delete();
+        $deleteUser->handle($user);
 
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User deleted.');
+        return $this->redirectRouteWithSuccess('admin.users.index', [], 'User deleted.');
     }
 
-    public function syncRoles(SyncUserRolesRequest $request, User $user): RedirectResponse
-    {
+    public function syncRoles(
+        SyncUserRolesRequest $request,
+        User $user,
+        SyncUserRoles $syncUserRoles,
+    ): RedirectResponse {
+        /** @var list<string> $roleNames */
         $roleNames = $request->validated('roles', []);
-        $user->syncRoles($roleNames);
 
-        return back()->with('success', 'Roles updated.');
+        $syncUserRoles->handle($user, new SyncUserRolesData(roles: $roleNames));
+
+        return $this->backWithSuccess('Roles updated.');
     }
 }

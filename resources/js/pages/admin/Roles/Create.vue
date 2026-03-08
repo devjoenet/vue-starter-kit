@@ -36,6 +36,7 @@ const form = useForm<App['Forms']['Admin']['Roles']['Store']>({
   name: '',
   user_ids: [] as number[],
 });
+const selectedUserIds = computed(() => form.user_ids ?? []);
 
 const submit = () => {
   if (!canCreate.value) return;
@@ -94,7 +95,7 @@ const toggleUser = (userId: number, isChecked: boolean | 'indeterminate') => {
             >
               <Checkbox
                 :disabled="!canCreate"
-                :model-value="form.user_ids.includes(user.id)"
+                :model-value="selectedUserIds.includes(user.id)"
                 @update:model-value="(value) => toggleUser(user.id, value)"
               />
 

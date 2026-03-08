@@ -12,7 +12,6 @@ import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import {
   useToast,
   type ToastAppearance,
-  type ToastItem,
   type ToastTone,
 } from '@/composables/useToast';
 import { cn } from '@/lib/utils';
@@ -61,14 +60,12 @@ const toneIconMap: Record<ToastTone, LucideIcon> = {
   info: Info,
 };
 
-const resolveIcon = (toastItem: ToastItem): LucideIcon | null => {
-  if (toastItem.icon === null) {
+const resolveIcon = (icon: unknown, tone: ToastTone): LucideIcon | null => {
+  if (icon === null) {
     return null;
   }
 
-  return (
-    (toastItem.icon as LucideIcon | undefined) ?? toneIconMap[toastItem.tone]
-  );
+  return (icon as LucideIcon | undefined) ?? toneIconMap[tone];
 };
 
 const toneClasses: Record<ToastTone, string> = {
@@ -110,19 +107,19 @@ const surfaceProgressClasses: Record<ToastAppearance, string> = {
   solid: 'bg-white/25',
 };
 
-const toastClasses = (toastItem: ToastItem): string => {
-  if (toastItem.appearance === 'solid') {
+const toastClasses = (tone: ToastTone, appearance: ToastAppearance): string => {
+  if (appearance === 'solid') {
     return cn(
       'pointer-events-auto relative overflow-hidden rounded-2xl border px-4 py-3',
       appearanceClasses.solid,
-      solidToneClasses[toastItem.tone],
+      solidToneClasses[tone],
     );
   }
 
   return cn(
     'pointer-events-auto relative overflow-hidden rounded-2xl border px-4 py-3',
-    toneClasses[toastItem.tone],
-    appearanceClasses[toastItem.appearance],
+    toneClasses[tone],
+    appearanceClasses[appearance],
   );
 };
 
@@ -193,7 +190,7 @@ watch(
         <div
           v-for="item in toasts"
           :key="item.id"
-          :class="toastClasses(item)"
+          :class="toastClasses(item.tone, item.appearance)"
           role="status"
           aria-live="polite"
         >
@@ -207,8 +204,8 @@ watch(
 
           <div class="flex items-start gap-2.5 pr-8">
             <component
-              :is="resolveIcon(item)"
-              v-if="resolveIcon(item)"
+              :is="resolveIcon(item.icon, item.tone)"
+              v-if="resolveIcon(item.icon, item.tone)"
               class="mt-0.5 size-4 shrink-0"
             />
 

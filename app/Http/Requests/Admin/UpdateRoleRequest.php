@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Models\Role;
+use App\Support\RoleNameNormalizer;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -21,7 +21,7 @@ class UpdateRoleRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'name' => Str::of((string) $this->input('name'))->squish()->kebab()->toString(),
+            'name' => app(RoleNameNormalizer::class)->normalize((string) $this->input('name')),
         ]);
     }
 
