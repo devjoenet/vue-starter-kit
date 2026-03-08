@@ -39,8 +39,8 @@ it('uses destructive base variants instead of legacy error wrappers in app views
 it('uses the correct role permission gate in admin layout navigation', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/AdminLayout.vue');
 
-    expect($contents)->toContain('can("roles.view")');
-    expect($contents)->not->toContain('can("users.view") ? [{ label: "Roles"');
+    expect($contents)->toContain("can('roles.view')");
+    expect($contents)->not->toContain("can('users.view') ? [{ label: 'Roles'");
 });
 
 it('reuses the shared permission group field component across admin permission pages', function () {
@@ -85,7 +85,7 @@ it('prefills the role name in the role management edit page details form', funct
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
 
     expect($contents)->toContain('v-model="roleForm.name"');
-    expect($contents)->toContain('() => props.roleName');
+    expect($contents)->toContain('() => props.role.name');
     expect($contents)->toContain('{ immediate: true },');
 });
 
@@ -95,5 +95,5 @@ it('syncs input default values across inertial page navigations when not using v
     expect($contents)->toContain('watch(');
     expect($contents)->toContain('() => props.defaultValue');
     expect($contents)->toContain('if (props.modelValue !== undefined)');
-    expect($contents)->toContain('modelValue.value = value ?? ""');
+    expect($contents)->toContain("modelValue.value = value ?? ''");
 });

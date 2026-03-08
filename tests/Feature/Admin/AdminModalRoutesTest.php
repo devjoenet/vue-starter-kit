@@ -88,8 +88,8 @@ test('roles edit route renders edit page', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Roles/Edit')
-            ->where('roleId', $role->id)
-            ->where('roleName', $role->name)
+            ->where('role.id', $role->id)
+            ->where('role.name', $role->name)
             ->has('permissionsByGroup')
             ->has('rolePermissions')
         );

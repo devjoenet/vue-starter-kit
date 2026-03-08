@@ -4,65 +4,56 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\Permissions\CreatePermission;
+use App\Actions\Admin\Permissions\DeletePermission;
+use App\Actions\Admin\Permissions\UpdatePermission;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Models\Permission;
+use App\Support\Data\Admin\Permissions\CreatePermissionData;
+use App\Support\Data\Admin\Permissions\PermissionItemData;
+use App\Support\Data\Admin\Permissions\UpdatePermissionData;
+use App\Support\GroupedPermissions;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class PermissionsController
+final class PermissionsController extends Controller
 {
-    /** @return array<int, string> */
-    private function permissionGroups(): array
-    {
-        return Permission::query()
-            ->select('group')
-            ->distinct()
-            ->orderBy('group')
-            ->pluck('group')
-            ->filter()
-            ->values()
-            ->all();
-    }
-
-    public function index(): Response
+    public function index(GroupedPermissions $groupedPermissions): Response
     {
         return Inertia::render('admin/Permissions/Index', [
-            'permissionsByGroup' => Permission::query()
-                ->select(['id', 'name', 'group'])
-                ->orderBy('group')
-                ->orderBy('name')
-                ->get()
-                ->groupBy('group')
-                ->map(fn ($items) => $items->values()),
+            'permissionsByGroup' => $groupedPermissions->allData(),
         ]);
     }
 
-    public function create(): Response
+    public function create(GroupedPermissions $groupedPermissions): Response
     {
         return Inertia::render('admin/Permissions/Create', [
-            'groups' => $this->permissionGroups(),
+            'groups' => $groupedPermissions->groups(),
         ]);
     }
 
-    public function store(StorePermissionRequest $request): RedirectResponse
-    {
-        $validated = $request->validated();
+    public function store(
+        StorePermissionRequest $request,
+        CreatePermission $createPermission,
+    ): RedirectResponse {
+        $permission = $createPermission->handle(new CreatePermissionData(
+            name: (string) $request->validated('name'),
+            group: (string) $request->validated('group'),
+        ));
 
-        $permission = Permission::query()->create([
-            'name' => $validated['name'],
-            'group' => $validated['group'],
-            'guard_name' => 'web',
-        ]);
-
-        return redirect()->route('admin.permissions.edit', $permission)
-            ->with('success', 'Permission created.');
+        return $this->redirectRouteWithSuccess(
+            'admin.permissions.edit',
+            $permission,
+            'Permission created.',
+        );
     }
 
-    public function edit(Permission $permission): Response
+    public function edit(Permission $permission, GroupedPermissions $groupedPermissions): Response
     {
-        $groups = collect($this->permissionGroups())
+        $groups = collect($groupedPermissions->groups())
             ->push($permission->group)
             ->filter()
             ->unique()
@@ -71,28 +62,30 @@ final class PermissionsController
             ->all();
 
         return Inertia::render('admin/Permissions/Edit', [
-            'permission' => $permission->only(['id', 'name', 'group']),
+            'permission' => PermissionItemData::fromModel($permission)->all(),
             'groups' => $groups,
         ]);
     }
 
-    public function update(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
-    {
-        $validated = $request->validated();
+    public function update(
+        UpdatePermissionRequest $request,
+        Permission $permission,
+        UpdatePermission $updatePermission,
+    ): RedirectResponse {
+        $updatePermission->handle($permission, new UpdatePermissionData(
+            name: (string) $request->validated('name'),
+            group: (string) $request->validated('group'),
+        ));
 
-        $permission->forceFill([
-            'name' => $validated['name'],
-            'group' => $validated['group'],
-        ])->save();
-
-        return back()->with('success', 'Permission updated.');
+        return $this->backWithSuccess('Permission updated.');
     }
 
-    public function destroy(Permission $permission): RedirectResponse
-    {
-        $permission->delete();
+    public function destroy(
+        Permission $permission,
+        DeletePermission $deletePermission,
+    ): RedirectResponse {
+        $deletePermission->handle($permission);
 
-        return redirect()->route('admin.permissions.index')
-            ->with('success', 'Permission deleted.');
+        return $this->redirectRouteWithSuccess('admin.permissions.index', [], 'Permission deleted.');
     }
 }

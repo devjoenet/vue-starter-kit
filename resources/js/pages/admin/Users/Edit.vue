@@ -49,6 +49,7 @@ const userForm = useForm<App['Forms']['Admin']['Users']['Update']>({
 const rolesForm = useForm<App['Forms']['Admin']['Users']['SyncRoles']>({
   roles: [...props.userRoles],
 });
+const selectedRoles = computed(() => rolesForm.roles ?? []);
 
 const updateUser = () => {
   if (!canUpdate.value) return;
@@ -181,7 +182,7 @@ const toggleRole = (roleName: string, isChecked: boolean | 'indeterminate') => {
           >
             <Checkbox
               :disabled="!canAssignRoles"
-              :model-value="rolesForm.roles.includes(r.name)"
+              :model-value="selectedRoles.includes(r.name)"
               @update:model-value="(value) => toggleRole(r.name, value)"
             />
             <span class="text-sm">{{ r.name }}</span>

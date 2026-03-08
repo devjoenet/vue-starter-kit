@@ -31,8 +31,7 @@ defineOptions({
     ),
 });
 const props = defineProps<{
-  roleId: number;
-  roleName: string;
+  role: { id: number; name: string };
   permissionsByGroup: Record<
     string,
     { id: number; name: string; group: string }[]
@@ -46,7 +45,7 @@ const canDelete = computed(() => can('roles.delete'));
 const canAssign = computed(() => can('roles.assignPermissions'));
 
 const roleForm = useForm<App['Forms']['Admin']['Roles']['Update']>({
-  name: props.roleName,
+  name: props.role.name,
 });
 const permsForm = useForm<App['Forms']['Admin']['Roles']['SyncPermissions']>({
   permissions: [...props.rolePermissions],
@@ -55,7 +54,7 @@ const selectedPermissions = ref<string[]>([...props.rolePermissions]);
 const permissionsSyncInFlight = ref(false);
 
 watch(
-  () => props.roleName,
+  () => props.role.name,
   (roleName) => {
     roleForm.name = roleName;
   },
@@ -75,32 +74,28 @@ const updateRole = () => {
   if (!canUpdate.value) return;
 
   roleForm.name = toKebabCase(roleForm.name);
-  roleForm.put(update.url(props.roleId), { preserveScroll: true });
+  roleForm.put(update.url(props.role.id), { preserveScroll: true });
 };
 
 const syncPermissions = () => {
   if (!canAssign.value) return;
-  router.put(
-    sync.url(props.roleId),
-    {
-      permissions: [...selectedPermissions.value],
+
+  permsForm.permissions = [...selectedPermissions.value];
+  permsForm.put(sync.url(props.role.id), {
+    preserveScroll: true,
+    onStart: () => {
+      permissionsSyncInFlight.value = true;
     },
-    {
-      preserveScroll: true,
-      onStart: () => {
-        permissionsSyncInFlight.value = true;
-      },
-      onFinish: () => {
-        permissionsSyncInFlight.value = false;
-      },
+    onFinish: () => {
+      permissionsSyncInFlight.value = false;
     },
-  );
+  });
 };
 
 const destroyRole = () => {
   if (!canDelete.value) return;
   if (!confirm('Delete this role?')) return;
-  router.delete(destroy.url(props.roleId));
+  router.delete(destroy.url(props.role.id));
 };
 
 const togglePermission = (
@@ -124,7 +119,7 @@ const togglePermission = (
   <div class="space-y-6 px-4">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <h1 class="text-2xl font-semibold">
-        Edit {{ toTitleCase(props.roleName) }}
+        Edit {{ toTitleCase(props.role.name) }}
       </h1>
       <Button
         appearance="outline"
@@ -217,6 +212,10 @@ const togglePermission = (
             </CollapsibleContent>
           </Collapsible>
         </div>
+
+        <p v-if="permsForm.errors.permissions" class="mt-2 text-xs opacity-80">
+          {{ permsForm.errors.permissions }}
+        </p>
       </Card>
     </div>
   </div>
