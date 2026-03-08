@@ -15,6 +15,7 @@ import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, edit, index } from '@/routes/admin/roles';
 import { adminPermissions } from '@/types/admin-permissions';
+import type { AdminRolesIndexPageProps } from '@/types/page-props';
 import { SquarePenIcon } from 'lucide-vue-next';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -30,9 +31,7 @@ defineOptions({
     ),
 });
 
-const props = defineProps<{
-  roles: { id: number; name: string; users_count: number }[];
-}>();
+const props = defineProps<AdminRolesIndexPageProps>();
 
 const { can } = useAbility();
 const canCreate = computed(() => can(adminPermissions.rolesCreate));

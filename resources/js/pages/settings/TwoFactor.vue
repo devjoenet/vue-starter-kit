@@ -12,6 +12,7 @@ import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { disable, enable, show } from '@/routes/two-factor';
+import type { SettingsTwoFactorPageProps } from '@/types/page-props';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -23,12 +24,7 @@ defineOptions({
     ),
 });
 
-type Props = {
-  requiresConfirmation?: boolean;
-  twoFactorEnabled?: boolean;
-};
-
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SettingsTwoFactorPageProps>(), {
   requiresConfirmation: false,
   twoFactorEnabled: false,
 });
@@ -54,7 +50,10 @@ onUnmounted(() => {
         description="Manage your two-factor authentication settings"
       />
 
-      <div v-if="!twoFactorEnabled" class="flex flex-col items-start gap-4">
+      <div
+        v-if="!props.twoFactorEnabled"
+        class="flex flex-col items-start gap-4"
+      >
         <Badge variant="destructive">Disabled</Badge>
 
         <p class="text-muted-foreground">
@@ -111,8 +110,8 @@ onUnmounted(() => {
 
       <TwoFactorSetupModal
         v-model:isOpen="showSetupModal"
-        :requiresConfirmation="requiresConfirmation"
-        :twoFactorEnabled="twoFactorEnabled"
+        :requiresConfirmation="props.requiresConfirmation"
+        :twoFactorEnabled="props.twoFactorEnabled"
       />
     </div>
   </Card>

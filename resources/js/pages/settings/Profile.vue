@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { h, computed } from 'vue';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
 import Button from '@/components/ui/button/Button.vue';
@@ -9,8 +8,9 @@ import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { edit } from '@/routes/profile';
+import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
+import type { SettingsProfilePageProps } from '@/types/page-props';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -22,15 +22,9 @@ defineOptions({
     ),
 });
 
-type Props = {
-  mustVerifyEmail: boolean;
-  status?: string;
-};
+const props = defineProps<SettingsProfilePageProps>();
 
-defineProps<Props>();
-
-const page = usePage();
-const user = computed(() => page.props.auth?.user ?? null);
+const user = computed(() => props.auth.user);
 </script>
 
 <template>
@@ -48,7 +42,7 @@ const user = computed(() => page.props.auth?.user ?? null);
         />
 
         <Form
-          v-bind="ProfileController.update.form()"
+          v-bind="update.form()"
           class="space-y-4"
           v-slot="{ errors, processing, recentlySuccessful }"
         >
@@ -77,7 +71,7 @@ const user = computed(() => page.props.auth?.user ?? null);
             :message="errors.email"
           />
 
-          <div v-if="mustVerifyEmail && !user.email_verified_at">
+          <div v-if="props.mustVerifyEmail && !user.email_verified_at">
             <p class="text-sm text-muted-foreground">
               Your email address is unverified.
               <Link
@@ -90,7 +84,7 @@ const user = computed(() => page.props.auth?.user ?? null);
             </p>
 
             <div
-              v-if="status === 'verification-link-sent'"
+              v-if="props.status === 'verification-link-sent'"
               class="mt-2 text-sm font-medium text-success"
             >
               A new verification link has been sent to your email address.

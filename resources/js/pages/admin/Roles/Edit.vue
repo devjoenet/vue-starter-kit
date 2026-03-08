@@ -16,7 +16,11 @@ import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/roles';
 import { sync } from '@/routes/admin/roles/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { App } from '@/wayfinder/types';
+import type { AdminRolesEditPageProps } from '@/types/page-props';
+import type {
+  SyncRolePermissionsRequest,
+  UpdateRoleRequest,
+} from '@/types/wayfinder-generated';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -31,24 +35,17 @@ defineOptions({
       () => page,
     ),
 });
-const props = defineProps<{
-  role: { id: number; name: string };
-  permissionsByGroup: Record<
-    string,
-    { id: number; name: string; group: string }[]
-  >;
-  rolePermissions: string[];
-}>();
+const props = defineProps<AdminRolesEditPageProps>();
 
 const { can } = useAbility();
 const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
 const canDelete = computed(() => can(adminPermissions.rolesDelete));
 const canAssign = computed(() => can(adminPermissions.rolesAssignPermissions));
 
-const roleForm = useForm<App['Forms']['Admin']['Roles']['Update']>({
+const roleForm = useForm<UpdateRoleRequest>({
   name: props.role.name,
 });
-const permsForm = useForm<App['Forms']['Admin']['Roles']['SyncPermissions']>({
+const permsForm = useForm<SyncRolePermissionsRequest>({
   permissions: [...props.rolePermissions],
 });
 const selectedPermissions = ref<string[]>([...props.rolePermissions]);

@@ -11,7 +11,11 @@ import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/users';
 import { sync } from '@/routes/admin/users/roles';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { App } from '@/wayfinder/types';
+import type { AdminUsersEditPageProps } from '@/types/page-props';
+import type {
+  SyncUserRolesRequest,
+  UpdateUserRequest,
+} from '@/types/wayfinder-generated';
 import { toTitleCase } from '../../../lib/utils';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -28,11 +32,7 @@ defineOptions({
     ),
 });
 
-const props = defineProps<{
-  user: { id: number; name: string; email: string };
-  roles: { id: number; name: string }[];
-  userRoles: string[];
-}>();
+const props = defineProps<AdminUsersEditPageProps>();
 
 const { can } = useAbility();
 
@@ -40,14 +40,14 @@ const canUpdate = computed(() => can(adminPermissions.usersUpdate));
 const canAssignRoles = computed(() => can(adminPermissions.usersAssignRoles));
 const canDelete = computed(() => can(adminPermissions.usersDelete));
 
-const userForm = useForm<App['Forms']['Admin']['Users']['Update']>({
+const userForm = useForm<UpdateUserRequest>({
   name: props.user.name,
   email: props.user.email,
   password: '',
   password_confirmation: '',
 });
 
-const rolesForm = useForm<App['Forms']['Admin']['Users']['SyncRoles']>({
+const rolesForm = useForm<SyncUserRolesRequest>({
   roles: [...props.userRoles],
 });
 const selectedRoles = computed(() => rolesForm.roles ?? []);

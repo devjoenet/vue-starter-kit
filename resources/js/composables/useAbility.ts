@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/vue3';
-import type { AdminPermission } from '@/types/admin-permissions';
+import type { AdminPermission } from '@/types/wayfinder-generated';
 
 export function useAbility() {
   const page = usePage();

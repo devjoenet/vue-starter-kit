@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import { useTemplateRef } from 'vue';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import Heading from '@/components/Heading.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -14,6 +13,7 @@ import DialogHeader from '@/components/ui/dialog/DialogHeader.vue';
 import DialogTitle from '@/components/ui/dialog/DialogTitle.vue';
 import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue';
 import Input from '@/components/ui/input/Input.vue';
+import { destroy } from '@/routes/profile';
 const passwordInput = useTemplateRef('passwordInput');
 </script>
 
@@ -42,7 +42,7 @@ const passwordInput = useTemplateRef('passwordInput');
 
         <DialogContent>
           <Form
-            v-bind="ProfileController.destroy.form()"
+            v-bind="destroy.form()"
             reset-on-success
             @error="() => passwordInput?.$el?.focus()"
             :options="{

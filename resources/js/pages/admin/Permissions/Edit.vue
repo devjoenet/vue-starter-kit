@@ -11,7 +11,8 @@ import { toCamelCase, toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { App } from '@/wayfinder/types';
+import type { AdminPermissionsEditPageProps } from '@/types/page-props';
+import type { UpdatePermissionRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -26,10 +27,7 @@ defineOptions({
       () => page,
     ),
 });
-const props = defineProps<{
-  permission: { id: number; name: string; group: string };
-  groups: string[];
-}>();
+const props = defineProps<AdminPermissionsEditPageProps>();
 
 const { can } = useAbility();
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
@@ -66,7 +64,7 @@ const prefixWithGroup = (group: string, actionSegment = '') => {
     : `${normalizedGroup}.`;
 };
 
-const form = useForm<App['Forms']['Admin']['Permissions']['Update']>({
+const form = useForm<UpdatePermissionRequest>({
   name: props.permission.name,
   group: props.permission.group,
 });

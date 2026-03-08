@@ -4,7 +4,8 @@ import { h } from 'vue';
 import AdminQuickLinks from '@/components/admin/AdminQuickLinks.vue';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/admin';
+import type { AdminDashboardPageProps } from '@/types/page-props';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -16,13 +17,7 @@ defineOptions({
     ),
 });
 
-defineProps<{
-  counts: {
-    users: number;
-    roles: number;
-    permissions: number;
-  };
-}>();
+const props = defineProps<AdminDashboardPageProps>();
 </script>
 
 <template>
@@ -77,6 +72,6 @@ defineProps<{
       <PlaceholderPattern />
     </div>
 
-    <AdminQuickLinks :counts="counts" />
+    <AdminQuickLinks :counts="props.counts" />
   </div>
 </template>

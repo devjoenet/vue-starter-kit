@@ -11,7 +11,8 @@ import { toKebabCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/roles';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { App } from '@/wayfinder/types';
+import type { AdminRolesCreatePageProps } from '@/types/page-props';
+import type { StoreRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -26,14 +27,12 @@ defineOptions({
       () => page,
     ),
 });
-const props = defineProps<{
-  users: { id: number; name: string; email: string }[];
-}>();
+const props = defineProps<AdminRolesCreatePageProps>();
 
 const { can } = useAbility();
 const canCreate = computed(() => can(adminPermissions.rolesCreate));
 
-const form = useForm<App['Forms']['Admin']['Roles']['Store']>({
+const form = useForm<StoreRoleRequest>({
   name: '',
   user_ids: [] as number[],
 });

@@ -16,6 +16,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, destroy, edit, index } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
+import type { AdminPermissionsIndexPageProps } from '@/types/page-props';
 import { TrashIcon, SquarePenIcon } from 'lucide-vue-next';
 import { toTitleCase } from '@/lib/utils';
 defineOptions({
@@ -32,12 +33,7 @@ defineOptions({
     ),
 });
 
-const props = defineProps<{
-  permissionsByGroup: Record<
-    string,
-    { id: number; name: string; group: string }[]
-  >;
-}>();
+const props = defineProps<AdminPermissionsIndexPageProps>();
 
 const { can } = useAbility();
 const canCreate = computed(() => can(adminPermissions.permissionsCreate));
