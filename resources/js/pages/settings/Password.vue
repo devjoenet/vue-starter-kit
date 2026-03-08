@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
-import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import Heading from '@/components/Heading.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { edit } from '@/routes/user-password';
+import { edit, update } from '@/routes/user-password';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -35,7 +34,7 @@ defineOptions({
       />
 
       <Form
-        v-bind="PasswordController.update.form()"
+        v-bind="update.form()"
         :options="{
           preserveScroll: true,
         }"

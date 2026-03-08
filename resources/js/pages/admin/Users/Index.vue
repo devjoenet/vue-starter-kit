@@ -14,6 +14,8 @@ import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, destroy, edit, index } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
+import type { AdminUsersIndexPageProps } from '@/types/page-props';
 import { PenBoxIcon, TrashIcon } from 'lucide-vue-next';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -29,16 +31,14 @@ defineOptions({
     ),
 });
 
-const props = defineProps<{
-  users: any;
-}>();
+const props = defineProps<AdminUsersIndexPageProps>();
 
 const { can } = useAbility();
 const page = usePage();
 
-const canCreate = computed(() => can('users.create'));
-const canUpdate = computed(() => can('users.update'));
-const canDelete = computed(() => can('users.delete'));
+const canCreate = computed(() => can(adminPermissions.usersCreate));
+const canUpdate = computed(() => can(adminPermissions.usersUpdate));
+const canDelete = computed(() => can(adminPermissions.usersDelete));
 </script>
 
 <template>
@@ -62,7 +62,7 @@ const canDelete = computed(() => can('users.delete'));
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="user in users.data" :key="user.id">
+          <TableRow v-for="user in props.users.data" :key="user.id">
             <TableCell class="font-medium">{{ user.name }}</TableCell>
             <TableCell class="text-muted-foreground">{{
               user.email

@@ -6,5 +6,4 @@ export type AppPageProps<
   name: string;
   auth: Auth;
   sidebarOpen: boolean;
-  [key: string]: unknown;
 };

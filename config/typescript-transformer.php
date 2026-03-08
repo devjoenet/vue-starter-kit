@@ -31,7 +31,7 @@ return [
     'transformers' => [
         Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,
         App\Support\TypeScript\FormRequestRulesTransformer::class,
-        // Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
+        Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
         // Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class,
         Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class,
         Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer::class,
@@ -54,7 +54,7 @@ return [
      * The package will write the generated TypeScript to this file.
      */
 
-    'output_file' => resource_path('js/types/generated.d.ts'),
+    'output_file' => resource_path('js/types/wayfinder-generated.d.ts'),
 
     /*
      * When the package is writing types to the output file, a writer is used to

@@ -24,6 +24,7 @@ import { dashboard } from '@/routes';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { NavItem } from '@/types/navigation';
 import AppLogo from './AppLogo.vue';
 
@@ -39,7 +40,7 @@ const mainNavItems: NavItem[] = [
 
 const adminNavItems = computed<NavItem[]>(() => {
   return [
-    ...(can('users.view')
+    ...(can(adminPermissions.usersView)
       ? [
           {
             title: 'Users',
@@ -48,7 +49,7 @@ const adminNavItems = computed<NavItem[]>(() => {
           },
         ]
       : []),
-    ...(can('roles.view')
+    ...(can(adminPermissions.rolesView)
       ? [
           {
             title: 'Roles',
@@ -57,7 +58,7 @@ const adminNavItems = computed<NavItem[]>(() => {
           },
         ]
       : []),
-    ...(can('permissions.view')
+    ...(can(adminPermissions.permissionsView)
       ? [
           {
             title: 'Permissions',

@@ -8,7 +8,9 @@ import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/users';
-import type { App } from '@/wayfinder/types';
+import { adminPermissions } from '@/types/admin-permissions';
+import type { AdminUsersCreatePageProps } from '@/types/page-props';
+import type { StoreUserRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -23,10 +25,12 @@ defineOptions({
       () => page,
     ),
 });
-const { can } = useAbility();
-const canCreate = computed(() => can('users.create'));
+defineProps<AdminUsersCreatePageProps>();
 
-const form = useForm<App['Forms']['Admin']['Users']['Store']>({
+const { can } = useAbility();
+const canCreate = computed(() => can(adminPermissions.usersCreate));
+
+const form = useForm<StoreUserRequest>({
   name: '',
   email: '',
   password: '',

@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useAbility } from '@/composables/useAbility';
 import { dashboard } from '@/routes/admin';
+import { adminPermissions } from '@/types/admin-permissions';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
@@ -15,13 +16,13 @@ const { can } = useAbility();
 const nav = computed(() => {
   return [
     { label: 'Dashboard', href: dashboard.url() },
-    ...(can('users.view')
+    ...(can(adminPermissions.usersView)
       ? [{ label: 'Users', href: adminUsersIndex.url() }]
       : []),
-    ...(can('roles.view')
+    ...(can(adminPermissions.rolesView)
       ? [{ label: 'Roles', href: adminRolesIndex.url() }]
       : []),
-    ...(can('permissions.view')
+    ...(can(adminPermissions.permissionsView)
       ? [{ label: 'Permissions', href: adminPermissionsIndex.url() }]
       : []),
   ];

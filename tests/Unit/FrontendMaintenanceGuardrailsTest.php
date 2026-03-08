@@ -39,8 +39,44 @@ it('uses destructive base variants instead of legacy error wrappers in app views
 it('uses the correct role permission gate in admin layout navigation', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/AdminLayout.vue');
 
-    expect($contents)->toContain("can('roles.view')");
-    expect($contents)->not->toContain("can('users.view') ? [{ label: 'Roles'");
+    expect($contents)->toContain("...(can(adminPermissions.rolesView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
+    expect($contents)->not->toContain("...(can(adminPermissions.usersView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
+});
+
+it('uses the canonical wayfinder type surface for admin form contracts', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $adminPages = [
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+
+    foreach ($adminPages as $adminPage) {
+        $contents = file_get_contents($projectRoot.'/'.$adminPage);
+
+        expect($contents)->toContain("from '@/types/wayfinder-generated'");
+        expect($contents)->not->toContain("from '@/types/wayfinder'");
+        expect($contents)->not->toContain("App['Forms']");
+    }
+});
+
+it('uses route modules rather than controller action imports for settings forms', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $settingsViews = [
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/components/DeleteUser.vue',
+    ];
+
+    foreach ($settingsViews as $settingsView) {
+        $contents = file_get_contents($projectRoot.'/'.$settingsView);
+
+        expect($contents)->not->toContain('@/actions/App/Http/Controllers/Settings/');
+        expect($contents)->toContain('.form()');
+    }
 });
 
 it('reuses the shared permission group field component across admin permission pages', function () {
