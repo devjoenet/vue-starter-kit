@@ -78,6 +78,10 @@ class HandleInertiaRequests extends Middleware
 
     private function resolveSidebarOpen(Request $request): bool
     {
-        return ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true';
+        if (! $request->hasCookie('sidebar_state')) {
+            return true;
+        }
+
+        return $request->cookie('sidebar_state') === 'true';
     }
 }

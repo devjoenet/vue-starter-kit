@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link } from '@inertiajs/vue3';
+import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 import { h, computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
@@ -24,7 +24,8 @@ defineOptions({
 
 const props = defineProps<SettingsProfilePageProps>();
 
-const user = computed(() => props.auth.user);
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
