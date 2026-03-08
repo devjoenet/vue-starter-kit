@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,23 +38,51 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        return [
+            ...parent::share($request),
+            'flash' => $this->sharedFlash($request),
+            'auth' => $this->sharedAuth($request),
+            'sidebarOpen' => $this->resolveSidebarOpen($request),
+        ];
+    }
+
+    /**
+     * Define the props that are shared once and remembered across navigations.
+     *
+     * @return array<string, mixed>
+     */
+    public function shareOnce(Request $request): array
+    {
+        return [
+            'name' => fn (): string => config('app.name'),
+        ];
+    }
+
+    /** @return array{success: Closure, error: Closure, warning: Closure, info: Closure} */
+    private function sharedFlash(Request $request): array
+    {
+        return [
+            'success' => fn () => $request->session()->get('success'),
+            'error' => fn () => $request->session()->get('error'),
+            'warning' => fn () => $request->session()->get('warning'),
+            'info' => fn () => $request->session()->get('info'),
+        ];
+    }
+
+    /** @return array{user: mixed, roles: mixed, permissions: mixed} */
+    private function sharedAuth(Request $request): array
+    {
         $user = $request->user();
 
         return [
-            ...parent::share($request),
-            'name' => config('app.name'),
-            'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
-                'warning' => fn () => $request->session()->get('warning'),
-                'info' => fn () => $request->session()->get('info'),
-            ],
-            'auth' => [
-                'user' => $request->user(),
-                'roles' => $user?->getRoleNames(),
-                'permissions' => $user?->getAllPermissions()->pluck('name')->values(),
-            ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'user' => $user,
+            'roles' => $user?->getRoleNames(),
+            'permissions' => $user?->getAllPermissions()->pluck('name')->values(),
         ];
+    }
+
+    private function resolveSidebarOpen(Request $request): bool
+    {
+        return ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true';
     }
 }
