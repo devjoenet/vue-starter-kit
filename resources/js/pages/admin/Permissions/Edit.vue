@@ -10,6 +10,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { toCamelCase, toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/permissions';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { App } from '@/wayfinder/types';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -31,8 +32,8 @@ const props = defineProps<{
 }>();
 
 const { can } = useAbility();
-const canUpdate = computed(() => can('permissions.update'));
-const canDelete = computed(() => can('permissions.delete'));
+const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
+const canDelete = computed(() => can(adminPermissions.permissionsDelete));
 
 const extractActionSegment = (permissionName: string, group: string) => {
   const normalizedGroup = toSnakeCase(group);

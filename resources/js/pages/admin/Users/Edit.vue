@@ -10,6 +10,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/users';
 import { sync } from '@/routes/admin/users/roles';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { App } from '@/wayfinder/types';
 import { toTitleCase } from '../../../lib/utils';
 defineOptions({
@@ -35,9 +36,9 @@ const props = defineProps<{
 
 const { can } = useAbility();
 
-const canUpdate = computed(() => can('users.update'));
-const canAssignRoles = computed(() => can('users.assignRoles'));
-const canDelete = computed(() => can('users.delete'));
+const canUpdate = computed(() => can(adminPermissions.usersUpdate));
+const canAssignRoles = computed(() => can(adminPermissions.usersAssignRoles));
+const canDelete = computed(() => can(adminPermissions.usersDelete));
 
 const userForm = useForm<App['Forms']['Admin']['Users']['Update']>({
   name: props.user.name,

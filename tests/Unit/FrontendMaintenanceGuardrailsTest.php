@@ -39,8 +39,8 @@ it('uses destructive base variants instead of legacy error wrappers in app views
 it('uses the correct role permission gate in admin layout navigation', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/AdminLayout.vue');
 
-    expect($contents)->toContain("can('roles.view')");
-    expect($contents)->not->toContain("can('users.view') ? [{ label: 'Roles'");
+    expect($contents)->toContain("...(can(adminPermissions.rolesView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
+    expect($contents)->not->toContain("...(can(adminPermissions.usersView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
 });
 
 it('reuses the shared permission group field component across admin permission pages', function () {

@@ -8,6 +8,7 @@ import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { App } from '@/wayfinder/types';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -24,7 +25,7 @@ defineOptions({
     ),
 });
 const { can } = useAbility();
-const canCreate = computed(() => can('users.create'));
+const canCreate = computed(() => can(adminPermissions.usersCreate));
 
 const form = useForm<App['Forms']['Admin']['Users']['Store']>({
   name: '',

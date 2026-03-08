@@ -14,6 +14,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, edit, index } from '@/routes/admin/roles';
+import { adminPermissions } from '@/types/admin-permissions';
 import { SquarePenIcon } from 'lucide-vue-next';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -34,8 +35,8 @@ const props = defineProps<{
 }>();
 
 const { can } = useAbility();
-const canCreate = computed(() => can('roles.create'));
-const canUpdate = computed(() => can('roles.update'));
+const canCreate = computed(() => can(adminPermissions.rolesCreate));
+const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
 </script>
 
 <template>

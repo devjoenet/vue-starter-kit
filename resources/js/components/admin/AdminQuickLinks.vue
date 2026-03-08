@@ -8,6 +8,7 @@ import { useAbility } from '@/composables/useAbility';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 
 const props = withDefaults(
   defineProps<{
@@ -46,7 +47,7 @@ const links = computed(() => {
     tone: QuickLinkTone;
   }> = [];
 
-  if (can('users.view')) {
+  if (can(adminPermissions.usersView)) {
     items.push({
       title: 'Users',
       description: 'Manage user accounts and access.',
@@ -56,7 +57,7 @@ const links = computed(() => {
     });
   }
 
-  if (can('roles.view')) {
+  if (can(adminPermissions.rolesView)) {
     items.push({
       title: 'Roles',
       description: 'Organize permissions into reusable roles.',
@@ -66,7 +67,7 @@ const links = computed(() => {
     });
   }
 
-  if (can('permissions.view')) {
+  if (can(adminPermissions.permissionsView)) {
     items.push({
       title: 'Permissions',
       description: 'Define granular access rules.',

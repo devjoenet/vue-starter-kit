@@ -15,6 +15,7 @@ import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/roles';
 import { sync } from '@/routes/admin/roles/permissions';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { App } from '@/wayfinder/types';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -40,9 +41,9 @@ const props = defineProps<{
 }>();
 
 const { can } = useAbility();
-const canUpdate = computed(() => can('roles.update'));
-const canDelete = computed(() => can('roles.delete'));
-const canAssign = computed(() => can('roles.assignPermissions'));
+const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
+const canDelete = computed(() => can(adminPermissions.rolesDelete));
+const canAssign = computed(() => can(adminPermissions.rolesAssignPermissions));
 
 const roleForm = useForm<App['Forms']['Admin']['Roles']['Update']>({
   name: props.role.name,

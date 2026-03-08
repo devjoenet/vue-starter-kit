@@ -15,6 +15,7 @@ import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, destroy, edit, index } from '@/routes/admin/permissions';
+import { adminPermissions } from '@/types/admin-permissions';
 import { TrashIcon, SquarePenIcon } from 'lucide-vue-next';
 import { toTitleCase } from '@/lib/utils';
 defineOptions({
@@ -39,9 +40,9 @@ const props = defineProps<{
 }>();
 
 const { can } = useAbility();
-const canCreate = computed(() => can('permissions.create'));
-const canUpdate = computed(() => can('permissions.update'));
-const canDelete = computed(() => can('permissions.delete'));
+const canCreate = computed(() => can(adminPermissions.permissionsCreate));
+const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
+const canDelete = computed(() => can(adminPermissions.permissionsDelete));
 
 const del = useForm({});
 const search = ref('');

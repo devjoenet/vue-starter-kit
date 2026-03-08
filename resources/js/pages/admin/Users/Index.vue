@@ -14,6 +14,7 @@ import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import { create, destroy, edit, index } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 import { PenBoxIcon, TrashIcon } from 'lucide-vue-next';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -36,9 +37,9 @@ const props = defineProps<{
 const { can } = useAbility();
 const page = usePage();
 
-const canCreate = computed(() => can('users.create'));
-const canUpdate = computed(() => can('users.update'));
-const canDelete = computed(() => can('users.delete'));
+const canCreate = computed(() => can(adminPermissions.usersCreate));
+const canUpdate = computed(() => can(adminPermissions.usersUpdate));
+const canDelete = computed(() => can(adminPermissions.usersDelete));
 </script>
 
 <template>

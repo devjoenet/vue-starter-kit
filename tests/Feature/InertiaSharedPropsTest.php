@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\AdminPermission;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -14,10 +15,11 @@ test('login page includes shared flash props', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('auth/Login')
             ->where('name', config('app.name'))
-            ->has('auth')
-            ->where('auth.user', null)
-            ->where('auth.roles', null)
-            ->where('auth.permissions', null)
+            ->where('auth', [
+                'user' => null,
+                'roles' => [],
+                'permissions' => [],
+            ])
             ->where('sidebarOpen', true)
             ->has('flash')
             ->where('flash.success', null)
@@ -55,7 +57,7 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
     app(PermissionRegistrar::class)->forgetCachedPermissions();
 
     $permission = Permission::query()->create([
-        'name' => 'users.view',
+        'name' => AdminPermission::UsersView->value,
         'group' => 'users',
         'guard_name' => 'web',
     ]);
@@ -80,11 +82,15 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
             ->component('admin/Dashboard')
             ->where('name', config('app.name'))
             ->where('sidebarOpen', false)
-            ->where('auth.user.id', $user->id)
-            ->where('auth.user.name', 'Taylor Otwell')
-            ->where('auth.user.email', 'taylor@example.com')
-            ->where('auth.user.email_verified_at', $user->email_verified_at?->toJSON())
-            ->where('auth.roles', ['admin'])
-            ->where('auth.permissions', ['users.view'])
+            ->where('auth', [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => 'Taylor Otwell',
+                    'email' => 'taylor@example.com',
+                    'email_verified_at' => $user->email_verified_at?->toJSON(),
+                ],
+                'roles' => ['admin'],
+                'permissions' => [AdminPermission::UsersView->value],
+            ])
         );
 });

@@ -2,13 +2,9 @@ import '@inertiajs/core';
 
 declare module '@inertiajs/core' {
   interface PageProps {
-    auth?: {
-      user?: import('./auth').User | null;
-      roles?: string[];
-      permissions?: string[];
-    };
+    auth: import('./auth').Auth;
     csrf_token?: string;
-    flash?: {
+    flash: {
       success?: string;
       error?: string;
       warning?: string;

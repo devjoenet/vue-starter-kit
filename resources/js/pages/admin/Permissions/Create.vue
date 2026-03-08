@@ -10,6 +10,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { toCamelCase, toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/permissions';
+import { adminPermissions } from '@/types/admin-permissions';
 import type { App } from '@/wayfinder/types';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
@@ -30,7 +31,7 @@ const props = defineProps<{
 }>();
 
 const { can } = useAbility();
-const canCreate = computed(() => can('permissions.create'));
+const canCreate = computed(() => can(adminPermissions.permissionsCreate));
 
 const form = useForm<App['Forms']['Admin']['Permissions']['Store']>({
   name: 'users.',

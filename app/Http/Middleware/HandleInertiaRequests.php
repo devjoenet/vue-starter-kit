@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Support\Data\Auth\SharedAuthData;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -69,16 +70,10 @@ class HandleInertiaRequests extends Middleware
         ];
     }
 
-    /** @return array{user: mixed, roles: mixed, permissions: mixed} */
+    /** @return array{user: array<string, mixed>|null, roles: list<string>, permissions: list<string>} */
     private function sharedAuth(Request $request): array
     {
-        $user = $request->user();
-
-        return [
-            'user' => $user,
-            'roles' => $user?->getRoleNames(),
-            'permissions' => $user?->getAllPermissions()->pluck('name')->values(),
-        ];
+        return SharedAuthData::fromRequest($request)->toArray();
     }
 
     private function resolveSidebarOpen(Request $request): bool
