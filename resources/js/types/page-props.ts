@@ -1,9 +1,3 @@
-import type { AppPageProps } from './app-page-props';
-
-export type PageProps<
-  T extends Record<string, unknown> = Record<string, never>,
-> = AppPageProps<T>;
-
 export type AdminDashboardCounts = {
   users: number;
   roles: number;
@@ -57,55 +51,55 @@ export type PaginatedCollection<T> = {
   data: T[];
 } & Record<string, unknown>;
 
-export type AdminDashboardPageProps = PageProps<{
+export type AdminDashboardPageProps = {
   counts: AdminDashboardCounts;
-}>;
+};
 
-export type AdminUsersIndexPageProps = PageProps<{
+export type AdminUsersIndexPageProps = {
   users: PaginatedCollection<UserListItem>;
-}>;
+};
 
-export type AdminUsersCreatePageProps = PageProps;
+export type AdminUsersCreatePageProps = {};
 
-export type AdminUsersEditPageProps = PageProps<{
+export type AdminUsersEditPageProps = {
   user: EditableUser;
   roles: RoleOption[];
   userRoles: string[];
-}>;
+};
 
-export type AdminRolesIndexPageProps = PageProps<{
+export type AdminRolesIndexPageProps = {
   roles: RoleListItem[];
-}>;
+};
 
-export type AdminRolesCreatePageProps = PageProps<{
+export type AdminRolesCreatePageProps = {
   users: AssignableUser[];
-}>;
+};
 
-export type AdminRolesEditPageProps = PageProps<{
+export type AdminRolesEditPageProps = {
   role: EditableRole;
   permissionsByGroup: PermissionsByGroup;
   rolePermissions: string[];
-}>;
+};
 
-export type AdminPermissionsIndexPageProps = PageProps<{
+export type AdminPermissionsIndexPageProps = {
   permissionsByGroup: PermissionsByGroup;
-}>;
+};
 
-export type AdminPermissionsCreatePageProps = PageProps<{
+export type AdminPermissionsCreatePageProps = {
   groups: string[];
-}>;
+};
 
-export type AdminPermissionsEditPageProps = PageProps<{
+export type AdminPermissionsEditPageProps = {
   permission: PermissionItem;
   groups: string[];
-}>;
+};
 
-export type SettingsProfilePageProps = PageProps<{
+export type SettingsProfilePageProps = {
   mustVerifyEmail: boolean;
   status?: string;
-}>;
+};
 
-export type SettingsTwoFactorPageProps = PageProps<{
+export type SettingsTwoFactorPageProps = {
   requiresConfirmation?: boolean;
   twoFactorEnabled?: boolean;
-}>;
+};
