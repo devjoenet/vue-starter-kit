@@ -36,6 +36,7 @@ defineOptions({
       <Form
         v-bind="update.form()"
         :options="{
+          only: ['flash'],
           preserveScroll: true,
         }"
         reset-on-success

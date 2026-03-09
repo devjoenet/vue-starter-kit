@@ -238,6 +238,17 @@ it('reuses the shared user identity fields across admin and settings user detail
     }
 });
 
+it('uses partial reload budgets for settings form submissions', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $profileContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Profile.vue');
+    $passwordContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Password.vue');
+
+    expect($profileContents)->toContain("only: ['auth', 'flash']");
+    expect($profileContents)->toContain('preserveScroll: true');
+    expect($passwordContents)->toContain("only: ['flash']");
+    expect($passwordContents)->toContain('preserveScroll: true');
+});
+
 it('syncs input default values across inertial page navigations when not using v-model', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input/Input.vue');
 

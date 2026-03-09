@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('password update page is displayed', function () {
     $user = User::factory()->create();
@@ -13,6 +14,21 @@ test('password update page is displayed', function () {
         ->get(route('user-password.edit'));
 
     $response->assertOk();
+});
+
+test('password update page supports flash-only partial reloads', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('user-password.edit'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('settings/Password')
+            ->reloadOnly(['flash'], fn (Assert $reload) => $reload
+                ->has('flash')
+                ->missing('auth')
+            )
+        );
 });
 
 test('password can be updated', function () {

@@ -44,6 +44,10 @@ const user = computed(() => page.props.auth.user);
 
         <Form
           v-bind="update.form()"
+          :options="{
+            only: ['auth', 'flash'],
+            preserveScroll: true,
+          }"
           class="space-y-4"
           v-slot="{ errors, processing, recentlySuccessful }"
         >
