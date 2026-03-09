@@ -128,6 +128,26 @@ it('reuses the shared delete confirmation composable across admin destructive ac
     }
 });
 
+it('reuses the shared selection-list composable across admin assignment forms', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $assignmentPages = [
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+    ];
+
+    foreach ($assignmentPages as $assignmentPage) {
+        $contents = file_get_contents($projectRoot.'/'.$assignmentPage);
+
+        expect($contents)->toContain("from '@/composables/useSelectionList'");
+        expect($contents)->toContain('useSelectionList<');
+        expect($contents)->toContain('toggleSelectedValue');
+        expect($contents)->not->toContain('const toggleUser =');
+        expect($contents)->not->toContain('const toggleRole =');
+        expect($contents)->not->toContain('const togglePermission =');
+    }
+});
+
 it('uses dedicated create and edit pages for admin CRUD forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $indexPages = [

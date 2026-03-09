@@ -11,6 +11,7 @@ import CollapsibleTrigger from '@/components/ui/collapsible/CollapsibleTrigger.v
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
+import { useSelectionList } from '@/composables/useSelectionList';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -50,8 +51,13 @@ const roleForm = useForm<UpdateRoleRequest>({
 const permsForm = useForm<SyncRolePermissionsRequest>({
   permissions: [...props.rolePermissions],
 });
-const selectedPermissions = ref<string[]>([...props.rolePermissions]);
 const permissionsSyncInFlight = ref(false);
+const {
+  hasSelectedValue,
+  replaceSelectedValues,
+  selectedValues: selectedPermissions,
+  toggleSelectedValue,
+} = useSelectionList<string>(props.rolePermissions);
 
 watch(
   () => props.role.name,
@@ -64,11 +70,14 @@ watch(
 watch(
   () => props.rolePermissions,
   (permissions) => {
-    selectedPermissions.value = [...permissions];
-    permsForm.permissions = [...permissions];
+    replaceSelectedValues(permissions);
   },
   { immediate: true },
 );
+
+watch(selectedPermissions, (permissions) => {
+  permsForm.permissions = [...permissions];
+});
 
 const updateRole = () => {
   if (!canUpdate.value) return;
@@ -106,21 +115,6 @@ const destroyRole = () => {
   });
 };
 
-const togglePermission = (
-  name: string,
-  isChecked: boolean | 'indeterminate',
-) => {
-  const nextSelectedPermissions = new Set(selectedPermissions.value);
-
-  if (isChecked === true) {
-    nextSelectedPermissions.add(name);
-  } else {
-    nextSelectedPermissions.delete(name);
-  }
-
-  selectedPermissions.value = [...nextSelectedPermissions];
-  permsForm.permissions = [...nextSelectedPermissions];
-};
 </script>
 
 <template>
@@ -209,9 +203,9 @@ const togglePermission = (
                 >
                   <Checkbox
                     :disabled="!canAssign"
-                    :model-value="selectedPermissions.includes(p.name)"
+                    :model-value="hasSelectedValue(p.name)"
                     @update:model-value="
-                      (value) => togglePermission(p.name, value)
+                      (value) => toggleSelectedValue(p.name, value)
                     "
                   />
                   <span class="text-sm">{{ p.name }}</span>

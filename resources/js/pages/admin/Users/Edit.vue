@@ -7,6 +7,7 @@ import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
+import { useSelectionList } from '@/composables/useSelectionList';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -52,7 +53,12 @@ const userForm = useForm<UpdateUserRequest>({
 const rolesForm = useForm<SyncUserRolesRequest>({
   roles: [...props.userRoles],
 });
-const selectedRoles = computed(() => rolesForm.roles ?? []);
+const {
+  hasSelectedValue,
+  replaceSelectedValues,
+  selectedValues: selectedRoles,
+  toggleSelectedValue,
+} = useSelectionList<string>(props.userRoles);
 
 watch(
   () => props.user,
@@ -74,10 +80,14 @@ watch(
       roles: [...userRoles],
     });
 
-    rolesForm.roles = [...userRoles];
+    replaceSelectedValues(userRoles);
   },
   { deep: true },
 );
+
+watch(selectedRoles, (roleNames) => {
+  rolesForm.roles = [...roleNames];
+});
 
 const updateUser = () => {
   if (!canUpdate.value) return;
@@ -116,17 +126,6 @@ const destroyUser = () => {
   });
 };
 
-const toggleRole = (roleName: string, isChecked: boolean | 'indeterminate') => {
-  const nextRoles = new Set(rolesForm.roles ?? []);
-
-  if (isChecked === true) {
-    nextRoles.add(roleName);
-  } else {
-    nextRoles.delete(roleName);
-  }
-
-  rolesForm.roles = [...nextRoles];
-};
 </script>
 
 <template>
@@ -225,11 +224,11 @@ const toggleRole = (roleName: string, isChecked: boolean | 'indeterminate') => {
             class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10"
             :class="!canAssignRoles ? 'opacity-60' : ''"
           >
-            <Checkbox
-              :disabled="!canAssignRoles"
-              :model-value="selectedRoles.includes(r.name)"
-              @update:model-value="(value) => toggleRole(r.name, value)"
-            />
+              <Checkbox
+                :disabled="!canAssignRoles"
+                :model-value="hasSelectedValue(r.name)"
+                @update:model-value="(value) => toggleSelectedValue(r.name, value)"
+              />
             <span class="text-sm">{{ r.name }}</span>
           </label>
         </div>
