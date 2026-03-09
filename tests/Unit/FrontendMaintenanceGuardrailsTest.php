@@ -182,6 +182,20 @@ it('uses an extracted table-based permission assignment surface in the role mana
     expect($tableContents)->not->toContain('Collapsible');
 });
 
+it('uses an extracted permission index table surface in the admin permissions index page', function () {
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Index.vue');
+    $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
+
+    expect($pageContents)->toContain("from '@/components/admin/PermissionIndexTable.vue'");
+    expect($pageContents)->toContain("@delete-permission=\"destroyPermission\"");
+    expect($pageContents)->not->toContain("from '@/composables/usePermissionTable'");
+
+    expect($tableContents)->toContain("from '@/composables/usePermissionTable'");
+    expect($tableContents)->toContain('permissions-search');
+    expect($tableContents)->toContain('permissions-group-filter');
+    expect($tableContents)->toContain('<Table');
+});
+
 it('prefills the role name in the role management edit page details form', function () {
     $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
     $formContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RoleDetailsForm.vue');
