@@ -27,6 +27,32 @@ test('two factor settings page can be rendered', function () {
         );
 });
 
+test('two factor settings page supports partial reloads for enablement state', function () {
+    if (! Features::canManageTwoFactorAuthentication()) {
+        $this->markTestSkipped('Two-factor authentication is not enabled.');
+    }
+
+    Features::twoFactorAuthentication([
+        'confirm' => true,
+        'confirmPassword' => true,
+    ]);
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()])
+        ->get(route('two-factor.show'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('settings/TwoFactor')
+            ->reloadOnly(['twoFactorEnabled', 'flash'], fn (Assert $reload) => $reload
+                ->has('twoFactorEnabled')
+                ->has('flash')
+                ->missing('requiresConfirmation')
+            )
+        );
+});
+
 test('two factor settings page requires password confirmation when enabled', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two-factor authentication is not enabled.');

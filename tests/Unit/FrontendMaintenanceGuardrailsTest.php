@@ -79,6 +79,26 @@ it('uses route modules rather than controller action imports for settings forms'
     }
 });
 
+it('breaks shell support components into extracted header, toast, and two-factor units', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $headerContents = file_get_contents($projectRoot.'/resources/js/components/AppHeader.vue');
+    $toastContents = file_get_contents($projectRoot.'/resources/js/components/AppToasts.vue');
+    $twoFactorModalContents = file_get_contents($projectRoot.'/resources/js/components/TwoFactorSetupModal.vue');
+
+    expect($headerContents)->toContain("from '@/components/app-header/AppHeaderDesktopNavigation.vue'");
+    expect($headerContents)->toContain("from '@/components/app-header/AppHeaderMobileNavigation.vue'");
+    expect($headerContents)->toContain("from '@/components/app-header/AppHeaderUtilityActions.vue'");
+    expect($headerContents)->not->toContain("from '@/components/ui/sheet/Sheet.vue'");
+
+    expect($toastContents)->toContain("from '@/components/toasts/AppToastItem.vue'");
+    expect($toastContents)->toContain("from '@/composables/useAppToastFeed'");
+    expect($toastContents)->not->toContain("from '@inertiajs/vue3'");
+
+    expect($twoFactorModalContents)->toContain("from '@/components/two-factor/TwoFactorSetupStep.vue'");
+    expect($twoFactorModalContents)->toContain("from '@/components/two-factor/TwoFactorConfirmationForm.vue'");
+    expect($twoFactorModalContents)->not->toContain("from '@inertiajs/vue3'");
+});
+
 it('reuses the shared permission editor component across admin permission pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [
@@ -246,11 +266,32 @@ it('uses partial reload budgets for settings form submissions', function () {
     $projectRoot = dirname(__DIR__, 2);
     $profileContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Profile.vue');
     $passwordContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Password.vue');
+    $twoFactorContents = file_get_contents($projectRoot.'/resources/js/pages/settings/TwoFactor.vue');
+    $twoFactorConfirmationContents = file_get_contents($projectRoot.'/resources/js/components/two-factor/TwoFactorConfirmationForm.vue');
 
     expect($profileContents)->toContain("only: ['auth', 'flash']");
     expect($profileContents)->toContain('preserveScroll: true');
     expect($passwordContents)->toContain("only: ['flash']");
     expect($passwordContents)->toContain('preserveScroll: true');
+    expect($twoFactorContents)->toContain("only: ['twoFactorEnabled', 'flash']");
+    expect($twoFactorConfirmationContents)->toContain("only: ['twoFactorEnabled', 'flash']");
+});
+
+it('reuses the shared settings section card across settings surfaces', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $settingsViews = [
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/components/DeleteUser.vue',
+    ];
+
+    foreach ($settingsViews as $settingsView) {
+        $contents = file_get_contents($projectRoot.'/'.$settingsView);
+
+        expect($contents)->toContain("from '@/components/SettingsSectionCard.vue'");
+        expect($contents)->toContain('SettingsSectionCard');
+    }
 });
 
 it('syncs input default values across inertial page navigations when not using v-model', function () {

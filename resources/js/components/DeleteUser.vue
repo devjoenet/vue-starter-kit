@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import { useTemplateRef } from 'vue';
-import Heading from '@/components/Heading.vue';
+import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
 import Dialog from '@/components/ui/dialog/Dialog.vue';
 import DialogClose from '@/components/ui/dialog/DialogClose.vue';
 import DialogContent from '@/components/ui/dialog/DialogContent.vue';
@@ -18,14 +17,11 @@ const passwordInput = useTemplateRef('passwordInput');
 </script>
 
 <template>
-  <Card variant="destructive" class="px-6">
-    <div class="space-y-4">
-      <Heading
-        variant="small"
-        title="Delete account"
-        description="Delete your account and all of its resources"
-      />
-
+  <SettingsSectionCard
+    variant="destructive"
+    title="Delete account"
+    description="Delete your account and all of its resources"
+  >
       <p class="text-sm text-destructive">
         Please proceed with caution. This action cannot be undone.
       </p>
@@ -103,6 +99,5 @@ const passwordInput = useTemplateRef('passwordInput');
           </Form>
         </DialogContent>
       </Dialog>
-    </div>
-  </Card>
+  </SettingsSectionCard>
 </template>
