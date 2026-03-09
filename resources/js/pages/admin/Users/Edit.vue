@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { computed, h, watch } from 'vue';
+import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
+import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
-import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
@@ -38,6 +37,7 @@ const props = defineProps<AdminUsersEditPageProps>();
 
 const { can } = useAbility();
 const { confirmDelete } = useDeleteConfirmation();
+const userLabel = computed(() => toTitleCase(props.user.name));
 
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
 const canAssignRoles = computed(() => can(adminPermissions.usersAssignRoles));
@@ -54,7 +54,6 @@ const rolesForm = useForm<SyncUserRolesRequest>({
   roles: [...props.userRoles],
 });
 const {
-  hasSelectedValue,
   replaceSelectedValues,
   selectedValues: selectedRoles,
   toggleSelectedValue,
@@ -132,7 +131,7 @@ const destroyUser = () => {
   <div class="space-y-6 px-4">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <h1 class="text-2xl font-semibold">
-        Edit {{ toTitleCase(props.user.name) }}
+        Edit {{ userLabel }}
       </h1>
 
       <Button
@@ -140,103 +139,27 @@ const destroyUser = () => {
         variant="destructive"
         :disabled="!canDelete"
         @click="destroyUser"
-        >Delete {{ toTitleCase(props.user.name) }}</Button
+        >Delete {{ userLabel }}</Button
       >
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
-      <Card variant="default" class="px-6">
-        <h2 class="text-lg font-semibold">Details</h2>
+      <UserDetailsForm
+        :can-update="canUpdate"
+        :form="userForm"
+        :user-label="userLabel"
+        @submit="updateUser"
+      />
 
-        <form class="mt-4 space-y-4" @submit.prevent="updateUser">
-          <Input
-            id="edit-user-name"
-            v-model="userForm.name"
-            name="name"
-            label="Name"
-            variant="outlined"
-            :disabled="!canUpdate"
-            :state="userForm.errors.name ? 'error' : 'default'"
-            :message="userForm.errors.name"
-          />
-
-          <Input
-            id="edit-user-email"
-            v-model="userForm.email"
-            type="email"
-            name="email"
-            label="Email"
-            variant="outlined"
-            :disabled="!canUpdate"
-            :state="userForm.errors.email ? 'error' : 'default'"
-            :message="userForm.errors.email"
-          />
-
-          <Input
-            id="edit-user-password"
-            v-model="userForm.password"
-            type="password"
-            name="password"
-            label="New password (optional)"
-            variant="outlined"
-            :disabled="!canUpdate"
-            :state="userForm.errors.password ? 'error' : 'default'"
-            :message="userForm.errors.password"
-          />
-          <Input
-            id="edit-user-password-confirmation"
-            v-model="userForm.password_confirmation"
-            type="password"
-            name="password_confirmation"
-            label="Confirm new password"
-            variant="outlined"
-            :disabled="!canUpdate"
-            :state="userForm.errors.password_confirmation ? 'error' : 'default'"
-            :message="userForm.errors.password_confirmation"
-          />
-
-          <div class="flex justify-end">
-            <Button
-              appearance="filled"
-              type="submit"
-              :disabled="!canUpdate || userForm.processing"
-              >Save {{ toTitleCase(props.user.name) }}</Button
-            >
-          </div>
-        </form>
-      </Card>
-
-      <Card variant="default" class="px-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">Roles</h2>
-          <Button
-            appearance="filled"
-            :disabled="!canAssignRoles || rolesForm.processing"
-            @click="syncRoles"
-            >Save Roles</Button
-          >
-        </div>
-
-        <div class="-mx-3 mt-4 space-y-2">
-          <label
-            v-for="r in roles"
-            :key="r.id"
-            class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10"
-            :class="!canAssignRoles ? 'opacity-60' : ''"
-          >
-              <Checkbox
-                :disabled="!canAssignRoles"
-                :model-value="hasSelectedValue(r.name)"
-                @update:model-value="(value) => toggleSelectedValue(r.name, value)"
-              />
-            <span class="text-sm">{{ r.name }}</span>
-          </label>
-        </div>
-
-        <p v-if="rolesForm.errors.roles" class="mt-2 text-xs opacity-80">
-          {{ rolesForm.errors.roles }}
-        </p>
-      </Card>
+      <UserRoleAssignmentTable
+        :can-assign="canAssignRoles"
+        :error="rolesForm.errors.roles"
+        :processing="rolesForm.processing"
+        :roles="roles"
+        :selected-role-names="selectedRoles"
+        @save="syncRoles"
+        @toggle-role="(name, value) => toggleSelectedValue(name, value)"
+      />
     </div>
   </div>
 </template>

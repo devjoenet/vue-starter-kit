@@ -188,6 +188,22 @@ it('prefills the role name in the role management edit page details form', funct
     expect($formContents)->toContain(':default-value="form.name"');
 });
 
+it('uses extracted details and table-based role assignment surfaces in the user management edit page', function () {
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Edit.vue');
+    $detailsContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserDetailsForm.vue');
+    $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserRoleAssignmentTable.vue');
+
+    expect($pageContents)->toContain("from '@/components/admin/UserDetailsForm.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/UserRoleAssignmentTable.vue'");
+    expect($pageContents)->not->toContain('space-y-2');
+    expect($pageContents)->not->toContain('rounded-xl border border-black/5');
+
+    expect($detailsContents)->toContain('v-model="form.name"');
+    expect($detailsContents)->toContain('v-model="form.email"');
+    expect($tableContents)->toContain('<Table');
+    expect($tableContents)->toContain('user-roles-search');
+});
+
 it('syncs input default values across inertial page navigations when not using v-model', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input/Input.vue');
 
