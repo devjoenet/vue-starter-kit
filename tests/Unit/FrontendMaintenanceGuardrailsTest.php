@@ -164,20 +164,28 @@ it('uses dedicated create and edit pages for admin CRUD forms', function () {
     }
 });
 
-it('uses collapsible permission groups in the role management edit page', function () {
-    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+it('uses an extracted table-based permission assignment surface in the role management edit page', function () {
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+    $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RolePermissionAssignmentTable.vue');
 
-    expect($contents)->toContain('Collapsible');
-    expect($contents)->toContain('CollapsibleTrigger');
-    expect($contents)->toContain(':default-open="false"');
+    expect($pageContents)->toContain("from '@/components/admin/RolePermissionAssignmentTable.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
+    expect($pageContents)->not->toContain('Collapsible');
+
+    expect($tableContents)->toContain('<Table');
+    expect($tableContents)->toContain('role-permissions-group-filter');
+    expect($tableContents)->toContain('role-permissions-search');
+    expect($tableContents)->not->toContain('Collapsible');
 });
 
 it('prefills the role name in the role management edit page details form', function () {
-    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+    $formContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RoleDetailsForm.vue');
 
-    expect($contents)->toContain('v-model="roleForm.name"');
-    expect($contents)->toContain('() => props.role.name');
-    expect($contents)->toContain('{ immediate: true },');
+    expect($pageContents)->toContain('() => props.role.name');
+    expect($pageContents)->toContain('{ immediate: true },');
+    expect($formContents)->toContain('v-model="form.name"');
+    expect($formContents)->toContain(':default-value="form.name"');
 });
 
 it('syncs input default values across inertial page navigations when not using v-model', function () {

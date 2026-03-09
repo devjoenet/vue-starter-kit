@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { router, useForm } from '@inertiajs/vue3';
-import { ChevronDown } from 'lucide-vue-next';
-import { h, computed, ref, watch } from 'vue';
+import { computed, h, ref, watch } from 'vue';
+import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
+import RolePermissionAssignmentTable from '@/components/admin/RolePermissionAssignmentTable.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
-import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import Collapsible from '@/components/ui/collapsible/Collapsible.vue';
-import CollapsibleContent from '@/components/ui/collapsible/CollapsibleContent.vue';
-import CollapsibleTrigger from '@/components/ui/collapsible/CollapsibleTrigger.vue';
-import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
@@ -53,7 +48,6 @@ const permsForm = useForm<SyncRolePermissionsRequest>({
 });
 const permissionsSyncInFlight = ref(false);
 const {
-  hasSelectedValue,
   replaceSelectedValues,
   selectedValues: selectedPermissions,
   toggleSelectedValue,
@@ -133,92 +127,21 @@ const destroyRole = () => {
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
-      <Card variant="default" class="px-6">
-        <h2 class="text-lg font-semibold">Role Details</h2>
+      <RoleDetailsForm
+        :can-update="canUpdate"
+        :form="roleForm"
+        @submit="updateRole"
+      />
 
-        <form class="mt-4 space-y-4" @submit.prevent="updateRole">
-          <Input
-            id="edit-role-name"
-            :default-value="roleForm.name"
-            v-model="roleForm.name"
-            name="name"
-            label="Role Name"
-            variant="outlined"
-            :disabled="!canUpdate"
-            :state="roleForm.errors.name ? 'error' : 'default'"
-            :message="roleForm.errors.name"
-          />
-
-          <div class="flex justify-end">
-            <Button
-              appearance="filled"
-              type="submit"
-              :disabled="!canUpdate || roleForm.processing"
-              >Save Role Name</Button
-            >
-          </div>
-        </form>
-      </Card>
-
-      <Card variant="default" class="px-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold">Permissions</h2>
-          <Button
-            appearance="filled"
-            :disabled="!canAssign || permissionsSyncInFlight"
-            @click="syncPermissions"
-            >Save Permissions</Button
-          >
-        </div>
-
-        <div class="mt-4 space-y-3">
-          <Collapsible
-            v-for="(items, group) in permissionsByGroup"
-            :key="group"
-            v-slot="{ open }"
-            :default-open="false"
-            class="rounded-xl border border-black/5 px-3 py-2 dark:border-white/10"
-          >
-            <div class="flex items-center justify-between gap-3">
-              <div class="text-sm font-semibold capitalize">{{ group }}</div>
-
-              <CollapsibleTrigger as-child>
-                <Button appearance="text" size="sm" class="gap-2">
-                  <span>{{ open ? 'Collapse' : 'Expand' }}</span>
-                  <ChevronDown
-                    class="h-4 w-4 transition-transform"
-                    :class="open ? 'rotate-180' : ''"
-                  />
-                </Button>
-              </CollapsibleTrigger>
-            </div>
-
-            <CollapsibleContent class="mt-2">
-              <div class="space-y-2">
-                <label
-                  v-for="p in items"
-                  :key="p.id"
-                  class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10"
-                  :class="!canAssign ? 'opacity-60' : ''"
-                >
-                  <Checkbox
-                    :disabled="!canAssign"
-                    :model-value="hasSelectedValue(p.name)"
-                    @update:model-value="
-                      (value) => toggleSelectedValue(p.name, value)
-                    "
-                  />
-                  <span class="text-sm">{{ p.name }}</span>
-                </label>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-
-        <p v-if="permsForm.errors.permissions" class="mt-2 text-xs opacity-80">
-          {{ permsForm.errors.permissions }}
-        </p>
-      </Card>
+      <RolePermissionAssignmentTable
+        :can-assign="canAssign"
+        :error="permsForm.errors.permissions"
+        :permissions-by-group="permissionsByGroup"
+        :processing="permissionsSyncInFlight"
+        :selected-permission-names="selectedPermissions"
+        @save="syncPermissions"
+        @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
+      />
     </div>
   </div>
 </template>
