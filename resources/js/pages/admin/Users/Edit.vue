@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { computed, h, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/users';
 import { sync } from '@/routes/admin/users/roles';
@@ -16,7 +17,6 @@ import type {
   SyncUserRolesRequest,
   UpdateUserRequest,
 } from '@/types/wayfinder-generated';
-import { toTitleCase } from '../../../lib/utils';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -52,16 +52,54 @@ const rolesForm = useForm<SyncUserRolesRequest>({
 });
 const selectedRoles = computed(() => rolesForm.roles ?? []);
 
+watch(
+  () => props.user,
+  (user) => {
+    userForm.defaults({
+      name: user.name,
+      email: user.email,
+      password: '',
+      password_confirmation: '',
+    });
+  },
+  { deep: true },
+);
+
+watch(
+  () => props.userRoles,
+  (userRoles) => {
+    rolesForm.defaults({
+      roles: [...userRoles],
+    });
+
+    rolesForm.roles = [...userRoles];
+  },
+  { deep: true },
+);
+
 const updateUser = () => {
   if (!canUpdate.value) return;
+
   userForm.put(update.url(props.user.id), {
+    only: ['user', 'auth', 'flash'],
     preserveScroll: true,
+    onSuccess: () => {
+      userForm.defaults({
+        name: userForm.name,
+        email: userForm.email,
+        password: '',
+        password_confirmation: '',
+      });
+      userForm.reset('password', 'password_confirmation');
+    },
   });
 };
 
 const syncRoles = () => {
   if (!canAssignRoles.value) return;
+
   rolesForm.put(sync.url(props.user.id), {
+    only: ['userRoles', 'flash'],
     preserveScroll: true,
   });
 };

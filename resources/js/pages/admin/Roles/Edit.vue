@@ -72,7 +72,10 @@ const updateRole = () => {
   if (!canUpdate.value) return;
 
   roleForm.name = toKebabCase(roleForm.name);
-  roleForm.put(update.url(props.role.id), { preserveScroll: true });
+  roleForm.put(update.url(props.role.id), {
+    only: ['role', 'flash'],
+    preserveScroll: true,
+  });
 };
 
 const syncPermissions = () => {
@@ -80,6 +83,7 @@ const syncPermissions = () => {
 
   permsForm.permissions = [...selectedPermissions.value];
   permsForm.put(sync.url(props.role.id), {
+    only: ['rolePermissions', 'flash'],
     preserveScroll: true,
     onStart: () => {
       permissionsSyncInFlight.value = true;
