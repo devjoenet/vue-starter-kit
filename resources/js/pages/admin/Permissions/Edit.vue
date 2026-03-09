@@ -6,6 +6,7 @@ import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
 import {
   extractPermissionActionSegment,
@@ -35,6 +36,7 @@ defineOptions({
 const props = defineProps<AdminPermissionsEditPageProps>();
 
 const { can } = useAbility();
+const { confirmDelete } = useDeleteConfirmation();
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 const canDelete = computed(() => can(adminPermissions.permissionsDelete));
 
@@ -70,9 +72,13 @@ const updatePermission = () => {
 };
 
 const destroyPermission = () => {
-  if (!canDelete.value) return;
-  if (!confirm('Delete this permission?')) return;
-  form.delete(destroy.url(props.permission.id));
+  confirmDelete({
+    enabled: canDelete.value,
+    message: 'Delete this permission?',
+    onConfirm: () => {
+      form.delete(destroy.url(props.permission.id));
+    },
+  });
 };
 </script>
 

@@ -6,6 +6,7 @@ import Card from '@/components/ui/card/Card.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -35,6 +36,7 @@ defineOptions({
 const props = defineProps<AdminUsersEditPageProps>();
 
 const { can } = useAbility();
+const { confirmDelete } = useDeleteConfirmation();
 
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
 const canAssignRoles = computed(() => can(adminPermissions.usersAssignRoles));
@@ -105,9 +107,13 @@ const syncRoles = () => {
 };
 
 const destroyUser = () => {
-  if (!canDelete.value) return;
-  if (!confirm('Delete this user? This is not reversible.')) return;
-  userForm.delete(destroy.url(props.user.id));
+  confirmDelete({
+    enabled: canDelete.value,
+    message: 'Delete this user? This is not reversible.',
+    onConfirm: () => {
+      userForm.delete(destroy.url(props.user.id));
+    },
+  });
 };
 
 const toggleRole = (roleName: string, isChecked: boolean | 'indeterminate') => {

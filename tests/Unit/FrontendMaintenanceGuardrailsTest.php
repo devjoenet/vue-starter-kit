@@ -110,6 +110,24 @@ it('reuses the shared frontend permission normalization helper across admin perm
     }
 });
 
+it('reuses the shared delete confirmation composable across admin destructive actions', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $destructivePages = [
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+        'resources/js/pages/admin/Permissions/Index.vue',
+    ];
+
+    foreach ($destructivePages as $destructivePage) {
+        $contents = file_get_contents($projectRoot.'/'.$destructivePage);
+
+        expect($contents)->toContain("from '@/composables/useDeleteConfirmation'");
+        expect($contents)->toContain('confirmDelete({');
+        expect($contents)->not->toContain("if (!confirm('");
+    }
+});
+
 it('uses dedicated create and edit pages for admin CRUD forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $indexPages = [

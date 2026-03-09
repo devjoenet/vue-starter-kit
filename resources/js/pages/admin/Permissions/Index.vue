@@ -12,6 +12,7 @@ import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { usePermissionTable } from '@/composables/usePermissionTable';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toTitleCase } from '@/lib/utils';
@@ -37,6 +38,7 @@ defineOptions({
 const props = defineProps<AdminPermissionsIndexPageProps>();
 
 const { can } = useAbility();
+const { confirmDelete } = useDeleteConfirmation();
 const canCreate = computed(() => can(adminPermissions.permissionsCreate));
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 const canDelete = computed(() => can(adminPermissions.permissionsDelete));
@@ -46,11 +48,15 @@ const { groupFilter, groupOptions, search, sortDirections, sortedRows, toggleSor
   usePermissionTable(() => props.permissionsByGroup);
 
 const destroyPermission = (id: number) => {
-  if (!canDelete.value) return;
-  if (!confirm('Delete this permission?')) return;
-  del.delete(destroy.url(id), {
-    only: ['permissionsByGroup', 'flash'],
-    preserveScroll: true,
+  confirmDelete({
+    enabled: canDelete.value,
+    message: 'Delete this permission?',
+    onConfirm: () => {
+      del.delete(destroy.url(id), {
+        only: ['permissionsByGroup', 'flash'],
+        preserveScroll: true,
+      });
+    },
   });
 };
 </script>

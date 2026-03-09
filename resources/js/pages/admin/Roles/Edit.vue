@@ -10,6 +10,7 @@ import CollapsibleContent from '@/components/ui/collapsible/CollapsibleContent.v
 import CollapsibleTrigger from '@/components/ui/collapsible/CollapsibleTrigger.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -38,6 +39,7 @@ defineOptions({
 const props = defineProps<AdminRolesEditPageProps>();
 
 const { can } = useAbility();
+const { confirmDelete } = useDeleteConfirmation();
 const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
 const canDelete = computed(() => can(adminPermissions.rolesDelete));
 const canAssign = computed(() => can(adminPermissions.rolesAssignPermissions));
@@ -95,9 +97,13 @@ const syncPermissions = () => {
 };
 
 const destroyRole = () => {
-  if (!canDelete.value) return;
-  if (!confirm('Delete this role?')) return;
-  router.delete(destroy.url(props.role.id));
+  confirmDelete({
+    enabled: canDelete.value,
+    message: 'Delete this role?',
+    onConfirm: () => {
+      router.delete(destroy.url(props.role.id));
+    },
+  });
 };
 
 const togglePermission = (
