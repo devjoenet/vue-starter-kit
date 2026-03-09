@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
+import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Select from '@/components/ui/select/Select.vue';
@@ -43,24 +42,15 @@ const resultsLabel = computed(() => {
 </script>
 
 <template>
-  <Card variant="default" class="overflow-hidden py-0">
-    <div class="flex items-center justify-between gap-3 border-b border-border/60 px-6 py-4">
-      <div class="space-y-1">
-        <h2 class="text-lg font-semibold">Permissions</h2>
-        <p class="text-sm text-muted-foreground">
-          Filter, sort, and assign permissions from one table.
-        </p>
-      </div>
-
-      <Button
-        appearance="filled"
-        :disabled="!canAssign || processing"
-        @click="$emit('save')"
-      >
-        Save Permissions
-      </Button>
-    </div>
-
+  <AssignmentTableCard
+    :can-submit="canAssign"
+    :error="error"
+    :processing="processing"
+    description="Filter, sort, and assign permissions from one table."
+    save-label="Save Permissions"
+    title="Permissions"
+    @save="$emit('save')"
+  >
     <Table wrapper-class="rounded-none border-0">
       <TableHeader>
         <TableRow>
@@ -156,9 +146,5 @@ const resultsLabel = computed(() => {
         </TableRow>
       </TableBody>
     </Table>
-
-    <p v-if="error" class="px-6 py-3 text-xs opacity-80">
-      {{ error }}
-    </p>
-  </Card>
+  </AssignmentTableCard>
 </template>

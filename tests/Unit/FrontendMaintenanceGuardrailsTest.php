@@ -171,15 +171,18 @@ it('uses dedicated create and edit pages for admin CRUD forms', function () {
 it('uses an extracted table-based permission assignment surface in the role management edit page', function () {
     $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RolePermissionAssignmentTable.vue');
+    $shellContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AssignmentTableCard.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/RolePermissionAssignmentTable.vue'");
     expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
     expect($pageContents)->not->toContain('Collapsible');
 
+    expect($tableContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
     expect($tableContents)->toContain('<Table');
     expect($tableContents)->toContain('role-permissions-group-filter');
     expect($tableContents)->toContain('role-permissions-search');
     expect($tableContents)->not->toContain('Collapsible');
+    expect($shellContents)->toContain('saveLabel');
 });
 
 it('uses an extracted permission index table surface in the admin permissions index page', function () {
@@ -218,6 +221,7 @@ it('uses extracted details and table-based role assignment surfaces in the user 
 
     expect($detailsContents)->toContain("from '@/components/UserIdentityFields.vue'");
     expect($detailsContents)->toContain('UserIdentityFields');
+    expect($tableContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
     expect($tableContents)->toContain('<Table');
     expect($tableContents)->toContain('user-roles-search');
 });
