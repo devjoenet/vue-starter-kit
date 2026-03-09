@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { h, computed, watch } from 'vue';
-import PermissionGroupSelect from '@/components/admin/PermissionGroupSelect.vue';
+import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
-import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -95,37 +93,14 @@ const destroyPermission = () => {
       >
     </div>
 
-    <Card variant="default" class="px-6">
-      <form class="space-y-4" @submit.prevent="updatePermission">
-        <PermissionGroupSelect
-          id="edit-permission-group"
-          v-model="form.group"
-          :groups="props.groups"
-          :disabled="!canUpdate"
-          :error="form.errors.group"
-        />
-
-        <Input
-          id="edit-permission-name"
-          v-model="form.name"
-          name="name"
-          label="Permission name"
-          variant="outlined"
-          :disabled="!canUpdate"
-          :state="form.errors.name ? 'error' : 'default'"
-          :message="form.errors.name"
-        />
-
-        <div class="flex justify-end">
-          <Button
-            appearance="filled"
-            type="submit"
-            :disabled="!canUpdate || form.processing"
-          >
-            Save
-          </Button>
-        </div>
-      </form>
-    </Card>
+    <PermissionEditorForm
+      group-id="edit-permission-group"
+      name-id="edit-permission-name"
+      :can-submit="canUpdate"
+      :form="form"
+      :groups="props.groups"
+      submit-label="Save"
+      @submit="updatePermission"
+    />
   </div>
 </template>

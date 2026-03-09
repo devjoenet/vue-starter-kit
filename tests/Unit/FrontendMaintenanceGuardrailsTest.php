@@ -79,7 +79,7 @@ it('uses route modules rather than controller action imports for settings forms'
     }
 });
 
-it('reuses the shared permission group field component across admin permission pages', function () {
+it('reuses the shared permission editor component across admin permission pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [
         'resources/js/pages/admin/Permissions/Create.vue',
@@ -89,8 +89,12 @@ it('reuses the shared permission group field component across admin permission p
     foreach ($permissionPages as $permissionPage) {
         $contents = file_get_contents($projectRoot.'/'.$permissionPage);
 
-        expect($contents)->toContain('PermissionGroupSelect');
+        expect($contents)->toContain('PermissionEditorForm');
     }
+
+    $editorContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionEditorForm.vue');
+
+    expect($editorContents)->toContain('PermissionGroupSelect');
 });
 
 it('reuses the shared frontend permission normalization helper across admin permission forms', function () {
