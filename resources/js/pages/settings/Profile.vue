@@ -3,9 +3,9 @@ import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 import { h, computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
+import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
-import Input from '@/components/ui/input/Input.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/profile';
@@ -47,29 +47,16 @@ const user = computed(() => page.props.auth.user);
           class="space-y-4"
           v-slot="{ errors, processing, recentlySuccessful }"
         >
-          <Input
-            id="name"
-            name="name"
-            label="Name"
-            variant="outlined"
-            :default-value="user.name"
-            required
-            autocomplete="name"
-            :state="errors.name ? 'error' : 'default'"
-            :message="errors.name"
-          />
-
-          <Input
-            id="email"
-            type="email"
-            name="email"
-            label="Email address"
-            variant="outlined"
-            :default-value="user.email"
-            required
-            autocomplete="username"
-            :state="errors.email ? 'error' : 'default'"
-            :message="errors.email"
+          <UserIdentityFields
+            name-id="profile-name"
+            email-id="profile-email"
+            email-label="Email address"
+            :name-default-value="user.name"
+            :email-default-value="user.email"
+            :name-error="errors.name"
+            :email-error="errors.email"
+            name-required
+            email-required
           />
 
           <div v-if="props.mustVerifyEmail && !user.email_verified_at">

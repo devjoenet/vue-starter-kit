@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
+import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -21,27 +22,14 @@ defineEmits<{
     <h2 class="text-lg font-semibold">Details</h2>
 
     <form class="mt-4 space-y-4" @submit.prevent="$emit('submit')">
-      <Input
-        id="edit-user-name"
-        v-model="form.name"
-        name="name"
-        label="Name"
-        variant="outlined"
+      <UserIdentityFields
+        name-id="edit-user-name"
+        email-id="edit-user-email"
+        v-model:name="form.name"
+        v-model:email="form.email"
         :disabled="!canUpdate"
-        :state="form.errors.name ? 'error' : 'default'"
-        :message="form.errors.name"
-      />
-
-      <Input
-        id="edit-user-email"
-        v-model="form.email"
-        type="email"
-        name="email"
-        label="Email"
-        variant="outlined"
-        :disabled="!canUpdate"
-        :state="form.errors.email ? 'error' : 'default'"
-        :message="form.errors.email"
+        :name-error="form.errors.name"
+        :email-error="form.errors.email"
       />
 
       <Input

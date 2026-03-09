@@ -198,10 +198,26 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($pageContents)->not->toContain('space-y-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');
 
-    expect($detailsContents)->toContain('v-model="form.name"');
-    expect($detailsContents)->toContain('v-model="form.email"');
+    expect($detailsContents)->toContain("from '@/components/UserIdentityFields.vue'");
+    expect($detailsContents)->toContain('UserIdentityFields');
     expect($tableContents)->toContain('<Table');
     expect($tableContents)->toContain('user-roles-search');
+});
+
+it('reuses the shared user identity fields across admin and settings user detail forms', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $views = [
+        'resources/js/components/admin/UserDetailsForm.vue',
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/settings/Profile.vue',
+    ];
+
+    foreach ($views as $view) {
+        $contents = file_get_contents($projectRoot.'/'.$view);
+
+        expect($contents)->toContain("from '@/components/UserIdentityFields.vue'");
+        expect($contents)->toContain('UserIdentityFields');
+    }
 });
 
 it('syncs input default values across inertial page navigations when not using v-model', function () {
