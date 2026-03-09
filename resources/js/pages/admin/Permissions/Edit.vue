@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { h, computed, watch } from 'vue';
-import PermissionGroupSelect from '@/components/admin/PermissionGroupSelect.vue';
+import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
-import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { toCamelCase, toSnakeCase } from '@/lib/utils';
+import {
+  extractPermissionActionSegment,
+  normalizePermissionName,
+  prefixPermissionWithGroup,
+} from '@/lib/permissions';
+import { toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
@@ -30,49 +34,14 @@ defineOptions({
 const props = defineProps<AdminPermissionsEditPageProps>();
 
 const { can } = useAbility();
+const { confirmDelete } = useDeleteConfirmation();
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 const canDelete = computed(() => can(adminPermissions.permissionsDelete));
-
-const extractActionSegment = (permissionName: string, group: string) => {
-  const normalizedGroup = toSnakeCase(group);
-  const rawValue = permissionName.trim();
-
-  if (!rawValue) {
-    return '';
-  }
-
-  if (rawValue.startsWith(`${normalizedGroup}.`)) {
-    return rawValue.slice(normalizedGroup.length + 1);
-  }
-
-  const segments = rawValue
-    .split('.')
-    .map((segment) => segment.trim())
-    .filter(Boolean);
-  if (segments.length > 1) {
-    return segments[segments.length - 1];
-  }
-
-  return rawValue;
-};
-
-const prefixWithGroup = (group: string, actionSegment = '') => {
-  const normalizedGroup = toSnakeCase(group);
-  const normalizedAction = toCamelCase(actionSegment);
-  return normalizedAction
-    ? `${normalizedGroup}.${normalizedAction}`
-    : `${normalizedGroup}.`;
-};
 
 const form = useForm<UpdatePermissionRequest>({
   name: props.permission.name,
   group: props.permission.group,
 });
-
-const normalizePermissionInput = (permissionName: string) => {
-  const action = extractActionSegment(permissionName, form.group);
-  return prefixWithGroup(form.group, action);
-};
 
 watch(
   () => form.group,
@@ -83,11 +52,11 @@ watch(
       return;
     }
 
-    const action = extractActionSegment(
+    const action = extractPermissionActionSegment(
       form.name,
       previousGroup || normalizedGroup,
     );
-    form.name = prefixWithGroup(normalizedGroup, action);
+    form.name = prefixPermissionWithGroup(normalizedGroup, action);
   },
   { immediate: true },
 );
@@ -96,14 +65,18 @@ const updatePermission = () => {
   if (!canUpdate.value) return;
 
   form.group = toSnakeCase(form.group);
-  form.name = normalizePermissionInput(form.name);
+  form.name = normalizePermissionName(form.name, form.group);
   form.put(update.url(props.permission.id));
 };
 
 const destroyPermission = () => {
-  if (!canDelete.value) return;
-  if (!confirm('Delete this permission?')) return;
-  form.delete(destroy.url(props.permission.id));
+  confirmDelete({
+    enabled: canDelete.value,
+    message: 'Delete this permission?',
+    onConfirm: () => {
+      form.delete(destroy.url(props.permission.id));
+    },
+  });
 };
 </script>
 
@@ -120,37 +93,14 @@ const destroyPermission = () => {
       >
     </div>
 
-    <Card variant="default" class="px-6">
-      <form class="space-y-4" @submit.prevent="updatePermission">
-        <PermissionGroupSelect
-          id="edit-permission-group"
-          v-model="form.group"
-          :groups="props.groups"
-          :disabled="!canUpdate"
-          :error="form.errors.group"
-        />
-
-        <Input
-          id="edit-permission-name"
-          v-model="form.name"
-          name="name"
-          label="Permission name"
-          variant="outlined"
-          :disabled="!canUpdate"
-          :state="form.errors.name ? 'error' : 'default'"
-          :message="form.errors.name"
-        />
-
-        <div class="flex justify-end">
-          <Button
-            appearance="filled"
-            type="submit"
-            :disabled="!canUpdate || form.processing"
-          >
-            Save
-          </Button>
-        </div>
-      </form>
-    </Card>
+    <PermissionEditorForm
+      group-id="edit-permission-group"
+      name-id="edit-permission-name"
+      :can-submit="canUpdate"
+      :form="form"
+      :groups="props.groups"
+      submit-label="Save"
+      @submit="updatePermission"
+    />
   </div>
 </template>

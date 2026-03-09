@@ -58,13 +58,13 @@ final class UsersController extends Controller
     public function edit(User $user): Response
     {
         return Inertia::render('admin/Users/Edit', [
-            'user' => EditableUserData::fromModel($user)->all(),
-            'roles' => Role::query()
+            'user' => fn (): array => EditableUserData::fromModel($user)->all(),
+            'roles' => fn (): array => Role::query()
                 ->orderBy('name')
                 ->get(['id', 'name'])
                 ->map(fn (Role $role): array => RoleOptionData::fromModel($role)->all())
                 ->all(),
-            'userRoles' => $user->getRoleNames()->values()->all(),
+            'userRoles' => fn (): array => $user->getRoleNames()->values()->all(),
         ]);
     }
 

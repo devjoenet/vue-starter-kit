@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { h, computed } from 'vue';
+import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -51,27 +52,14 @@ const submit = () => {
 
     <Card variant="default" class="px-6">
       <form class="space-y-4" @submit.prevent="submit">
-        <Input
-          id="create-user-name"
-          v-model="form.name"
-          name="name"
-          label="Name"
-          variant="outlined"
+        <UserIdentityFields
+          name-id="create-user-name"
+          email-id="create-user-email"
+          v-model:name="form.name"
+          v-model:email="form.email"
           :disabled="!canCreate"
-          :state="form.errors.name ? 'error' : 'default'"
-          :message="form.errors.name"
-        />
-
-        <Input
-          id="create-user-email"
-          v-model="form.email"
-          type="email"
-          name="email"
-          label="Email"
-          variant="outlined"
-          :disabled="!canCreate"
-          :state="form.errors.email ? 'error' : 'default'"
-          :message="form.errors.email"
+          :name-error="form.errors.name"
+          :email-error="form.errors.email"
         />
 
         <Input

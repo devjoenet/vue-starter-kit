@@ -53,6 +53,32 @@ test('users edit route renders edit page', function () {
         );
 });
 
+test('users edit route supports partial reloads for user edit state', function () {
+    /** @var User $target */
+    $target = auth()->user();
+
+    $target->assignRole('super-admin');
+
+    $this->get(route('admin.users.edit', $target))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/Users/Edit')
+            ->reloadOnly(['user', 'auth', 'flash'], fn (Assert $reload) => $reload
+                ->has('user')
+                ->has('auth.user')
+                ->has('flash')
+                ->missing('roles')
+                ->missing('userRoles')
+            )
+            ->reloadOnly(['userRoles', 'flash'], fn (Assert $reload) => $reload
+                ->has('userRoles')
+                ->has('flash')
+                ->missing('user')
+                ->missing('roles')
+            )
+        );
+});
+
 test('roles create route renders create page', function () {
     $this->get(route('admin.roles.create'))
         ->assertOk()
@@ -95,12 +121,50 @@ test('roles edit route renders edit page', function () {
         );
 });
 
+test('roles edit route supports partial reloads for role edit state', function () {
+    $role = Role::query()->create([
+        'name' => 'editor',
+        'guard_name' => 'web',
+    ]);
+
+    $this->get(route('admin.roles.edit', $role))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/Roles/Edit')
+            ->reloadOnly(['role', 'flash'], fn (Assert $reload) => $reload
+                ->has('role')
+                ->has('flash')
+                ->missing('permissionsByGroup')
+                ->missing('rolePermissions')
+            )
+            ->reloadOnly(['rolePermissions', 'flash'], fn (Assert $reload) => $reload
+                ->has('rolePermissions')
+                ->has('flash')
+                ->missing('role')
+                ->missing('permissionsByGroup')
+            )
+        );
+});
+
 test('permissions create route renders create page', function () {
     $this->get(route('admin.permissions.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Permissions/Create')
             ->has('groups')
+        );
+});
+
+test('permissions index route supports partial reloads for permission table state', function () {
+    $this->get(route('admin.permissions.index'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/Permissions/Index')
+            ->has('permissionsByGroup')
+            ->reloadOnly(['permissionsByGroup', 'flash'], fn (Assert $reload) => $reload
+                ->has('permissionsByGroup')
+                ->has('flash')
+            )
         );
 });
 

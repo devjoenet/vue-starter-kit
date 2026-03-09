@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('guests are redirected to the login page', function () {
@@ -20,16 +23,34 @@ test('authenticated users can visit the dashboard', function () {
 
 test('authenticated users can visit the admin dashboard', function () {
     $user = User::factory()->create();
+    User::factory()->count(2)->create();
+    Role::query()->create([
+        'name' => 'reviewer',
+        'guard_name' => 'web',
+    ]);
+    Permission::query()->create([
+        'name' => 'reports.view',
+        'group' => 'reports',
+        'guard_name' => 'web',
+    ]);
+
     $this->actingAs($user);
 
     $this->get(route('admin.dashboard'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Dashboard')
-            ->has('counts', fn (Assert $counts) => $counts
-                ->has('users')
-                ->has('roles')
-                ->has('permissions')
-            )
+            ->where('counts.users', 3)
+            ->where('counts.roles', 1)
+            ->where('counts.permissions', 1)
         );
+});
+
+test('dashboard route ownership stays explicit', function () {
+    $routes = collect(Route::getRoutes()->getRoutes());
+
+    expect($routes->where('action.as', 'dashboard'))->toHaveCount(1);
+    expect($routes->where('action.as', 'admin.dashboard'))->toHaveCount(1);
+    expect($routes->where('uri', 'dashboard'))->toHaveCount(1);
+    expect($routes->where('uri', 'admin')->where('action.as', 'admin.dashboard'))->toHaveCount(1);
 });

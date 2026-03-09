@@ -6,6 +6,7 @@ import Card from '@/components/ui/card/Card.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
+import { useSelectionList } from '@/composables/useSelectionList';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toKebabCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -36,25 +37,15 @@ const form = useForm<StoreRoleRequest>({
   name: '',
   user_ids: [] as number[],
 });
-const selectedUserIds = computed(() => form.user_ids ?? []);
+const { hasSelectedValue, selectedValues, toggleSelectedValue } =
+  useSelectionList<number>(form.user_ids ?? []);
 
 const submit = () => {
   if (!canCreate.value) return;
 
   form.name = toKebabCase(form.name);
+  form.user_ids = [...selectedValues.value];
   form.post(store.url());
-};
-
-const toggleUser = (userId: number, isChecked: boolean | 'indeterminate') => {
-  const nextUserIds = new Set(form.user_ids ?? []);
-
-  if (isChecked === true) {
-    nextUserIds.add(userId);
-  } else {
-    nextUserIds.delete(userId);
-  }
-
-  form.user_ids = [...nextUserIds];
 };
 </script>
 
@@ -95,8 +86,10 @@ const toggleUser = (userId: number, isChecked: boolean | 'indeterminate') => {
             >
               <Checkbox
                 :disabled="!canCreate"
-                :model-value="selectedUserIds.includes(user.id)"
-                @update:model-value="(value) => toggleUser(user.id, value)"
+                :model-value="hasSelectedValue(user.id)"
+                @update:model-value="
+                  (value) => toggleSelectedValue(user.id, value)
+                "
               />
 
               <span class="min-w-0">

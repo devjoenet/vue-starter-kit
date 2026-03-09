@@ -69,9 +69,9 @@ final class RolesController extends Controller
     public function edit(Role $role, GroupedPermissions $groupedPermissions): Response
     {
         return Inertia::render('admin/Roles/Edit', [
-            'role' => EditableRoleData::fromModel($role)->all(),
-            'permissionsByGroup' => $groupedPermissions->allData(),
-            'rolePermissions' => $role->permissions()->pluck('name')->values()->all(),
+            'role' => fn (): array => EditableRoleData::fromModel($role)->all(),
+            'permissionsByGroup' => $groupedPermissions->allData(...),
+            'rolePermissions' => fn (): array => $role->permissions()->pluck('name')->values()->all(),
         ]);
     }
 

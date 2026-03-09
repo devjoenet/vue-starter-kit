@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Inertia\Testing\AssertableInertia as Assert;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -12,6 +13,23 @@ test('profile page is displayed', function () {
         ->get(route('profile.edit'));
 
     $response->assertOk();
+});
+
+test('profile page supports partial reloads for shared auth updates', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('profile.edit'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('settings/Profile')
+            ->reloadOnly(['auth', 'flash'], fn (Assert $reload) => $reload
+                ->has('auth.user')
+                ->has('flash')
+                ->missing('mustVerifyEmail')
+                ->missing('status')
+            )
+        );
 });
 
 test('profile information can be updated', function () {
