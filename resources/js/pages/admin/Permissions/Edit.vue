@@ -7,7 +7,12 @@ import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { toCamelCase, toSnakeCase } from '@/lib/utils';
+import {
+  extractPermissionActionSegment,
+  normalizePermissionName,
+  prefixPermissionWithGroup,
+} from '@/lib/permissions';
+import { toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
@@ -33,46 +38,10 @@ const { can } = useAbility();
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 const canDelete = computed(() => can(adminPermissions.permissionsDelete));
 
-const extractActionSegment = (permissionName: string, group: string) => {
-  const normalizedGroup = toSnakeCase(group);
-  const rawValue = permissionName.trim();
-
-  if (!rawValue) {
-    return '';
-  }
-
-  if (rawValue.startsWith(`${normalizedGroup}.`)) {
-    return rawValue.slice(normalizedGroup.length + 1);
-  }
-
-  const segments = rawValue
-    .split('.')
-    .map((segment) => segment.trim())
-    .filter(Boolean);
-  if (segments.length > 1) {
-    return segments[segments.length - 1];
-  }
-
-  return rawValue;
-};
-
-const prefixWithGroup = (group: string, actionSegment = '') => {
-  const normalizedGroup = toSnakeCase(group);
-  const normalizedAction = toCamelCase(actionSegment);
-  return normalizedAction
-    ? `${normalizedGroup}.${normalizedAction}`
-    : `${normalizedGroup}.`;
-};
-
 const form = useForm<UpdatePermissionRequest>({
   name: props.permission.name,
   group: props.permission.group,
 });
-
-const normalizePermissionInput = (permissionName: string) => {
-  const action = extractActionSegment(permissionName, form.group);
-  return prefixWithGroup(form.group, action);
-};
 
 watch(
   () => form.group,
@@ -83,11 +52,11 @@ watch(
       return;
     }
 
-    const action = extractActionSegment(
+    const action = extractPermissionActionSegment(
       form.name,
       previousGroup || normalizedGroup,
     );
-    form.name = prefixWithGroup(normalizedGroup, action);
+    form.name = prefixPermissionWithGroup(normalizedGroup, action);
   },
   { immediate: true },
 );
@@ -96,7 +65,7 @@ const updatePermission = () => {
   if (!canUpdate.value) return;
 
   form.group = toSnakeCase(form.group);
-  form.name = normalizePermissionInput(form.name);
+  form.name = normalizePermissionName(form.name, form.group);
   form.put(update.url(props.permission.id));
 };
 

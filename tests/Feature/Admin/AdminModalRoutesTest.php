@@ -155,6 +155,19 @@ test('permissions create route renders create page', function () {
         );
 });
 
+test('permissions index route supports partial reloads for permission table state', function () {
+    $this->get(route('admin.permissions.index'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('admin/Permissions/Index')
+            ->has('permissionsByGroup')
+            ->reloadOnly(['permissionsByGroup', 'flash'], fn (Assert $reload) => $reload
+                ->has('permissionsByGroup')
+                ->has('flash')
+            )
+        );
+});
+
 test('permissions edit route renders edit page', function () {
     $permission = Permission::query()->create([
         'name' => 'custom.view',

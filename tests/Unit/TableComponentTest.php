@@ -33,25 +33,22 @@ it('uses shared table ui components in admin role, permission, and user index pa
     $usersIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Index.vue');
 
     expect($rolesIndex)
-        ->toContain('from "@/components/ui/table/Table.vue"')
+        ->toContain("from '@/components/ui/table/Table.vue'")
         ->toContain('<Table>')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');
 
     expect($permissionsIndex)
-        ->toContain('from "@/components/ui/table/Table.vue"')
-        ->toContain('search = ref("")')
-        ->toContain('groupFilter = ref("")')
-        ->toContain('sortDirections = ref<{')
-        ->toContain('permissionRows = computed(')
-        ->toContain('sortedRows = computed(')
-        ->toContain('toggleSort = (column: "name" | "group")')
+        ->toContain("from '@/components/ui/table/Table.vue'")
+        ->toContain("from '@/composables/usePermissionTable'")
+        ->toContain('usePermissionTable(() => props.permissionsByGroup)')
+        ->toContain("only: ['permissionsByGroup', 'flash']")
         ->toContain('<Table>')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');
 
     expect($usersIndex)
-        ->toContain('from "@/components/ui/table/Table.vue"')
+        ->toContain("from '@/components/ui/table/Table.vue'")
         ->toContain('<Table>')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');

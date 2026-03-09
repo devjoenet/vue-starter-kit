@@ -7,7 +7,12 @@ import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { toCamelCase, toSnakeCase } from '@/lib/utils';
+import {
+  extractPermissionActionSegment,
+  normalizePermissionName,
+  prefixPermissionWithGroup,
+} from '@/lib/permissions';
+import { toSnakeCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
@@ -37,42 +42,6 @@ const form = useForm<StorePermissionRequest>({
   group: 'users',
 });
 
-const prefixWithGroup = (group: string, actionSegment = '') => {
-  const normalizedGroup = toSnakeCase(group);
-  const normalizedAction = toCamelCase(actionSegment);
-  return normalizedAction
-    ? `${normalizedGroup}.${normalizedAction}`
-    : `${normalizedGroup}.`;
-};
-
-const extractActionSegment = (permissionName: string, group: string) => {
-  const normalizedGroup = toSnakeCase(group);
-  const rawValue = permissionName.trim();
-
-  if (!rawValue) {
-    return '';
-  }
-
-  if (rawValue.startsWith(`${normalizedGroup}.`)) {
-    return rawValue.slice(normalizedGroup.length + 1);
-  }
-
-  const segments = rawValue
-    .split('.')
-    .map((segment) => segment.trim())
-    .filter(Boolean);
-  if (segments.length > 1) {
-    return segments[segments.length - 1];
-  }
-
-  return rawValue;
-};
-
-const normalizePermissionInput = (permissionName: string) => {
-  const action = extractActionSegment(permissionName, form.group);
-  return prefixWithGroup(form.group, action);
-};
-
 watch(
   () => form.group,
   (nextGroup, previousGroup) => {
@@ -82,11 +51,11 @@ watch(
       return;
     }
 
-    const action = extractActionSegment(
+    const action = extractPermissionActionSegment(
       form.name,
       previousGroup || normalizedGroup,
     );
-    form.name = prefixWithGroup(normalizedGroup, action);
+    form.name = prefixPermissionWithGroup(normalizedGroup, action);
   },
   { immediate: true },
 );
@@ -95,7 +64,7 @@ const submit = () => {
   if (!canCreate.value) return;
 
   form.group = toSnakeCase(form.group);
-  form.name = normalizePermissionInput(form.name);
+  form.name = normalizePermissionName(form.name, form.group);
   form.post(store.url());
 };
 </script>

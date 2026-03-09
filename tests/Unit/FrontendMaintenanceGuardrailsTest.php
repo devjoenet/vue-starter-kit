@@ -93,6 +93,23 @@ it('reuses the shared permission group field component across admin permission p
     }
 });
 
+it('reuses the shared frontend permission normalization helper across admin permission forms', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $permissionPages = [
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+
+    foreach ($permissionPages as $permissionPage) {
+        $contents = file_get_contents($projectRoot.'/'.$permissionPage);
+
+        expect($contents)->toContain("from '@/lib/permissions'");
+        expect($contents)->toContain('normalizePermissionName');
+        expect($contents)->not->toContain('const extractActionSegment =');
+        expect($contents)->not->toContain('const prefixWithGroup =');
+    }
+});
+
 it('uses dedicated create and edit pages for admin CRUD forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $indexPages = [
