@@ -124,15 +124,12 @@ const destroyUser = () => {
     },
   });
 };
-
 </script>
 
 <template>
   <div class="space-y-6 px-4">
     <div class="flex flex-wrap items-center justify-between gap-3">
-      <h1 class="text-2xl font-semibold">
-        Edit {{ userLabel }}
-      </h1>
+      <h1 class="text-2xl font-semibold">Edit {{ userLabel }}</h1>
 
       <Button
         appearance="outline"

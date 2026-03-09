@@ -22,7 +22,9 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="relative flex w-auto flex-col items-center justify-center space-y-5">
+  <div
+    class="relative flex w-auto flex-col items-center justify-center space-y-5"
+  >
     <Alert v-if="setupErrorMessages.length" variant="destructive">
       <ScanLine class="size-4" />
       <AlertTitle>Unable to prepare two-factor setup</AlertTitle>
@@ -75,7 +77,9 @@ defineEmits<{
 
       <div class="relative flex w-full items-center justify-center">
         <div class="absolute inset-0 top-1/2 h-px w-full bg-border" />
-        <span class="relative bg-card px-2 py-1">or, enter the code manually</span>
+        <span class="relative bg-card px-2 py-1"
+          >or, enter the code manually</span
+        >
       </div>
 
       <div class="flex w-full items-center justify-center space-x-2">

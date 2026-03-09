@@ -24,7 +24,7 @@ final class PermissionsController extends Controller
     public function index(GroupedPermissions $groupedPermissions): Response
     {
         return Inertia::render('admin/Permissions/Index', [
-            'permissionsByGroup' => fn (): array => $groupedPermissions->allData(),
+            'permissionsByGroup' => $groupedPermissions->allData(...),
         ]);
     }
 

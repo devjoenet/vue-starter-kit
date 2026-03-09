@@ -26,8 +26,14 @@ defineEmits<{
   (event: 'delete-permission', permissionId: number): void;
 }>();
 
-const { groupFilter, groupOptions, search, sortDirections, sortedRows, toggleSort } =
-  usePermissionTable(() => props.permissionsByGroup);
+const {
+  groupFilter,
+  groupOptions,
+  search,
+  sortDirections,
+  sortedRows,
+  toggleSort,
+} = usePermissionTable(() => props.permissionsByGroup);
 </script>
 
 <template>
@@ -50,7 +56,9 @@ const { groupFilter, groupOptions, search, sortDirections, sortedRows, toggleSor
         />
         <div class="flex h-fit justify-items-center self-center md:text-right">
           <p class="text-lg leading-tight font-semibold">
-            {{ sortedRows.length }} result{{ sortedRows.length === 1 ? '' : 's' }}
+            {{ sortedRows.length }} result{{
+              sortedRows.length === 1 ? '' : 's'
+            }}
           </p>
         </div>
       </div>
@@ -112,12 +120,7 @@ const { groupFilter, groupOptions, search, sortDirections, sortedRows, toggleSor
           </TableCell>
           <TableCell>
             <div class="flex items-center justify-end gap-2">
-              <Button
-                v-if="canUpdate"
-                appearance="outline"
-                size="sm"
-                as-child
-              >
+              <Button v-if="canUpdate" appearance="outline" size="sm" as-child>
                 <Link :href="edit.url(permission.id)">
                   <SquarePenIcon />
                 </Link>

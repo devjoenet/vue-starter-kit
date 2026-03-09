@@ -37,14 +37,12 @@ onMounted(async () => {
   >
     <input type="hidden" name="code" :value="code" />
     <div ref="pinInputContainerRef" class="relative w-full space-y-3">
-      <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
+      <div
+        class="flex w-full flex-col items-center justify-center space-y-3 py-2"
+      >
         <InputOTP id="otp" v-model="code" :maxlength="6" :disabled="processing">
           <InputOTPGroup>
-            <InputOTPSlot
-              v-for="index in 6"
-              :key="index"
-              :index="index - 1"
-            />
+            <InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" />
           </InputOTPGroup>
         </InputOTP>
         <Alert v-if="errors.code" variant="destructive" class="w-full">

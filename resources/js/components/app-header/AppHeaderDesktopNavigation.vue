@@ -33,11 +33,7 @@ const activeItemStyles =
             ]"
             :href="item.href"
           >
-            <component
-              :is="item.icon"
-              v-if="item.icon"
-              class="mr-2 h-4 w-4"
-            />
+            <component :is="item.icon" v-if="item.icon" class="mr-2 h-4 w-4" />
             {{ item.title }}
           </Link>
           <div

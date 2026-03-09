@@ -87,7 +87,9 @@ const submit = () => {
               <Checkbox
                 :disabled="!canCreate"
                 :model-value="hasSelectedValue(user.id)"
-                @update:model-value="(value) => toggleSelectedValue(user.id, value)"
+                @update:model-value="
+                  (value) => toggleSelectedValue(user.id, value)
+                "
               />
 
               <span class="min-w-0">

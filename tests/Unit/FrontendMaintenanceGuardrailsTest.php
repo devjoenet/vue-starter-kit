@@ -210,7 +210,7 @@ it('uses an extracted permission index table surface in the admin permissions in
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/PermissionIndexTable.vue'");
-    expect($pageContents)->toContain("@delete-permission=\"destroyPermission\"");
+    expect($pageContents)->toContain('@delete-permission="destroyPermission"');
     expect($pageContents)->not->toContain("from '@/composables/usePermissionTable'");
 
     expect($tableContents)->toContain("from '@/composables/usePermissionTable'");

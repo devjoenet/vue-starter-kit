@@ -45,79 +45,76 @@ onUnmounted(() => {
     title="Two-Factor Authentication"
     description="Manage your two-factor authentication settings"
   >
-      <div
-        v-if="!props.twoFactorEnabled"
-        class="flex flex-col items-start gap-4"
-      >
-        <Badge variant="destructive">Disabled</Badge>
+    <div v-if="!props.twoFactorEnabled" class="flex flex-col items-start gap-4">
+      <Badge variant="destructive">Disabled</Badge>
 
-        <p class="text-muted-foreground">
-          When you enable two-factor authentication, you will be prompted for a
-          secure pin during login. This pin can be retrieved from a
-          TOTP-supported application on your phone.
-        </p>
+      <p class="text-muted-foreground">
+        When you enable two-factor authentication, you will be prompted for a
+        secure pin during login. This pin can be retrieved from a TOTP-supported
+        application on your phone.
+      </p>
 
-        <div>
-          <Button
-            v-if="hasSetupData"
-            appearance="filled"
-            @click="showSetupModal = true"
-          >
-            <ShieldCheck />Continue Setup
-          </Button>
-
-          <Form
-            v-else
-            v-bind="enable.form()"
-            :options="{
-              only: ['twoFactorEnabled', 'flash'],
-              preserveScroll: true,
-            }"
-            @success="showSetupModal = true"
-            #default="{ processing }"
-          >
-            <Button type="submit" appearance="filled" :disabled="processing">
-              <ShieldCheck />Enable 2FA
-            </Button>
-          </Form>
-        </div>
-      </div>
-
-      <div v-else class="flex flex-col items-start gap-4">
-        <Badge variant="success">Enabled</Badge>
-
-        <p class="text-muted-foreground">
-          With two-factor authentication enabled, you will be prompted for a
-          secure, random pin during login, which you can retrieve from the
-          TOTP-supported application on your phone.
-        </p>
-
-        <TwoFactorRecoveryCodes />
+      <div>
+        <Button
+          v-if="hasSetupData"
+          appearance="filled"
+          @click="showSetupModal = true"
+        >
+          <ShieldCheck />Continue Setup
+        </Button>
 
         <Form
-          v-bind="disable.form()"
+          v-else
+          v-bind="enable.form()"
           :options="{
             only: ['twoFactorEnabled', 'flash'],
             preserveScroll: true,
           }"
+          @success="showSetupModal = true"
           #default="{ processing }"
         >
-          <Button
-            appearance="filled"
-            variant="destructive"
-            type="submit"
-            :disabled="processing"
-          >
-            <ShieldBan />
-            Disable 2FA
+          <Button type="submit" appearance="filled" :disabled="processing">
+            <ShieldCheck />Enable 2FA
           </Button>
         </Form>
       </div>
+    </div>
 
-      <TwoFactorSetupModal
-        v-model:isOpen="showSetupModal"
-        :requiresConfirmation="props.requiresConfirmation"
-        :twoFactorEnabled="props.twoFactorEnabled"
-      />
+    <div v-else class="flex flex-col items-start gap-4">
+      <Badge variant="success">Enabled</Badge>
+
+      <p class="text-muted-foreground">
+        With two-factor authentication enabled, you will be prompted for a
+        secure, random pin during login, which you can retrieve from the
+        TOTP-supported application on your phone.
+      </p>
+
+      <TwoFactorRecoveryCodes />
+
+      <Form
+        v-bind="disable.form()"
+        :options="{
+          only: ['twoFactorEnabled', 'flash'],
+          preserveScroll: true,
+        }"
+        #default="{ processing }"
+      >
+        <Button
+          appearance="filled"
+          variant="destructive"
+          type="submit"
+          :disabled="processing"
+        >
+          <ShieldBan />
+          Disable 2FA
+        </Button>
+      </Form>
+    </div>
+
+    <TwoFactorSetupModal
+      v-model:isOpen="showSetupModal"
+      :requiresConfirmation="props.requiresConfirmation"
+      :twoFactorEnabled="props.twoFactorEnabled"
+    />
   </SettingsSectionCard>
 </template>

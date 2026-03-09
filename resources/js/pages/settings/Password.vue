@@ -90,9 +90,7 @@ defineOptions({
           leave-active-class="transition ease-in-out"
           leave-to-class="opacity-0"
         >
-          <p v-show="recentlySuccessful" class="text-sm text-success">
-            Saved.
-          </p>
+          <p v-show="recentlySuccessful" class="text-sm text-success">Saved.</p>
         </Transition>
       </div>
     </Form>

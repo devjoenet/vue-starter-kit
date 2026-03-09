@@ -17,7 +17,9 @@ export function usePermissionTable(
 ) {
   const search = ref('');
   const groupFilter = ref('');
-  const sortDirections = ref<Record<PermissionSortColumn, PermissionSortDirection>>({
+  const sortDirections = ref<
+    Record<PermissionSortColumn, PermissionSortDirection>
+  >({
     group: 'asc',
     name: 'asc',
   });

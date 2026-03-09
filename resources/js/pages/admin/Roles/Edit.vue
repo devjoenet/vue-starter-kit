@@ -108,7 +108,6 @@ const destroyRole = () => {
     },
   });
 };
-
 </script>
 
 <template>

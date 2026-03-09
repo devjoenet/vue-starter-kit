@@ -31,8 +31,14 @@ const emit = defineEmits<{
   (event: 'save'): void;
 }>();
 
-const { groupFilter, groupOptions, search, sortDirections, sortedRows, toggleSort } =
-  usePermissionTable(() => props.permissionsByGroup);
+const {
+  groupFilter,
+  groupOptions,
+  search,
+  sortDirections,
+  sortedRows,
+  toggleSort,
+} = usePermissionTable(() => props.permissionsByGroup);
 
 const resultsLabel = computed(() => {
   const count = sortedRows.value.length;
@@ -113,7 +119,9 @@ const resultsLabel = computed(() => {
               variant="outlined"
             />
           </TableHead>
-          <TableHead class="hidden xl:table-cell text-right text-xs font-semibold text-muted-foreground uppercase tracking-[0.16em]">
+          <TableHead
+            class="hidden text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase xl:table-cell"
+          >
             {{ resultsLabel }}
           </TableHead>
         </TableRow>

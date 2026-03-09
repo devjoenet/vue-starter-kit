@@ -80,7 +80,9 @@ const resolvedIcon = computed<LucideIcon | null>(() => {
     return null;
   }
 
-  return (props.item.icon as LucideIcon | undefined) ?? toneIconMap[props.item.tone];
+  return (
+    (props.item.icon as LucideIcon | undefined) ?? toneIconMap[props.item.tone]
+  );
 });
 
 const toastClasses = computed(() => {

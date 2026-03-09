@@ -22,7 +22,11 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: 'save'): void;
-  (event: 'toggle-role', roleName: string, value: boolean | 'indeterminate'): void;
+  (
+    event: 'toggle-role',
+    roleName: string,
+    value: boolean | 'indeterminate',
+  ): void;
 }>();
 
 const search = ref('');
@@ -34,7 +38,9 @@ const filteredRoles = computed(() => {
     return props.roles;
   }
 
-  return props.roles.filter((role) => role.name.toLowerCase().includes(searchTerm));
+  return props.roles.filter((role) =>
+    role.name.toLowerCase().includes(searchTerm),
+  );
 });
 
 const resultsLabel = computed(() => {
@@ -60,7 +66,9 @@ const resultsLabel = computed(() => {
           <TableHead class="w-14 text-center">Access</TableHead>
           <TableHead>Display Name</TableHead>
           <TableHead>Slug</TableHead>
-          <TableHead class="text-right text-xs font-semibold text-muted-foreground uppercase tracking-[0.16em]">
+          <TableHead
+            class="text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
+          >
             {{ resultsLabel }}
           </TableHead>
         </TableRow>
@@ -83,7 +91,9 @@ const resultsLabel = computed(() => {
             <Checkbox
               :disabled="!canAssign"
               :model-value="selectedRoleNames.includes(role.name)"
-              @update:model-value="(value) => $emit('toggle-role', role.name, value)"
+              @update:model-value="
+                (value) => $emit('toggle-role', role.name, value)
+              "
             />
           </TableCell>
           <TableCell class="font-medium">
