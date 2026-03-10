@@ -140,7 +140,6 @@ it('reuses the shared delete confirmation composable across admin destructive ac
         'resources/js/pages/admin/Users/Edit.vue',
         'resources/js/pages/admin/Roles/Edit.vue',
         'resources/js/pages/admin/Permissions/Edit.vue',
-        'resources/js/pages/admin/Permissions/Index.vue',
     ];
 
     foreach ($destructivePages as $destructivePage) {
@@ -195,14 +194,19 @@ it('uses an extracted table-based permission assignment surface in the role mana
 
     expect($pageContents)->toContain("from '@/components/admin/RolePermissionAssignmentTable.vue'");
     expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
+    expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
+    expect($pageContents)->toContain("quiet_success: true");
+    expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('Collapsible');
 
     expect($tableContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
     expect($tableContents)->toContain('<Table');
     expect($tableContents)->toContain('role-permissions-group-filter');
-    expect($tableContents)->toContain('role-permissions-search');
+    expect($tableContents)->not->toContain('role-permissions-search');
     expect($tableContents)->not->toContain('Collapsible');
-    expect($shellContents)->toContain('saveLabel');
+    expect($tableContents)->toContain('hidden text-muted-foreground lg:table-cell');
+    expect($shellContents)->not->toContain('saveLabel');
 });
 
 it('uses an extracted permission index table surface in the admin permissions index page', function () {
@@ -210,13 +214,15 @@ it('uses an extracted permission index table surface in the admin permissions in
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/PermissionIndexTable.vue'");
-    expect($pageContents)->toContain('@delete-permission="destroyPermission"');
     expect($pageContents)->not->toContain("from '@/composables/usePermissionTable'");
+    expect($pageContents)->not->toContain("from '@/composables/useDeleteConfirmation'");
+    expect($pageContents)->not->toContain('destroyPermission');
 
-    expect($tableContents)->toContain("from '@/composables/usePermissionTable'");
-    expect($tableContents)->toContain('permissions-search');
-    expect($tableContents)->toContain('permissions-group-filter');
+    expect($tableContents)->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
     expect($tableContents)->toContain('<Table');
+    expect($tableContents)->toContain('column="permission"');
+    expect($tableContents)->not->toContain('permissions-search');
+    expect($tableContents)->not->toContain('permissions-group-filter');
 });
 
 it('prefills the role name in the role management edit page details form', function () {
@@ -236,6 +242,10 @@ it('uses extracted details and table-based role assignment surfaces in the user 
 
     expect($pageContents)->toContain("from '@/components/admin/UserDetailsForm.vue'");
     expect($pageContents)->toContain("from '@/components/admin/UserRoleAssignmentTable.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
+    expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
+    expect($pageContents)->toContain("quiet_success: true");
+    expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('space-y-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');
 
@@ -243,7 +253,45 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($detailsContents)->toContain('UserIdentityFields');
     expect($tableContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
     expect($tableContents)->toContain('<Table');
-    expect($tableContents)->toContain('user-roles-search');
+    expect($tableContents)->toContain('hidden text-xs font-medium text-muted-foreground italic md:table-cell');
+    expect($tableContents)->not->toContain('user-roles-search');
+});
+
+it('uses shared index header controls and linked name cells on admin index pages', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $indexPages = [
+        'resources/js/pages/admin/Users/Index.vue',
+        'resources/js/pages/admin/Roles/Index.vue',
+    ];
+
+    foreach ($indexPages as $indexPage) {
+        $contents = file_get_contents($projectRoot.'/'.$indexPage);
+
+        expect($contents)->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
+        expect($contents)->not->toContain('Actions</TableHead>');
+        expect($contents)->not->toContain('TrashIcon');
+    }
+
+    $permissionPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Permissions/Index.vue');
+    $headerCellContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminIndexHeaderCell.vue');
+
+    expect($permissionPageContents)->toContain('PermissionIndexTable');
+    expect($headerCellContents)->toContain('ArrowDownNarrowWideIcon');
+    expect($headerCellContents)->toContain('ArrowDownWideNarrowIcon');
+    expect($headerCellContents)->toContain('ArrowDownUpIcon');
+    expect($headerCellContents)->toContain('DropdownMenuCheckboxItem');
+});
+
+it('keeps permission edit delete actions in the shared form footer', function () {
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Edit.vue');
+    $formContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionEditorForm.vue');
+
+    expect($pageContents)->toContain(':can-delete="canDelete"');
+    expect($pageContents)->toContain('@delete="destroyPermission"');
+    expect($pageContents)->not->toContain("from '@/components/ui/button/Button.vue'");
+
+    expect($formContents)->toContain("event: 'delete'");
+    expect($formContents)->toContain('variant="destructive"');
 });
 
 it('reuses the shared user identity fields across admin and settings user detail forms', function () {

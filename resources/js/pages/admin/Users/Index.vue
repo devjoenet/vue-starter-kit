@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { h, computed } from 'vue';
+import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
-import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
+import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
 import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
-import { create, destroy, edit, index } from '@/routes/admin/users';
+import { create, edit, index } from '@/routes/admin/users';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminUsersIndexPageProps } from '@/types/page-props';
-import { PenBoxIcon, TrashIcon } from 'lucide-vue-next';
+import type {
+  AdminUsersIndexColumn,
+  AdminUsersIndexPageProps,
+} from '@/types/page-props';
 defineOptions({
   layout: (_: unknown, page: unknown) =>
     h(
@@ -34,11 +38,21 @@ defineOptions({
 const props = defineProps<AdminUsersIndexPageProps>();
 
 const { can } = useAbility();
-const page = usePage();
 
 const canCreate = computed(() => can(adminPermissions.usersCreate));
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
-const canDelete = computed(() => can(adminPermissions.usersDelete));
+const { clearFilters, selectedFiltersFor, sortDirectionFor, toggleFilter, toggleSort } =
+  useAdminIndexTableQuery<AdminUsersIndexColumn>({
+    getQuery: () => props.query,
+    getUrl: (query) =>
+      index.url({
+        query: {
+          ...query,
+          page: undefined,
+        },
+      }),
+    only: ['users', 'filterOptions', 'query'],
+  });
 </script>
 
 <template>
@@ -55,15 +69,85 @@ const canDelete = computed(() => can(adminPermissions.usersDelete));
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Roles</TableHead>
-            <TableHead class="w-[1%] text-right">Actions</TableHead>
+            <AdminIndexHeaderCell
+              label="Name"
+              column="name"
+              :filter-options="props.filterOptions.name"
+              :format-option-label="toTitleCase"
+              :selected-filters="selectedFiltersFor('name')"
+              :sort-direction="sortDirectionFor('name')"
+              @clear-filters="
+                (column) => {
+                  clearFilters(column as AdminUsersIndexColumn);
+                }
+              "
+              @toggle-filter="
+                (column, value, checked) =>
+                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              "
+              @toggle-sort="
+                (column) => {
+                  toggleSort(column as AdminUsersIndexColumn);
+                }
+              "
+            />
+            <AdminIndexHeaderCell
+              label="Email"
+              column="email"
+              :filter-options="props.filterOptions.email"
+              :selected-filters="selectedFiltersFor('email')"
+              :sort-direction="sortDirectionFor('email')"
+              @clear-filters="
+                (column) => {
+                  clearFilters(column as AdminUsersIndexColumn);
+                }
+              "
+              @toggle-filter="
+                (column, value, checked) =>
+                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              "
+              @toggle-sort="
+                (column) => {
+                  toggleSort(column as AdminUsersIndexColumn);
+                }
+              "
+            />
+            <AdminIndexHeaderCell
+              label="Roles"
+              column="roles"
+              :filter-options="props.filterOptions.roles"
+              :format-option-label="toTitleCase"
+              :selected-filters="selectedFiltersFor('roles')"
+              :sort-direction="sortDirectionFor('roles')"
+              @clear-filters="
+                (column) => {
+                  clearFilters(column as AdminUsersIndexColumn);
+                }
+              "
+              @toggle-filter="
+                (column, value, checked) =>
+                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              "
+              @toggle-sort="
+                (column) => {
+                  toggleSort(column as AdminUsersIndexColumn);
+                }
+              "
+            />
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-for="user in props.users.data" :key="user.id">
-            <TableCell class="font-medium">{{ user.name }}</TableCell>
+            <TableCell class="font-medium">
+              <Link
+                v-if="canUpdate"
+                :href="edit.url(user.id)"
+                class="transition-colors hover:text-foreground/70"
+              >
+                {{ user.name }}
+              </Link>
+              <span v-else>{{ user.name }}</span>
+            </TableCell>
             <TableCell class="text-muted-foreground">{{
               user.email
             }}</TableCell>
@@ -83,41 +167,10 @@ const canDelete = computed(() => can(adminPermissions.usersDelete));
                 >
               </div>
             </TableCell>
-            <TableCell>
-              <div class="flex items-center justify-end gap-2">
-                <Button
-                  v-if="canUpdate"
-                  appearance="outline"
-                  size="sm"
-                  as-child
-                >
-                  <Link :href="edit.url(user.id)">
-                    <PenBoxIcon />
-                  </Link>
-                </Button>
-
-                <form
-                  v-if="canDelete"
-                  class="inline-flex"
-                  method="post"
-                  :action="destroy.url(user.id)"
-                >
-                  <input type="hidden" name="_method" value="delete" />
-                  <input
-                    type="hidden"
-                    name="_token"
-                    :value="page.props.csrf_token"
-                  />
-                  <Button
-                    type="submit"
-                    variant="destructive"
-                    appearance="outline"
-                    size="sm"
-                  >
-                    <TrashIcon />
-                  </Button>
-                </form>
-              </div>
+          </TableRow>
+          <TableRow v-if="props.users.data.length === 0">
+            <TableCell colspan="3" class="text-center text-muted-foreground">
+              No users match the current filters.
             </TableCell>
           </TableRow>
         </TableBody>

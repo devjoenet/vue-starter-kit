@@ -6,6 +6,7 @@ use App\Enums\AdminPermission;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\CarbonInterface;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -73,6 +74,7 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
         'email' => 'taylor@example.com',
     ]);
     $user->assignRole($role);
+    $emailVerifiedAt = $user->email_verified_at;
 
     $this->actingAs($user)
         ->withUnencryptedCookie('sidebar_state', 'false')
@@ -87,7 +89,9 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
                     'id' => $user->id,
                     'name' => 'Taylor Otwell',
                     'email' => 'taylor@example.com',
-                    'email_verified_at' => $user->email_verified_at?->toJSON(),
+                    'email_verified_at' => $emailVerifiedAt instanceof CarbonInterface
+                        ? $emailVerifiedAt->toJSON()
+                        : null,
                 ],
                 'roles' => ['admin'],
                 'permissions' => [AdminPermission::UsersView->value],

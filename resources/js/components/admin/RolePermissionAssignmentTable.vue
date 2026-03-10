@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import Input from '@/components/ui/input/Input.vue';
 import Select from '@/components/ui/select/Select.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
@@ -18,7 +17,6 @@ const props = defineProps<{
   canAssign: boolean;
   error?: string;
   permissionsByGroup: PermissionsByGroup;
-  processing: boolean;
   selectedPermissionNames: string[];
 }>();
 
@@ -28,13 +26,11 @@ const emit = defineEmits<{
     permissionName: string,
     value: boolean | 'indeterminate',
   ): void;
-  (event: 'save'): void;
 }>();
 
 const {
   groupFilter,
   groupOptions,
-  search,
   sortDirections,
   sortedRows,
   toggleSort,
@@ -49,13 +45,9 @@ const resultsLabel = computed(() => {
 
 <template>
   <AssignmentTableCard
-    :can-submit="canAssign"
     :error="error"
-    :processing="processing"
     description="Filter, sort, and assign permissions from one table."
-    save-label="Save Permissions"
     title="Permissions"
-    @save="$emit('save')"
   >
     <Table wrapper-class="rounded-none border-0">
       <TableHeader>
@@ -101,7 +93,7 @@ const resultsLabel = computed(() => {
         </TableRow>
         <TableRow>
           <TableHead />
-          <TableHead class="align-top">
+          <TableHead class="align-top" colspan="2">
             <Select
               id="role-permissions-group-filter"
               v-model="groupFilter"
@@ -111,16 +103,8 @@ const resultsLabel = computed(() => {
               trigger-class="min-w-[11rem]"
             />
           </TableHead>
-          <TableHead class="align-top">
-            <Input
-              id="role-permissions-search"
-              v-model="search"
-              placeholder="Filter permissions..."
-              variant="outlined"
-            />
-          </TableHead>
           <TableHead
-            class="hidden text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase xl:table-cell"
+            class="hidden text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase lg:table-cell"
           >
             {{ resultsLabel }}
           </TableHead>
@@ -143,7 +127,7 @@ const resultsLabel = computed(() => {
           <TableCell class="font-medium">
             {{ toTitleCase(permission.suffix) }}
           </TableCell>
-          <TableCell class="hidden text-muted-foreground xl:table-cell">
+          <TableCell class="hidden text-muted-foreground lg:table-cell">
             {{ permission.name }}
           </TableCell>
         </TableRow>

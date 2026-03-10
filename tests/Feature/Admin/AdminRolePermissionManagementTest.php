@@ -132,3 +132,40 @@ test('admin sees a validation error when syncing missing role permissions', func
 
     expect($role->fresh()?->permissions)->toHaveCount(0);
 });
+
+test('quiet success role edit requests do not flash duplicate success messages', function () {
+    $role = Role::query()->create([
+        'name' => 'qa_lead',
+        'guard_name' => 'web',
+    ]);
+
+    $permission = Permission::query()->create([
+        'name' => 'qa_lead.approveRelease',
+        'group' => 'qa_lead',
+        'guard_name' => 'web',
+    ]);
+
+    $updateResponse = $this->from(route('admin.roles.edit', $role))
+        ->put(route('admin.roles.update', [
+            'role' => $role,
+            'quiet_success' => 1,
+        ]), [
+            'name' => 'qa-team-lead',
+        ]);
+
+    $updateResponse->assertRedirect(route('admin.roles.edit', $role));
+    $updateResponse->assertSessionMissing('success');
+
+    $syncResponse = $this->from(route('admin.roles.edit', $role))
+        ->put(route('admin.roles.permissions.sync', [
+            'role' => $role->fresh(),
+            'quiet_success' => 1,
+        ]), [
+            'permissions' => [$permission->name],
+        ]);
+
+    $syncResponse->assertRedirect(route('admin.roles.edit', $role->fresh()));
+    $syncResponse->assertSessionMissing('success');
+
+    expect($role->fresh()?->hasPermissionTo($permission))->toBeTrue();
+});

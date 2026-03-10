@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
-import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import type { UpdateUserRequest } from '@/types/wayfinder-generated';
@@ -9,11 +8,6 @@ import type { UpdateUserRequest } from '@/types/wayfinder-generated';
 defineProps<{
   canUpdate: boolean;
   form: InertiaForm<UpdateUserRequest>;
-  userLabel: string;
-}>();
-
-defineEmits<{
-  (event: 'submit'): void;
 }>();
 </script>
 
@@ -21,7 +15,7 @@ defineEmits<{
   <Card variant="default" class="px-6">
     <h2 class="text-lg font-semibold">Details</h2>
 
-    <form class="mt-4 space-y-4" @submit.prevent="$emit('submit')">
+    <div class="mt-4 space-y-4">
       <UserIdentityFields
         name-id="edit-user-name"
         email-id="edit-user-email"
@@ -55,16 +49,6 @@ defineEmits<{
         :state="form.errors.password_confirmation ? 'error' : 'default'"
         :message="form.errors.password_confirmation"
       />
-
-      <div class="flex justify-end">
-        <Button
-          appearance="filled"
-          type="submit"
-          :disabled="!canUpdate || form.processing"
-        >
-          Save {{ userLabel }}
-        </Button>
-      </div>
-    </form>
+    </div>
   </Card>
 </template>

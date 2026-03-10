@@ -2,7 +2,6 @@
 import { useForm } from '@inertiajs/vue3';
 import { h, computed, watch } from 'vue';
 import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
-import Button from '@/components/ui/button/Button.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -84,22 +83,18 @@ const destroyPermission = () => {
   <div class="space-y-6 px-4">
     <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
       <h1 class="text-2xl font-semibold">Edit permission</h1>
-      <Button
-        appearance="outline"
-        variant="destructive"
-        :disabled="!canDelete"
-        @click="destroyPermission"
-        >Delete</Button
-      >
     </div>
 
     <PermissionEditorForm
+      :can-delete="canDelete"
       group-id="edit-permission-group"
       name-id="edit-permission-name"
       :can-submit="canUpdate"
+      delete-label="Delete"
       :form="form"
       :groups="props.groups"
       submit-label="Save"
+      @delete="destroyPermission"
       @submit="updatePermission"
     />
   </div>

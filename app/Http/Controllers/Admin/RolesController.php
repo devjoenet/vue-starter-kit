@@ -14,29 +14,72 @@ use App\Http\Requests\Admin\SyncRolePermissionsRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\AdminIndexQuery;
+use App\Support\Data\Admin\AdminIndexQueryData;
 use App\Support\Data\Admin\Roles\AssignableUserData;
 use App\Support\Data\Admin\Roles\CreateRoleData;
 use App\Support\Data\Admin\Roles\EditableRoleData;
+use App\Support\Data\Admin\Roles\RoleIndexFilterOptionsData;
 use App\Support\Data\Admin\Roles\RoleListItemData;
 use App\Support\Data\Admin\Roles\SyncRolePermissionsData;
 use App\Support\Data\Admin\Roles\UpdateRoleData;
 use App\Support\GroupedPermissions;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class RolesController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $indexQuery = AdminIndexQuery::fromRequest(
+            request: $request,
+            allowedSorts: ['id', 'display_name', 'slug', 'users'],
+            allowedFilters: ['display_name', 'slug', 'users'],
+        );
+
+        $roles = Role::query()
+            ->select(['id', 'name'])
+            ->withCount('users')
+            ->get()
+            ->map(fn (Role $role): array => RoleListItemData::fromModel($role)->all());
+
+        $filteredRoles = $roles
+            ->when(
+                $indexQuery->filterValues('display_name') !== [],
+                fn ($collection) => $collection->whereIn('name', $indexQuery->filterValues('display_name')),
+            )
+            ->when(
+                $indexQuery->filterValues('slug') !== [],
+                fn ($collection) => $collection->whereIn('name', $indexQuery->filterValues('slug')),
+            )
+            ->when(
+                $indexQuery->filterValues('users') !== [],
+                fn ($collection) => $collection->filter(
+                    fn (array $role): bool => in_array((string) $role['users_count'], $indexQuery->filterValues('users'), true),
+                ),
+            );
+
+        $sortedRoles = match ($indexQuery->sort) {
+            'display_name', 'slug' => $filteredRoles->sortBy('name', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            'users' => $filteredRoles->sortBy('users_count', SORT_NUMERIC, $indexQuery->direction === 'desc'),
+            default => $filteredRoles->sortBy('id', SORT_NUMERIC, $indexQuery->direction === 'desc'),
+        };
+
         return Inertia::render('admin/Roles/Index', [
-            'roles' => Role::query()
-                ->select(['id', 'name'])
-                ->withCount('users')
-                ->orderBy('name')
-                ->get()
-                ->map(fn (Role $role): array => RoleListItemData::fromModel($role)->all())
-                ->all(),
+            'roles' => $sortedRoles->values()->all(),
+            'filterOptions' => RoleIndexFilterOptionsData::from([
+                'display_name' => $roles->pluck('name')->unique()->sort()->values()->all(),
+                'slug' => $roles->pluck('name')->unique()->sort()->values()->all(),
+                'users' => $roles->pluck('users_count')
+                    ->map(fn (int $count): string => (string) $count)
+                    ->unique()
+                    ->sort()
+                    ->values()
+                    ->all(),
+            ])->all(),
+            'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
 
@@ -84,6 +127,10 @@ final class RolesController extends Controller
             name: (string) $request->validated('name'),
         ));
 
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
+
         return $this->backWithSuccess('Role updated.');
     }
 
@@ -105,6 +152,10 @@ final class RolesController extends Controller
         $syncRolePermissions->handle($role, new SyncRolePermissionsData(
             permissions: $permissionNames,
         ));
+
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
 
         return $this->backWithSuccess('Permissions updated.');
     }
