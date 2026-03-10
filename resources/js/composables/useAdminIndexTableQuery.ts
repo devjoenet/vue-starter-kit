@@ -54,7 +54,8 @@ export function useAdminIndexTableQuery<TColumn extends string>({
 
   const toggleSort = (column: TColumn) => {
     const direction =
-      currentQuery.value.sort === column && currentQuery.value.direction === 'asc'
+      currentQuery.value.sort === column &&
+      currentQuery.value.direction === 'asc'
         ? 'desc'
         : 'asc';
 

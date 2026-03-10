@@ -108,36 +108,42 @@ const saveAllChanges = async () => {
   const succeeded = await run([
     detailsDirty.value
       ? createStep((callbacks) => {
-          userForm.put(update.url(props.user.id, { query: { quiet_success: true } }), {
-            only: ['user', 'auth', 'flash'],
-            preserveScroll: true,
-            onSuccess: () => {
-              userForm.defaults({
-                name: userForm.name,
-                email: userForm.email,
-                password: '',
-                password_confirmation: '',
-              });
-              userForm.reset('password', 'password_confirmation');
-              callbacks.onSuccess();
+          userForm.put(
+            update.url(props.user.id, { query: { quiet_success: true } }),
+            {
+              only: ['user', 'auth', 'flash'],
+              preserveScroll: true,
+              onSuccess: () => {
+                userForm.defaults({
+                  name: userForm.name,
+                  email: userForm.email,
+                  password: '',
+                  password_confirmation: '',
+                });
+                userForm.reset('password', 'password_confirmation');
+                callbacks.onSuccess();
+              },
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
             },
-            onCancel: callbacks.onCancel,
-            onError: callbacks.onError,
-            onFinish: callbacks.onFinish,
-          });
+          );
         })
       : null,
     rolesDirty.value
       ? createStep((callbacks) => {
           rolesForm.roles = [...selectedRoles.value];
-          rolesForm.put(sync.url(props.user.id, { query: { quiet_success: true } }), {
-            only: ['userRoles', 'flash'],
-            preserveScroll: true,
-            onSuccess: callbacks.onSuccess,
-            onCancel: callbacks.onCancel,
-            onError: callbacks.onError,
-            onFinish: callbacks.onFinish,
-          });
+          rolesForm.put(
+            sync.url(props.user.id, { query: { quiet_success: true } }),
+            {
+              only: ['userRoles', 'flash'],
+              preserveScroll: true,
+              onSuccess: callbacks.onSuccess,
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
+            },
+          );
         })
       : null,
   ]);
@@ -165,10 +171,7 @@ const destroyUser = () => {
     </div>
 
     <div class="space-y-6">
-      <UserDetailsForm
-        :can-update="canUpdate"
-        :form="userForm"
-      />
+      <UserDetailsForm :can-update="canUpdate" :form="userForm" />
 
       <UserRoleAssignmentTable
         :can-assign="canAssignRoles"

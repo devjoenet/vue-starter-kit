@@ -24,8 +24,8 @@ use App\Support\Data\Admin\Roles\RoleListItemData;
 use App\Support\Data\Admin\Roles\SyncRolePermissionsData;
 use App\Support\Data\Admin\Roles\UpdateRoleData;
 use App\Support\GroupedPermissions;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 

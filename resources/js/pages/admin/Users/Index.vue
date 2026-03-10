@@ -41,18 +41,23 @@ const { can } = useAbility();
 
 const canCreate = computed(() => can(adminPermissions.usersCreate));
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
-const { clearFilters, selectedFiltersFor, sortDirectionFor, toggleFilter, toggleSort } =
-  useAdminIndexTableQuery<AdminUsersIndexColumn>({
-    getQuery: () => props.query,
-    getUrl: (query) =>
-      index.url({
-        query: {
-          ...query,
-          page: undefined,
-        },
-      }),
-    only: ['users', 'filterOptions', 'query'],
-  });
+const {
+  clearFilters,
+  selectedFiltersFor,
+  sortDirectionFor,
+  toggleFilter,
+  toggleSort,
+} = useAdminIndexTableQuery<AdminUsersIndexColumn>({
+  getQuery: () => props.query,
+  getUrl: (query) =>
+    index.url({
+      query: {
+        ...query,
+        page: undefined,
+      },
+    }),
+  only: ['users', 'filterOptions', 'query'],
+});
 </script>
 
 <template>

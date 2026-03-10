@@ -46,7 +46,7 @@ final readonly class AdminIndexQuery
                 }
 
                 $normalizedValues = collect($filterValues)
-                    ->filter(fn (mixed $value): bool => is_scalar($value) && trim((string) $value) !== '')
+                    ->filter(fn (mixed $value): bool => is_scalar($value) && mb_trim((string) $value) !== '')
                     ->map(fn (mixed $value): string => (string) $value)
                     ->unique()
                     ->values()

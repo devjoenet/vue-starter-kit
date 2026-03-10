@@ -24,18 +24,23 @@ const props = defineProps<{
   query: AdminIndexQuery<AdminPermissionsIndexColumn>;
 }>();
 
-const { clearFilters, selectedFiltersFor, sortDirectionFor, toggleFilter, toggleSort } =
-  useAdminIndexTableQuery<AdminPermissionsIndexColumn>({
-    getQuery: () => props.query,
-    getUrl: (query) =>
-      index.url({
-        query: {
-          ...query,
-          page: undefined,
-        },
-      }),
-    only: ['permissions', 'filterOptions', 'query'],
-  });
+const {
+  clearFilters,
+  selectedFiltersFor,
+  sortDirectionFor,
+  toggleFilter,
+  toggleSort,
+} = useAdminIndexTableQuery<AdminPermissionsIndexColumn>({
+  getQuery: () => props.query,
+  getUrl: (query) =>
+    index.url({
+      query: {
+        ...query,
+        page: undefined,
+      },
+    }),
+  only: ['permissions', 'filterOptions', 'query'],
+});
 </script>
 
 <template>

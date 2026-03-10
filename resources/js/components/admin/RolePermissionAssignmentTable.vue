@@ -28,13 +28,8 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const {
-  groupFilter,
-  groupOptions,
-  sortDirections,
-  sortedRows,
-  toggleSort,
-} = usePermissionTable(() => props.permissionsByGroup);
+const { groupFilter, groupOptions, sortDirections, sortedRows, toggleSort } =
+  usePermissionTable(() => props.permissionsByGroup);
 
 const resultsLabel = computed(() => {
   const count = sortedRows.value.length;

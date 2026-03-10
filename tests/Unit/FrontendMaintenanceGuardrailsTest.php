@@ -196,7 +196,7 @@ it('uses an extracted table-based permission assignment surface in the role mana
     expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
     expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
     expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
-    expect($pageContents)->toContain("quiet_success: true");
+    expect($pageContents)->toContain('quiet_success: true');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('Collapsible');
 
@@ -244,7 +244,7 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($pageContents)->toContain("from '@/components/admin/UserRoleAssignmentTable.vue'");
     expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
     expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
-    expect($pageContents)->toContain("quiet_success: true");
+    expect($pageContents)->toContain('quiet_success: true');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('space-y-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');

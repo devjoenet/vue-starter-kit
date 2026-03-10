@@ -41,7 +41,8 @@ export function useSequentialSave() {
 
   const run = async (steps: SubmitStep[]): Promise<boolean> => {
     const activeSteps = steps.filter(
-      (step): step is () => Promise<boolean> => step !== null && step !== undefined,
+      (step): step is () => Promise<boolean> =>
+        step !== null && step !== undefined,
     );
 
     if (processing.value || activeSteps.length === 0) {

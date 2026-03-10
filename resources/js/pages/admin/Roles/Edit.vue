@@ -97,32 +97,38 @@ const saveAllChanges = async () => {
     detailsDirty.value
       ? createStep((callbacks) => {
           roleForm.name = toKebabCase(roleForm.name);
-          roleForm.put(update.url(props.role.id, { query: { quiet_success: true } }), {
-            only: ['role', 'flash'],
-            preserveScroll: true,
-            onSuccess: () => {
-              roleForm.defaults({
-                name: roleForm.name,
-              });
-              callbacks.onSuccess();
+          roleForm.put(
+            update.url(props.role.id, { query: { quiet_success: true } }),
+            {
+              only: ['role', 'flash'],
+              preserveScroll: true,
+              onSuccess: () => {
+                roleForm.defaults({
+                  name: roleForm.name,
+                });
+                callbacks.onSuccess();
+              },
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
             },
-            onCancel: callbacks.onCancel,
-            onError: callbacks.onError,
-            onFinish: callbacks.onFinish,
-          });
+          );
         })
       : null,
     permissionsDirty.value
       ? createStep((callbacks) => {
           permsForm.permissions = [...selectedPermissions.value];
-          permsForm.put(sync.url(props.role.id, { query: { quiet_success: true } }), {
-            only: ['rolePermissions', 'flash'],
-            preserveScroll: true,
-            onSuccess: callbacks.onSuccess,
-            onCancel: callbacks.onCancel,
-            onError: callbacks.onError,
-            onFinish: callbacks.onFinish,
-          });
+          permsForm.put(
+            sync.url(props.role.id, { query: { quiet_success: true } }),
+            {
+              only: ['rolePermissions', 'flash'],
+              preserveScroll: true,
+              onSuccess: callbacks.onSuccess,
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
+            },
+          );
         })
       : null,
   ]);

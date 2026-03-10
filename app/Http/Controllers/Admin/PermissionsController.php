@@ -19,8 +19,8 @@ use App\Support\Data\Admin\Permissions\PermissionIndexItemData;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\GroupedPermissions;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 

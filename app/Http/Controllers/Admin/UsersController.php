@@ -23,8 +23,8 @@ use App\Support\Data\Admin\Users\SyncUserRolesData;
 use App\Support\Data\Admin\Users\UpdateUserData;
 use App\Support\Data\Admin\Users\UserIndexFilterOptionsData;
 use App\Support\Data\Admin\Users\UserListItemData;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -62,7 +62,7 @@ final class UsersController extends Controller
                     ->withMin('roles as sort_role_name', 'name')
                     ->orderBy('sort_role_name', $indexQuery->direction)
                     ->orderBy('id'),
-                function ($query) use ($indexQuery) {
+                function ($query) use ($indexQuery): void {
                     $sortColumn = match ($indexQuery->sort) {
                         'name' => 'name',
                         'email' => 'email',

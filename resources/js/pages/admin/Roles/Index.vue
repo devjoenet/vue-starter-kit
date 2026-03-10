@@ -39,18 +39,23 @@ const props = defineProps<AdminRolesIndexPageProps>();
 const { can } = useAbility();
 const canCreate = computed(() => can(adminPermissions.rolesCreate));
 const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
-const { clearFilters, selectedFiltersFor, sortDirectionFor, toggleFilter, toggleSort } =
-  useAdminIndexTableQuery<AdminRolesIndexColumn>({
-    getQuery: () => props.query,
-    getUrl: (query) =>
-      index.url({
-        query: {
-          ...query,
-          page: undefined,
-        },
-      }),
-    only: ['roles', 'filterOptions', 'query'],
-  });
+const {
+  clearFilters,
+  selectedFiltersFor,
+  sortDirectionFor,
+  toggleFilter,
+  toggleSort,
+} = useAdminIndexTableQuery<AdminRolesIndexColumn>({
+  getQuery: () => props.query,
+  getUrl: (query) =>
+    index.url({
+      query: {
+        ...query,
+        page: undefined,
+      },
+    }),
+  only: ['roles', 'filterOptions', 'query'],
+});
 </script>
 
 <template>
