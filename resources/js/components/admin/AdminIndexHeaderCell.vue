@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuCheckboxItem from '@/components/ui/dropdown-menu/DropdownMenuCheckboxItem.vue';
 import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
 import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
 import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue';
@@ -14,7 +13,9 @@ import {
   ArrowDownNarrowWideIcon,
   ArrowDownUpIcon,
   ArrowDownWideNarrowIcon,
-  ListFilterIcon,
+  CheckIcon,
+  FunnelIcon,
+  SquareIcon,
 } from 'lucide-vue-next';
 
 const props = withDefaults(
@@ -33,16 +34,34 @@ const props = withDefaults(
   },
 );
 
-defineEmits<{
+const emit = defineEmits<{
+  (event: 'apply-filters', column: string, values: string[]): void;
   (event: 'clear-filters', column: string): void;
-  (
-    event: 'toggle-filter',
-    column: string,
-    value: string,
-    checked: boolean | 'indeterminate',
-  ): void;
   (event: 'toggle-sort', column: string): void;
 }>();
+
+const menuOpen = ref(false);
+const draftFilters = ref<string[]>([...props.selectedFilters]);
+
+const syncDraftFilters = () => {
+  draftFilters.value = [...props.selectedFilters];
+};
+
+watch(
+  () => props.selectedFilters,
+  () => {
+    if (!menuOpen.value) {
+      syncDraftFilters();
+    }
+  },
+  { deep: true },
+);
+
+watch(menuOpen, (open) => {
+  if (!open) {
+    syncDraftFilters();
+  }
+});
 
 const sortIcon = computed(() => {
   if (props.sortDirection === 'asc') {
@@ -55,22 +74,97 @@ const sortIcon = computed(() => {
 
   return ArrowDownUpIcon;
 });
+
+const filterButtonTitle = computed(() => {
+  if (props.selectedFilters.length === 0) {
+    return `Filter ${props.label}. No filters selected.`;
+  }
+
+  return `Filter ${props.label}. ${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} selected.`;
+});
+
+const sortButtonTitle = computed(() => {
+  if (props.sortDirection === 'asc') {
+    return `Sort ${props.label}. Currently ascending.`;
+  }
+
+  if (props.sortDirection === 'desc') {
+    return `Sort ${props.label}. Currently descending.`;
+  }
+
+  return `Sort ${props.label}. Currently not sorted.`;
+});
+
+const hasDraftChanges = computed(() => {
+  if (draftFilters.value.length !== props.selectedFilters.length) {
+    return true;
+  }
+
+  return draftFilters.value.some(
+    (value) => !props.selectedFilters.includes(value),
+  );
+});
+
+const hasActiveFilters = computed(() => props.selectedFilters.length > 0);
+
+const toggleDraftFilter = (value: string) => {
+  if (draftFilters.value.includes(value)) {
+    draftFilters.value = draftFilters.value.filter(
+      (currentValue) => currentValue !== value,
+    );
+
+    return;
+  }
+
+  draftFilters.value = [...draftFilters.value, value];
+};
+
+const applyFilters = () => {
+  emit('apply-filters', props.column, [...draftFilters.value].sort());
+  menuOpen.value = false;
+};
+
+const clearFilters = () => {
+  emit('clear-filters', props.column);
+  menuOpen.value = false;
+};
 </script>
 
 <template>
-  <TableHead :class="cn('align-top', headClass)">
-    <div class="flex items-start gap-2">
-      <span>{{ label }}</span>
+  <TableHead :class="cn('align-middle', headClass)">
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-medium leading-none">{{ label }}</span>
 
-      <DropdownMenu>
+      <DropdownMenu v-model:open="menuOpen">
         <DropdownMenuTrigger :as-child="true">
           <Button
-            appearance="outline"
+            :appearance="hasActiveFilters ? 'filled' : 'outline'"
             size="sm"
-            class="h-7 gap-1 px-2 text-muted-foreground"
+            :aria-label="filterButtonTitle"
+            :title="filterButtonTitle"
+            class="h-6 gap-1 px-1.5 align-middle"
           >
-            <ListFilterIcon class="size-3.5" />
-            <span v-if="selectedFilters.length" class="text-[10px]">
+            <FunnelIcon
+              :class="
+                cn(
+                  'size-3',
+                  hasActiveFilters
+                    ? 'text-primary-foreground'
+                    : 'text-muted-foreground',
+                )
+              "
+            />
+            <span
+              v-if="selectedFilters.length"
+              :class="
+                cn(
+                  'text-[11px]',
+                  hasActiveFilters
+                    ? 'text-primary-foreground'
+                    : 'text-muted-foreground',
+                )
+              "
+            >
               {{ selectedFilters.length }}
             </span>
           </Button>
@@ -79,32 +173,58 @@ const sortIcon = computed(() => {
           <DropdownMenuLabel>{{ label }}</DropdownMenuLabel>
           <DropdownMenuItem
             :disabled="selectedFilters.length === 0"
-            @select.prevent="$emit('clear-filters', column)"
+            @select.prevent="clearFilters"
           >
             Clear filters
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem
+          <DropdownMenuItem
             v-for="option in filterOptions"
             :key="`${column}-${option}`"
-            :checked="selectedFilters.includes(option)"
-            @update:checked="
-              (checked: boolean | 'indeterminate') =>
-                $emit('toggle-filter', column, option, checked)
-            "
+            @select.prevent="toggleDraftFilter(option)"
           >
+            <span
+              class="flex size-4 items-center justify-center rounded-xs border border-border/80 bg-background text-primary"
+            >
+              <CheckIcon v-if="draftFilters.includes(option)" class="size-3" />
+              <SquareIcon v-else class="size-3 text-transparent" />
+            </span>
             {{ formatOptionLabel(option) }}
-          </DropdownMenuCheckboxItem>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <div class="flex justify-end p-1">
+            <Button
+              v-if="hasDraftChanges"
+              appearance="filled"
+              size="sm"
+              type="button"
+              @click="applyFilters"
+            >
+              Apply
+            </Button>
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <Button
-        appearance="outline"
+        :appearance="sortDirection === 'none' ? 'outline' : 'filled'"
         size="sm"
-        class="h-7 px-2 text-muted-foreground"
+        :aria-label="sortButtonTitle"
+        :title="sortButtonTitle"
+        class="h-6 px-1.5 align-middle"
         @click="$emit('toggle-sort', column)"
       >
-        <component :is="sortIcon" class="size-3.5" />
+        <component
+          :is="sortIcon"
+          :class="
+            cn(
+              'size-3',
+              sortDirection === 'none'
+                ? 'text-muted-foreground'
+                : 'text-primary-foreground',
+            )
+          "
+        />
       </Button>
     </div>
   </TableHead>

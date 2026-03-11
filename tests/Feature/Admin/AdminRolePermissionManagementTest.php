@@ -169,3 +169,25 @@ test('quiet success role edit requests do not flash duplicate success messages',
 
     expect($role->fresh()?->hasPermissionTo($permission))->toBeTrue();
 });
+
+test('quiet success permission edit requests do not flash duplicate success messages', function () {
+    $permission = Permission::query()->create([
+        'name' => 'users.exportData',
+        'group' => 'users',
+        'guard_name' => 'web',
+    ]);
+
+    $response = $this->from(route('admin.permissions.edit', $permission))
+        ->put(route('admin.permissions.update', [
+            'permission' => $permission,
+            'quiet_success' => 1,
+        ]), [
+            'name' => 'users.export reports',
+            'group' => 'users',
+        ]);
+
+    $response->assertRedirect(route('admin.permissions.edit', $permission));
+    $response->assertSessionMissing('success');
+
+    expect($permission->fresh()?->name)->toBe('users.exportReports');
+});

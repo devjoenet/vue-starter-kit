@@ -3,7 +3,6 @@ import Button from '@/components/ui/button/Button.vue';
 
 defineProps<{
   canDelete: boolean;
-  canSave: boolean;
   deleteLabel: string;
   processing: boolean;
   saveLabel: string;
@@ -28,11 +27,7 @@ defineEmits<{
       {{ deleteLabel }}
     </Button>
 
-    <Button
-      appearance="filled"
-      :disabled="!canSave || processing"
-      @click="$emit('save')"
-    >
+    <Button appearance="filled" :disabled="processing" @click="$emit('save')">
       {{ saveLabel }}
     </Button>
   </div>

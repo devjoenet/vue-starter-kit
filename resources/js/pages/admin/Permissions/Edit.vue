@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { h, computed, watch } from 'vue';
 import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
+import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import {
   extractPermissionActionSegment,
@@ -34,8 +35,10 @@ const props = defineProps<AdminPermissionsEditPageProps>();
 
 const { can } = useAbility();
 const { confirmDelete } = useDeleteConfirmation();
+const { success } = useToast();
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 const canDelete = computed(() => can(adminPermissions.permissionsDelete));
+const submitLabel = computed(() => (form.isDirty ? 'Save and Close' : 'Close'));
 
 const form = useForm<UpdatePermissionRequest>({
   name: props.permission.name,
@@ -60,18 +63,38 @@ watch(
   { immediate: true },
 );
 
+const closeToIndex = () => {
+  router.visit(index.url());
+};
+
 const updatePermission = () => {
   if (!canUpdate.value) return;
 
+  if (!form.isDirty) {
+    closeToIndex();
+    return;
+  }
+
   form.group = toSnakeCase(form.group);
   form.name = normalizePermissionName(form.name, form.group);
-  form.put(update.url(props.permission.id));
+  form.put(
+    update.url(props.permission.id, { query: { quiet_success: true } }),
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        success('Changes saved.');
+        closeToIndex();
+      },
+    },
+  );
 };
 
 const destroyPermission = () => {
   confirmDelete({
+    confirmLabel: 'Delete permission',
     enabled: canDelete.value,
-    message: 'Delete this permission?',
+    message: 'Delete this permission? This is not reversible.',
+    title: 'Delete permission?',
     onConfirm: () => {
       form.delete(destroy.url(props.permission.id));
     },
@@ -93,7 +116,7 @@ const destroyPermission = () => {
       delete-label="Delete"
       :form="form"
       :groups="props.groups"
-      submit-label="Save"
+      :submit-label="submitLabel"
       @delete="destroyPermission"
       @submit="updatePermission"
     />

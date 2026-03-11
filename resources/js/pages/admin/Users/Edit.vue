@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { computed, h, watch } from 'vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
@@ -98,10 +98,16 @@ watch(selectedRoles, (roleNames) => {
 
 const detailsDirty = computed(() => canUpdate.value && userForm.isDirty);
 const rolesDirty = computed(() => canAssignRoles.value && rolesForm.isDirty);
-const canSave = computed(() => detailsDirty.value || rolesDirty.value);
+const isDirty = computed(() => detailsDirty.value || rolesDirty.value);
+const saveLabel = computed(() => (isDirty.value ? 'Save and Close' : 'Close'));
 
-const saveAllChanges = async () => {
-  if (!canSave.value) {
+const closeToIndex = () => {
+  router.visit(index.url());
+};
+
+const saveOrClose = async () => {
+  if (!isDirty.value) {
+    closeToIndex();
     return;
   }
 
@@ -150,13 +156,16 @@ const saveAllChanges = async () => {
 
   if (succeeded) {
     success('Changes saved.');
+    closeToIndex();
   }
 };
 
 const destroyUser = () => {
   confirmDelete({
+    confirmLabel: `Delete ${userLabel.value}`,
     enabled: canDelete.value,
     message: 'Delete this user? This is not reversible.',
+    title: `Delete ${userLabel.value}?`,
     onConfirm: () => {
       userForm.delete(destroy.url(props.user.id));
     },
@@ -183,12 +192,11 @@ const destroyUser = () => {
 
       <EditPageActionRow
         :can-delete="canDelete"
-        :can-save="canSave"
         :delete-label="`Delete ${userLabel}`"
         :processing="saveProcessing"
-        save-label="Save"
+        :save-label="saveLabel"
         @delete="destroyUser"
-        @save="saveAllChanges"
+        @save="saveOrClose"
       />
     </div>
   </div>

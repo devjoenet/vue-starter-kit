@@ -2,12 +2,17 @@
 import type { InertiaForm } from '@inertiajs/vue3';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
+import { toTitleCase } from '@/lib/utils';
 import type { UpdateRoleRequest } from '@/types/wayfinder-generated';
 
-defineProps<{
+const props = defineProps<{
   canUpdate: boolean;
   form: InertiaForm<UpdateRoleRequest>;
 }>();
+
+const normalizeRoleNameForDisplay = () => {
+  props.form.name = toTitleCase(props.form.name);
+};
 </script>
 
 <template>
@@ -25,6 +30,7 @@ defineProps<{
         :disabled="!canUpdate"
         :state="form.errors.name ? 'error' : 'default'"
         :message="form.errors.name"
+        @blur="normalizeRoleNameForDisplay"
       />
     </div>
   </Card>

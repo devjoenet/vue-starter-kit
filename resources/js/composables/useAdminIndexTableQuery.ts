@@ -91,6 +91,17 @@ export function useAdminIndexTableQuery<TColumn extends string>({
     });
   };
 
+  const setFilters = (column: TColumn, values: string[]) => {
+    visit({
+      sort: currentQuery.value.sort,
+      direction: currentQuery.value.direction,
+      filters: normalizeFilters({
+        ...currentQuery.value.filters,
+        [column]: values,
+      }),
+    });
+  };
+
   const clearFilters = (column: TColumn) => {
     const filters = { ...currentQuery.value.filters };
 
@@ -106,6 +117,7 @@ export function useAdminIndexTableQuery<TColumn extends string>({
   return {
     clearFilters,
     selectedFiltersFor,
+    setFilters,
     sortDirectionFor,
     toggleFilter,
     toggleSort,

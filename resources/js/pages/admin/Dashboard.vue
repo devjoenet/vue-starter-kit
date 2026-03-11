@@ -36,6 +36,8 @@ const props = defineProps<AdminDashboardPageProps>();
       class="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgb(28_150_206/0.14),transparent_55%)]"
     />
 
+    <AdminQuickLinks :counts="props.counts" />
+
     <div class="relative grid auto-rows-[170px] gap-4 md:grid-cols-6">
       <div
         class="group relative overflow-hidden rounded-xl border border-border/60 bg-card/90 shadow-(--elevation-1) transition-all duration-200 hover:-translate-y-1 hover:shadow-(--elevation-2) md:col-span-4"
@@ -71,7 +73,5 @@ const props = defineProps<AdminDashboardPageProps>();
       />
       <PlaceholderPattern />
     </div>
-
-    <AdminQuickLinks :counts="props.counts" />
   </div>
 </template>

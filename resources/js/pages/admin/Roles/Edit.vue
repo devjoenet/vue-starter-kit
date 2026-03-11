@@ -44,7 +44,7 @@ const canDelete = computed(() => can(adminPermissions.rolesDelete));
 const canAssign = computed(() => can(adminPermissions.rolesAssignPermissions));
 
 const roleForm = useForm<UpdateRoleRequest>({
-  name: props.role.name,
+  name: toTitleCase(props.role.name),
 });
 const permsForm = useForm<SyncRolePermissionsRequest>({
   permissions: [...props.rolePermissions],
@@ -60,10 +60,10 @@ watch(
   () => props.role.name,
   (roleName) => {
     roleForm.defaults({
-      name: roleName,
+      name: toTitleCase(roleName),
     });
 
-    roleForm.name = roleName;
+    roleForm.name = toTitleCase(roleName);
   },
   { immediate: true },
 );
@@ -86,33 +86,43 @@ watch(selectedPermissions, (permissions) => {
 
 const detailsDirty = computed(() => canUpdate.value && roleForm.isDirty);
 const permissionsDirty = computed(() => canAssign.value && permsForm.isDirty);
-const canSave = computed(() => detailsDirty.value || permissionsDirty.value);
+const isDirty = computed(() => detailsDirty.value || permissionsDirty.value);
+const saveLabel = computed(() => (isDirty.value ? 'Save and Close' : 'Close'));
 
-const saveAllChanges = async () => {
-  if (!canSave.value) {
+const closeToIndex = () => {
+  router.visit(index.url());
+};
+
+const saveOrClose = async () => {
+  if (!isDirty.value) {
+    closeToIndex();
     return;
   }
 
   const succeeded = await run([
     detailsDirty.value
       ? createStep((callbacks) => {
-          roleForm.name = toKebabCase(roleForm.name);
-          roleForm.put(
-            update.url(props.role.id, { query: { quiet_success: true } }),
-            {
-              only: ['role', 'flash'],
-              preserveScroll: true,
-              onSuccess: () => {
-                roleForm.defaults({
-                  name: roleForm.name,
-                });
-                callbacks.onSuccess();
+          roleForm
+            .transform((data) => ({
+              ...data,
+              name: toKebabCase(data.name),
+            }))
+            .put(
+              update.url(props.role.id, { query: { quiet_success: true } }),
+              {
+                only: ['role', 'flash'],
+                preserveScroll: true,
+                onSuccess: () => {
+                  roleForm.defaults({
+                    name: roleForm.name,
+                  });
+                  callbacks.onSuccess();
+                },
+                onCancel: callbacks.onCancel,
+                onError: callbacks.onError,
+                onFinish: callbacks.onFinish,
               },
-              onCancel: callbacks.onCancel,
-              onError: callbacks.onError,
-              onFinish: callbacks.onFinish,
-            },
-          );
+            );
         })
       : null,
     permissionsDirty.value
@@ -135,13 +145,16 @@ const saveAllChanges = async () => {
 
   if (succeeded) {
     success('Changes saved.');
+    closeToIndex();
   }
 };
 
 const destroyRole = () => {
   confirmDelete({
+    confirmLabel: 'Delete role',
     enabled: canDelete.value,
-    message: 'Delete this role?',
+    message: 'Delete this role? This is not reversible.',
+    title: `Delete ${toTitleCase(props.role.name)}?`,
     onConfirm: () => {
       router.delete(destroy.url(props.role.id));
     },
@@ -170,12 +183,11 @@ const destroyRole = () => {
 
       <EditPageActionRow
         :can-delete="canDelete"
-        :can-save="canSave"
         delete-label="Delete Role"
         :processing="saveProcessing"
-        save-label="Save"
+        :save-label="saveLabel"
         @delete="destroyRole"
-        @save="saveAllChanges"
+        @save="saveOrClose"
       />
     </div>
   </div>

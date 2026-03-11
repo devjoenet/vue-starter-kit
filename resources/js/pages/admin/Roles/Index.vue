@@ -41,9 +41,9 @@ const canCreate = computed(() => can(adminPermissions.rolesCreate));
 const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
 const {
   clearFilters,
+  setFilters,
   selectedFiltersFor,
   sortDirectionFor,
-  toggleFilter,
   toggleSort,
 } = useAdminIndexTableQuery<AdminRolesIndexColumn>({
   getQuery: () => props.query,
@@ -84,9 +84,9 @@ const {
                   clearFilters(column as AdminRolesIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminRolesIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminRolesIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -105,9 +105,9 @@ const {
                   clearFilters(column as AdminRolesIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminRolesIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminRolesIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -126,9 +126,9 @@ const {
                   clearFilters(column as AdminRolesIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminRolesIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminRolesIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -144,7 +144,7 @@ const {
               <Link
                 v-if="canUpdate"
                 :href="edit.url(role.id)"
-                class="transition-colors hover:text-foreground/70"
+                class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
               >
                 {{ toTitleCase(role.name) }}
               </Link>

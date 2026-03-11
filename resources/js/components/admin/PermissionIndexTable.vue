@@ -26,9 +26,9 @@ const props = defineProps<{
 
 const {
   clearFilters,
+  setFilters,
   selectedFiltersFor,
   sortDirectionFor,
-  toggleFilter,
   toggleSort,
 } = useAdminIndexTableQuery<AdminPermissionsIndexColumn>({
   getQuery: () => props.query,
@@ -49,32 +49,6 @@ const {
       <TableHeader>
         <TableRow>
           <AdminIndexHeaderCell
-            label="Group"
-            column="group"
-            :filter-options="props.filterOptions.group"
-            :format-option-label="toTitleCase"
-            :selected-filters="selectedFiltersFor('group')"
-            :sort-direction="sortDirectionFor('group')"
-            @clear-filters="
-              (column) => {
-                clearFilters(column as AdminPermissionsIndexColumn);
-              }
-            "
-            @toggle-filter="
-              (column, value, checked) =>
-                toggleFilter(
-                  column as AdminPermissionsIndexColumn,
-                  value,
-                  checked,
-                )
-            "
-            @toggle-sort="
-              (column) => {
-                toggleSort(column as AdminPermissionsIndexColumn);
-              }
-            "
-          />
-          <AdminIndexHeaderCell
             label="Permission"
             column="permission"
             :filter-options="props.filterOptions.permission"
@@ -86,13 +60,31 @@ const {
                 clearFilters(column as AdminPermissionsIndexColumn);
               }
             "
-            @toggle-filter="
-              (column, value, checked) =>
-                toggleFilter(
-                  column as AdminPermissionsIndexColumn,
-                  value,
-                  checked,
-                )
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as AdminPermissionsIndexColumn, values)
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as AdminPermissionsIndexColumn);
+              }
+            "
+          />
+          <AdminIndexHeaderCell
+            label="Group"
+            column="group"
+            :filter-options="props.filterOptions.group"
+            :format-option-label="toTitleCase"
+            :selected-filters="selectedFiltersFor('group')"
+            :sort-direction="sortDirectionFor('group')"
+            @clear-filters="
+              (column) => {
+                clearFilters(column as AdminPermissionsIndexColumn);
+              }
+            "
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as AdminPermissionsIndexColumn, values)
             "
             @toggle-sort="
               (column) => {
@@ -111,13 +103,9 @@ const {
                 clearFilters(column as AdminPermissionsIndexColumn);
               }
             "
-            @toggle-filter="
-              (column, value, checked) =>
-                toggleFilter(
-                  column as AdminPermissionsIndexColumn,
-                  value,
-                  checked,
-                )
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as AdminPermissionsIndexColumn, values)
             "
             @toggle-sort="
               (column) => {
@@ -129,18 +117,18 @@ const {
       </TableHeader>
       <TableBody>
         <TableRow v-for="permission in props.permissions" :key="permission.id">
-          <TableCell class="text-muted-foreground">
-            {{ toTitleCase(permission.group) }}
-          </TableCell>
           <TableCell class="font-medium">
             <Link
               v-if="canUpdate"
               :href="edit.url(permission.id)"
-              class="transition-colors hover:text-foreground/70"
+              class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
             >
               {{ toTitleCase(permission.suffix) }}
             </Link>
             <span v-else>{{ toTitleCase(permission.suffix) }}</span>
+          </TableCell>
+          <TableCell class="text-muted-foreground">
+            {{ toTitleCase(permission.group) }}
           </TableCell>
           <TableCell class="text-muted-foreground">
             {{ permission.name }}

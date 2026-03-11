@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { Fragment, createApp, h } from 'vue';
+import DeleteConfirmationDialog from './components/DeleteConfirmationDialog.vue';
 import AppToasts from './components/AppToasts.vue';
 import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
@@ -17,7 +18,8 @@ createInertiaApp({
     ),
   setup({ el, App, props, plugin }) {
     createApp({
-      render: () => h(Fragment, [h(App, props), h(AppToasts)]),
+      render: () =>
+        h(Fragment, [h(App, props), h(AppToasts), h(DeleteConfirmationDialog)]),
     })
       .use(plugin)
       .mount(el);

@@ -43,9 +43,9 @@ const canCreate = computed(() => can(adminPermissions.usersCreate));
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
 const {
   clearFilters,
+  setFilters,
   selectedFiltersFor,
   sortDirectionFor,
-  toggleFilter,
   toggleSort,
 } = useAdminIndexTableQuery<AdminUsersIndexColumn>({
   getQuery: () => props.query,
@@ -86,9 +86,9 @@ const {
                   clearFilters(column as AdminUsersIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminUsersIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -107,9 +107,9 @@ const {
                   clearFilters(column as AdminUsersIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminUsersIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -129,9 +129,9 @@ const {
                   clearFilters(column as AdminUsersIndexColumn);
                 }
               "
-              @toggle-filter="
-                (column, value, checked) =>
-                  toggleFilter(column as AdminUsersIndexColumn, value, checked)
+              @apply-filters="
+                (column, values) =>
+                  setFilters(column as AdminUsersIndexColumn, values)
               "
               @toggle-sort="
                 (column) => {
@@ -147,7 +147,7 @@ const {
               <Link
                 v-if="canUpdate"
                 :href="edit.url(user.id)"
-                class="transition-colors hover:text-foreground/70"
+                class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
               >
                 {{ user.name }}
               </Link>

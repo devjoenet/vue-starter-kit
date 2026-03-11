@@ -120,6 +120,10 @@ final class PermissionsController extends Controller
             group: (string) $request->validated('group'),
         ));
 
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
+
         return $this->backWithSuccess('Permission updated.');
     }
 
