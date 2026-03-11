@@ -9,10 +9,10 @@ export const tableHeaderVariants = cva(
 );
 export const tableBodyVariants = cva('[&_tr:last-child]:border-0');
 export const tableRowVariants = cva(
-  'border-b border-border/55 transition-colors hover:bg-muted/35 data-[state=selected]:bg-muted/45',
+  'border-b border-border/55 transition-colors even:bg-muted/20 hover:bg-muted/35 data-[state=selected]:bg-muted/45 dark:even:bg-white/4 dark:hover:bg-white/8 dark:data-[state=selected]:bg-white/10',
 );
 export const tableHeadVariants = cva(
   'h-11 px-4 text-left align-middle text-xs font-semibold tracking-wide whitespace-nowrap text-muted-foreground uppercase [&_button]:font-[inherit] [&_button]:leading-[inherit] [&_button]:tracking-[inherit] [&_button]:text-inherit [&_button]:uppercase',
 );
-export const tableCellVariants = cva('p-4 align-middle whitespace-nowrap');
+export const tableCellVariants = cva('px-4 py-3 align-middle whitespace-nowrap');
 export const tableCaptionVariants = cva('mt-3 text-sm text-muted-foreground');

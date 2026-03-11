@@ -34,6 +34,9 @@ test('users index route includes roles for each user row', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Users/Index')
             ->has('users.data')
+            ->has('filterOptions.roles')
+            ->where('query.sort', 'id')
+            ->where('query.direction', 'asc')
             ->where('users.data.0.roles', fn ($roles) => collect($roles)->contains('super-admin'))
         );
 });
@@ -100,6 +103,9 @@ test('roles index route includes user counts for each role row', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Roles/Index')
             ->has('roles')
+            ->has('filterOptions.users')
+            ->where('query.sort', 'id')
+            ->where('query.direction', 'asc')
             ->where('roles', fn ($roles) => collect($roles)->contains(fn ($entry) => $entry['name'] === 'reviewer' && $entry['users_count'] === 2))
         );
 });
@@ -160,10 +166,14 @@ test('permissions index route supports partial reloads for permission table stat
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Permissions/Index')
-            ->has('permissionsByGroup')
-            ->reloadOnly(['permissionsByGroup', 'flash'], fn (Assert $reload) => $reload
-                ->has('permissionsByGroup')
-                ->has('flash')
+            ->has('permissions')
+            ->has('filterOptions.group')
+            ->where('query.sort', 'id')
+            ->where('query.direction', 'asc')
+            ->reloadOnly(['permissions', 'filterOptions', 'query'], fn (Assert $reload) => $reload
+                ->has('permissions')
+                ->has('filterOptions.group')
+                ->has('query')
             )
         );
 });

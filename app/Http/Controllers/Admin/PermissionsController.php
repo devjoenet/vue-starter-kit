@@ -11,20 +11,63 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Models\Permission;
+use App\Support\AdminIndexQuery;
+use App\Support\Data\Admin\AdminIndexQueryData;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
+use App\Support\Data\Admin\Permissions\PermissionIndexFilterOptionsData;
+use App\Support\Data\Admin\Permissions\PermissionIndexItemData;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\GroupedPermissions;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class PermissionsController extends Controller
 {
-    public function index(GroupedPermissions $groupedPermissions): Response
+    public function index(Request $request): Response
     {
+        $indexQuery = AdminIndexQuery::fromRequest(
+            request: $request,
+            allowedSorts: ['id', 'group', 'permission', 'permission_check'],
+            allowedFilters: ['group', 'permission', 'permission_check'],
+        );
+
+        $permissions = Permission::query()
+            ->select(['id', 'name', 'group'])
+            ->get()
+            ->map(fn (Permission $permission): array => PermissionIndexItemData::fromModel($permission)->all());
+
+        $filteredPermissions = $permissions
+            ->when(
+                $indexQuery->filterValues('group') !== [],
+                fn ($collection) => $collection->whereIn('group', $indexQuery->filterValues('group')),
+            )
+            ->when(
+                $indexQuery->filterValues('permission') !== [],
+                fn ($collection) => $collection->whereIn('suffix', $indexQuery->filterValues('permission')),
+            )
+            ->when(
+                $indexQuery->filterValues('permission_check') !== [],
+                fn ($collection) => $collection->whereIn('name', $indexQuery->filterValues('permission_check')),
+            );
+
+        $sortedPermissions = match ($indexQuery->sort) {
+            'group' => $filteredPermissions->sortBy('group', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            'permission' => $filteredPermissions->sortBy('suffix', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            'permission_check' => $filteredPermissions->sortBy('name', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            default => $filteredPermissions->sortBy('id', SORT_NUMERIC, $indexQuery->direction === 'desc'),
+        };
+
         return Inertia::render('admin/Permissions/Index', [
-            'permissionsByGroup' => $groupedPermissions->allData(...),
+            'permissions' => $sortedPermissions->values()->all(),
+            'filterOptions' => PermissionIndexFilterOptionsData::from([
+                'group' => $permissions->pluck('group')->unique()->sort()->values()->all(),
+                'permission' => $permissions->pluck('suffix')->unique()->sort()->values()->all(),
+                'permission_check' => $permissions->pluck('name')->unique()->sort()->values()->all(),
+            ])->all(),
+            'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
 
@@ -76,6 +119,10 @@ final class PermissionsController extends Controller
             name: (string) $request->validated('name'),
             group: (string) $request->validated('group'),
         ));
+
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
 
         return $this->backWithSuccess('Permission updated.');
     }

@@ -19,7 +19,11 @@ it('matches the shared table ui structure', function () {
     expect($stylesContents)
         ->toContain('tableWrapperVariants')
         ->toContain('tableHeadVariants')
-        ->toContain('tableRowVariants');
+        ->toContain('tableRowVariants')
+        ->toContain('even:bg-muted/20')
+        ->toContain('hover:bg-muted/35')
+        ->toContain('dark:even:bg-white/4')
+        ->toContain('dark:hover:bg-white/8');
 
     expect($tableContents)
         ->toContain('data-slot="table-wrapper"')
@@ -30,6 +34,7 @@ it('matches the shared table ui structure', function () {
 it('uses shared table ui components in admin role, permission, and user index pages', function () {
     $rolesIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Index.vue');
     $permissionsIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Index.vue');
+    $permissionsTable = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
     $usersIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Index.vue');
 
     expect($rolesIndex)
@@ -39,10 +44,11 @@ it('uses shared table ui components in admin role, permission, and user index pa
         ->toContain('<TableBody>');
 
     expect($permissionsIndex)
+        ->toContain("from '@/components/admin/PermissionIndexTable.vue'")
+        ->not->toContain("from '@/components/ui/table/Table.vue'");
+
+    expect($permissionsTable)
         ->toContain("from '@/components/ui/table/Table.vue'")
-        ->toContain("from '@/composables/usePermissionTable'")
-        ->toContain('usePermissionTable(() => props.permissionsByGroup)')
-        ->toContain("only: ['permissionsByGroup', 'flash']")
         ->toContain('<Table>')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');

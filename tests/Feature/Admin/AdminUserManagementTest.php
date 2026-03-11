@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Illuminate\Support\Facades\Hash;
@@ -48,4 +49,39 @@ test('admin cannot update a user password when confirmation does not match', fun
     $response->assertSessionHasErrors(['password']);
 
     expect(Hash::check('old-password', $user->fresh()->password))->toBeTrue();
+});
+
+test('quiet success user edit requests do not flash duplicate success messages', function (): void {
+    $user = User::factory()->create();
+    $role = Role::query()->create([
+        'name' => 'support_specialist',
+        'guard_name' => 'web',
+    ]);
+
+    $updateResponse = $this->from(route('admin.users.edit', $user))
+        ->put(route('admin.users.update', [
+            'user' => $user,
+            'quiet_success' => 1,
+        ]), [
+            'name' => 'Updated User',
+            'email' => $user->email,
+            'password' => '',
+            'password_confirmation' => '',
+        ]);
+
+    $updateResponse->assertRedirect(route('admin.users.edit', $user));
+    $updateResponse->assertSessionMissing('success');
+
+    $syncResponse = $this->from(route('admin.users.edit', $user))
+        ->put(route('admin.users.roles.sync', [
+            'user' => $user,
+            'quiet_success' => 1,
+        ]), [
+            'roles' => [$role->name],
+        ]);
+
+    $syncResponse->assertRedirect(route('admin.users.edit', $user));
+    $syncResponse->assertSessionMissing('success');
+
+    expect($user->fresh()?->hasRole($role))->toBeTrue();
 });

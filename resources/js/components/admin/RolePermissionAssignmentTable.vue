@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
+import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import Input from '@/components/ui/input/Input.vue';
-import Select from '@/components/ui/select/Select.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
@@ -13,12 +11,12 @@ import TableRow from '@/components/ui/table/TableRow.vue';
 import { usePermissionTable } from '@/composables/usePermissionTable';
 import { toTitleCase } from '@/lib/utils';
 import type { PermissionsByGroup } from '@/types/page-props';
+import type { PermissionSortColumn } from '@/composables/usePermissionTable';
 
 const props = defineProps<{
   canAssign: boolean;
   error?: string;
   permissionsByGroup: PermissionsByGroup;
-  processing: boolean;
   selectedPermissionNames: string[];
 }>();
 
@@ -28,102 +26,96 @@ const emit = defineEmits<{
     permissionName: string,
     value: boolean | 'indeterminate',
   ): void;
-  (event: 'save'): void;
 }>();
 
 const {
-  groupFilter,
-  groupOptions,
-  search,
-  sortDirections,
+  clearFilters,
+  filterOptions,
+  resultsLabel,
+  selectedFiltersFor,
+  setFilters,
+  sortDirectionFor,
   sortedRows,
   toggleSort,
 } = usePermissionTable(() => props.permissionsByGroup);
-
-const resultsLabel = computed(() => {
-  const count = sortedRows.value.length;
-
-  return `${count} result${count === 1 ? '' : 's'}`;
-});
 </script>
 
 <template>
   <AssignmentTableCard
-    :can-submit="canAssign"
     :error="error"
-    :processing="processing"
     description="Filter, sort, and assign permissions from one table."
-    save-label="Save Permissions"
     title="Permissions"
-    @save="$emit('save')"
   >
     <Table wrapper-class="rounded-none border-0">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14 text-center">Access</TableHead>
-          <TableHead>
-            <button
-              type="button"
-              class="inline-flex items-center gap-1"
-              @click="toggleSort('group')"
-            >
-              Group
-              <span class="text-[10px]">
-                {{
-                  sortDirections.group === 'none'
-                    ? '⇅'
-                    : sortDirections.group === 'asc'
-                      ? '▲'
-                      : '▼'
-                }}
-              </span>
-            </button>
-          </TableHead>
-          <TableHead>
-            <button
-              type="button"
-              class="inline-flex items-center gap-1"
-              @click="toggleSort('name')"
-            >
-              Permission
-              <span class="text-[10px]">
-                {{
-                  sortDirections.name === 'none'
-                    ? '⇅'
-                    : sortDirections.name === 'asc'
-                      ? '▲'
-                      : '▼'
-                }}
-              </span>
-            </button>
-          </TableHead>
-          <TableHead class="hidden xl:table-cell">Permission Check</TableHead>
-        </TableRow>
-        <TableRow>
-          <TableHead />
-          <TableHead class="align-top">
-            <Select
-              id="role-permissions-group-filter"
-              v-model="groupFilter"
-              :options="groupOptions"
-              placeholder="All groups"
-              variant="outlined"
-              trigger-class="min-w-[11rem]"
-            />
-          </TableHead>
-          <TableHead class="align-top">
-            <Input
-              id="role-permissions-search"
-              v-model="search"
-              placeholder="Filter permissions..."
-              variant="outlined"
-            />
-          </TableHead>
-          <TableHead
-            class="hidden text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase xl:table-cell"
-          >
-            {{ resultsLabel }}
-          </TableHead>
+          <AdminIndexHeaderCell
+            label="Group"
+            column="group"
+            :filter-options="filterOptions.group"
+            :format-option-label="toTitleCase"
+            :selected-filters="selectedFiltersFor('group')"
+            :sort-direction="sortDirectionFor('group')"
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as PermissionSortColumn, values)
+            "
+            @clear-filters="
+              (column) => {
+                clearFilters(column as PermissionSortColumn);
+              }
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as PermissionSortColumn);
+              }
+            "
+          />
+          <AdminIndexHeaderCell
+            label="Permission"
+            column="permission"
+            :filter-options="filterOptions.permission"
+            :format-option-label="toTitleCase"
+            :selected-filters="selectedFiltersFor('permission')"
+            :sort-direction="sortDirectionFor('permission')"
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as PermissionSortColumn, values)
+            "
+            @clear-filters="
+              (column) => {
+                clearFilters(column as PermissionSortColumn);
+              }
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as PermissionSortColumn);
+              }
+            "
+          />
+          <AdminIndexHeaderCell
+            label="Permission Check"
+            column="permission_check"
+            head-class="hidden xl:table-cell"
+            :filter-options="filterOptions.permission_check"
+            :selected-filters="selectedFiltersFor('permission_check')"
+            :sort-direction="sortDirectionFor('permission_check')"
+            @apply-filters="
+              (column, values) =>
+                setFilters(column as PermissionSortColumn, values)
+            "
+            @clear-filters="
+              (column) => {
+                clearFilters(column as PermissionSortColumn);
+              }
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as PermissionSortColumn);
+              }
+            "
+          />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -154,5 +146,10 @@ const resultsLabel = computed(() => {
         </TableRow>
       </TableBody>
     </Table>
+    <p
+      class="border-t border-border/60 px-6 py-3 text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
+    >
+      {{ resultsLabel }}
+    </p>
   </AssignmentTableCard>
 </template>

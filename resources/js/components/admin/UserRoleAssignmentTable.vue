@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
+import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import Input from '@/components/ui/input/Input.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
@@ -12,16 +12,17 @@ import TableRow from '@/components/ui/table/TableRow.vue';
 import { toTitleCase } from '@/lib/utils';
 import type { RoleOption } from '@/types/page-props';
 
+type RoleSortColumn = 'display_name' | 'slug';
+type SortDirection = 'none' | 'asc' | 'desc';
+
 const props = defineProps<{
   canAssign: boolean;
   error?: string;
-  processing: boolean;
   roles: RoleOption[];
   selectedRoleNames: string[];
 }>();
 
-const emit = defineEmits<{
-  (event: 'save'): void;
+defineEmits<{
   (
     event: 'toggle-role',
     roleName: string,
@@ -29,64 +30,152 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const search = ref('');
+const activeSortColumn = ref<RoleSortColumn>('display_name');
+const activeSortDirection = ref<SortDirection>('asc');
+const selectedFilters = ref<Partial<Record<RoleSortColumn, string[]>>>({});
 
-const filteredRoles = computed(() => {
-  const searchTerm = search.value.trim().toLowerCase();
+const filterOptions = computed(() => ({
+  display_name: Array.from(
+    new Set(props.roles.map((role) => role.name)),
+  ).sort(),
+  slug: Array.from(new Set(props.roles.map((role) => role.name))).sort(),
+}));
 
-  if (!searchTerm) {
-    return props.roles;
+const selectedFiltersFor = (column: RoleSortColumn): string[] =>
+  selectedFilters.value[column] ?? [];
+
+const setFilters = (column: RoleSortColumn, values: string[]) => {
+  selectedFilters.value = {
+    ...selectedFilters.value,
+    [column]: [...new Set(values)].sort(),
+  };
+
+  if (selectedFilters.value[column]?.length === 0) {
+    delete selectedFilters.value[column];
+  }
+};
+
+const clearFilters = (column: RoleSortColumn) => {
+  const nextFilters = { ...selectedFilters.value };
+
+  delete nextFilters[column];
+
+  selectedFilters.value = nextFilters;
+};
+
+const sortDirectionFor = (column: RoleSortColumn): SortDirection =>
+  activeSortColumn.value === column ? activeSortDirection.value : 'none';
+
+const toggleSort = (column: RoleSortColumn) => {
+  if (activeSortColumn.value !== column) {
+    activeSortColumn.value = column;
+    activeSortDirection.value = 'asc';
+
+    return;
   }
 
-  return props.roles.filter((role) =>
-    role.name.toLowerCase().includes(searchTerm),
-  );
-});
+  if (activeSortDirection.value === 'none') {
+    activeSortDirection.value = 'asc';
 
-const resultsLabel = computed(() => {
-  const count = filteredRoles.value.length;
+    return;
+  }
 
-  return `${count} role${count === 1 ? '' : 's'}`;
-});
+  if (activeSortDirection.value === 'asc') {
+    activeSortDirection.value = 'desc';
+
+    return;
+  }
+
+  activeSortDirection.value = 'none';
+};
+
+const filteredRoles = computed(() =>
+  props.roles.filter((role) => {
+    const displayNameFilters = selectedFiltersFor('display_name');
+    const slugFilters = selectedFiltersFor('slug');
+
+    return (
+      (!displayNameFilters.length || displayNameFilters.includes(role.name)) &&
+      (!slugFilters.length || slugFilters.includes(role.name))
+    );
+  }),
+);
+
+const sortedRoles = computed(() =>
+  [...filteredRoles.value].sort((left, right) => {
+    if (activeSortDirection.value === 'none') {
+      return left.id - right.id;
+    }
+
+    const direction = activeSortDirection.value === 'asc' ? 1 : -1;
+
+    if (activeSortColumn.value === 'slug') {
+      return left.name.localeCompare(right.name) * direction;
+    }
+
+    return (
+      toTitleCase(left.name).localeCompare(toTitleCase(right.name)) * direction
+    );
+  }),
+);
 </script>
 
 <template>
   <AssignmentTableCard
-    :can-submit="canAssign"
     :error="error"
-    :processing="processing"
     description="Filter and assign roles from one table."
-    save-label="Save Roles"
     title="Roles"
-    @save="$emit('save')"
   >
     <Table wrapper-class="rounded-none border-0">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14 text-center">Access</TableHead>
-          <TableHead>Display Name</TableHead>
-          <TableHead>Slug</TableHead>
-          <TableHead
-            class="text-right text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
-          >
-            {{ resultsLabel }}
-          </TableHead>
-        </TableRow>
-        <TableRow>
-          <TableHead />
-          <TableHead class="align-top" colspan="2">
-            <Input
-              id="user-roles-search"
-              v-model="search"
-              placeholder="Filter roles..."
-              variant="outlined"
-            />
-          </TableHead>
-          <TableHead />
+          <AdminIndexHeaderCell
+            label="Display Name"
+            column="display_name"
+            :filter-options="filterOptions.display_name"
+            :format-option-label="toTitleCase"
+            :selected-filters="selectedFiltersFor('display_name')"
+            :sort-direction="sortDirectionFor('display_name')"
+            @apply-filters="
+              (column, values) => setFilters(column as RoleSortColumn, values)
+            "
+            @clear-filters="
+              (column) => {
+                clearFilters(column as RoleSortColumn);
+              }
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as RoleSortColumn);
+              }
+            "
+          />
+          <AdminIndexHeaderCell
+            label="Slug"
+            column="slug"
+            head-class="hidden md:table-cell"
+            :filter-options="filterOptions.slug"
+            :selected-filters="selectedFiltersFor('slug')"
+            :sort-direction="sortDirectionFor('slug')"
+            @apply-filters="
+              (column, values) => setFilters(column as RoleSortColumn, values)
+            "
+            @clear-filters="
+              (column) => {
+                clearFilters(column as RoleSortColumn);
+              }
+            "
+            @toggle-sort="
+              (column) => {
+                toggleSort(column as RoleSortColumn);
+              }
+            "
+          />
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="role in filteredRoles" :key="role.id">
+        <TableRow v-for="role in sortedRoles" :key="role.id">
           <TableCell class="text-center">
             <Checkbox
               :disabled="!canAssign"
@@ -99,14 +188,15 @@ const resultsLabel = computed(() => {
           <TableCell class="font-medium">
             {{ toTitleCase(role.name) }}
           </TableCell>
-          <TableCell class="text-xs font-medium text-muted-foreground italic">
+          <TableCell
+            class="hidden text-xs font-medium text-muted-foreground italic md:table-cell"
+          >
             {{ role.name }}
           </TableCell>
-          <TableCell />
         </TableRow>
-        <TableRow v-if="!filteredRoles.length">
-          <TableCell colspan="4" class="text-center text-muted-foreground">
-            No roles match the current filter.
+        <TableRow v-if="sortedRoles.length === 0">
+          <TableCell colspan="3" class="text-center text-muted-foreground">
+            No roles match the current filters.
           </TableCell>
         </TableRow>
       </TableBody>

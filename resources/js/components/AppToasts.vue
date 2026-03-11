@@ -8,7 +8,7 @@ const { toasts, dismissToast } = useAppToastFeed();
 <template>
   <Teleport to="body">
     <div
-      class="pointer-events-none fixed top-4 right-4 z-[200] flex w-[min(94vw,24rem)] flex-col gap-2"
+      class="pointer-events-none fixed top-4 right-4 z-[200] flex w-[min(94vw,18rem)] flex-col gap-2"
     >
       <TransitionGroup name="toast" tag="div" class="space-y-2">
         <AppToastItem

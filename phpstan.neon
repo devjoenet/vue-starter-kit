@@ -1,7 +1,7 @@
 includes:
   - vendor/larastan/larastan/extension.neon
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon
-
+  - vendor/pestphp/pest/extension.neon
 parameters:
   level: 5
   ignoreErrors:
@@ -14,7 +14,6 @@ parameters:
     -
       message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase::(seed|actingAs|get|put|post|from|withSession|assertAuthenticated|assertGuest)\(\)\.$#'
       path: tests/*
-
   paths:
     - app
     - config
@@ -22,6 +21,5 @@ parameters:
     - database/factories
     - routes
     - tests
-
   excludePaths:
     - vendor/

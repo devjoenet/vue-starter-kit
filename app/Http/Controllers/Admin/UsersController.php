@@ -14,28 +14,90 @@ use App\Http\Requests\Admin\SyncUserRolesRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\AdminIndexQuery;
+use App\Support\Data\Admin\AdminIndexQueryData;
 use App\Support\Data\Admin\Users\CreateUserData;
 use App\Support\Data\Admin\Users\EditableUserData;
 use App\Support\Data\Admin\Users\RoleOptionData;
 use App\Support\Data\Admin\Users\SyncUserRolesData;
 use App\Support\Data\Admin\Users\UpdateUserData;
+use App\Support\Data\Admin\Users\UserIndexFilterOptionsData;
 use App\Support\Data\Admin\Users\UserListItemData;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class UsersController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $indexQuery = AdminIndexQuery::fromRequest(
+            request: $request,
+            allowedSorts: ['id', 'name', 'email', 'roles'],
+            allowedFilters: ['name', 'email', 'roles'],
+        );
+
+        $users = User::query()
+            ->select(['id', 'name', 'email'])
+            ->with(['roles:id,name'])
+            ->when(
+                $indexQuery->filterValues('name') !== [],
+                fn ($query) => $query->whereIn('name', $indexQuery->filterValues('name')),
+            )
+            ->when(
+                $indexQuery->filterValues('email') !== [],
+                fn ($query) => $query->whereIn('email', $indexQuery->filterValues('email')),
+            )
+            ->when(
+                $indexQuery->filterValues('roles') !== [],
+                fn ($query) => $query->whereHas(
+                    'roles',
+                    fn ($rolesQuery) => $rolesQuery->whereIn('name', $indexQuery->filterValues('roles')),
+                ),
+            )
+            ->when(
+                $indexQuery->sort === 'roles',
+                fn ($query) => $query
+                    ->withMin('roles as sort_role_name', 'name')
+                    ->orderBy('sort_role_name', $indexQuery->direction)
+                    ->orderBy('id'),
+                function ($query) use ($indexQuery): void {
+                    $sortColumn = match ($indexQuery->sort) {
+                        'name' => 'name',
+                        'email' => 'email',
+                        default => 'id',
+                    };
+
+                    $query->orderBy($sortColumn, $indexQuery->direction)->orderBy('id');
+                },
+            )
+            ->paginate(15)
+            ->through(fn (User $user): array => UserListItemData::fromModel($user)->all())
+            ->withQueryString();
+
         return Inertia::render('admin/Users/Index', [
-            'users' => User::query()
-                ->select(['id', 'name', 'email'])
-                ->with(['roles:id,name'])
-                ->latest()
-                ->paginate(15)
-                ->through(fn (User $user): array => UserListItemData::fromModel($user)->all())
-                ->withQueryString(),
+            'users' => $users,
+            'filterOptions' => UserIndexFilterOptionsData::from([
+                'name' => User::query()
+                    ->select('name')
+                    ->distinct()
+                    ->orderBy('name')
+                    ->pluck('name')
+                    ->all(),
+                'email' => User::query()
+                    ->select('email')
+                    ->distinct()
+                    ->orderBy('email')
+                    ->pluck('email')
+                    ->all(),
+                'roles' => Role::query()
+                    ->select('name')
+                    ->orderBy('name')
+                    ->pluck('name')
+                    ->all(),
+            ])->all(),
+            'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
 
@@ -79,6 +141,10 @@ final class UsersController extends Controller
             password: $request->validated('password'),
         ));
 
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
+
         return $this->backWithSuccess('User updated.');
     }
 
@@ -98,6 +164,10 @@ final class UsersController extends Controller
         $roleNames = $request->validated('roles', []);
 
         $syncUserRoles->handle($user, new SyncUserRolesData(roles: $roleNames));
+
+        if ($request->boolean('quiet_success')) {
+            return back();
+        }
 
         return $this->backWithSuccess('Roles updated.');
     }

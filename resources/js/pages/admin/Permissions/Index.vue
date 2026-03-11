@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed, h } from 'vue';
 import PermissionIndexTable from '@/components/admin/PermissionIndexTable.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useAbility } from '@/composables/useAbility';
-import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
-import { create, destroy, index } from '@/routes/admin/permissions';
+import { create, index } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminPermissionsIndexPageProps } from '@/types/page-props';
 defineOptions({
@@ -27,25 +26,8 @@ defineOptions({
 const props = defineProps<AdminPermissionsIndexPageProps>();
 
 const { can } = useAbility();
-const { confirmDelete } = useDeleteConfirmation();
 const canCreate = computed(() => can(adminPermissions.permissionsCreate));
 const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
-const canDelete = computed(() => can(adminPermissions.permissionsDelete));
-
-const del = useForm({});
-
-const destroyPermission = (id: number) => {
-  confirmDelete({
-    enabled: canDelete.value,
-    message: 'Delete this permission?',
-    onConfirm: () => {
-      del.delete(destroy.url(id), {
-        only: ['permissionsByGroup', 'flash'],
-        preserveScroll: true,
-      });
-    },
-  });
-};
 </script>
 
 <template>
@@ -59,10 +41,10 @@ const destroyPermission = (id: number) => {
     </div>
 
     <PermissionIndexTable
-      :can-delete="canDelete"
       :can-update="canUpdate"
-      :permissions-by-group="props.permissionsByGroup"
-      @delete-permission="destroyPermission"
+      :filter-options="props.filterOptions"
+      :permissions="props.permissions"
+      :query="props.query"
     />
   </div>
 </template>

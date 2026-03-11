@@ -3,26 +3,37 @@ import { toTitleCase } from '@/lib/utils';
 import type { PermissionsByGroup } from '@/types/page-props';
 
 type PermissionSortDirection = 'none' | 'asc' | 'desc';
-type PermissionSortColumn = 'group' | 'name';
+export type PermissionSortColumn = 'group' | 'permission' | 'permission_check';
 
 export type PermissionTableRow = {
+  group: string;
   id: number;
   name: string;
-  group: string;
   suffix: string;
+};
+
+const nextSortDirection = (
+  current: PermissionSortDirection,
+): PermissionSortDirection => {
+  if (current === 'none') {
+    return 'asc';
+  }
+
+  if (current === 'asc') {
+    return 'desc';
+  }
+
+  return 'none';
 };
 
 export function usePermissionTable(
   permissionsByGroup: () => PermissionsByGroup,
 ) {
-  const search = ref('');
-  const groupFilter = ref('');
-  const sortDirections = ref<
-    Record<PermissionSortColumn, PermissionSortDirection>
-  >({
-    group: 'asc',
-    name: 'asc',
-  });
+  const activeSortColumn = ref<PermissionSortColumn>('group');
+  const activeSortDirection = ref<PermissionSortDirection>('asc');
+  const selectedFilters = ref<Partial<Record<PermissionSortColumn, string[]>>>(
+    {},
+  );
 
   const permissionRows = computed<PermissionTableRow[]>(() =>
     Object.entries(permissionsByGroup()).flatMap(([group, items]) =>
@@ -36,91 +47,110 @@ export function usePermissionTable(
     ),
   );
 
-  const groupOptions = computed(() => {
-    const groups = Array.from(
+  const filterOptions = computed(() => ({
+    group: Array.from(
       new Set(permissionRows.value.map((permission) => permission.group)),
-    ).sort((left, right) => left.localeCompare(right));
+    ).sort(),
+    permission: Array.from(
+      new Set(permissionRows.value.map((permission) => permission.suffix)),
+    ).sort(),
+    permission_check: Array.from(
+      new Set(permissionRows.value.map((permission) => permission.name)),
+    ).sort(),
+  }));
 
-    return [
-      { value: '', label: '' },
-      ...groups.map((group) => ({
-        value: group,
-        label: toTitleCase(group),
-      })),
-    ];
-  });
+  const matchesSelectedFilters = (
+    column: PermissionSortColumn,
+    value: string,
+  ) => {
+    const columnFilters = selectedFilters.value[column];
 
-  const filteredRows = computed(() => {
-    const searchTerm = search.value.trim().toLowerCase();
+    return !columnFilters?.length || columnFilters.includes(value);
+  };
 
-    return permissionRows.value.filter((permission) => {
-      const matchesGroup =
-        !groupFilter.value || permission.group === groupFilter.value;
-
-      if (!matchesGroup) {
-        return false;
-      }
-
-      if (!searchTerm) {
-        return true;
-      }
-
-      return (
-        permission.name.toLowerCase().includes(searchTerm) ||
-        permission.suffix.toLowerCase().includes(searchTerm) ||
-        permission.group.toLowerCase().includes(searchTerm)
-      );
-    });
-  });
+  const filteredRows = computed(() =>
+    permissionRows.value.filter(
+      (permission) =>
+        matchesSelectedFilters('group', permission.group) &&
+        matchesSelectedFilters('permission', permission.suffix) &&
+        matchesSelectedFilters('permission_check', permission.name),
+    ),
+  );
 
   const sortedRows = computed(() =>
     [...filteredRows.value].sort((left, right) => {
-      if (sortDirections.value.group !== 'none') {
-        const groupComparison = left.group.localeCompare(right.group);
-        if (groupComparison !== 0) {
-          return sortDirections.value.group === 'asc'
-            ? groupComparison
-            : groupComparison * -1;
-        }
+      if (activeSortDirection.value === 'none') {
+        return left.id - right.id;
       }
 
-      if (sortDirections.value.name !== 'none') {
-        const nameComparison = left.suffix.localeCompare(right.suffix);
-        if (nameComparison !== 0) {
-          return sortDirections.value.name === 'asc'
-            ? nameComparison
-            : nameComparison * -1;
-        }
+      const direction = activeSortDirection.value === 'asc' ? 1 : -1;
+
+      if (activeSortColumn.value === 'group') {
+        return left.group.localeCompare(right.group) * direction;
       }
 
-      return 0;
+      if (activeSortColumn.value === 'permission') {
+        return left.suffix.localeCompare(right.suffix) * direction;
+      }
+
+      return left.name.localeCompare(right.name) * direction;
     }),
   );
 
+  const resultsLabel = computed(() => {
+    const count = sortedRows.value.length;
+
+    return `${count} result${count === 1 ? '' : 's'}`;
+  });
+
+  const selectedFiltersFor = (column: PermissionSortColumn): string[] =>
+    selectedFilters.value[column] ?? [];
+
+  const setFilters = (column: PermissionSortColumn, values: string[]) => {
+    selectedFilters.value = {
+      ...selectedFilters.value,
+      [column]: [...new Set(values)].sort(),
+    };
+
+    if (selectedFilters.value[column]?.length === 0) {
+      delete selectedFilters.value[column];
+    }
+  };
+
+  const clearFilters = (column: PermissionSortColumn) => {
+    const nextFilters = { ...selectedFilters.value };
+
+    delete nextFilters[column];
+
+    selectedFilters.value = nextFilters;
+  };
+
+  const sortDirectionFor = (
+    column: PermissionSortColumn,
+  ): PermissionSortDirection =>
+    activeSortColumn.value === column ? activeSortDirection.value : 'none';
+
   const toggleSort = (column: PermissionSortColumn) => {
-    const current = sortDirections.value[column];
+    if (activeSortColumn.value !== column) {
+      activeSortColumn.value = column;
+      activeSortDirection.value = 'asc';
 
-    if (current === 'none') {
-      sortDirections.value[column] = 'asc';
       return;
     }
 
-    if (current === 'asc') {
-      sortDirections.value[column] = 'desc';
-      return;
-    }
-
-    sortDirections.value[column] = 'none';
+    activeSortDirection.value = nextSortDirection(activeSortDirection.value);
   };
 
   return {
-    filteredRows,
-    groupFilter,
-    groupOptions,
+    clearFilters,
+    filterOptions,
     permissionRows,
-    search,
-    sortDirections,
+    resultsLabel,
+    selectedFiltersFor,
+    setFilters,
+    sortDirectionFor,
     sortedRows,
     toggleSort,
+    toFilterLabel: toTitleCase,
   };
 }

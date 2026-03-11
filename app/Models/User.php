@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property \Carbon\CarbonInterface|null $email_verified_at
+ */
 class User extends Authenticatable
 {
     use HasFactory;

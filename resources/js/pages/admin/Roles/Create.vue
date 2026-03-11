@@ -8,7 +8,7 @@ import Input from '@/components/ui/input/Input.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useSelectionList } from '@/composables/useSelectionList';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { toKebabCase } from '@/lib/utils';
+import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
 import { create, index, store } from '@/routes/admin/roles';
 import { adminPermissions } from '@/types/admin-permissions';
@@ -40,12 +40,20 @@ const form = useForm<StoreRoleRequest>({
 const { hasSelectedValue, selectedValues, toggleSelectedValue } =
   useSelectionList<number>(form.user_ids ?? []);
 
+const normalizeRoleNameForDisplay = () => {
+  form.name = toTitleCase(form.name);
+};
+
 const submit = () => {
   if (!canCreate.value) return;
 
-  form.name = toKebabCase(form.name);
   form.user_ids = [...selectedValues.value];
-  form.post(store.url());
+  form
+    .transform((data) => ({
+      ...data,
+      name: toKebabCase(data.name),
+    }))
+    .post(store.url());
 };
 </script>
 
@@ -56,7 +64,7 @@ const submit = () => {
     </div>
 
     <form class="space-y-6" @submit.prevent="submit">
-      <div class="grid gap-6 lg:grid-cols-2">
+      <div class="space-y-6">
         <Card variant="default" class="px-6">
           <h2 class="text-lg font-semibold">Role Details</h2>
 
@@ -70,6 +78,7 @@ const submit = () => {
               :disabled="!canCreate"
               :state="form.errors.name ? 'error' : 'default'"
               :message="form.errors.name"
+              @blur="normalizeRoleNameForDisplay"
             />
           </div>
         </Card>

@@ -11,7 +11,9 @@ type PermissionEditorFormData = {
 };
 
 defineProps<{
+  canDelete?: boolean;
   canSubmit: boolean;
+  deleteLabel?: string;
   form: InertiaForm<PermissionEditorFormData>;
   groups: string[];
   groupId: string;
@@ -20,6 +22,7 @@ defineProps<{
 }>();
 
 defineEmits<{
+  (event: 'delete'): void;
   (event: 'submit'): void;
 }>();
 </script>
@@ -46,7 +49,18 @@ defineEmits<{
         :message="form.errors.name"
       />
 
-      <div class="flex justify-end">
+      <div class="flex flex-wrap justify-end gap-3">
+        <Button
+          v-if="canDelete"
+          appearance="outline"
+          variant="destructive"
+          type="button"
+          :disabled="!canDelete || form.processing"
+          @click="$emit('delete')"
+        >
+          {{ deleteLabel ?? 'Delete' }}
+        </Button>
+
         <Button
           appearance="filled"
           type="submit"

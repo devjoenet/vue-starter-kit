@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { router, useForm } from '@inertiajs/vue3';
-import { computed, h, ref, watch } from 'vue';
+import { computed, h, watch } from 'vue';
+import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
 import RolePermissionAssignmentTable from '@/components/admin/RolePermissionAssignmentTable.vue';
-import Button from '@/components/ui/button/Button.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
+import { useSequentialSave } from '@/composables/useSequentialSave';
+import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -36,27 +38,32 @@ const props = defineProps<AdminRolesEditPageProps>();
 
 const { can } = useAbility();
 const { confirmDelete } = useDeleteConfirmation();
+const { success } = useToast();
 const canUpdate = computed(() => can(adminPermissions.rolesUpdate));
 const canDelete = computed(() => can(adminPermissions.rolesDelete));
 const canAssign = computed(() => can(adminPermissions.rolesAssignPermissions));
 
 const roleForm = useForm<UpdateRoleRequest>({
-  name: props.role.name,
+  name: toTitleCase(props.role.name),
 });
 const permsForm = useForm<SyncRolePermissionsRequest>({
   permissions: [...props.rolePermissions],
 });
-const permissionsSyncInFlight = ref(false);
 const {
   replaceSelectedValues,
   selectedValues: selectedPermissions,
   toggleSelectedValue,
 } = useSelectionList<string>(props.rolePermissions);
+const { createStep, processing: saveProcessing, run } = useSequentialSave();
 
 watch(
   () => props.role.name,
   (roleName) => {
-    roleForm.name = roleName;
+    roleForm.defaults({
+      name: toTitleCase(roleName),
+    });
+
+    roleForm.name = toTitleCase(roleName);
   },
   { immediate: true },
 );
@@ -64,6 +71,10 @@ watch(
 watch(
   () => props.rolePermissions,
   (permissions) => {
+    permsForm.defaults({
+      permissions: [...permissions],
+    });
+
     replaceSelectedValues(permissions);
   },
   { immediate: true },
@@ -73,36 +84,77 @@ watch(selectedPermissions, (permissions) => {
   permsForm.permissions = [...permissions];
 });
 
-const updateRole = () => {
-  if (!canUpdate.value) return;
+const detailsDirty = computed(() => canUpdate.value && roleForm.isDirty);
+const permissionsDirty = computed(() => canAssign.value && permsForm.isDirty);
+const isDirty = computed(() => detailsDirty.value || permissionsDirty.value);
+const saveLabel = computed(() => (isDirty.value ? 'Save and Close' : 'Close'));
 
-  roleForm.name = toKebabCase(roleForm.name);
-  roleForm.put(update.url(props.role.id), {
-    only: ['role', 'flash'],
-    preserveScroll: true,
-  });
+const closeToIndex = () => {
+  router.visit(index.url());
 };
 
-const syncPermissions = () => {
-  if (!canAssign.value) return;
+const saveOrClose = async () => {
+  if (!isDirty.value) {
+    closeToIndex();
+    return;
+  }
 
-  permsForm.permissions = [...selectedPermissions.value];
-  permsForm.put(sync.url(props.role.id), {
-    only: ['rolePermissions', 'flash'],
-    preserveScroll: true,
-    onStart: () => {
-      permissionsSyncInFlight.value = true;
-    },
-    onFinish: () => {
-      permissionsSyncInFlight.value = false;
-    },
-  });
+  const succeeded = await run([
+    detailsDirty.value
+      ? createStep((callbacks) => {
+          roleForm
+            .transform((data) => ({
+              ...data,
+              name: toKebabCase(data.name),
+            }))
+            .put(
+              update.url(props.role.id, { query: { quiet_success: true } }),
+              {
+                only: ['role', 'flash'],
+                preserveScroll: true,
+                onSuccess: () => {
+                  roleForm.defaults({
+                    name: roleForm.name,
+                  });
+                  callbacks.onSuccess();
+                },
+                onCancel: callbacks.onCancel,
+                onError: callbacks.onError,
+                onFinish: callbacks.onFinish,
+              },
+            );
+        })
+      : null,
+    permissionsDirty.value
+      ? createStep((callbacks) => {
+          permsForm.permissions = [...selectedPermissions.value];
+          permsForm.put(
+            sync.url(props.role.id, { query: { quiet_success: true } }),
+            {
+              only: ['rolePermissions', 'flash'],
+              preserveScroll: true,
+              onSuccess: callbacks.onSuccess,
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
+            },
+          );
+        })
+      : null,
+  ]);
+
+  if (succeeded) {
+    success('Changes saved.');
+    closeToIndex();
+  }
 };
 
 const destroyRole = () => {
   confirmDelete({
+    confirmLabel: 'Delete role',
     enabled: canDelete.value,
-    message: 'Delete this role?',
+    message: 'Delete this role? This is not reversible.',
+    title: `Delete ${toTitleCase(props.role.name)}?`,
     onConfirm: () => {
       router.delete(destroy.url(props.role.id));
     },
@@ -116,30 +168,26 @@ const destroyRole = () => {
       <h1 class="text-2xl font-semibold">
         Edit {{ toTitleCase(props.role.name) }}
       </h1>
-      <Button
-        appearance="outline"
-        variant="destructive"
-        :disabled="!canDelete"
-        @click="destroyRole"
-        >Delete Role</Button
-      >
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-2">
-      <RoleDetailsForm
-        :can-update="canUpdate"
-        :form="roleForm"
-        @submit="updateRole"
-      />
+    <div class="space-y-6">
+      <RoleDetailsForm :can-update="canUpdate" :form="roleForm" />
 
       <RolePermissionAssignmentTable
         :can-assign="canAssign"
         :error="permsForm.errors.permissions"
         :permissions-by-group="permissionsByGroup"
-        :processing="permissionsSyncInFlight"
         :selected-permission-names="selectedPermissions"
-        @save="syncPermissions"
         @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
+      />
+
+      <EditPageActionRow
+        :can-delete="canDelete"
+        delete-label="Delete Role"
+        :processing="saveProcessing"
+        :save-label="saveLabel"
+        @delete="destroyRole"
+        @save="saveOrClose"
       />
     </div>
   </div>
