@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { Form, Head, Link, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
@@ -11,14 +11,11 @@ import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { SettingsProfilePageProps } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
-      },
-      () => h(SettingsLayout, null, () => page),
-    ),
+  layout: [AppLayout, SettingsLayout],
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
 });
 
 const props = defineProps<SettingsProfilePageProps>();
@@ -32,12 +29,14 @@ const user = computed(() => page.props.auth.user);
 
   <h1 class="sr-only">Profile Settings</h1>
 
-  <div v-if="user" class="space-y-6">
+  <div id="settings-profile-page" v-if="user" class="space-y-6">
     <SettingsSectionCard
+      id="settings-profile-information-card"
       title="Profile information"
       description="Update your name and email address"
     >
       <Form
+        id="settings-profile-information-form"
         v-bind="update.form()"
         :options="{
           only: ['auth', 'flash'],
@@ -62,6 +61,7 @@ const user = computed(() => page.props.auth.user);
           <p class="text-sm text-muted-foreground">
             Your email address is unverified.
             <Link
+              id="settings-profile-resend-verification-link"
               :href="send()"
               as="button"
               class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
@@ -72,14 +72,16 @@ const user = computed(() => page.props.auth.user);
 
           <div
             v-if="props.status === 'verification-link-sent'"
+            id="settings-profile-verification-status"
             class="mt-2 text-sm font-medium text-success"
           >
             A new verification link has been sent to your email address.
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div id="settings-profile-actions" class="flex items-center gap-4">
           <Button
+            id="settings-profile-save-button"
             appearance="filled"
             :disabled="processing"
             data-test="update-profile-button"
@@ -100,6 +102,6 @@ const user = computed(() => page.props.auth.user);
       </Form>
     </SettingsSectionCard>
 
-    <DeleteUser />
+    <DeleteUser id="settings-profile-delete-account-card" />
   </div>
 </template>

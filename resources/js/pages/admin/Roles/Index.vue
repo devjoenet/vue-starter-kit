@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { Link, setLayoutProps } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -21,17 +21,14 @@ import type {
   AdminRolesIndexPageProps,
 } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Roles', href: index.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Roles', href: index.url() },
+  ],
 });
 
 const props = defineProps<AdminRolesIndexPageProps>();
@@ -59,17 +56,29 @@ const {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-roles-index-page" class="space-y-6 px-4">
+    <div
+      id="admin-roles-index-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Roles</h1>
 
-      <Button v-if="canCreate" appearance="outline" as-child>
+      <Button
+        v-if="canCreate"
+        id="admin-roles-index-create-button"
+        appearance="outline"
+        as-child
+      >
         <Link :href="create.url()">Create New Role</Link>
       </Button>
     </div>
 
-    <Card variant="default" class="overflow-hidden py-0">
-      <Table>
+    <Card
+      id="admin-roles-index-table-card"
+      variant="default"
+      class="overflow-hidden py-0"
+    >
+      <Table id="admin-roles-index-table">
         <TableHeader>
           <TableRow>
             <AdminIndexHeaderCell

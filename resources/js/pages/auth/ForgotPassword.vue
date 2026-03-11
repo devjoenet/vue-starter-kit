@@ -29,44 +29,57 @@ defineProps<{
 <template>
   <Head title="Forgot password" />
 
-  <Card variant="default" class="px-6">
-    <div class="space-y-4">
-      <p v-if="status" class="text-center text-sm font-medium text-success">
-        {{ status }}
-      </p>
-
-      <Form
-        v-bind="email.form()"
-        v-slot="{ errors, processing }"
-        class="space-y-4"
-      >
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          label="Email address"
-          variant="outlined"
-          autocomplete="off"
-          autofocus
-          :state="errors.email ? 'error' : 'default'"
-          :message="errors.email"
-        />
-
-        <Button
-          class="w-full"
-          appearance="filled"
-          :disabled="processing"
-          data-test="email-password-reset-link-button"
+  <section id="auth-forgot-password-page" class="space-y-6">
+    <Card id="auth-forgot-password-card" variant="default" class="px-6">
+      <div class="space-y-4">
+        <p
+          v-if="status"
+          id="auth-forgot-password-status"
+          class="text-center text-sm font-medium text-success"
         >
-          <Spinner v-if="processing" />
-          Email password reset link
-        </Button>
-      </Form>
-    </div>
-  </Card>
+          {{ status }}
+        </p>
 
-  <div class="space-x-1 text-center text-sm text-muted-foreground">
-    <span>Or, return to</span>
-    <TextLink :href="login()">log in</TextLink>
-  </div>
+        <Form
+          id="auth-forgot-password-form"
+          v-bind="email.form()"
+          v-slot="{ errors, processing }"
+          class="space-y-4"
+        >
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            label="Email address"
+            variant="outlined"
+            autocomplete="off"
+            autofocus
+            :state="errors.email ? 'error' : 'default'"
+            :message="errors.email"
+          />
+
+          <Button
+            id="auth-forgot-password-submit-button"
+            class="w-full"
+            appearance="filled"
+            :disabled="processing"
+            data-test="email-password-reset-link-button"
+          >
+            <Spinner v-if="processing" />
+            Email password reset link
+          </Button>
+        </Form>
+      </div>
+    </Card>
+
+    <div
+      id="auth-forgot-password-login-link-row"
+      class="space-x-1 text-center text-sm text-muted-foreground"
+    >
+      <span>Or, return to</span>
+      <TextLink id="auth-forgot-password-login-link" :href="login()">
+        log in
+      </TextLink>
+    </div>
+  </section>
 </template>

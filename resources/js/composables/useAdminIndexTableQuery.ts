@@ -4,8 +4,14 @@ import type { AdminIndexQuery } from '@/types/page-props';
 
 type UseAdminIndexTableQueryOptions<TColumn extends string> = {
   getQuery: () => AdminIndexQuery<TColumn>;
-  getUrl: (query: AdminIndexQuery<TColumn>) => string;
+  getUrl: (query: AdminIndexVisitQuery<TColumn>) => string;
   only: string[];
+};
+
+type AdminIndexVisitQuery<TColumn extends string> = {
+  direction?: AdminIndexQuery<TColumn>['direction'];
+  filters: AdminIndexQuery<TColumn>['filters'];
+  sort?: AdminIndexQuery<TColumn>['sort'];
 };
 
 const normalizeFilters = <TColumn extends string>(
@@ -31,7 +37,7 @@ export function useAdminIndexTableQuery<TColumn extends string>({
 }: UseAdminIndexTableQueryOptions<TColumn>) {
   const currentQuery = computed(() => getQuery());
 
-  const visit = (nextQuery: AdminIndexQuery<TColumn>) => {
+  const visit = (nextQuery: AdminIndexVisitQuery<TColumn>) => {
     router.visit(getUrl(nextQuery), {
       preserveScroll: true,
       preserveState: true,
@@ -53,15 +59,29 @@ export function useAdminIndexTableQuery<TColumn extends string>({
   };
 
   const toggleSort = (column: TColumn) => {
-    const direction =
-      currentQuery.value.sort === column &&
-      currentQuery.value.direction === 'asc'
-        ? 'desc'
-        : 'asc';
+    if (currentQuery.value.sort !== column) {
+      visit({
+        sort: column,
+        direction: 'asc',
+        filters: normalizeFilters(currentQuery.value.filters),
+      });
+
+      return;
+    }
+
+    if (currentQuery.value.direction === 'asc') {
+      visit({
+        sort: column,
+        direction: 'desc',
+        filters: normalizeFilters(currentQuery.value.filters),
+      });
+
+      return;
+    }
 
     visit({
-      sort: column,
-      direction,
+      sort: undefined,
+      direction: undefined,
       filters: normalizeFilters(currentQuery.value.filters),
     });
   };

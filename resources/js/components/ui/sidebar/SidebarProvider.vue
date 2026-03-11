@@ -49,7 +49,9 @@ function setOpen(value: boolean) {
   open.value = value; // emits('update:open', value)
 
   // This sets the cookie to keep the sidebar state.
-  document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+  if (typeof document !== 'undefined') {
+    document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+  }
 }
 
 function setOpenMobile(value: boolean) {

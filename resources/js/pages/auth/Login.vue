@@ -33,80 +33,99 @@ defineProps<{
 <template>
   <Head title="Log in" />
 
-  <Card variant="default" class="px-6">
-    <div class="space-y-4">
-      <p v-if="status" class="text-center text-sm font-medium text-success">
-        {{ status }}
-      </p>
+  <section id="auth-login-page" class="space-y-6">
+    <Card id="auth-login-card" variant="default" class="px-6">
+      <div class="space-y-4">
+        <p
+          v-if="status"
+          id="auth-login-status"
+          class="text-center text-sm font-medium text-success"
+        >
+          {{ status }}
+        </p>
 
-      <Form
-        v-bind="store.form()"
-        :reset-on-success="['password']"
-        v-slot="{ errors, processing }"
-        class="space-y-4"
-      >
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          label="Email address"
-          variant="outlined"
-          required
-          autofocus
-          :tabindex="1"
-          autocomplete="email"
-          :state="errors.email ? 'error' : 'default'"
-          :message="errors.email"
-        />
-
-        <div class="space-y-2">
-          <div class="flex justify-end">
-            <TextLink
-              v-if="canResetPassword"
-              :href="request()"
-              class="text-sm"
-              :tabindex="5"
-            >
-              Forgot password?
-            </TextLink>
-          </div>
-
+        <Form
+          id="auth-login-form"
+          v-bind="store.form()"
+          :reset-on-success="['password']"
+          v-slot="{ errors, processing }"
+          class="space-y-4"
+        >
           <Input
-            id="password"
-            type="password"
-            name="password"
-            label="Password"
+            id="email"
+            type="email"
+            name="email"
+            label="Email address"
             variant="outlined"
             required
-            :tabindex="2"
-            autocomplete="current-password"
-            :state="errors.password ? 'error' : 'default'"
-            :message="errors.password"
+            autofocus
+            :tabindex="1"
+            autocomplete="email"
+            :state="errors.email ? 'error' : 'default'"
+            :message="errors.email"
           />
-        </div>
 
-        <label for="remember" class="flex items-center gap-3 text-sm">
-          <Checkbox id="remember" name="remember" :tabindex="3" />
-          <span>Remember me</span>
-        </label>
+          <div id="auth-login-password-block" class="space-y-2">
+            <div class="flex justify-end">
+              <TextLink
+                v-if="canResetPassword"
+                id="auth-login-forgot-password-link"
+                :href="request()"
+                class="text-sm"
+                :tabindex="5"
+              >
+                Forgot password?
+              </TextLink>
+            </div>
 
-        <Button
-          type="submit"
-          appearance="filled"
-          class="w-full"
-          :tabindex="4"
-          :disabled="processing"
-          data-test="login-button"
-        >
-          <Spinner v-if="processing" />
-          Log in
-        </Button>
-      </Form>
+            <Input
+              id="password"
+              type="password"
+              name="password"
+              label="Password"
+              variant="outlined"
+              required
+              :tabindex="2"
+              autocomplete="current-password"
+              :state="errors.password ? 'error' : 'default'"
+              :message="errors.password"
+            />
+          </div>
+
+          <label
+            id="auth-login-remember-row"
+            for="remember"
+            class="flex items-center gap-3 text-sm"
+          >
+            <Checkbox id="remember" name="remember" :tabindex="3" />
+            <span>Remember me</span>
+          </label>
+
+          <Button
+            id="auth-login-submit-button"
+            type="submit"
+            appearance="filled"
+            class="w-full"
+            :tabindex="4"
+            :disabled="processing"
+            data-test="login-button"
+          >
+            <Spinner v-if="processing" />
+            Log in
+          </Button>
+        </Form>
+      </div>
+    </Card>
+
+    <div
+      v-if="canRegister"
+      id="auth-login-register-link-row"
+      class="text-center text-sm text-muted-foreground"
+    >
+      Don't have an account?
+      <TextLink id="auth-login-register-link" :href="register()" :tabindex="5">
+        Sign up
+      </TextLink>
     </div>
-  </Card>
-
-  <div class="text-center text-sm text-muted-foreground" v-if="canRegister">
-    Don't have an account?
-    <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
-  </div>
+  </section>
 </template>

@@ -57,108 +57,128 @@ const code = ref<string>('');
 <template>
   <Head title="Two-Factor Authentication" />
 
-  <Card variant="default" class="px-6">
-    <div class="space-y-4">
-      <p class="text-sm text-muted-foreground">
-        {{ authConfigContent.description }}
-      </p>
-      <template v-if="!showRecoveryInput">
-        <Form
-          v-bind="store.form()"
-          class="space-y-4"
-          reset-on-error
-          @error="code = ''"
-          #default="{ errors, processing, clearErrors }"
+  <section id="auth-two-factor-challenge-page">
+    <Card id="auth-two-factor-challenge-card" variant="default" class="px-6">
+      <div class="space-y-4">
+        <p
+          id="auth-two-factor-challenge-description"
+          class="text-sm text-muted-foreground"
         >
-          <input type="hidden" name="code" :value="code" />
-
-          <div
-            class="flex flex-col items-center justify-center gap-3 text-center"
+          {{ authConfigContent.description }}
+        </p>
+        <template v-if="!showRecoveryInput">
+          <Form
+            id="auth-two-factor-code-form"
+            v-bind="store.form()"
+            class="space-y-4"
+            reset-on-error
+            @error="code = ''"
+            #default="{ errors, processing, clearErrors }"
           >
-            <InputOTP
-              id="otp"
-              v-model="code"
-              :maxlength="6"
+            <input type="hidden" name="code" :value="code" />
+
+            <div
+              id="auth-two-factor-code-panel"
+              class="flex flex-col items-center justify-center gap-3 text-center"
+            >
+              <InputOTP
+                id="otp"
+                v-model="code"
+                :maxlength="6"
+                :disabled="processing"
+                autofocus
+              >
+                <InputOTPGroup id="auth-two-factor-code-input-group">
+                  <InputOTPSlot
+                    v-for="index in 6"
+                    :key="index"
+                    :index="index - 1"
+                  />
+                </InputOTPGroup>
+              </InputOTP>
+
+              <Alert
+                v-if="errors.code"
+                id="auth-two-factor-code-error"
+                variant="destructive"
+                class="w-full text-left"
+              >
+                <AlertDescription>{{ errors.code }}</AlertDescription>
+              </Alert>
+            </div>
+
+            <Button
+              id="auth-two-factor-code-submit-button"
+              type="submit"
+              appearance="filled"
+              class="w-full"
               :disabled="processing"
-              autofocus
+              >Continue</Button
             >
-              <InputOTPGroup>
-                <InputOTPSlot
-                  v-for="index in 6"
-                  :key="index"
-                  :index="index - 1"
-                />
-              </InputOTPGroup>
-            </InputOTP>
 
-            <Alert
-              v-if="errors.code"
-              variant="destructive"
-              class="w-full text-left"
+            <div
+              id="auth-two-factor-code-toggle-row"
+              class="text-center text-sm text-muted-foreground"
             >
-              <AlertDescription>{{ errors.code }}</AlertDescription>
-            </Alert>
-          </div>
+              <span>or you can </span>
+              <button
+                id="auth-two-factor-switch-to-recovery-button"
+                type="button"
+                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                @click="() => toggleRecoveryMode(clearErrors)"
+              >
+                {{ authConfigContent.buttonText }}
+              </button>
+            </div>
+          </Form>
+        </template>
 
-          <Button
-            type="submit"
-            appearance="filled"
-            class="w-full"
-            :disabled="processing"
-            >Continue</Button
+        <template v-else>
+          <Form
+            id="auth-two-factor-recovery-form"
+            v-bind="store.form()"
+            class="space-y-4"
+            reset-on-error
+            #default="{ errors, processing, clearErrors }"
           >
+            <Input
+              id="auth-two-factor-recovery-code"
+              name="recovery_code"
+              type="text"
+              label="Recovery code"
+              variant="outlined"
+              :autofocus="showRecoveryInput"
+              required
+              :state="errors.recovery_code ? 'error' : 'default'"
+              :message="errors.recovery_code"
+            />
 
-          <div class="text-center text-sm text-muted-foreground">
-            <span>or you can </span>
-            <button
-              type="button"
-              class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-              @click="() => toggleRecoveryMode(clearErrors)"
+            <Button
+              id="auth-two-factor-recovery-submit-button"
+              type="submit"
+              appearance="filled"
+              class="w-full"
+              :disabled="processing"
+              >Continue</Button
             >
-              {{ authConfigContent.buttonText }}
-            </button>
-          </div>
-        </Form>
-      </template>
 
-      <template v-else>
-        <Form
-          v-bind="store.form()"
-          class="space-y-4"
-          reset-on-error
-          #default="{ errors, processing, clearErrors }"
-        >
-          <Input
-            name="recovery_code"
-            type="text"
-            label="Recovery code"
-            variant="outlined"
-            :autofocus="showRecoveryInput"
-            required
-            :state="errors.recovery_code ? 'error' : 'default'"
-            :message="errors.recovery_code"
-          />
-
-          <Button
-            type="submit"
-            appearance="filled"
-            class="w-full"
-            :disabled="processing"
-            >Continue</Button
-          >
-
-          <div class="text-center text-sm text-muted-foreground">
-            <span>or you can </span>
-            <button
-              type="button"
-              class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-              @click="() => toggleRecoveryMode(clearErrors)"
+            <div
+              id="auth-two-factor-recovery-toggle-row"
+              class="text-center text-sm text-muted-foreground"
             >
-              {{ authConfigContent.buttonText }}
-            </button>
-          </div>
-        </Form>
-      </template>
-    </div>
-  </Card>
+              <span>or you can </span>
+              <button
+                id="auth-two-factor-switch-to-code-button"
+                type="button"
+                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                @click="() => toggleRecoveryMode(clearErrors)"
+              >
+                {{ authConfigContent.buttonText }}
+              </button>
+            </div>
+          </Form>
+        </template>
+      </div>
+    </Card>
+  </section>
 </template>

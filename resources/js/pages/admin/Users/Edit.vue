@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { router, useForm } from '@inertiajs/vue3';
-import { computed, h, watch } from 'vue';
+import { router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
 import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
@@ -21,18 +21,15 @@ import type {
   UpdateUserRequest,
 } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Users', href: index.url() },
-          { title: 'Edit' },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Users', href: index.url() },
+    { title: 'Edit' },
+  ],
 });
 
 const props = defineProps<AdminUsersEditPageProps>();
@@ -174,15 +171,23 @@ const destroyUser = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-users-edit-page" class="space-y-6 px-4">
+    <div
+      id="admin-users-edit-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Edit {{ userLabel }}</h1>
     </div>
 
-    <div class="space-y-6">
-      <UserDetailsForm :can-update="canUpdate" :form="userForm" />
+    <div id="admin-users-edit-sections" class="space-y-6">
+      <UserDetailsForm
+        id="admin-users-edit-details-card"
+        :can-update="canUpdate"
+        :form="userForm"
+      />
 
       <UserRoleAssignmentTable
+        id="admin-users-edit-roles-card"
         :can-assign="canAssignRoles"
         :error="rolesForm.errors.roles"
         :roles="roles"
@@ -191,6 +196,7 @@ const destroyUser = () => {
       />
 
       <EditPageActionRow
+        id="admin-users-edit-actions"
         :can-delete="canDelete"
         :delete-label="`Delete ${userLabel}`"
         :processing="saveProcessing"

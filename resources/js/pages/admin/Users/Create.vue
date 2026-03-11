@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -13,19 +13,17 @@ import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminUsersCreatePageProps } from '@/types/page-props';
 import type { StoreUserRequest } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Users', href: index.url() },
-          { title: 'Create', href: create.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
 });
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Users', href: index.url() },
+    { title: 'Create', href: create.url() },
+  ],
+});
+
 defineProps<AdminUsersCreatePageProps>();
 
 const { can } = useAbility();
@@ -45,13 +43,20 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-users-create-page" class="space-y-6 px-4">
+    <div
+      id="admin-users-create-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Create user</h1>
     </div>
 
-    <Card variant="default" class="px-6">
-      <form class="space-y-4" @submit.prevent="submit">
+    <Card id="admin-users-create-form-card" variant="default" class="px-6">
+      <form
+        id="admin-users-create-form"
+        class="space-y-4"
+        @submit.prevent="submit"
+      >
         <UserIdentityFields
           name-id="create-user-name"
           email-id="create-user-email"
@@ -87,6 +92,7 @@ const submit = () => {
 
         <div class="flex justify-end">
           <Button
+            id="admin-users-create-submit-button"
             appearance="filled"
             type="submit"
             :disabled="!canCreate || form.processing"

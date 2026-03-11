@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { router, useForm } from '@inertiajs/vue3';
-import { h, computed, watch } from 'vue';
+import { router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
@@ -18,19 +18,17 @@ import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminPermissionsEditPageProps } from '@/types/page-props';
 import type { UpdatePermissionRequest } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Permissions', href: index.url() },
-          { title: 'Edit' },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
 });
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Permissions', href: index.url() },
+    { title: 'Edit' },
+  ],
+});
+
 const props = defineProps<AdminPermissionsEditPageProps>();
 
 const { can } = useAbility();
@@ -103,12 +101,16 @@ const destroyPermission = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
+  <div id="admin-permissions-edit-page" class="space-y-6 px-4">
+    <div
+      id="admin-permissions-edit-page-header"
+      class="flex flex-wrap items-center justify-between gap-3 pt-12"
+    >
       <h1 class="text-2xl font-semibold">Edit permission</h1>
     </div>
 
     <PermissionEditorForm
+      id="admin-permissions-edit-form-card"
       :can-delete="canDelete"
       group-id="edit-permission-group"
       name-id="edit-permission-name"

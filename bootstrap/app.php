@@ -8,6 +8,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,5 +27,19 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response): ?ExceptionResponse {
+            if ($response->request->expectsJson()) {
+                return null;
+            }
+
+            if (! in_array($response->statusCode(), [403, 404, 500, 503], true)) {
+                return null;
+            }
+
+            return $response
+                ->render('ErrorPage', [
+                    'status' => $response->statusCode(),
+                ])
+                ->withSharedData();
+        });
     })->create();

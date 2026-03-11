@@ -326,9 +326,10 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect($headerCellContents)->toContain('FunnelIcon');
     expect($headerCellContents)->toContain('CheckIcon');
     expect($headerCellContents)->toContain('SquareIcon');
-    expect($headerCellContents)->toContain('text-sm font-medium leading-none');
-    expect($headerCellContents)->toContain('class="h-6 gap-1 px-1.5 align-middle"');
-    expect($headerCellContents)->toContain('class="h-6 px-1.5 align-middle"');
+    expect($headerCellContents)->toContain('text-sm leading-none font-medium');
+    expect($headerCellContents)->toContain('class="relative h-4 w-4 p-0 align-middle"');
+    expect($headerCellContents)->toContain('class="h-4 w-4 p-0 align-middle"');
+    expect($headerCellContents)->toContain("'size-2'");
     expect($headerCellContents)->toContain("event: 'apply-filters'");
     expect($headerCellContents)->toContain(':appearance="sortDirection === \'none\' ? \'outline\' : \'filled\'"');
     expect($headerCellContents)->toContain(':appearance="hasActiveFilters ? \'filled\' : \'outline\'"');
@@ -347,12 +348,197 @@ it('uses shared index header controls and linked name cells on admin index pages
     )->toBeLessThan(mb_strpos($permissionTableContents, 'label="Group"'));
 });
 
+it('uses inertia layout props for shared admin and settings breadcrumbs', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $pageFiles = [
+        'resources/js/pages/admin/Dashboard.vue',
+        'resources/js/pages/admin/Users/Index.vue',
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Index.vue',
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Index.vue',
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/pages/settings/Appearance.vue',
+    ];
+
+    $layoutContents = file_get_contents($projectRoot.'/resources/js/layouts/AppLayout.vue');
+
+    expect($layoutContents)->toContain('useLayoutProps');
+    expect($layoutContents)->toContain('breadcrumbs: []');
+
+    foreach ($pageFiles as $pageFile) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        expect($contents)->toContain('setLayoutProps({');
+        expect($contents)->not->toContain('layout: (_: unknown, page: unknown) =>');
+    }
+});
+
+it('assigns meaningful dom ids to every page surface', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $pageIdExpectations = [
+        'resources/js/pages/Welcome.vue' => [
+            'id="welcome-page"',
+            'id="welcome-page-hero"',
+            'id="welcome-page-visual"',
+        ],
+        'resources/js/pages/ErrorPage.vue' => [
+            'id="error-page"',
+            'id="error-page-card"',
+            'id="error-page-actions"',
+        ],
+        'resources/js/pages/admin/Dashboard.vue' => [
+            'id="admin-dashboard-page"',
+            'id="admin-dashboard-quick-links"',
+            'id="admin-dashboard-main-panel"',
+        ],
+        'resources/js/pages/admin/Users/Index.vue' => [
+            'id="admin-users-index-page"',
+            'id="admin-users-index-page-header"',
+            'id="admin-users-index-table"',
+        ],
+        'resources/js/pages/admin/Users/Create.vue' => [
+            'id="admin-users-create-page"',
+            'id="admin-users-create-form"',
+            'id="admin-users-create-submit-button"',
+        ],
+        'resources/js/pages/admin/Users/Edit.vue' => [
+            'id="admin-users-edit-page"',
+            'id="admin-users-edit-details-card"',
+            'id="admin-users-edit-actions"',
+        ],
+        'resources/js/pages/admin/Roles/Index.vue' => [
+            'id="admin-roles-index-page"',
+            'id="admin-roles-index-page-header"',
+            'id="admin-roles-index-table"',
+        ],
+        'resources/js/pages/admin/Roles/Create.vue' => [
+            'id="admin-roles-create-page"',
+            'id="admin-roles-create-form"',
+            'id="admin-roles-create-users-card"',
+        ],
+        'resources/js/pages/admin/Roles/Edit.vue' => [
+            'id="admin-roles-edit-page"',
+            'id="admin-roles-edit-permissions-card"',
+            'id="admin-roles-edit-actions"',
+        ],
+        'resources/js/pages/admin/Permissions/Index.vue' => [
+            'id="admin-permissions-index-page"',
+            'id="admin-permissions-index-page-header"',
+            'id="admin-permissions-index-table-card"',
+        ],
+        'resources/js/pages/admin/Permissions/Create.vue' => [
+            'id="admin-permissions-create-page"',
+            'id="admin-permissions-create-page-header"',
+            'id="admin-permissions-create-form-card"',
+        ],
+        'resources/js/pages/admin/Permissions/Edit.vue' => [
+            'id="admin-permissions-edit-page"',
+            'id="admin-permissions-edit-page-header"',
+            'id="admin-permissions-edit-form-card"',
+        ],
+        'resources/js/pages/settings/Profile.vue' => [
+            'id="settings-profile-page"',
+            'id="settings-profile-information-form"',
+            'id="settings-profile-delete-account-card"',
+        ],
+        'resources/js/pages/settings/Password.vue' => [
+            'id="settings-password-page"',
+            'id="settings-password-form"',
+            'id="settings-password-save-button"',
+        ],
+        'resources/js/pages/settings/TwoFactor.vue' => [
+            'id="settings-two-factor-page"',
+            'id="settings-two-factor-card"',
+            'id="settings-two-factor-setup-modal"',
+        ],
+        'resources/js/pages/settings/Appearance.vue' => [
+            'id="settings-appearance-page"',
+            'id="settings-appearance-card"',
+            'id="settings-appearance-tabs"',
+        ],
+        'resources/js/pages/auth/Login.vue' => [
+            'id="auth-login-page"',
+            'id="auth-login-form"',
+            'id="auth-login-submit-button"',
+        ],
+        'resources/js/pages/auth/Register.vue' => [
+            'id="auth-register-page"',
+            'id="auth-register-form"',
+            'id="auth-register-submit-button"',
+        ],
+        'resources/js/pages/auth/ForgotPassword.vue' => [
+            'id="auth-forgot-password-page"',
+            'id="auth-forgot-password-form"',
+            'id="auth-forgot-password-submit-button"',
+        ],
+        'resources/js/pages/auth/ResetPassword.vue' => [
+            'id="auth-reset-password-page"',
+            'id="auth-reset-password-form"',
+            'id="auth-reset-password-submit-button"',
+        ],
+        'resources/js/pages/auth/ConfirmPassword.vue' => [
+            'id="auth-confirm-password-page"',
+            'id="auth-confirm-password-form"',
+            'id="auth-confirm-password-submit-button"',
+        ],
+        'resources/js/pages/auth/TwoFactorChallenge.vue' => [
+            'id="auth-two-factor-challenge-page"',
+            'id="auth-two-factor-code-form"',
+            'id="auth-two-factor-recovery-form"',
+        ],
+        'resources/js/pages/auth/VerifyEmail.vue' => [
+            'id="auth-verify-email-page"',
+            'id="auth-verify-email-form"',
+            'id="auth-verify-email-submit-button"',
+        ],
+    ];
+
+    foreach ($pageIdExpectations as $pageFile => $expectedIds) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        foreach ($expectedIds as $expectedId) {
+            expect($contents)->toContain($expectedId);
+        }
+    }
+});
+
+it('keeps browser globals behind ssr-safe guards in shared composables', function () {
+    $currentUrlContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/useCurrentUrl.ts');
+    $toastContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/useToast.ts');
+    $sidebarProviderContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/SidebarProvider.vue');
+
+    expect($currentUrlContents)->not->toContain('window?.location.origin');
+    expect($currentUrlContents)->toContain("new URL(pageUrl, 'http://localhost').pathname");
+
+    expect($toastContents)->toContain("if (typeof window === 'undefined')");
+    expect($toastContents)->toContain('window.requestAnimationFrame(callback)');
+
+    expect($sidebarProviderContents)->toContain("if (typeof document !== 'undefined')");
+});
+
+it('cycles shared admin index sorting through asc, desc, and none', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/useAdminIndexTableQuery.ts');
+
+    expect($contents)->toContain('if (currentQuery.value.sort !== column)');
+    expect($contents)->toContain("direction: 'asc'");
+    expect($contents)->toContain("direction: 'desc'");
+    expect($contents)->toContain('sort: undefined');
+    expect($contents)->toContain('direction: undefined');
+});
+
 it('renders dashboard metric cards before placeholder sections', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
 
     expect(
-        mb_strpos($contents, '<AdminQuickLinks :counts="props.counts" />'),
-    )->toBeLessThan(mb_strpos($contents, '<div class="relative grid auto-rows-[170px] gap-4 md:grid-cols-6">'));
+        mb_strpos($contents, 'id="admin-dashboard-quick-links"'),
+    )->toBeLessThan(mb_strpos($contents, 'id="admin-dashboard-highlight-grid"'));
 });
 
 it('keeps permission edit delete actions in the shared form footer', function () {
