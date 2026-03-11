@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response): ?ExceptionResponse {
             if ($response->request->expectsJson()) {
                 return null;
             }
