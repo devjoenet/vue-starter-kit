@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { router, useForm } from '@inertiajs/vue3';
-import { computed, h, watch } from 'vue';
+import { router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
 import RolePermissionAssignmentTable from '@/components/admin/RolePermissionAssignmentTable.vue';
@@ -21,19 +21,17 @@ import type {
   UpdateRoleRequest,
 } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Roles', href: index.url() },
-          { title: 'Edit' },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
 });
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Roles', href: index.url() },
+    { title: 'Edit' },
+  ],
+});
+
 const props = defineProps<AdminRolesEditPageProps>();
 
 const { can } = useAbility();

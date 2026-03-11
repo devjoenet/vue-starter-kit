@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { Form, Head, Link, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
@@ -11,14 +11,11 @@ import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { SettingsProfilePageProps } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
-      },
-      () => h(SettingsLayout, null, () => page),
-    ),
+  layout: [AppLayout, SettingsLayout],
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
 });
 
 const props = defineProps<SettingsProfilePageProps>();

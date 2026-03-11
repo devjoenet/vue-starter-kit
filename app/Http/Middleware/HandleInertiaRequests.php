@@ -62,11 +62,13 @@ class HandleInertiaRequests extends Middleware
     /** @return array{success: Closure, error: Closure, warning: Closure, info: Closure} */
     private function sharedFlash(Request $request): array
     {
+        $session = $request->hasSession() ? $request->session() : null;
+
         return [
-            'success' => fn () => $request->session()->get('success'),
-            'error' => fn () => $request->session()->get('error'),
-            'warning' => fn () => $request->session()->get('warning'),
-            'info' => fn () => $request->session()->get('info'),
+            'success' => fn () => $session?->get('success'),
+            'error' => fn () => $session?->get('error'),
+            'warning' => fn () => $session?->get('warning'),
+            'info' => fn () => $session?->get('info'),
         ];
     }
 

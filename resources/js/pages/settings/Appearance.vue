@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import { h } from 'vue';
+import { Head, setLayoutProps } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import Heading from '@/components/Heading.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -8,14 +7,11 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/appearance';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Appearance settings', href: edit().url }],
-      },
-      () => h(SettingsLayout, null, () => page),
-    ),
+  layout: [AppLayout, SettingsLayout],
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Appearance settings', href: edit().url }],
 });
 </script>
 

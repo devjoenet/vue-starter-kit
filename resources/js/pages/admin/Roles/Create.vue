@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
@@ -15,19 +15,17 @@ import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminRolesCreatePageProps } from '@/types/page-props';
 import type { StoreRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Roles', href: index.url() },
-          { title: 'Create', href: create.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
 });
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Roles', href: index.url() },
+    { title: 'Create', href: create.url() },
+  ],
+});
+
 const props = defineProps<AdminRolesCreatePageProps>();
 
 const { can } = useAbility();

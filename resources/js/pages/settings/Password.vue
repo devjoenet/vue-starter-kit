@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import { h } from 'vue';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -8,14 +7,11 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/user-password';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Password settings', href: edit().url }],
-      },
-      () => h(SettingsLayout, null, () => page),
-    ),
+  layout: [AppLayout, SettingsLayout],
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Password settings', href: edit().url }],
 });
 </script>
 

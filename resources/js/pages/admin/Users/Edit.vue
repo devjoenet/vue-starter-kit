@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { router, useForm } from '@inertiajs/vue3';
-import { computed, h, watch } from 'vue';
+import { router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
 import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
@@ -21,18 +21,15 @@ import type {
   UpdateUserRequest,
 } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Users', href: index.url() },
-          { title: 'Edit' },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Users', href: index.url() },
+    { title: 'Edit' },
+  ],
 });
 
 const props = defineProps<AdminUsersEditPageProps>();

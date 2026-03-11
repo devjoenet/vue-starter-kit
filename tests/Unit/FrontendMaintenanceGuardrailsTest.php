@@ -326,9 +326,10 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect($headerCellContents)->toContain('FunnelIcon');
     expect($headerCellContents)->toContain('CheckIcon');
     expect($headerCellContents)->toContain('SquareIcon');
-    expect($headerCellContents)->toContain('text-sm font-medium leading-none');
-    expect($headerCellContents)->toContain('class="h-6 gap-1 px-1.5 align-middle"');
-    expect($headerCellContents)->toContain('class="h-6 px-1.5 align-middle"');
+    expect($headerCellContents)->toContain('text-sm leading-none font-medium');
+    expect($headerCellContents)->toContain('class="relative h-4 w-4 p-0 align-middle"');
+    expect($headerCellContents)->toContain('class="h-4 w-4 p-0 align-middle"');
+    expect($headerCellContents)->toContain("'size-2'");
     expect($headerCellContents)->toContain("event: 'apply-filters'");
     expect($headerCellContents)->toContain(':appearance="sortDirection === \'none\' ? \'outline\' : \'filled\'"');
     expect($headerCellContents)->toContain(':appearance="hasActiveFilters ? \'filled\' : \'outline\'"');
@@ -345,6 +346,48 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect(
         mb_strpos($permissionTableContents, 'label="Permission"'),
     )->toBeLessThan(mb_strpos($permissionTableContents, 'label="Group"'));
+});
+
+it('uses inertia layout props for shared admin and settings breadcrumbs', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $pageFiles = [
+        'resources/js/pages/admin/Dashboard.vue',
+        'resources/js/pages/admin/Users/Index.vue',
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Index.vue',
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Index.vue',
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/pages/settings/Appearance.vue',
+    ];
+
+    $layoutContents = file_get_contents($projectRoot.'/resources/js/layouts/AppLayout.vue');
+
+    expect($layoutContents)->toContain('useLayoutProps');
+    expect($layoutContents)->toContain('breadcrumbs: []');
+
+    foreach ($pageFiles as $pageFile) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        expect($contents)->toContain('setLayoutProps({');
+        expect($contents)->not->toContain('layout: (_: unknown, page: unknown) =>');
+    }
+});
+
+it('cycles shared admin index sorting through asc, desc, and none', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/useAdminIndexTableQuery.ts');
+
+    expect($contents)->toContain('if (currentQuery.value.sort !== column)');
+    expect($contents)->toContain("direction: 'asc'");
+    expect($contents)->toContain("direction: 'desc'");
+    expect($contents)->toContain('sort: undefined');
+    expect($contents)->toContain('direction: undefined');
 });
 
 it('renders dashboard metric cards before placeholder sections', function () {

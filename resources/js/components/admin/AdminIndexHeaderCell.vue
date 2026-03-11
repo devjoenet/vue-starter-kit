@@ -133,7 +133,7 @@ const clearFilters = () => {
 <template>
   <TableHead :class="cn('align-middle', headClass)">
     <div class="flex items-center gap-2">
-      <span class="text-sm font-medium leading-none">{{ label }}</span>
+      <span class="text-sm leading-none font-medium">{{ label }}</span>
 
       <DropdownMenu v-model:open="menuOpen">
         <DropdownMenuTrigger :as-child="true">
@@ -142,12 +142,12 @@ const clearFilters = () => {
             size="sm"
             :aria-label="filterButtonTitle"
             :title="filterButtonTitle"
-            class="h-6 gap-1 px-1.5 align-middle"
+            class="relative h-4 w-4 p-0 align-middle"
           >
             <FunnelIcon
               :class="
                 cn(
-                  'size-3',
+                  'size-2',
                   hasActiveFilters
                     ? 'text-primary-foreground'
                     : 'text-muted-foreground',
@@ -158,10 +158,10 @@ const clearFilters = () => {
               v-if="selectedFilters.length"
               :class="
                 cn(
-                  'text-[11px]',
+                  'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full px-0.5 text-[8px] leading-none',
                   hasActiveFilters
-                    ? 'text-primary-foreground'
-                    : 'text-muted-foreground',
+                    ? 'bg-primary-foreground text-primary'
+                    : 'bg-muted text-muted-foreground',
                 )
               "
             >
@@ -211,14 +211,14 @@ const clearFilters = () => {
         size="sm"
         :aria-label="sortButtonTitle"
         :title="sortButtonTitle"
-        class="h-6 px-1.5 align-middle"
+        class="h-4 w-4 p-0 align-middle"
         @click="$emit('toggle-sort', column)"
       >
         <component
           :is="sortIcon"
           :class="
             cn(
-              'size-3',
+              'size-2',
               sortDirection === 'none'
                 ? 'text-muted-foreground'
                 : 'text-primary-foreground',

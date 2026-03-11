@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { computed, h } from 'vue';
+import { Link, setLayoutProps } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import PermissionIndexTable from '@/components/admin/PermissionIndexTable.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useAbility } from '@/composables/useAbility';
@@ -10,17 +10,14 @@ import { create, index } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminPermissionsIndexPageProps } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Permissions', href: index.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Permissions', href: index.url() },
+  ],
 });
 
 const props = defineProps<AdminPermissionsIndexPageProps>();

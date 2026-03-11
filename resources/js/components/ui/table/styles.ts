@@ -14,5 +14,7 @@ export const tableRowVariants = cva(
 export const tableHeadVariants = cva(
   'h-11 px-4 text-left align-middle text-xs font-semibold tracking-wide whitespace-nowrap text-muted-foreground uppercase [&_button]:font-[inherit] [&_button]:leading-[inherit] [&_button]:tracking-[inherit] [&_button]:text-inherit [&_button]:uppercase',
 );
-export const tableCellVariants = cva('px-4 py-3 align-middle whitespace-nowrap');
+export const tableCellVariants = cva(
+  'px-4 py-3 align-middle whitespace-nowrap',
+);
 export const tableCaptionVariants = cva('mt-3 text-sm text-muted-foreground');

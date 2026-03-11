@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3';
-import { h, computed, watch } from 'vue';
+import { setLayoutProps, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import { useAbility } from '@/composables/useAbility';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -16,19 +16,17 @@ import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminPermissionsCreatePageProps } from '@/types/page-props';
 import type { StorePermissionRequest } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Permissions', href: index.url() },
-          { title: 'Create', href: create.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
 });
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Permissions', href: index.url() },
+    { title: 'Create', href: create.url() },
+  ],
+});
+
 const props = defineProps<AdminPermissionsCreatePageProps>();
 
 const { can } = useAbility();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
-import { h, onUnmounted, ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
@@ -13,14 +13,11 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { disable, enable, show } from '@/routes/two-factor';
 import type { SettingsTwoFactorPageProps } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Two-Factor Authentication', href: show.url() }],
-      },
-      () => h(SettingsLayout, null, () => page),
-    ),
+  layout: [AppLayout, SettingsLayout],
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Two-Factor Authentication', href: show.url() }],
 });
 
 const props = withDefaults(defineProps<SettingsTwoFactorPageProps>(), {

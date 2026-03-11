@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import { h } from 'vue';
+import { Head, setLayoutProps } from '@inertiajs/vue3';
 import AdminQuickLinks from '@/components/admin/AdminQuickLinks.vue';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import type { AdminDashboardPageProps } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [{ title: 'Dashboard', href: dashboard().url }],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [{ title: 'Dashboard', href: dashboard().url }],
 });
 
 const props = defineProps<AdminDashboardPageProps>();

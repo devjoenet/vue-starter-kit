@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { h, computed } from 'vue';
+import { Link, setLayoutProps } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -21,17 +21,14 @@ import type {
   AdminRolesIndexPageProps,
 } from '@/types/page-props';
 defineOptions({
-  layout: (_: unknown, page: unknown) =>
-    h(
-      AppLayout,
-      {
-        breadcrumbs: [
-          { title: 'Dashboard', href: dashboard.url() },
-          { title: 'Roles', href: index.url() },
-        ],
-      },
-      () => page,
-    ),
+  layout: AppLayout,
+});
+
+setLayoutProps({
+  breadcrumbs: [
+    { title: 'Dashboard', href: dashboard.url() },
+    { title: 'Roles', href: index.url() },
+  ],
 });
 
 const props = defineProps<AdminRolesIndexPageProps>();
