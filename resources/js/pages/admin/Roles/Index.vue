@@ -56,17 +56,29 @@ const {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-roles-index-page" class="space-y-6 px-4">
+    <div
+      id="admin-roles-index-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Roles</h1>
 
-      <Button v-if="canCreate" appearance="outline" as-child>
+      <Button
+        v-if="canCreate"
+        id="admin-roles-index-create-button"
+        appearance="outline"
+        as-child
+      >
         <Link :href="create.url()">Create New Role</Link>
       </Button>
     </div>
 
-    <Card variant="default" class="overflow-hidden py-0">
-      <Table>
+    <Card
+      id="admin-roles-index-table-card"
+      variant="default"
+      class="overflow-hidden py-0"
+    >
+      <Table id="admin-roles-index-table">
         <TableHeader>
           <TableRow>
             <AdminIndexHeaderCell

@@ -18,13 +18,16 @@ withDefaults(
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
   </Head>
   <div
+    id="welcome-page"
     class="flex min-h-screen flex-col items-center bg-background p-6 text-foreground lg:justify-center lg:p-8"
   >
     <header
+      id="welcome-page-header"
       class="mb-6 w-full max-w-83.75 text-sm not-has-[nav]:hidden lg:max-w-4xl"
     >
-      <nav class="flex items-center justify-end gap-4">
+      <nav id="welcome-page-nav" class="flex items-center justify-end gap-4">
         <Button
+          id="welcome-dashboard-link"
           as="a"
           appearance="outline"
           v-if="$page.props.auth?.user"
@@ -33,6 +36,7 @@ withDefaults(
         >
         <template v-else>
           <Button
+            id="welcome-login-link"
             as="a"
             :href="login().url"
             appearance="outline"
@@ -40,6 +44,7 @@ withDefaults(
             >Login</Button
           >
           <Button
+            id="welcome-register-link"
             as="a"
             v-if="canRegister"
             :href="register().url"
@@ -54,9 +59,11 @@ withDefaults(
       class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0"
     >
       <main
+        id="welcome-page-hero"
         class="max-w-83.75lex-col-reverse flex w-full overflow-hidden rounded-lg border border-border bg-card lg:max-w-4xl lg:flex-row"
       >
         <div
+          id="welcome-page-content"
           class="flex-1 rounded-br-lg rounded-bl-lg bg-card p-6 pb-12 text-[13px] leading-5 text-card-foreground lg:rounded-tl-lg lg:rounded-br-none lg:p-20"
         >
           <h1 class="mb-1 font-semibold text-foreground">Let's get started</h1>
@@ -64,7 +71,7 @@ withDefaults(
             Laravel has an incredibly rich ecosystem. <br />We suggest starting
             with the following.
           </p>
-          <ul class="mb-4 flex flex-col lg:mb-6">
+          <ul id="welcome-page-resources" class="mb-4 flex flex-col lg:mb-6">
             <li
               class="relative flex items-center gap-4 py-2 before:absolute before:top-1/2 before:bottom-0 before:left-[0.4rem] before:border-l before:border-border"
             >
@@ -136,9 +143,13 @@ withDefaults(
               </span>
             </li>
           </ul>
-          <ul class="flex gap-3 text-sm leading-normal">
+          <ul
+            id="welcome-page-actions"
+            class="flex gap-3 text-sm leading-normal"
+          >
             <li>
               <a
+                id="welcome-deploy-link"
                 href="https://cloud.laravel.com"
                 target="_blank"
                 class="inline-flex items-center rounded-sm border border-primary bg-primary px-5 py-1.5 text-sm leading-normal text-primary-foreground transition hover:bg-primary/90"
@@ -149,6 +160,7 @@ withDefaults(
           </ul>
         </div>
         <div
+          id="welcome-page-visual"
           class="relative -mb-px aspect-335/376 w-full shrink-0 overflow-hidden rounded-t-lg bg-linear-to-br from-primary/10 via-background to-accent/20 lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-109.5 lg:rounded-t-none lg:rounded-r-lg"
         >
           <svg

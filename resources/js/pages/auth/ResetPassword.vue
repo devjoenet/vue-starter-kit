@@ -30,60 +30,64 @@ const inputEmail = ref(props.email);
 <template>
   <Head title="Reset password" />
 
-  <Card variant="default" class="px-6">
-    <Form
-      v-bind="update.form()"
-      :transform="(data) => ({ ...data, token, email })"
-      :reset-on-success="['password', 'password_confirmation']"
-      v-slot="{ errors, processing }"
-      class="space-y-4"
-    >
-      <Input
-        id="email"
-        v-model="inputEmail"
-        type="email"
-        name="email"
-        label="Email"
-        variant="outlined"
-        autocomplete="email"
-        readonly
-        :state="errors.email ? 'error' : 'default'"
-        :message="errors.email"
-      />
-
-      <Input
-        id="password"
-        type="password"
-        name="password"
-        label="Password"
-        variant="outlined"
-        autocomplete="new-password"
-        autofocus
-        :state="errors.password ? 'error' : 'default'"
-        :message="errors.password"
-      />
-
-      <Input
-        id="password_confirmation"
-        type="password"
-        name="password_confirmation"
-        label="Confirm password"
-        variant="outlined"
-        autocomplete="new-password"
-        :state="errors.password_confirmation ? 'error' : 'default'"
-        :message="errors.password_confirmation"
-      />
-
-      <Button
-        type="submit"
-        appearance="filled"
-        class="w-full"
-        :disabled="processing"
-        data-test="reset-password-button"
+  <section id="auth-reset-password-page">
+    <Card id="auth-reset-password-card" variant="default" class="px-6">
+      <Form
+        id="auth-reset-password-form"
+        v-bind="update.form()"
+        :transform="(data) => ({ ...data, token, email })"
+        :reset-on-success="['password', 'password_confirmation']"
+        v-slot="{ errors, processing }"
+        class="space-y-4"
       >
-        <Spinner v-if="processing" />
-        Reset password
-      </Button>
-    </Form>
-  </Card>
+        <Input
+          id="email"
+          v-model="inputEmail"
+          type="email"
+          name="email"
+          label="Email"
+          variant="outlined"
+          autocomplete="email"
+          readonly
+          :state="errors.email ? 'error' : 'default'"
+          :message="errors.email"
+        />
+
+        <Input
+          id="password"
+          type="password"
+          name="password"
+          label="Password"
+          variant="outlined"
+          autocomplete="new-password"
+          autofocus
+          :state="errors.password ? 'error' : 'default'"
+          :message="errors.password"
+        />
+
+        <Input
+          id="password_confirmation"
+          type="password"
+          name="password_confirmation"
+          label="Confirm password"
+          variant="outlined"
+          autocomplete="new-password"
+          :state="errors.password_confirmation ? 'error' : 'default'"
+          :message="errors.password_confirmation"
+        />
+
+        <Button
+          id="auth-reset-password-submit-button"
+          type="submit"
+          appearance="filled"
+          class="w-full"
+          :disabled="processing"
+          data-test="reset-password-button"
+        >
+          <Spinner v-if="processing" />
+          Reset password
+        </Button>
+      </Form>
+    </Card>
+  </section>
 </template>

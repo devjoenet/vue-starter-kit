@@ -28,16 +28,25 @@ const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-permissions-index-page" class="space-y-6 px-4">
+    <div
+      id="admin-permissions-index-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Permissions</h1>
 
-      <Button v-if="canCreate" appearance="outline" as-child>
+      <Button
+        v-if="canCreate"
+        id="admin-permissions-index-create-button"
+        appearance="outline"
+        as-child
+      >
         <Link :href="create.url()">Create New Permission</Link>
       </Button>
     </div>
 
     <PermissionIndexTable
+      id="admin-permissions-index-table-card"
       :can-update="canUpdate"
       :filter-options="props.filterOptions"
       :permissions="props.permissions"

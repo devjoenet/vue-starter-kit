@@ -65,12 +65,16 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-permissions-create-page" class="space-y-6 px-4">
+    <div
+      id="admin-permissions-create-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Create permission</h1>
     </div>
 
     <PermissionEditorForm
+      id="admin-permissions-create-form-card"
       group-id="create-permission-group"
       name-id="create-permission-name"
       :can-submit="canCreate"

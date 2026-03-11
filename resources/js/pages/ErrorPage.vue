@@ -39,13 +39,15 @@ const content = computed(() => {
   <Head :title="`${content.title} (${status})`" />
 
   <div
+    id="error-page"
     class="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/60 px-6 py-16"
   >
     <div
+      id="error-page-card"
       class="w-full max-w-2xl rounded-3xl border border-border/70 bg-card/95 p-8 shadow-(--elevation-2) sm:p-10"
     >
-      <div class="space-y-6">
-        <div class="space-y-3">
+      <div id="error-page-content" class="space-y-6">
+        <div id="error-page-copy" class="space-y-3">
           <p
             class="text-sm font-semibold tracking-[0.2em] text-primary uppercase"
           >
@@ -61,12 +63,12 @@ const content = computed(() => {
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <Button as-child appearance="filled">
+        <div id="error-page-actions" class="flex flex-wrap items-center gap-3">
+          <Button id="error-page-home-link" as-child appearance="filled">
             <Link href="/">Go home</Link>
           </Button>
 
-          <Button as-child appearance="outline">
+          <Button id="error-page-dashboard-link" as-child appearance="outline">
             <Link :href="dashboard()">Open dashboard</Link>
           </Button>
         </div>

@@ -29,28 +29,42 @@ defineProps<{
 <template>
   <Head title="Email verification" />
 
-  <Card variant="default" class="px-6">
-    <Form
-      v-bind="send.form()"
-      class="space-y-4 text-center"
-      v-slot="{ processing }"
-    >
-      <p
-        v-if="status === 'verification-link-sent'"
-        class="text-sm font-medium text-success"
+  <section id="auth-verify-email-page">
+    <Card id="auth-verify-email-card" variant="default" class="px-6">
+      <Form
+        id="auth-verify-email-form"
+        v-bind="send.form()"
+        class="space-y-4 text-center"
+        v-slot="{ processing }"
       >
-        A new verification link has been sent to the email address you provided
-        during registration.
-      </p>
+        <p
+          v-if="status === 'verification-link-sent'"
+          id="auth-verify-email-status"
+          class="text-sm font-medium text-success"
+        >
+          A new verification link has been sent to the email address you
+          provided during registration.
+        </p>
 
-      <Button appearance="filled" class="w-full" :disabled="processing">
-        <Spinner v-if="processing" />
-        Resend verification email
-      </Button>
+        <Button
+          id="auth-verify-email-submit-button"
+          appearance="filled"
+          class="w-full"
+          :disabled="processing"
+        >
+          <Spinner v-if="processing" />
+          Resend verification email
+        </Button>
 
-      <TextLink :href="logout()" as="button" class="mx-auto block text-sm">
-        Log out
-      </TextLink>
-    </Form>
-  </Card>
+        <TextLink
+          id="auth-verify-email-logout-button"
+          :href="logout()"
+          as="button"
+          class="mx-auto block text-sm"
+        >
+          Log out
+        </TextLink>
+      </Form>
+    </Card>
+  </section>
 </template>

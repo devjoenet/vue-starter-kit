@@ -58,17 +58,29 @@ const {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-users-index-page" class="space-y-6 px-4">
+    <div
+      id="admin-users-index-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Users</h1>
 
-      <Button v-if="canCreate" appearance="outline" as-child>
+      <Button
+        v-if="canCreate"
+        id="admin-users-index-create-button"
+        appearance="outline"
+        as-child
+      >
         <Link :href="create.url()">Create New User</Link>
       </Button>
     </div>
 
-    <Card variant="default" class="overflow-hidden py-0">
-      <Table>
+    <Card
+      id="admin-users-index-table-card"
+      variant="default"
+      class="overflow-hidden py-0"
+    >
+      <Table id="admin-users-index-table">
         <TableHeader>
           <TableRow>
             <AdminIndexHeaderCell

@@ -171,15 +171,23 @@ const destroyUser = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-users-edit-page" class="space-y-6 px-4">
+    <div
+      id="admin-users-edit-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Edit {{ userLabel }}</h1>
     </div>
 
-    <div class="space-y-6">
-      <UserDetailsForm :can-update="canUpdate" :form="userForm" />
+    <div id="admin-users-edit-sections" class="space-y-6">
+      <UserDetailsForm
+        id="admin-users-edit-details-card"
+        :can-update="canUpdate"
+        :form="userForm"
+      />
 
       <UserRoleAssignmentTable
+        id="admin-users-edit-roles-card"
         :can-assign="canAssignRoles"
         :error="rolesForm.errors.roles"
         :roles="roles"
@@ -188,6 +196,7 @@ const destroyUser = () => {
       />
 
       <EditPageActionRow
+        id="admin-users-edit-actions"
         :can-delete="canDelete"
         :delete-label="`Delete ${userLabel}`"
         :processing="saveProcessing"

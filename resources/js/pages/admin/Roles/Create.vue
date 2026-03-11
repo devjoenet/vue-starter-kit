@@ -56,14 +56,25 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-roles-create-page" class="space-y-6 px-4">
+    <div
+      id="admin-roles-create-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">Create role</h1>
     </div>
 
-    <form class="space-y-6" @submit.prevent="submit">
-      <div class="space-y-6">
-        <Card variant="default" class="px-6">
+    <form
+      id="admin-roles-create-form"
+      class="space-y-6"
+      @submit.prevent="submit"
+    >
+      <div id="admin-roles-create-sections" class="space-y-6">
+        <Card
+          id="admin-roles-create-details-card"
+          variant="default"
+          class="px-6"
+        >
           <h2 class="text-lg font-semibold">Role Details</h2>
 
           <div class="mt-4 space-y-4">
@@ -81,7 +92,7 @@ const submit = () => {
           </div>
         </Card>
 
-        <Card variant="default" class="px-6">
+        <Card id="admin-roles-create-users-card" variant="default" class="px-6">
           <h2 class="text-lg font-semibold">Assign Users</h2>
 
           <div class="-mx-3 mt-4 max-h-72 space-y-2 overflow-y-auto px-3">
@@ -118,6 +129,7 @@ const submit = () => {
 
       <div class="flex justify-end">
         <Button
+          id="admin-roles-create-submit-button"
           appearance="filled"
           type="submit"
           :disabled="!canCreate || form.processing"

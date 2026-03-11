@@ -161,17 +161,25 @@ const destroyRole = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div id="admin-roles-edit-page" class="space-y-6 px-4">
+    <div
+      id="admin-roles-edit-page-header"
+      class="flex flex-wrap items-center justify-between gap-3"
+    >
       <h1 class="text-2xl font-semibold">
         Edit {{ toTitleCase(props.role.name) }}
       </h1>
     </div>
 
-    <div class="space-y-6">
-      <RoleDetailsForm :can-update="canUpdate" :form="roleForm" />
+    <div id="admin-roles-edit-sections" class="space-y-6">
+      <RoleDetailsForm
+        id="admin-roles-edit-details-card"
+        :can-update="canUpdate"
+        :form="roleForm"
+      />
 
       <RolePermissionAssignmentTable
+        id="admin-roles-edit-permissions-card"
         :can-assign="canAssign"
         :error="permsForm.errors.permissions"
         :permissions-by-group="permissionsByGroup"
@@ -180,6 +188,7 @@ const destroyRole = () => {
       />
 
       <EditPageActionRow
+        id="admin-roles-edit-actions"
         :can-delete="canDelete"
         delete-label="Delete Role"
         :processing="saveProcessing"

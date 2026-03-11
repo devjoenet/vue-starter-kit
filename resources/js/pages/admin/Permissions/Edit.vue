@@ -101,12 +101,16 @@ const destroyPermission = () => {
 </script>
 
 <template>
-  <div class="space-y-6 px-4">
-    <div class="flex flex-wrap items-center justify-between gap-3 pt-12">
+  <div id="admin-permissions-edit-page" class="space-y-6 px-4">
+    <div
+      id="admin-permissions-edit-page-header"
+      class="flex flex-wrap items-center justify-between gap-3 pt-12"
+    >
       <h1 class="text-2xl font-semibold">Edit permission</h1>
     </div>
 
     <PermissionEditorForm
+      id="admin-permissions-edit-form-card"
       :can-delete="canDelete"
       group-id="edit-permission-group"
       name-id="edit-permission-name"

@@ -54,6 +54,15 @@ const toasts = ref<ToastItem[]>([]);
 const timeoutIds = new Map<number, ReturnType<typeof setTimeout>>();
 let nextToastId = 1;
 
+const runNextFrame = (callback: () => void): void => {
+  if (typeof window === 'undefined') {
+    callback();
+    return;
+  }
+
+  window.requestAnimationFrame(callback);
+};
+
 const normalizePayload = (payload: string | ToastPayload): ToastPayload => {
   if (typeof payload === 'string') {
     return {
@@ -103,7 +112,7 @@ const queueToast = (payload: string | ToastPayload): number | null => {
 
   toasts.value = currentToasts;
 
-  requestAnimationFrame(() => {
+  runNextFrame(() => {
     const targetToast = toasts.value.find((item) => item.id === toast.id);
     if (!targetToast) {
       return;

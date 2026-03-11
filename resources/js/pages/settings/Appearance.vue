@@ -20,14 +20,16 @@ setLayoutProps({
 
   <h1 class="sr-only">Appearance Settings</h1>
 
-  <Card variant="default" class="px-6">
-    <div class="space-y-4">
-      <Heading
-        variant="small"
-        title="Appearance settings"
-        description="Update your account's appearance settings"
-      />
-      <AppearanceTabs />
-    </div>
-  </Card>
+  <div id="settings-appearance-page">
+    <Card id="settings-appearance-card" variant="default" class="px-6">
+      <div class="space-y-4">
+        <Heading
+          variant="small"
+          title="Appearance settings"
+          description="Update your account's appearance settings"
+        />
+        <AppearanceTabs id="settings-appearance-tabs" />
+      </div>
+    </Card>
+  </div>
 </template>

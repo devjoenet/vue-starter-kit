@@ -24,35 +24,39 @@ defineOptions({
 <template>
   <Head title="Confirm password" />
 
-  <Card variant="default" class="px-6">
-    <Form
-      v-bind="store.form()"
-      reset-on-success
-      v-slot="{ errors, processing }"
-      class="space-y-4"
-    >
-      <Input
-        id="password"
-        type="password"
-        name="password"
-        label="Password"
-        variant="outlined"
-        required
-        autocomplete="current-password"
-        autofocus
-        :state="errors.password ? 'error' : 'default'"
-        :message="errors.password"
-      />
-
-      <Button
-        appearance="filled"
-        class="w-full"
-        :disabled="processing"
-        data-test="confirm-password-button"
+  <section id="auth-confirm-password-page">
+    <Card id="auth-confirm-password-card" variant="default" class="px-6">
+      <Form
+        id="auth-confirm-password-form"
+        v-bind="store.form()"
+        reset-on-success
+        v-slot="{ errors, processing }"
+        class="space-y-4"
       >
-        <Spinner v-if="processing" />
-        Confirm password
-      </Button>
-    </Form>
-  </Card>
+        <Input
+          id="password"
+          type="password"
+          name="password"
+          label="Password"
+          variant="outlined"
+          required
+          autocomplete="current-password"
+          autofocus
+          :state="errors.password ? 'error' : 'default'"
+          :message="errors.password"
+        />
+
+        <Button
+          id="auth-confirm-password-submit-button"
+          appearance="filled"
+          class="w-full"
+          :disabled="processing"
+          data-test="confirm-password-button"
+        >
+          <Spinner v-if="processing" />
+          Confirm password
+        </Button>
+      </Form>
+    </Card>
+  </section>
 </template>
