@@ -2,6 +2,9 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
 import TextLink from '@/components/TextLink.vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
@@ -13,9 +16,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Verify email',
+        title: 'Verify your email address',
         description:
-          'Please verify your email address by clicking on the link we just emailed to you.',
+          'Confirm your email to keep account access secure and finish setup.',
       },
       () => page,
     ),
@@ -37,14 +40,17 @@ defineProps<{
         class="space-y-4 text-center"
         v-slot="{ processing }"
       >
-        <p
+        <Alert
           v-if="status === 'verification-link-sent'"
           id="auth-verify-email-status"
-          class="text-sm font-medium text-success"
+          variant="success"
         >
-          A new verification link has been sent to the email address you
-          provided during registration.
-        </p>
+          <AlertTitle>Verification email sent</AlertTitle>
+          <AlertDescription>
+            Use the newest message in your inbox to finish verifying this
+            account.
+          </AlertDescription>
+        </Alert>
 
         <Button
           id="auth-verify-email-submit-button"
@@ -53,8 +59,12 @@ defineProps<{
           :disabled="processing"
         >
           <Spinner v-if="processing" />
-          Resend verification email
+          Send another verification email
         </Button>
+
+        <p class="text-xs text-muted-foreground">
+          Resend only if the previous email did not arrive or has expired.
+        </p>
 
         <TextLink
           id="auth-verify-email-logout-button"
@@ -62,7 +72,7 @@ defineProps<{
           as="button"
           class="mx-auto block text-sm"
         >
-          Log out
+          Sign out
         </TextLink>
       </Form>
     </Card>

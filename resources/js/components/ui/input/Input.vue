@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core';
 import type { Component, HTMLAttributes } from 'vue';
-import { computed, ref, useAttrs, useSlots, watch } from 'vue';
+import { computed, ref, useAttrs, useId, useSlots, watch } from 'vue';
 import { cn } from '@/lib/utils';
 import FieldAdornmentIcon from '../form-field/FieldAdornmentIcon.vue';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
@@ -78,6 +78,7 @@ const emits = defineEmits<{
 
 const attrs = useAttrs();
 const slots = useSlots();
+const generatedId = useId();
 const fieldRef = ref<HTMLInputElement | HTMLTextAreaElement | null>(null);
 const isComposing = ref(false);
 
@@ -132,7 +133,27 @@ const placeholderValue = computed(() =>
 
 const showCounter = computed(() => typeof props.maxLength === 'number');
 const currentLength = computed(() => String(modelValue.value ?? '').length);
-const inputId = computed(() => (attrs.id as string | undefined) ?? undefined);
+const inputId = computed(
+  () => (attrs.id as string | undefined) ?? `input-${generatedId}`,
+);
+const customDescribedBy = computed(
+  () => attrs['aria-describedby'] as string | undefined,
+);
+const assistiveTextId = computed(() =>
+  supportingText.value ? `${inputId.value}-assistive` : undefined,
+);
+const counterId = computed(() =>
+  showCounter.value ? `${inputId.value}-counter` : undefined,
+);
+const describedBy = computed(() => {
+  const ids = [
+    customDescribedBy.value,
+    assistiveTextId.value,
+    counterId.value,
+  ].filter(Boolean);
+
+  return ids.length ? ids.join(' ') : undefined;
+});
 
 const hasClearControl = computed(
   () =>
@@ -511,6 +532,7 @@ defineExpose({
         :autofocus="autofocus"
         :inputmode="type === 'number' ? 'decimal' : undefined"
         :aria-invalid="hasError ? 'true' : undefined"
+        :aria-describedby="describedBy"
         :class="baseFieldClasses"
         v-bind="attrs"
         @focus="handleFocus"
@@ -605,10 +627,11 @@ defineExpose({
       class="mt-2 flex items-start justify-between gap-3"
     >
       <FieldAssistiveText
+        :id="assistiveTextId"
         :text="supportingText"
         :class="assistiveTextClasses"
       />
-      <p v-if="showCounter" :class="assistiveTextClasses">
+      <p v-if="showCounter" :id="counterId" :class="assistiveTextClasses">
         {{ currentLength }} / {{ maxLength }}
       </p>
     </div>

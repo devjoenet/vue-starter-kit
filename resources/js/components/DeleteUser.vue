@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import { useTemplateRef } from 'vue';
+import SettingsActionRow from '@/components/SettingsActionRow.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Dialog from '@/components/ui/dialog/Dialog.vue';
@@ -20,84 +21,93 @@ const passwordInput = useTemplateRef('passwordInput');
   <SettingsSectionCard
     variant="destructive"
     title="Delete account"
-    description="Delete your account and all of its resources"
+    description="Permanently remove this account and the data tied to it."
+    content-class="space-y-3"
   >
-    <p class="text-sm text-destructive">
-      Please proceed with caution. This action cannot be undone.
+    <p class="text-sm text-muted-foreground">
+      Use this only when the account should no longer exist in this starter or
+      any related environments.
     </p>
 
-    <Dialog>
-      <DialogTrigger as-child>
-        <Button
-          appearance="filled"
-          variant="destructive"
-          data-test="delete-user-button"
-          >Delete account</Button
-        >
-      </DialogTrigger>
-
-      <DialogContent>
-        <Form
-          v-bind="destroy.form()"
-          reset-on-success
-          @error="() => passwordInput?.$el?.focus()"
-          :options="{
-            preserveScroll: true,
-          }"
-          class="space-y-4"
-          v-slot="{ errors, processing, reset, clearErrors }"
-        >
-          <DialogHeader class="space-y-3">
-            <DialogTitle
-              >Are you sure you want to delete your account?</DialogTitle
-            >
-            <DialogDescription>
-              Once your account is deleted, all of its resources and data will
-              also be permanently deleted. Please enter your password to confirm
-              you would like to permanently delete your account.
-            </DialogDescription>
-          </DialogHeader>
-
-          <Input
-            id="password"
-            ref="passwordInput"
-            type="password"
-            name="password"
-            label="Password"
-            variant="outlined"
-            placeholder="Password"
-            :state="errors.password ? 'error' : 'default'"
-            :message="errors.password"
-          />
-
-          <DialogFooter class="gap-2">
-            <DialogClose as-child>
-              <Button
-                appearance="outline"
-                variant="muted"
-                @click="
-                  () => {
-                    clearErrors();
-                    reset();
-                  }
-                "
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-
+    <template #footer>
+      <SettingsActionRow
+        status="This action cannot be undone."
+        status-tone="destructive"
+      >
+        <Dialog>
+          <DialogTrigger as-child>
             <Button
-              type="submit"
               appearance="filled"
               variant="destructive"
-              :disabled="processing"
-              data-test="confirm-delete-user-button"
+              data-test="delete-user-button"
+              >Delete account</Button
             >
-              Delete account
-            </Button>
-          </DialogFooter>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </DialogTrigger>
+
+          <DialogContent>
+            <Form
+              v-bind="destroy.form()"
+              reset-on-success
+              @error="() => passwordInput?.$el?.focus()"
+              :options="{
+                preserveScroll: true,
+              }"
+              class="space-y-4"
+              v-slot="{ errors, processing, reset, clearErrors }"
+            >
+              <DialogHeader class="space-y-3">
+                <DialogTitle
+                  >Are you sure you want to delete your account?</DialogTitle
+                >
+                <DialogDescription>
+                  Once your account is deleted, all of its resources and data
+                  will also be permanently deleted. Please enter your password
+                  to confirm you would like to permanently delete your account.
+                </DialogDescription>
+              </DialogHeader>
+
+              <Input
+                id="password"
+                ref="passwordInput"
+                type="password"
+                name="password"
+                label="Password"
+                variant="outlined"
+                placeholder="Password"
+                :state="errors.password ? 'error' : 'default'"
+                :message="errors.password"
+              />
+
+              <DialogFooter class="gap-2">
+                <DialogClose as-child>
+                  <Button
+                    appearance="outline"
+                    variant="muted"
+                    @click="
+                      () => {
+                        clearErrors();
+                        reset();
+                      }
+                    "
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+
+                <Button
+                  type="submit"
+                  appearance="filled"
+                  variant="destructive"
+                  :disabled="processing"
+                  data-test="confirm-delete-user-button"
+                >
+                  Delete account
+                </Button>
+              </DialogFooter>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      </SettingsActionRow>
+    </template>
   </SettingsSectionCard>
 </template>

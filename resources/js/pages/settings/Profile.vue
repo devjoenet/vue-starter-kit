@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { Form, Head, Link, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
+import SettingsActionRow from '@/components/SettingsActionRow.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
-import UserIdentityFields from '@/components/UserIdentityFields.vue';
+import TextLink from '@/components/TextLink.vue';
 import Button from '@/components/ui/button/Button.vue';
+import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit, update } from '@/routes/profile';
@@ -30,20 +32,21 @@ const user = computed(() => page.props.auth.user);
   <h1 class="sr-only">Profile Settings</h1>
 
   <div id="settings-profile-page" v-if="user" class="space-y-6">
-    <SettingsSectionCard
-      id="settings-profile-information-card"
-      title="Profile information"
-      description="Update your name and email address"
+    <Form
+      id="settings-profile-information-form"
+      v-bind="update.form()"
+      :options="{
+        only: ['auth', 'flash'],
+        preserveScroll: true,
+      }"
+      class="space-y-4"
+      v-slot="{ errors, processing, recentlySuccessful }"
     >
-      <Form
-        id="settings-profile-information-form"
-        v-bind="update.form()"
-        :options="{
-          only: ['auth', 'flash'],
-          preserveScroll: true,
-        }"
-        class="space-y-4"
-        v-slot="{ errors, processing, recentlySuccessful }"
+      <SettingsSectionCard
+        id="settings-profile-information-card"
+        title="Details"
+        description="Update the name and email attached to this account."
+        content-class="space-y-5"
       >
         <UserIdentityFields
           name-id="profile-name"
@@ -57,17 +60,19 @@ const user = computed(() => page.props.auth.user);
           email-required
         />
 
-        <div v-if="props.mustVerifyEmail && !user.email_verified_at">
+        <div
+          v-if="props.mustVerifyEmail && !user.email_verified_at"
+          class="rounded-xl border border-warning/20 bg-warning/8 px-4 py-3"
+        >
           <p class="text-sm text-muted-foreground">
             Your email address is unverified.
-            <Link
+            <TextLink
               id="settings-profile-resend-verification-link"
               :href="send()"
               as="button"
-              class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
             >
               Click here to resend the verification email.
-            </Link>
+            </TextLink>
           </p>
 
           <div
@@ -79,28 +84,23 @@ const user = computed(() => page.props.auth.user);
           </div>
         </div>
 
-        <div id="settings-profile-actions" class="flex items-center gap-4">
-          <Button
-            id="settings-profile-save-button"
-            appearance="filled"
-            :disabled="processing"
-            data-test="update-profile-button"
-            >Save</Button
+        <template #footer>
+          <SettingsActionRow
+            id="settings-profile-actions"
+            :status="recentlySuccessful ? 'Profile updated.' : undefined"
+            status-tone="success"
           >
-
-          <Transition
-            enter-active-class="transition ease-in-out"
-            enter-from-class="opacity-0"
-            leave-active-class="transition ease-in-out"
-            leave-to-class="opacity-0"
-          >
-            <p v-show="recentlySuccessful" class="text-sm text-success">
-              Saved.
-            </p>
-          </Transition>
-        </div>
-      </Form>
-    </SettingsSectionCard>
+            <Button
+              id="settings-profile-save-button"
+              appearance="filled"
+              :disabled="processing"
+              data-test="update-profile-button"
+              >Save changes</Button
+            >
+          </SettingsActionRow>
+        </template>
+      </SettingsSectionCard>
+    </Form>
 
     <DeleteUser id="settings-profile-delete-account-card" />
   </div>

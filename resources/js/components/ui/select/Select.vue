@@ -86,6 +86,10 @@ const fieldId = computed(() => props.id ?? `select-${generatedId}`);
 const menuId = computed(() => `${fieldId.value}-menu`);
 const { hasError, fieldState, supportingText, showAsterisk } =
   useFieldState(props);
+const assistiveTextId = computed(() =>
+  supportingText.value ? `${fieldId.value}-assistive` : undefined,
+);
+const describedBy = computed(() => assistiveTextId.value ?? undefined);
 
 const hasSelectedValue = computed(() => {
   if (modelValue.value === null || modelValue.value === undefined) {
@@ -262,6 +266,7 @@ function clearValue(): void {
             :aria-invalid="hasError ? 'true' : undefined"
             :aria-expanded="open ? 'true' : 'false'"
             :aria-controls="menuId"
+            :aria-describedby="describedBy"
             :aria-required="required ? 'true' : undefined"
             :aria-readonly="readonly ? 'true' : undefined"
             :class="triggerClasses"
@@ -393,6 +398,7 @@ function clearValue(): void {
 
     <div v-if="supportingText" class="mt-2">
       <FieldAssistiveText
+        :id="assistiveTextId"
         :text="supportingText"
         :class="assistiveTextClasses"
       />

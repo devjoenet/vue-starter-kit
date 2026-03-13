@@ -67,7 +67,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--border, currentColor);
   }
 }
 
@@ -105,7 +105,11 @@
   --info-foreground: var(--brand-midnight);
   --warning: #d8ad4f;
   --warning-foreground: var(--brand-midnight);
-  --success: color-mix(in oklab, var(--brand-teal) 86%, var(--brand-midnight) 14%);
+  --success: color-mix(
+    in oklab,
+    var(--brand-teal) 86%,
+    var(--brand-midnight) 14%
+  );
   --success-foreground: var(--brand-midnight);
 
   --border: #cad6df;
@@ -115,8 +119,16 @@
   --chart-1: var(--brand-royal);
   --chart-2: var(--brand-cyan);
   --chart-3: var(--brand-teal);
-  --chart-4: color-mix(in oklab, var(--brand-royal) 58%, var(--brand-midnight) 42%);
-  --chart-5: color-mix(in oklab, var(--brand-mist) 28%, var(--brand-midnight) 72%);
+  --chart-4: color-mix(
+    in oklab,
+    var(--brand-royal) 58%,
+    var(--brand-midnight) 42%
+  );
+  --chart-5: color-mix(
+    in oklab,
+    var(--brand-mist) 28%,
+    var(--brand-midnight) 72%
+  );
 
   --radius: 0.45rem;
 
@@ -164,6 +176,11 @@
     0 18px 36px -24px rgb(15 28 47 / 0.18),
     0 12px 20px -16px rgb(15 28 47 / 0.14);
   --glass-backdrop: blur(12px) saturate(115%);
+  --overlay-backdrop: color-mix(
+    in oklab,
+    var(--brand-midnight) 34%,
+    transparent
+  );
 }
 
 .dark {
@@ -179,7 +196,11 @@
   --primary: color-mix(in oklab, var(--brand-royal) 78%, var(--brand-mist) 22%);
   --primary-foreground: #08111d;
 
-  --secondary: color-mix(in oklab, var(--brand-teal) 88%, var(--brand-mist) 12%);
+  --secondary: color-mix(
+    in oklab,
+    var(--brand-teal) 88%,
+    var(--brand-mist) 12%
+  );
   --secondary-foreground: var(--brand-midnight);
 
   --accent: color-mix(in oklab, var(--brand-cyan) 86%, var(--brand-mist) 14%);
@@ -205,7 +226,11 @@
   --chart-2: var(--accent);
   --chart-3: var(--secondary);
   --chart-4: color-mix(in oklab, var(--brand-royal) 62%, var(--brand-cyan) 38%);
-  --chart-5: color-mix(in oklab, var(--brand-mist) 52%, var(--brand-midnight) 48%);
+  --chart-5: color-mix(
+    in oklab,
+    var(--brand-mist) 52%,
+    var(--brand-midnight) 48%
+  );
 
   --sidebar-background: #0b1627;
   --sidebar-foreground: var(--foreground);
@@ -246,9 +271,13 @@
   --glass-surface-hover: rgb(30 49 75 / 0.84);
   --glass-border: rgb(232 238 242 / 0.14);
   --glass-shadow:
-    0 18px 36px -24px rgb(0 0 0 / 0.48),
-    0 12px 20px -16px rgb(0 0 0 / 0.42);
+    0 18px 36px -24px rgb(0 0 0 / 0.48), 0 12px 20px -16px rgb(0 0 0 / 0.42);
   --glass-backdrop: blur(14px) saturate(120%);
+  --overlay-backdrop: color-mix(
+    in oklab,
+    var(--brand-midnight) 62%,
+    transparent
+  );
 }
 
 @layer base {

@@ -2,6 +2,9 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
 import TextLink from '@/components/TextLink.vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -14,8 +17,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
+        title: 'Create your access',
+        description:
+          'Set up an account for demos, internal testing, or secure client-facing workflows.',
       },
       () => page,
     ),
@@ -34,6 +38,14 @@ defineOptions({
         v-slot="{ errors, processing }"
         class="space-y-4"
       >
+        <Alert variant="info">
+          <AlertTitle>Set up account access</AlertTitle>
+          <AlertDescription>
+            Use this for approved demo setup, internal testing, or client-facing
+            workflows that need a secure sign-in.
+          </AlertDescription>
+        </Alert>
+
         <Input
           id="name"
           type="text"
@@ -99,6 +111,11 @@ defineOptions({
           <Spinner v-if="processing" />
           Create account
         </Button>
+
+        <p class="text-center text-xs text-muted-foreground">
+          After registration, continue with verification or sign in directly if
+          the account is already active.
+        </p>
       </Form>
     </Card>
 
@@ -106,13 +123,13 @@ defineOptions({
       id="auth-register-login-link-row"
       class="text-center text-sm text-muted-foreground"
     >
-      Already have an account?
+      Already have access?
       <TextLink
         id="auth-register-login-link"
         :href="login()"
         class="underline underline-offset-4"
         :tabindex="6"
-        >Log in</TextLink
+        >Sign in</TextLink
       >
     </div>
   </section>

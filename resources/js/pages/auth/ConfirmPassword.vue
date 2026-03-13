@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -12,9 +15,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Confirm your password',
+        title: 'Confirm access',
         description:
-          'This is a secure area of the application. Please confirm your password before continuing.',
+          'Re-enter your password before continuing with this sensitive action.',
       },
       () => page,
     ),
@@ -33,6 +36,14 @@ defineOptions({
         v-slot="{ errors, processing }"
         class="space-y-4"
       >
+        <Alert variant="info">
+          <AlertTitle>Confirm this action</AlertTitle>
+          <AlertDescription>
+            This check confirms it is still you before the protected action
+            continues. Enter the current password for this account to proceed.
+          </AlertDescription>
+        </Alert>
+
         <Input
           id="password"
           type="password"
@@ -54,8 +65,13 @@ defineOptions({
           data-test="confirm-password-button"
         >
           <Spinner v-if="processing" />
-          Confirm password
+          Continue securely
         </Button>
+
+        <p class="text-center text-xs text-muted-foreground">
+          After confirmation, you will return directly to the protected step you
+          were trying to finish.
+        </p>
       </Form>
     </Card>
   </section>

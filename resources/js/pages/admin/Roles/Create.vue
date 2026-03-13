@@ -99,7 +99,7 @@ const submit = () => {
             <label
               v-for="user in props.users"
               :key="user.id"
-              class="flex items-center gap-3 rounded-xl border border-black/5 p-3 dark:border-white/10"
+              class="flex items-center gap-3 rounded-xl border border-border/70 bg-background/55 p-3"
               :class="!canCreate ? 'opacity-60' : ''"
             >
               <Checkbox

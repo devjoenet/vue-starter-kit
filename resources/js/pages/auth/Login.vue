@@ -2,6 +2,9 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
 import TextLink from '@/components/TextLink.vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
@@ -16,8 +19,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
+        title: 'Access your workspace',
+        description:
+          'Sign in to continue with your dashboard, client reviews, and internal tools.',
       },
       () => page,
     ),
@@ -36,13 +40,10 @@ defineProps<{
   <section id="auth-login-page" class="space-y-6">
     <Card id="auth-login-card" variant="default" class="px-6">
       <div class="space-y-4">
-        <p
-          v-if="status"
-          id="auth-login-status"
-          class="text-center text-sm font-medium text-success"
-        >
-          {{ status }}
-        </p>
+        <Alert v-if="status" id="auth-login-status" variant="success">
+          <AlertTitle>Ready to sign in</AlertTitle>
+          <AlertDescription>{{ status }}</AlertDescription>
+        </Alert>
 
         <Form
           id="auth-login-form"
@@ -113,6 +114,10 @@ defineProps<{
             <Spinner v-if="processing" />
             Log in
           </Button>
+
+          <p class="text-center text-xs text-muted-foreground">
+            Use this if you already have a workspace or demo account.
+          </p>
         </Form>
       </div>
     </Card>
@@ -122,9 +127,9 @@ defineProps<{
       id="auth-login-register-link-row"
       class="text-center text-sm text-muted-foreground"
     >
-      Don't have an account?
+      Need access?
       <TextLink id="auth-login-register-link" :href="register()" :tabindex="5">
-        Sign up
+        Create an account
       </TextLink>
     </div>
   </section>

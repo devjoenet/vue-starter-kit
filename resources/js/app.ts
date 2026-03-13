@@ -1,11 +1,24 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import { Fragment, createApp, h } from 'vue';
-import DeleteConfirmationDialog from './components/DeleteConfirmationDialog.vue';
 import AppToasts from './components/AppToasts.vue';
+import DeleteConfirmationDialog from './components/DeleteConfirmationDialog.vue';
 import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Southeast Code';
+const fallbackProgressColor = '#1f5fbf';
+
+const resolveProgressColor = () => {
+  if (typeof window === 'undefined') {
+    return fallbackProgressColor;
+  }
+
+  return (
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--primary')
+      .trim() || fallbackProgressColor
+  );
+};
 
 createInertiaApp({
   pages: './pages',
@@ -19,7 +32,7 @@ createInertiaApp({
       .mount(el!);
   },
   progress: {
-    color: '#4B5563',
+    color: resolveProgressColor(),
   },
 });
 

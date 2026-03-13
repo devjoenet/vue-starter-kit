@@ -2,6 +2,9 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { h } from 'vue';
 import TextLink from '@/components/TextLink.vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -14,8 +17,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Forgot password',
-        description: 'Enter your email to receive a password reset link',
+        title: 'Reset your password',
+        description:
+          'Enter the email tied to your account and we will send a secure reset link.',
       },
       () => page,
     ),
@@ -32,13 +36,12 @@ defineProps<{
   <section id="auth-forgot-password-page" class="space-y-6">
     <Card id="auth-forgot-password-card" variant="default" class="px-6">
       <div class="space-y-4">
-        <p
-          v-if="status"
-          id="auth-forgot-password-status"
-          class="text-center text-sm font-medium text-success"
-        >
-          {{ status }}
-        </p>
+        <Alert v-if="status" id="auth-forgot-password-status" variant="success">
+          <AlertTitle>Check your inbox</AlertTitle>
+          <AlertDescription>
+            {{ status }}
+          </AlertDescription>
+        </Alert>
 
         <Form
           id="auth-forgot-password-form"
@@ -66,8 +69,12 @@ defineProps<{
             data-test="email-password-reset-link-button"
           >
             <Spinner v-if="processing" />
-            Email password reset link
+            Send reset link
           </Button>
+
+          <p class="text-center text-xs text-muted-foreground">
+            We will send the newest secure reset link to the address above.
+          </p>
         </Form>
       </div>
     </Card>
@@ -76,9 +83,9 @@ defineProps<{
       id="auth-forgot-password-login-link-row"
       class="space-x-1 text-center text-sm text-muted-foreground"
     >
-      <span>Or, return to</span>
+      <span>Remembered it?</span>
       <TextLink id="auth-forgot-password-login-link" :href="login()">
-        log in
+        Return to sign in
       </TextLink>
     </div>
   </section>

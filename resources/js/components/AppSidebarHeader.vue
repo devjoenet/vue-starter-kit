@@ -14,7 +14,7 @@ withDefaults(
 
 <template>
   <header
-    class="mb-6 flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 bg-[linear-gradient(135deg,rgb(28_150_206/0.08),transparent_55%)] px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+    class="mb-6 flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 bg-[linear-gradient(135deg,rgb(28_150_206/0.08),transparent_55%)] px-6 transition-[background-color,opacity] duration-200 ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 motion-reduce:transition-none md:px-4"
   >
     <div class="flex items-center gap-2">
       <SidebarTrigger class="-ml-1" />

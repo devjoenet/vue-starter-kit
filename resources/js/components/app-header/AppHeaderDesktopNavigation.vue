@@ -12,8 +12,7 @@ defineProps<{
 }>();
 
 const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
-const activeItemStyles =
-  'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+const activeItemStyles = 'bg-muted text-foreground';
 </script>
 
 <template>
@@ -29,7 +28,7 @@ const activeItemStyles =
             :class="[
               navigationMenuTriggerStyle(),
               whenCurrentUrl(item.href, activeItemStyles),
-              'h-9 cursor-pointer px-3',
+              'cursor-pointer px-3',
             ]"
             :href="item.href"
           >
@@ -38,7 +37,7 @@ const activeItemStyles =
           </Link>
           <div
             v-if="isCurrentUrl(item.href)"
-            class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
+            class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-primary"
           />
         </NavigationMenuItem>
       </NavigationMenuList>

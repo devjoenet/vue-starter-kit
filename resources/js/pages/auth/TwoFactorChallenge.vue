@@ -3,12 +3,14 @@ import { Form, Head } from '@inertiajs/vue3';
 import { h, computed, ref } from 'vue';
 import Alert from '@/components/ui/alert/Alert.vue';
 import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import InputOTP from '@/components/ui/input-otp/InputOTP.vue';
 import InputOTPGroup from '@/components/ui/input-otp/InputOTPGroup.vue';
 import InputOTPSlot from '@/components/ui/input-otp/InputOTPSlot.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/two-factor/login';
 import type { TwoFactorConfigContent } from '@/types/auth';
@@ -17,9 +19,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Two-Factor Authentication',
+        title: 'Complete two-factor sign in',
         description:
-          'Complete your two-factor authentication challenge to continue.',
+          'Use your authenticator app or a recovery code to verify it is really you.',
       },
       () => page,
     ),
@@ -30,16 +32,15 @@ const authConfigContent = computed<TwoFactorConfigContent>(() => {
     return {
       title: 'Recovery Code',
       description:
-        'Please confirm access to your account by entering one of your emergency recovery codes.',
-      buttonText: 'login using an authentication code',
+        'Use one of your recovery codes when your authenticator device is unavailable.',
+      buttonText: 'Use an authentication code instead',
     };
   }
 
   return {
     title: 'Authentication Code',
-    description:
-      'Enter the authentication code provided by your authenticator application.',
-    buttonText: 'login using a recovery code',
+    description: 'Enter the current code from your authenticator application.',
+    buttonText: 'Use a recovery code instead',
   };
 });
 
@@ -60,11 +61,22 @@ const code = ref<string>('');
   <section id="auth-two-factor-challenge-page">
     <Card id="auth-two-factor-challenge-card" variant="default" class="px-6">
       <div class="space-y-4">
+        <Alert variant="info">
+          <AlertTitle>{{ authConfigContent.title }}</AlertTitle>
+          <AlertDescription>
+            {{ authConfigContent.description }}
+          </AlertDescription>
+        </Alert>
+
         <p
           id="auth-two-factor-challenge-description"
           class="text-sm text-muted-foreground"
         >
-          {{ authConfigContent.description }}
+          {{
+            showRecoveryInput
+              ? 'Use a one-time recovery code only when your authenticator device is unavailable.'
+              : 'Enter the current six-digit code exactly as it appears in your authenticator app.'
+          }}
         </p>
         <template v-if="!showRecoveryInput">
           <Form
@@ -113,8 +125,15 @@ const code = ref<string>('');
               appearance="filled"
               class="w-full"
               :disabled="processing"
-              >Continue</Button
             >
+              <Spinner v-if="processing" />
+              Verify and continue
+            </Button>
+
+            <p class="text-center text-xs text-muted-foreground">
+              This form accepts only the active code currently shown in your
+              authenticator app.
+            </p>
 
             <div
               id="auth-two-factor-code-toggle-row"
@@ -124,7 +143,7 @@ const code = ref<string>('');
               <button
                 id="auth-two-factor-switch-to-recovery-button"
                 type="button"
-                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                class="text-foreground underline decoration-border underline-offset-4 transition-colors duration-300 ease-out hover:text-primary hover:decoration-primary/50"
                 @click="() => toggleRecoveryMode(clearErrors)"
               >
                 {{ authConfigContent.buttonText }}
@@ -159,8 +178,15 @@ const code = ref<string>('');
               appearance="filled"
               class="w-full"
               :disabled="processing"
-              >Continue</Button
             >
+              <Spinner v-if="processing" />
+              Verify and continue
+            </Button>
+
+            <p class="text-center text-xs text-muted-foreground">
+              Recovery codes are one-time use. Reveal a new set in settings if
+              you have already used this one or no longer trust it.
+            </p>
 
             <div
               id="auth-two-factor-recovery-toggle-row"
@@ -170,7 +196,7 @@ const code = ref<string>('');
               <button
                 id="auth-two-factor-switch-to-code-button"
                 type="button"
-                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                class="text-foreground underline decoration-border underline-offset-4 transition-colors duration-300 ease-out hover:text-primary hover:decoration-primary/50"
                 @click="() => toggleRecoveryMode(clearErrors)"
               >
                 {{ authConfigContent.buttonText }}
