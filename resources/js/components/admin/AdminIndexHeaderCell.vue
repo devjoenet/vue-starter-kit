@@ -1,4 +1,12 @@
 <script setup lang="ts">
+import {
+  ArrowDownNarrowWideIcon,
+  ArrowDownWideNarrowIcon,
+  ArrowUpDownIcon,
+  CheckIcon,
+  FunnelIcon,
+  SquareIcon,
+} from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
@@ -9,14 +17,6 @@ import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSep
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import TableHead from '@/components/ui/table/TableHead.vue';
 import { cn } from '@/lib/utils';
-import {
-  ArrowDownNarrowWideIcon,
-  ArrowDownUpIcon,
-  ArrowDownWideNarrowIcon,
-  CheckIcon,
-  FunnelIcon,
-  SquareIcon,
-} from 'lucide-vue-next';
 
 const props = withDefaults(
   defineProps<{
@@ -63,36 +63,24 @@ watch(menuOpen, (open) => {
   }
 });
 
-const sortIcon = computed(() => {
-  if (props.sortDirection === 'asc') {
-    return ArrowDownNarrowWideIcon;
-  }
-
-  if (props.sortDirection === 'desc') {
-    return ArrowDownWideNarrowIcon;
-  }
-
-  return ArrowDownUpIcon;
-});
-
 const filterButtonTitle = computed(() => {
   if (props.selectedFilters.length === 0) {
-    return `Filter ${props.label}. No filters selected.`;
+    return `Filter by ${props.label}`;
   }
 
-  return `Filter ${props.label}. ${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} selected.`;
+  return `Filter by ${props.label} \n${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} selected.`;
 });
 
 const sortButtonTitle = computed(() => {
   if (props.sortDirection === 'asc') {
-    return `Sort ${props.label}. Currently ascending.`;
+    return `${props.label} sorted in ascending order.`;
   }
 
   if (props.sortDirection === 'desc') {
-    return `Sort ${props.label}. Currently descending.`;
+    return `${props.label} sorted in descending order.`;
   }
 
-  return `Sort ${props.label}. Currently not sorted.`;
+  return `${props.label} is not sorted.`;
 });
 
 const hasDraftChanges = computed(() => {
@@ -138,30 +126,21 @@ const clearFilters = () => {
       <DropdownMenu v-model:open="menuOpen">
         <DropdownMenuTrigger :as-child="true">
           <Button
-            :appearance="hasActiveFilters ? 'filled' : 'outline'"
             size="sm"
+            variant="muted"
             :aria-label="filterButtonTitle"
             :title="filterButtonTitle"
-            class="relative h-4 w-4 p-0 align-middle"
+            class="relative h-5 w-5 p-0 align-middle"
           >
-            <FunnelIcon
-              :class="
-                cn(
-                  'size-2',
-                  hasActiveFilters
-                    ? 'text-primary-foreground'
-                    : 'text-muted-foreground',
-                )
-              "
-            />
+            <FunnelIcon class="size-3" />
             <span
               v-if="selectedFilters.length"
               :class="
                 cn(
-                  'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full px-0.5 text-[8px] leading-none',
+                  'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full p-0.5 text-[8px] leading-none',
                   hasActiveFilters
-                    ? 'bg-primary-foreground text-primary'
-                    : 'bg-muted text-muted-foreground',
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-transparent text-transparent',
                 )
               "
             >
@@ -195,7 +174,6 @@ const clearFilters = () => {
           <div class="flex justify-end p-1">
             <Button
               v-if="hasDraftChanges"
-              appearance="filled"
               size="sm"
               type="button"
               @click="applyFilters"
@@ -207,24 +185,22 @@ const clearFilters = () => {
       </DropdownMenu>
 
       <Button
-        :appearance="sortDirection === 'none' ? 'outline' : 'filled'"
         size="sm"
+        variant="muted"
         :aria-label="sortButtonTitle"
         :title="sortButtonTitle"
-        class="h-4 w-4 p-0 align-middle"
+        class="h-5 w-5 p-0 align-middle"
         @click="$emit('toggle-sort', column)"
       >
-        <component
-          :is="sortIcon"
-          :class="
-            cn(
-              'size-2',
-              sortDirection === 'none'
-                ? 'text-muted-foreground'
-                : 'text-primary-foreground',
-            )
-          "
+        <ArrowDownNarrowWideIcon
+          v-if="props.sortDirection === 'asc'"
+          class="size-3"
         />
+        <ArrowDownWideNarrowIcon
+          v-if="props.sortDirection === 'desc'"
+          class="size-3"
+        />
+        <ArrowUpDownIcon v-if="props.sortDirection === 'none'" class="size-3" />
       </Button>
     </div>
   </TableHead>

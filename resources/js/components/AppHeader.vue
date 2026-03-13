@@ -9,6 +9,7 @@ import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types/navigation';
+
 type Props = {
   breadcrumbs?: BreadcrumbItem[];
 };

@@ -10,8 +10,8 @@ import TableBody from '@/components/ui/table/TableBody.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
-import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
 import { useAbility } from '@/composables/useAbility';
+import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { toTitleCase } from '@/lib/utils';
 import { dashboard } from '@/routes/admin';
@@ -21,6 +21,7 @@ import type {
   AdminUsersIndexColumn,
   AdminUsersIndexPageProps,
 } from '@/types/page-props';
+
 defineOptions({
   layout: AppLayout,
 });
