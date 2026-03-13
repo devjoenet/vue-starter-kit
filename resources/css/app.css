@@ -11,9 +11,9 @@
     Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-  /*--radius-lg: var(--radius);
+  --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);*/
+  --radius-sm: calc(var(--radius) - 4px);
 
   /* Tailwind v4 token bridge (don’t rename these) */
   --color-background: var(--background);
@@ -61,10 +61,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/*
-  Tailwind v4 border default compatibility:
-  keep until you’ve explicitly set border colors everywhere you rely on defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -75,86 +71,65 @@
   }
 }
 
-@layer utilities {
-  body,
-  html {
-    --font-sans:
-      'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-      'Noto Color Emoji';
-  }
-}
-
-/* =========================================
-   Southeast Code palette (Option B) in OKLCH
-   Punchy, bold, modern, still professional
-   Primary: aqua
-   Secondary: violet-indigo
-   ========================================= */
-
 :root {
-  /* Surfaces */
-  --background: oklch(98.66% 0.0282 27.5);
-  --foreground: oklch(20.73% 0.0298 229);
+  --brand-midnight: #0f1c2f;
+  --brand-royal: #1f5fbf;
+  --brand-cyan: #1fc7e8;
+  --brand-teal: #56d3c2;
+  --brand-mist: #e8eef2;
 
-  --card: oklch(100% 0 0);
-  --card-foreground: oklch(20.73% 0.0298 229);
+  --background: #f4f7f9;
+  --foreground: var(--brand-midnight);
 
-  --popover: oklch(100% 0 0);
-  --popover-foreground: oklch(20.73% 0.0298 229);
+  --card: #fbfcfd;
+  --card-foreground: var(--foreground);
 
-  /* Brand */
-  --primary: oklch(80.09% 0.1139 201.1);
-  --primary-foreground: oklch(20.73% 0.0298 229);
+  --popover: #fbfcfd;
+  --popover-foreground: var(--foreground);
 
-  --secondary: oklch(56.49% 0.1696 238.7);
-  --secondary-foreground: oklch(100% 0 0);
+  --primary: var(--brand-royal);
+  --primary-foreground: #f6f9fb;
 
-  --accent: oklch(67.12% 0.1722 357.2);
-  --accent-foreground: oklch(20.73% 0.0298 229);
+  --secondary: var(--brand-teal);
+  --secondary-foreground: var(--brand-midnight);
 
-  /* Neutrals */
-  --muted: oklch(96.22% 0.0255 25.8);
-  --muted-foreground: oklch(47.95% 0.0206 232.8);
+  --accent: var(--brand-cyan);
+  --accent-foreground: var(--brand-midnight);
 
-  /* Feedback */
-  --destructive: oklch(61.12% 0.2209 17);
-  --destructive-foreground: oklch(98% 0 0);
-  --info: oklch(64.5% 0.142 235);
-  --info-foreground: oklch(100% 0 0);
-  --warning: oklch(82.31% 0.166 86.4);
-  --warning-foreground: oklch(20.73% 0.0298 229);
-  --success: oklch(70.12% 0.149 152.4);
-  --success-foreground: oklch(20.73% 0.0298 229);
+  --muted: var(--brand-mist);
+  --muted-foreground: #536174;
 
-  /* Lines / focus */
-  --border: oklch(88.88% 0.0186 19.1);
-  --input: oklch(87.22% 0.0169 16.4);
-  --ring: oklch(78.99% 0.1178 202);
+  --destructive: #c65b5b;
+  --destructive-foreground: #fbf5f5;
+  --info: color-mix(in oklab, var(--brand-cyan) 62%, var(--brand-royal) 38%);
+  --info-foreground: var(--brand-midnight);
+  --warning: #d8ad4f;
+  --warning-foreground: var(--brand-midnight);
+  --success: color-mix(in oklab, var(--brand-teal) 86%, var(--brand-midnight) 14%);
+  --success-foreground: var(--brand-midnight);
 
-  /* Data viz */
-  --chart-1: oklch(80.09% 0.1139 201.1);
-  --chart-2: oklch(56.49% 0.1696 238.7);
-  --chart-3: oklch(67.12% 0.1722 357.2);
-  --chart-4: oklch(79.11% 0.154 39.7);
-  --chart-5: oklch(68.06% 0.074 149.3);
+  --border: #cad6df;
+  --input: #c3d1db;
+  --ring: var(--brand-cyan);
 
-  /* Radius */
-  --radius: 0.35rem;
+  --chart-1: var(--brand-royal);
+  --chart-2: var(--brand-cyan);
+  --chart-3: var(--brand-teal);
+  --chart-4: color-mix(in oklab, var(--brand-royal) 58%, var(--brand-midnight) 42%);
+  --chart-5: color-mix(in oklab, var(--brand-mist) 28%, var(--brand-midnight) 72%);
 
-  /* Sidebar */
-  --sidebar-background: oklch(96.99% 0.0258 25.8);
-  --sidebar-foreground: oklch(20.73% 0.0298 229);
-  --sidebar-primary: oklch(80.09% 0.1139 201.1);
-  --sidebar-primary-foreground: oklch(20.73% 0.0298 229);
-  --sidebar-accent: oklch(93.73% 0.0225 23.2);
-  --sidebar-accent-foreground: oklch(20.73% 0.0298 229);
-  --sidebar-border: oklch(87.22% 0.0169 16.4);
-  --sidebar-ring: oklch(78.99% 0.1178 202);
+  --radius: 0.45rem;
 
+  --sidebar-background: #edf2f5;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #dce7ee;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #cbd8e0;
+  --sidebar-ring: var(--ring);
   --sidebar: var(--sidebar-background);
 
-  /* Legacy UI tokens (mapped to Tailwind v4 tokens) */
   --surface: var(--card);
   --outline: var(--border);
   --field-bg: var(--muted);
@@ -162,108 +137,86 @@
   --field-label: var(--muted-foreground);
   --field-focus: var(--ring);
   --error: var(--destructive);
-  --sc-primary: var(--primary);
 
-  /* Brand accents used in illustrations */
   --brand-ink: var(--foreground);
-  --brand-mint: var(--primary);
-  --brand-rose: var(--chart-3);
-  --brand-sky: var(--chart-1);
-  --brand-violet: var(--secondary);
+  --brand-mint: var(--brand-teal);
+  --brand-rose: var(--brand-royal);
+  --brand-sky: var(--brand-cyan);
+  --brand-violet: color-mix(
+    in oklab,
+    var(--brand-royal) 74%,
+    var(--brand-midnight) 26%
+  );
 
-  /* Elevation */
   --elevation-1:
-    0 1px 2px 0 rgb(15 23 42 / 0.08), 0 1px 1px -1px rgb(15 23 42 / 0.06);
+    0 1px 2px 0 rgb(15 28 47 / 0.07), 0 8px 16px -14px rgb(15 28 47 / 0.08);
   --elevation-2:
-    0 12px 24px -16px rgb(15 23 42 / 0.22),
-    0 8px 16px -12px rgb(15 23 42 / 0.18);
+    0 18px 36px -24px rgb(15 28 47 / 0.18),
+    0 12px 20px -16px rgb(15 28 47 / 0.14);
   --elevation-3:
-    0 24px 48px -28px rgb(15 23 42 / 0.3),
-    0 16px 28px -20px rgb(15 23 42 / 0.24);
+    0 24px 48px -28px rgb(15 28 47 / 0.24),
+    0 18px 30px -22px rgb(15 28 47 / 0.16);
 
-  /* Liquid glass */
-  --glass-surface: oklch(98.5% 0.015 30 / 0.58);
-  --glass-surface-hover: oklch(99.5% 0.01 30 / 0.72);
-  --glass-border: oklch(100% 0 0 / 0.58);
-  --glass-highlight: oklch(100% 0 0 / 0.88);
-  --glass-rim:
-    inset 2px 2px 0 -2px rgb(255 255 255 / 0.78),
-    inset 0 0 3px 1px rgb(255 255 255 / 0.62);
+  --glass-surface: rgb(251 252 253 / 0.84);
+  --glass-surface-hover: rgb(251 252 253 / 0.94);
+  --glass-border: rgb(202 214 223 / 0.7);
   --glass-shadow:
-    0 24px 40px -32px rgb(15 23 42 / 0.35),
-    0 12px 24px -16px rgb(15 23 42 / 0.24);
-  --glass-backdrop: blur(0px) saturate(155%);
+    0 18px 36px -24px rgb(15 28 47 / 0.18),
+    0 12px 20px -16px rgb(15 28 47 / 0.14);
+  --glass-backdrop: blur(12px) saturate(115%);
 }
 
 .dark {
-  /* More navy, more separation between layers */
-  --background: oklch(14.5% 0.035 252);
-  --foreground: oklch(97.8% 0.01 255);
+  --background: var(--brand-midnight);
+  --foreground: var(--brand-mist);
 
-  /* Cards/panels get an actual surface (depth comes from contrast) */
-  --card: oklch(18.5% 0.04 252);
-  --card-foreground: oklch(97.8% 0.01 255);
+  --card: #15243a;
+  --card-foreground: var(--foreground);
 
-  --popover: oklch(18.5% 0.04 252);
-  --popover-foreground: oklch(97.8% 0.01 255);
+  --popover: #15243a;
+  --popover-foreground: var(--foreground);
 
-  /* Brand stays bold */
-  --primary: oklch(82% 0.125 195); /* aqua, punchy */
-  --primary-foreground: oklch(19% 0.02 255); /* dark text on bright aqua */
+  --primary: color-mix(in oklab, var(--brand-royal) 78%, var(--brand-mist) 22%);
+  --primary-foreground: #08111d;
 
-  --secondary: oklch(68% 0.135 278); /* violet-indigo */
-  --secondary-foreground: oklch(19% 0.02 255);
+  --secondary: color-mix(in oklab, var(--brand-teal) 88%, var(--brand-mist) 12%);
+  --secondary-foreground: var(--brand-midnight);
 
-  /*
-    IMPORTANT:
-    In shadcn-style tokens, --accent is commonly used for hover backgrounds.
-    You wanted ALL menu hovers to match the sidebar hover style, not pink.
-    So we make accent a "navy lift" tint, not magenta.
-  */
-  --accent: oklch(23% 0.055 240);
-  --accent-foreground: oklch(97.8% 0.01 255);
+  --accent: color-mix(in oklab, var(--brand-cyan) 86%, var(--brand-mist) 14%);
+  --accent-foreground: var(--brand-midnight);
 
-  /* Neutrals: enough contrast so outlines/buttons don’t disappear */
-  --muted: oklch(21% 0.03 252);
-  --muted-foreground: oklch(77.5% 0.015 255);
+  --muted: #1a2b43;
+  --muted-foreground: #a4b3c1;
 
-  --border: oklch(28.5% 0.03 252);
-  --input: oklch(28.5% 0.03 252);
-  --ring: oklch(82% 0.125 195);
+  --destructive: #e18585;
+  --destructive-foreground: var(--brand-midnight);
+  --info: color-mix(in oklab, var(--brand-cyan) 66%, var(--brand-mist) 34%);
+  --info-foreground: var(--brand-midnight);
+  --warning: #e4be67;
+  --warning-foreground: var(--brand-midnight);
+  --success: color-mix(in oklab, var(--brand-teal) 86%, var(--brand-mist) 14%);
+  --success-foreground: var(--brand-midnight);
 
-  /* Feedback */
-  --destructive: oklch(63.5% 0.21 16);
-  --destructive-foreground: oklch(98% 0 0);
-  --info: oklch(78% 0.11 222);
-  --info-foreground: oklch(19% 0.02 255);
-  --warning: oklch(84% 0.145 92);
-  --warning-foreground: oklch(19% 0.02 255);
-  --success: oklch(80% 0.125 150);
-  --success-foreground: oklch(19% 0.02 255);
+  --border: #2c415a;
+  --input: #314862;
+  --ring: var(--accent);
 
-  /* Data viz keeps the magenta vibe so your UI still has color */
-  --chart-1: oklch(82% 0.125 195);
-  --chart-2: oklch(68% 0.135 278);
-  --chart-3: oklch(70% 0.17 356); /* magenta lives here now */
-  --chart-4: oklch(80% 0.15 40);
-  --chart-5: oklch(77% 0.085 150);
+  --chart-1: var(--primary);
+  --chart-2: var(--accent);
+  --chart-3: var(--secondary);
+  --chart-4: color-mix(in oklab, var(--brand-royal) 62%, var(--brand-cyan) 38%);
+  --chart-5: color-mix(in oklab, var(--brand-mist) 52%, var(--brand-midnight) 48%);
 
-  /* Sidebar tuned to match the new navy stack */
-  --sidebar-background: oklch(16.5% 0.04 252);
-  --sidebar-foreground: oklch(96.8% 0.012 255);
-  --sidebar-primary: oklch(82% 0.125 195);
-  --sidebar-primary-foreground: oklch(19% 0.02 255);
-
-  /* Make sidebar hover == accent hover everywhere */
-  --sidebar-accent: var(--accent);
-  --sidebar-accent-foreground: var(--accent-foreground);
-
-  --sidebar-border: oklch(28.5% 0.03 252);
-  --sidebar-ring: oklch(82% 0.125 195);
-
+  --sidebar-background: #0b1627;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #182941;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #24384f;
+  --sidebar-ring: var(--ring);
   --sidebar: var(--sidebar-background);
 
-  /* Legacy UI tokens (mapped to Tailwind v4 tokens) */
   --surface: var(--card);
   --outline: var(--border);
   --field-bg: var(--muted);
@@ -271,34 +224,31 @@
   --field-label: var(--muted-foreground);
   --field-focus: var(--ring);
   --error: var(--destructive);
-  --sc-primary: var(--primary);
 
-  /* Brand accents used in illustrations */
   --brand-ink: var(--foreground);
-  --brand-mint: var(--primary);
-  --brand-rose: var(--chart-3);
-  --brand-sky: var(--chart-1);
-  --brand-violet: var(--secondary);
+  --brand-mint: var(--secondary);
+  --brand-rose: var(--primary);
+  --brand-sky: var(--accent);
+  --brand-violet: color-mix(
+    in oklab,
+    var(--brand-royal) 78%,
+    var(--brand-cyan) 22%
+  );
 
-  /* Elevation (slightly stronger for dark surfaces) */
   --elevation-1:
-    0 1px 2px 0 rgb(0 0 0 / 0.45), 0 8px 16px -12px rgb(0 0 0 / 0.4);
+    0 1px 2px 0 rgb(0 0 0 / 0.4), 0 8px 16px -14px rgb(0 0 0 / 0.36);
   --elevation-2:
-    0 16px 32px -20px rgb(0 0 0 / 0.55), 0 12px 20px -16px rgb(0 0 0 / 0.5);
+    0 18px 36px -24px rgb(0 0 0 / 0.48), 0 12px 20px -16px rgb(0 0 0 / 0.42);
   --elevation-3:
-    0 28px 60px -32px rgb(0 0 0 / 0.6), 0 18px 30px -20px rgb(0 0 0 / 0.52);
+    0 24px 48px -28px rgb(0 0 0 / 0.56), 0 18px 30px -20px rgb(0 0 0 / 0.46);
 
-  /* Liquid glass */
-  --glass-surface: oklch(22% 0.03 252 / 0.45);
-  --glass-surface-hover: oklch(26% 0.03 252 / 0.58);
-  --glass-border: oklch(100% 0 0 / 0.18);
-  --glass-highlight: oklch(100% 0 0 / 0.26);
-  --glass-rim:
-    inset 2px 2px 0 -2px rgb(255 255 255 / 0.18),
-    inset 0 0 3px 1px rgb(255 255 255 / 0.15);
+  --glass-surface: rgb(24 41 65 / 0.72);
+  --glass-surface-hover: rgb(30 49 75 / 0.84);
+  --glass-border: rgb(232 238 242 / 0.14);
   --glass-shadow:
-    0 24px 40px -32px rgb(2 6 23 / 0.7), 0 12px 24px -16px rgb(2 6 23 / 0.6);
-  --glass-backdrop: blur(0px) saturate(145%);
+    0 18px 36px -24px rgb(0 0 0 / 0.48),
+    0 12px 20px -16px rgb(0 0 0 / 0.42);
+  --glass-backdrop: blur(14px) saturate(120%);
 }
 
 @layer base {
@@ -328,31 +278,15 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    box-shadow: var(--glass-rim);
-    background:
-      radial-gradient(
-        120% 120% at 50% -20%,
-        var(--glass-highlight) 0%,
-        transparent 58%
-      ),
-      linear-gradient(
-        180deg,
-        rgb(255 255 255 / 0.08) 0%,
-        transparent 28%,
-        rgb(255 255 255 / 0.03) 100%
-      );
+    border: 1px solid rgb(255 255 255 / 0.06);
+    background: linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.14) 0%,
+      transparent 30%,
+      transparent 100%
+    );
     pointer-events: none;
     z-index: 1;
-  }
-
-  .liquid-glass::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    filter: url(#liquid-glass-surface);
-    pointer-events: none;
   }
 
   .liquid-glass-hover:hover {
