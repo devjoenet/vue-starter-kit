@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppHeaderDesktopNavigation from '@/components/app-header/AppHeaderDesktopNavigation.vue';
 import AppHeaderMobileNavigation from '@/components/app-header/AppHeaderMobileNavigation.vue';
@@ -29,18 +29,7 @@ const mainNavItems: NavItem[] = [
   },
 ];
 
-const rightNavItems: NavItem[] = [
-  {
-    title: 'Repository',
-    href: 'https://github.com/laravel/vue-starter-kit',
-    icon: Folder,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits#vue',
-    icon: BookOpen,
-  },
-];
+const utilityNavItems: NavItem[] = [];
 </script>
 
 <template>
@@ -49,7 +38,7 @@ const rightNavItems: NavItem[] = [
       <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
         <AppHeaderMobileNavigation
           :items="mainNavItems"
-          :utility-items="rightNavItems"
+          :utility-items="utilityNavItems"
         />
 
         <Link :href="dashboard()" class="flex items-center gap-x-2">
@@ -58,7 +47,7 @@ const rightNavItems: NavItem[] = [
 
         <AppHeaderDesktopNavigation :items="mainNavItems" />
 
-        <AppHeaderUtilityActions :items="rightNavItems" :user="user" />
+        <AppHeaderUtilityActions :items="utilityNavItems" :user="user" />
       </div>
     </div>
 
@@ -67,7 +56,7 @@ const rightNavItems: NavItem[] = [
       class="flex w-full border-b border-sidebar-border/70"
     >
       <div
-        class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl"
+        class="mx-auto flex h-12 w-full items-center justify-start px-4 text-muted-foreground md:max-w-7xl"
       >
         <Breadcrumbs :breadcrumbs="breadcrumbs" />
       </div>

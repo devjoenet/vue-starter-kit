@@ -5,11 +5,11 @@ import {
   Info,
   TriangleAlert,
   X,
-  type LucideIcon,
 } from 'lucide-vue-next';
+import type { LucideIcon } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { cn } from '@/lib/utils';
 import type { ToastAppearance, ToastTone } from '@/composables/useToast';
+import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   item: {
@@ -49,15 +49,15 @@ const appearanceClasses: Record<ToastAppearance, string> = {
     'bg-[var(--surface)]/94 backdrop-blur-xl shadow-[var(--elevation-2)]',
   glass: 'liquid-glass liquid-glass-hover border-transparent',
   outline: 'bg-[var(--surface)]/40 backdrop-blur-xl',
-  solid: 'text-white shadow-[var(--elevation-2)]',
+  solid: 'shadow-[var(--elevation-2)]',
 };
 
 const solidToneClasses: Record<ToastTone, string> = {
   default: 'bg-[var(--foreground)] text-[var(--background)] border-transparent',
-  success: 'bg-success border-transparent',
-  error: 'bg-[var(--error)] border-transparent',
-  warning: 'bg-warning border-transparent',
-  info: 'bg-info border-transparent',
+  success: 'bg-success text-success-foreground border-transparent',
+  error: 'bg-[var(--error)] text-destructive-foreground border-transparent',
+  warning: 'bg-warning text-warning-foreground border-transparent',
+  info: 'bg-info text-info-foreground border-transparent',
 };
 
 const progressClasses: Record<ToastTone, string> = {
@@ -69,10 +69,10 @@ const progressClasses: Record<ToastTone, string> = {
 };
 
 const surfaceProgressClasses: Record<ToastAppearance, string> = {
-  default: 'bg-black/8 dark:bg-white/10',
-  glass: 'bg-black/10 dark:bg-white/14',
-  outline: 'bg-black/12 dark:bg-white/12',
-  solid: 'bg-white/25',
+  default: 'bg-border/70',
+  glass: 'bg-border/55',
+  outline: 'bg-border/60',
+  solid: 'bg-background/25',
 };
 
 const resolvedIcon = computed<LucideIcon | null>(() => {
@@ -137,10 +137,10 @@ const toastClasses = computed(() => {
       :class="surfaceProgressClasses[item.appearance]"
     >
       <div
-        class="h-full transition-[width] ease-linear"
+        class="h-full origin-left transition-transform ease-linear motion-reduce:transition-none"
         :class="progressClasses[item.tone]"
         :style="{
-          width: item.animate ? '0%' : '100%',
+          transform: item.animate ? 'scaleX(0)' : 'scaleX(1)',
           transitionDuration: `${item.duration}ms`,
         }"
       />

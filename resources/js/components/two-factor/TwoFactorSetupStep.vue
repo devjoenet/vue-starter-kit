@@ -101,10 +101,13 @@ defineEmits<{
             />
             <button
               type="button"
+              :aria-label="
+                copied ? 'Manual setup key copied' : 'Copy manual setup key'
+              "
               class="relative block h-auto border-l border-border px-3 hover:bg-muted"
               @click="$emit('copy-manual-key')"
             >
-              <Check v-if="copied" class="w-4 text-green-500" />
+              <Check v-if="copied" class="w-4 text-success" />
               <Copy v-else class="w-4" />
             </button>
           </template>

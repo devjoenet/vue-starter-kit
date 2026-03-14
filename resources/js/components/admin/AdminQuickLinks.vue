@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import Heading from '@/components/Heading.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import { useAbility } from '@/composables/useAbility';
@@ -29,13 +28,15 @@ const props = withDefaults(
 
 const { can } = useAbility();
 
-type QuickLinkTone = 'sky' | 'violet' | 'mint';
+type QuickLinkTone = 'primary' | 'secondary' | 'accent';
 
 const toneClasses: Record<QuickLinkTone, string> = {
-  sky: 'from-sky-500/15 via-card to-card/80 ring-sky-400/20 hover:shadow-[0_18px_40px_-26px_rgba(56,189,248,0.75)]',
-  violet:
-    'from-violet-500/15 via-card to-card/80 ring-violet-400/20 hover:shadow-[0_18px_40px_-26px_rgba(167,139,250,0.75)]',
-  mint: 'from-emerald-400/15 via-card to-card/80 ring-emerald-300/20 hover:shadow-[0_18px_40px_-26px_rgba(52,211,153,0.7)]',
+  primary:
+    'border-primary/16 bg-linear-to-br from-primary/10 via-card to-card shadow-(--elevation-1)',
+  secondary:
+    'border-secondary/20 bg-linear-to-br from-secondary/12 via-card to-card shadow-(--elevation-1)',
+  accent:
+    'border-accent/20 bg-linear-to-br from-accent/10 via-card to-card shadow-(--elevation-1)',
 };
 
 const links = computed(() => {
@@ -50,30 +51,30 @@ const links = computed(() => {
   if (can(adminPermissions.usersView)) {
     items.push({
       title: 'Users',
-      description: 'Manage user accounts and access.',
+      description: 'Review who can access the workspace.',
       href: adminUsersIndex.url(),
       count: props.counts.users,
-      tone: 'sky',
+      tone: 'primary',
     });
   }
 
   if (can(adminPermissions.rolesView)) {
     items.push({
       title: 'Roles',
-      description: 'Organize permissions into reusable roles.',
+      description: 'Keep access grouped into reusable policies.',
       href: adminRolesIndex.url(),
       count: props.counts.roles,
-      tone: 'violet',
+      tone: 'secondary',
     });
   }
 
   if (can(adminPermissions.permissionsView)) {
     items.push({
       title: 'Permissions',
-      description: 'Define granular access rules.',
+      description: 'Define the checks that secure each workflow.',
       href: adminPermissionsIndex.url(),
       count: props.counts.permissions,
-      tone: 'mint',
+      tone: 'accent',
     });
   }
 
@@ -84,26 +85,30 @@ const hasLinks = computed(() => links.value.length > 0);
 </script>
 
 <template>
-  <section v-if="hasLinks" class="mt-8 space-y-5">
-    <Heading
-      title="Administration"
-      description="Manage users, roles, and permissions."
-    />
+  <section class="space-y-4">
+    <div class="max-w-xl space-y-2">
+      <p class="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+        Administration
+      </p>
+      <h2 class="text-2xl font-semibold tracking-tight">
+        Manage access with real counts, not placeholder tiles.
+      </h2>
+      <p class="text-sm leading-6 text-muted-foreground">
+        These are the active admin surfaces available in the starter right now.
+      </p>
+    </div>
 
-    <div class="grid gap-5 md:grid-cols-3">
+    <div v-if="hasLinks" class="grid gap-5 md:grid-cols-3">
       <Card
         v-for="item in links"
         :key="item.title"
         :class="[
-          'group relative h-full overflow-hidden border-border/60 bg-linear-to-br px-6 py-5 shadow-(--elevation-1) ring-1 transition-all duration-200 hover:shadow-(--elevation-3)',
+          'group relative h-full overflow-hidden px-6 py-5 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-(--elevation-2) motion-reduce:transform-none motion-reduce:transition-none',
           toneClasses[item.tone],
         ]"
       >
         <div
-          class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-primary/0 via-primary/60 to-secondary/0"
-        />
-        <div
-          class="pointer-events-none absolute top-12 -right-16 size-40 rounded-full bg-primary/15 blur-3xl transition-opacity duration-300 group-hover:opacity-100 md:opacity-0"
+          class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent"
         />
 
         <div class="relative flex h-full flex-col justify-between gap-6">
@@ -118,7 +123,7 @@ const hasLinks = computed(() => links.value.length > 0);
             </div>
 
             <div
-              class="flex min-w-18 items-center justify-center rounded-full border border-primary/30 bg-primary/15 px-3 py-1 text-2xl font-semibold text-primary tabular-nums"
+              class="flex min-w-18 items-center justify-center rounded-full border border-primary/20 bg-background/90 px-3 py-1 text-2xl font-semibold text-primary tabular-nums"
             >
               {{ item.count }}
             </div>
@@ -126,17 +131,34 @@ const hasLinks = computed(() => links.value.length > 0);
 
           <div>
             <Button
-              appearance="outline"
+              appearance="link"
               variant="primary"
               size="sm"
               as-child
-              class="w-fit shadow-(--elevation-1) transition-all hover:bg-primary/90 hover:shadow-(--elevation-2)"
+              class="w-fit px-0 transition-colors motion-reduce:transition-none"
             >
-              <Link :href="item.href">Open</Link>
+              <Link :href="item.href">Open {{ item.title }}</Link>
             </Button>
           </div>
         </div>
       </Card>
     </div>
+
+    <Card
+      v-else
+      id="admin-dashboard-quick-links-empty-state"
+      class="border-dashed px-6 py-6"
+    >
+      <div class="max-w-2xl space-y-2">
+        <h3 class="text-base font-semibold tracking-tight">
+          No admin surfaces are assigned to this account yet.
+        </h3>
+        <p class="text-sm leading-6 text-muted-foreground">
+          This workspace can still be reviewed as a product shell, but user,
+          role, and permission tools will appear only when this account is given
+          access to them.
+        </p>
+      </div>
+    </Card>
   </section>
 </template>

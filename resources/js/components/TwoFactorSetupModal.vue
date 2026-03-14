@@ -35,7 +35,7 @@ const modalConfig = computed<TwoFactorConfigContent>(() => {
     return {
       title: 'Two-Factor Authentication Enabled',
       description:
-        'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
+        'Setup is complete. Keep your recovery codes available, then close this window and continue using the account normally.',
       buttonText: 'Close',
     };
   }
@@ -43,7 +43,8 @@ const modalConfig = computed<TwoFactorConfigContent>(() => {
   if (showVerificationStep.value) {
     return {
       title: 'Verify Authentication Code',
-      description: 'Enter the 6-digit code from your authenticator app',
+      description:
+        'Enter the current 6-digit code from your authenticator app to finish enabling two-factor authentication.',
       buttonText: 'Continue',
     };
   }
@@ -51,7 +52,7 @@ const modalConfig = computed<TwoFactorConfigContent>(() => {
   return {
     title: 'Enable Two-Factor Authentication',
     description:
-      'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
+      'Scan the QR code or copy the setup key into your authenticator app, then continue to confirm your first code.',
     buttonText: 'Continue',
   };
 });

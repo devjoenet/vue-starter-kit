@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import { h, ref } from 'vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -12,8 +15,9 @@ defineOptions({
     h(
       AuthLayout,
       {
-        title: 'Reset password',
-        description: 'Please enter your new password below',
+        title: 'Choose a new password',
+        description:
+          'Set a new password for this account and return to work with minimal interruption.',
       },
       () => page,
     ),
@@ -40,6 +44,14 @@ const inputEmail = ref(props.email);
         v-slot="{ errors, processing }"
         class="space-y-4"
       >
+        <Alert variant="info">
+          <AlertTitle>Choose the password you want to use next</AlertTitle>
+          <AlertDescription>
+            You are resetting the password for {{ email }}. Save the new
+            password only when you are ready to use it immediately.
+          </AlertDescription>
+        </Alert>
+
         <Input
           id="email"
           v-model="inputEmail"
@@ -85,8 +97,13 @@ const inputEmail = ref(props.email);
           data-test="reset-password-button"
         >
           <Spinner v-if="processing" />
-          Reset password
+          Save new password
         </Button>
+
+        <p class="text-center text-xs text-muted-foreground">
+          Once saved, return to sign in with the updated password. The reset
+          link will no longer be needed after that.
+        </p>
       </Form>
     </Card>
   </section>

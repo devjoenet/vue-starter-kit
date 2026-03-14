@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import {
-  BookOpen,
-  Folder,
-  KeyRound,
-  LayoutGrid,
-  Shield,
-  Users,
-} from 'lucide-vue-next';
+import { KeyRound, LayoutGrid, Shield, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -70,18 +63,7 @@ const adminNavItems = computed<NavItem[]>(() => {
   ];
 });
 
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Github Repo',
-    href: 'https://github.com/devjoenet/vue-starter-kit',
-    icon: Folder,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits#vue',
-    icon: BookOpen,
-  },
-];
+const footerNavItems: NavItem[] = [];
 </script>
 
 <template>
@@ -108,7 +90,9 @@ const footerNavItems: NavItem[] = [
     </SidebarContent>
 
     <SidebarFooter>
-      <NavFooter :items="footerNavItems" />
+      <template v-if="footerNavItems.length">
+        <NavFooter :items="footerNavItems" />
+      </template>
       <NavUser />
     </SidebarFooter>
   </Sidebar>

@@ -322,17 +322,17 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect($permissionPageContents)->toContain('PermissionIndexTable');
     expect($headerCellContents)->toContain('ArrowDownNarrowWideIcon');
     expect($headerCellContents)->toContain('ArrowDownWideNarrowIcon');
-    expect($headerCellContents)->toContain('ArrowDownUpIcon');
+    expect($headerCellContents)->toContain('ArrowUpDownIcon');
     expect($headerCellContents)->toContain('FunnelIcon');
     expect($headerCellContents)->toContain('CheckIcon');
     expect($headerCellContents)->toContain('SquareIcon');
     expect($headerCellContents)->toContain('text-sm leading-none font-medium');
-    expect($headerCellContents)->toContain('class="relative h-4 w-4 p-0 align-middle"');
-    expect($headerCellContents)->toContain('class="h-4 w-4 p-0 align-middle"');
-    expect($headerCellContents)->toContain("'size-2'");
+    expect($headerCellContents)->toContain('class="relative h-5 w-5 p-0 align-middle"');
+    expect($headerCellContents)->toContain('class="h-5 w-5 p-0 align-middle"');
+    expect($headerCellContents)->toContain('class="size-3"');
     expect($headerCellContents)->toContain("event: 'apply-filters'");
-    expect($headerCellContents)->toContain(':appearance="sortDirection === \'none\' ? \'outline\' : \'filled\'"');
-    expect($headerCellContents)->toContain(':appearance="hasActiveFilters ? \'filled\' : \'outline\'"');
+    expect($headerCellContents)->toContain('size="sm"');
+    expect($headerCellContents)->toContain('variant="muted"');
     expect($headerCellContents)->toContain('@select.prevent');
     expect($headerCellContents)->toContain(':title="filterButtonTitle"');
     expect($headerCellContents)->toContain(':title="sortButtonTitle"');
@@ -386,7 +386,7 @@ it('assigns meaningful dom ids to every page surface', function () {
         'resources/js/pages/Welcome.vue' => [
             'id="welcome-page"',
             'id="welcome-page-hero"',
-            'id="welcome-page-visual"',
+            'id="welcome-page-proof-panel"',
         ],
         'resources/js/pages/ErrorPage.vue' => [
             'id="error-page"',
@@ -533,12 +533,15 @@ it('cycles shared admin index sorting through asc, desc, and none', function () 
     expect($contents)->toContain('direction: undefined');
 });
 
-it('renders dashboard metric cards before placeholder sections', function () {
+it('keeps the admin dashboard free of decorative placeholder surfaces', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
 
-    expect(
-        mb_strpos($contents, 'id="admin-dashboard-quick-links"'),
-    )->toBeLessThan(mb_strpos($contents, 'id="admin-dashboard-highlight-grid"'));
+    expect($contents)->toContain('id="admin-dashboard-quick-links"');
+    expect($contents)->toContain('id="admin-dashboard-main-panel"');
+    expect($contents)->toContain('id="admin-dashboard-focus-panel"');
+    expect($contents)->toContain('id="admin-dashboard-readiness-panel"');
+    expect($contents)->not->toContain('PlaceholderPattern');
+    expect($contents)->not->toContain('id="admin-dashboard-highlight-grid"');
 });
 
 it('keeps permission edit delete actions in the shared form footer', function () {
@@ -594,6 +597,7 @@ it('reuses the shared settings section card across settings surfaces', function 
         'resources/js/pages/settings/Profile.vue',
         'resources/js/pages/settings/Password.vue',
         'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/pages/settings/Appearance.vue',
         'resources/js/components/DeleteUser.vue',
     ];
 
@@ -603,6 +607,154 @@ it('reuses the shared settings section card across settings surfaces', function 
         expect($contents)->toContain("from '@/components/SettingsSectionCard.vue'");
         expect($contents)->toContain('SettingsSectionCard');
     }
+});
+
+it('reuses the shared settings action row across settings action surfaces', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $settingsViews = [
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/components/DeleteUser.vue',
+    ];
+
+    foreach ($settingsViews as $settingsView) {
+        $contents = file_get_contents($projectRoot.'/'.$settingsView);
+
+        expect($contents)->toContain("from '@/components/SettingsActionRow.vue'");
+        expect($contents)->toContain('SettingsActionRow');
+    }
+});
+
+it('keeps two-factor recovery codes free of nested card wrappers', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/TwoFactorRecoveryCodes.vue');
+
+    expect($contents)->not->toContain("from '@/components/ui/card/Card.vue'");
+    expect($contents)->not->toContain('CardHeader');
+    expect($contents)->toContain('usePreferredReducedMotion');
+    expect($contents)->toContain('grid-rows-[1fr]');
+});
+
+it('uses reduced-motion-safe motion patterns across shared shell surfaces', function () {
+    $projectRoot = dirname(__DIR__, 2);
+
+    $toastContents = file_get_contents($projectRoot.'/resources/js/components/toasts/AppToastItem.vue');
+    $dialogContents = file_get_contents($projectRoot.'/resources/js/components/ui/dialog/styles.ts');
+    $sheetContents = file_get_contents($projectRoot.'/resources/js/components/ui/sheet/styles.ts');
+    $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/ui/sidebar/styles.ts');
+
+    expect($toastContents)->toContain('transition-transform');
+    expect($toastContents)->not->toContain('transition-[width]');
+    expect($toastContents)->toContain('motion-reduce:transition-none');
+    expect($dialogContents)->toContain('motion-reduce:data-[state=closed]:animate-none');
+    expect($sheetContents)->toContain('motion-reduce:data-[state=open]:animate-none');
+    expect($sidebarContents)->toContain('motion-reduce:transition-none');
+    expect($sidebarContents)->not->toContain('transition-[width,height,padding]');
+});
+
+it('keeps key touch targets at mobile-friendly sizes across shared shell controls', function () {
+    $headerUtilityContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderUtilityActions.vue');
+    $mobileNavContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderMobileNavigation.vue');
+    $navigationMenuContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/navigation-menu/styles.ts');
+    $inputOtpContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input-otp/styles.ts');
+    $sidebarContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/styles.ts');
+
+    expect($headerUtilityContents)->toContain('h-11 w-11');
+    expect($headerUtilityContents)->toContain('size-11');
+    expect($mobileNavContents)->toContain('min-h-11');
+    expect($mobileNavContents)->toContain('h-11 w-11');
+    expect($navigationMenuContents)->toContain('h-11');
+    expect($inputOtpContents)->toContain('h-11 w-11');
+    expect($sidebarContents)->toContain("sidebarTriggerVariants = cva('h-11 w-11')");
+});
+
+it('renders breadcrumbs honestly when intermediate items do not have destinations', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/Breadcrumbs.vue');
+
+    expect($contents)->toContain('v-else-if="item.href"');
+    expect($contents)->not->toContain("item.href ?? '#'");
+});
+
+it('keeps dashboard quick links from collapsing into a blank area when no admin links are available', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AdminQuickLinks.vue');
+
+    expect($contents)->toContain('id="admin-dashboard-quick-links-empty-state"');
+    expect($contents)->toContain('No admin surfaces are assigned to this account yet.');
+    expect($contents)->toContain('Open {{ item.title }}');
+});
+
+it('keeps starter-kit copy and fallback branding out of the shared shell', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $headerContents = file_get_contents($projectRoot.'/resources/js/components/AppHeader.vue');
+    $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/AppSidebar.vue');
+    $appContents = file_get_contents($projectRoot.'/resources/js/app.ts');
+    $ssrContents = file_get_contents($projectRoot.'/resources/js/ssr.ts');
+
+    expect($welcomeContents)->not->toContain('laravel starter-kit');
+    expect($headerContents)->not->toContain('docs');
+    expect($sidebarContents)->not->toContain('docs');
+    expect($appContents)->toContain("|| 'Southeast Code'");
+    expect($ssrContents)->toContain("|| 'Southeast Code'");
+});
+
+it('keeps key icon-only controls explicitly named for assistive technology', function () {
+    $mobileNavContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderMobileNavigation.vue');
+    $headerUtilityContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderUtilityActions.vue');
+    $twoFactorSetupStepContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/two-factor/TwoFactorSetupStep.vue');
+
+    expect($mobileNavContents)->toContain('aria-label="Open navigation menu"');
+    expect($headerUtilityContents)->toContain('aria-label="Open user menu"');
+    expect($twoFactorSetupStepContents)->toContain("copied ? 'Manual setup key copied' : 'Copy manual setup key'");
+});
+
+it('keeps touched shell and auth utility surfaces on semantic token styling', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $textLinkContents = file_get_contents($projectRoot.'/resources/js/components/TextLink.vue');
+    $appearanceTabsContents = file_get_contents($projectRoot.'/resources/js/components/AppearanceTabs.vue');
+    $headerContents = file_get_contents($projectRoot.'/resources/js/components/AppHeader.vue');
+    $toastContents = file_get_contents($projectRoot.'/resources/js/components/toasts/AppToastItem.vue');
+
+    expect($textLinkContents)->toContain('decoration-border');
+    expect($textLinkContents)->not->toContain('decoration-neutral');
+    expect($appearanceTabsContents)->toContain('bg-muted/80');
+    expect($appearanceTabsContents)->not->toContain('bg-neutral');
+    expect($headerContents)->toContain('text-muted-foreground');
+    expect($headerContents)->not->toContain('text-neutral');
+    expect($toastContents)->toContain('bg-border/70');
+});
+
+it('uses VueUse primitives for the touched appearance and two-factor helper flows', function () {
+    $appearanceContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/useAppearance.ts');
+    $twoFactorModalContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/TwoFactorSetupModal.vue');
+    $recoveryCodesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/TwoFactorRecoveryCodes.vue');
+
+    expect($appearanceContents)->toContain('useStorage');
+    expect($appearanceContents)->toContain('usePreferredDark');
+    expect($twoFactorModalContents)->toContain('useClipboard');
+    expect($recoveryCodesContents)->toContain('usePreferredReducedMotion');
+});
+
+it('keeps auth state guidance calm, specific, and next-step oriented', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $confirmPasswordContents = file_get_contents($projectRoot.'/resources/js/pages/auth/ConfirmPassword.vue');
+    $resetPasswordContents = file_get_contents($projectRoot.'/resources/js/pages/auth/ResetPassword.vue');
+    $registerContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Register.vue');
+    $twoFactorChallengeContents = file_get_contents($projectRoot.'/resources/js/pages/auth/TwoFactorChallenge.vue');
+
+    expect($confirmPasswordContents)->toContain('Confirm this action');
+    expect($confirmPasswordContents)->toContain('protected step');
+
+    expect($resetPasswordContents)->toContain('Choose the password you want to use next');
+    expect($resetPasswordContents)->toContain('reset');
+    expect($resetPasswordContents)->toContain('link will no longer be needed');
+
+    expect($registerContents)->toContain('Set up account access');
+    expect($registerContents)->toContain('After registration, continue with verification or sign in directly');
+
+    expect($twoFactorChallengeContents)->toContain('This form accepts only the active code currently shown');
+    expect($twoFactorChallengeContents)->toContain('your authenticator device is unavailable');
+    expect($twoFactorChallengeContents)->toContain('<Spinner v-if="processing" />');
 });
 
 it('syncs input default values across inertial page navigations when not using v-model', function () {
