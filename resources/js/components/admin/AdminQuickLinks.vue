@@ -29,14 +29,38 @@ const props = withDefaults(
 const { can } = useAbility();
 
 type QuickLinkTone = 'primary' | 'secondary' | 'accent';
+type QuickLinkVariant = 'primary' | 'secondary' | 'info';
 
-const toneClasses: Record<QuickLinkTone, string> = {
-  primary:
-    'border-primary/16 bg-linear-to-br from-primary/10 via-card to-card shadow-(--elevation-1)',
-  secondary:
-    'border-secondary/20 bg-linear-to-br from-secondary/12 via-card to-card shadow-(--elevation-1)',
-  accent:
-    'border-accent/20 bg-linear-to-br from-accent/10 via-card to-card shadow-(--elevation-1)',
+const toneClasses: Record<
+  QuickLinkTone,
+  {
+    card: string;
+    beam: string;
+    badge: string;
+    linkVariant: QuickLinkVariant;
+  }
+> = {
+  primary: {
+    card: 'border-primary/24 bg-linear-to-br from-primary/18 via-card to-card shadow-(--elevation-1)',
+    beam: 'via-primary/70',
+    badge:
+      'border-primary/24 bg-primary/14 text-primary shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
+    linkVariant: 'primary',
+  },
+  secondary: {
+    card: 'border-secondary/26 bg-linear-to-br from-secondary/18 via-card to-card shadow-(--elevation-1)',
+    beam: 'via-secondary/70',
+    badge:
+      'border-secondary/24 bg-secondary/16 text-secondary shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
+    linkVariant: 'secondary',
+  },
+  accent: {
+    card: 'border-accent/24 bg-linear-to-br from-accent/18 via-card to-card shadow-(--elevation-1)',
+    beam: 'via-accent/70',
+    badge:
+      'border-accent/24 bg-accent/16 text-accent shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
+    linkVariant: 'info',
+  },
 };
 
 const links = computed(() => {
@@ -104,11 +128,14 @@ const hasLinks = computed(() => links.value.length > 0);
         :key="item.title"
         :class="[
           'group relative h-full overflow-hidden px-6 py-5 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-(--elevation-2) motion-reduce:transform-none motion-reduce:transition-none',
-          toneClasses[item.tone],
+          toneClasses[item.tone].card,
         ]"
       >
         <div
-          class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent"
+          :class="[
+            'pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent',
+            toneClasses[item.tone].beam,
+          ]"
         />
 
         <div class="relative flex h-full flex-col justify-between gap-6">
@@ -123,7 +150,10 @@ const hasLinks = computed(() => links.value.length > 0);
             </div>
 
             <div
-              class="flex min-w-18 items-center justify-center rounded-full border border-primary/20 bg-background/90 px-3 py-1 text-2xl font-semibold text-primary tabular-nums"
+              :class="[
+                'flex min-w-18 items-center justify-center rounded-full border px-3 py-1 text-2xl font-semibold tabular-nums',
+                toneClasses[item.tone].badge,
+              ]"
             >
               {{ item.count }}
             </div>
@@ -132,7 +162,7 @@ const hasLinks = computed(() => links.value.length > 0);
           <div>
             <Button
               appearance="link"
-              variant="primary"
+              :variant="toneClasses[item.tone].linkVariant"
               size="sm"
               as-child
               class="w-fit px-0 transition-colors motion-reduce:transition-none"

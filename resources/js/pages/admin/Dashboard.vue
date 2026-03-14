@@ -55,13 +55,16 @@ const starterReadiness = [
 
   <div
     id="admin-dashboard-page"
-    class="relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-2xl border border-border/60 bg-linear-to-br from-background via-background to-muted/40 p-6 shadow-(--elevation-2)"
+    class="relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-2xl border border-border/60 bg-linear-to-br from-background via-background to-primary/12 p-6 shadow-(--elevation-2)"
   >
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-56 bg-linear-to-b from-primary/8 via-primary/3 to-transparent"
+      class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/14 via-primary/5 to-transparent"
     />
     <div
-      class="pointer-events-none absolute top-8 -right-16 size-64 rounded-full bg-accent/8 blur-3xl"
+      class="pointer-events-none absolute top-8 -right-16 size-72 rounded-full bg-accent/12 blur-3xl"
+    />
+    <div
+      class="pointer-events-none absolute -bottom-24 left-12 size-72 rounded-full bg-secondary/12 blur-3xl"
     />
 
     <AdminQuickLinks id="admin-dashboard-quick-links" :counts="props.counts" />
@@ -71,7 +74,7 @@ const starterReadiness = [
     >
       <section
         id="admin-dashboard-main-panel"
-        class="rounded-2xl border border-border/70 bg-card/90 p-6 shadow-(--elevation-1)"
+        class="rounded-2xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-primary/10 p-6 shadow-(--elevation-1)"
       >
         <div class="max-w-2xl space-y-3">
           <p
@@ -93,7 +96,7 @@ const starterReadiness = [
           <div
             v-for="item in accessOverview"
             :key="item.id"
-            class="rounded-2xl border border-border/60 bg-background/80 p-4"
+            class="rounded-2xl border border-border/60 bg-linear-to-br from-background/96 to-primary/8 p-4"
           >
             <dt
               class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
@@ -112,7 +115,7 @@ const starterReadiness = [
 
       <aside
         id="admin-dashboard-focus-panel"
-        class="rounded-2xl border border-border/70 bg-background/85 p-6 shadow-(--elevation-1)"
+        class="rounded-2xl border border-border/70 bg-linear-to-br from-background/96 to-accent/10 p-6 shadow-(--elevation-1)"
       >
         <div class="space-y-3">
           <p
@@ -129,7 +132,7 @@ const starterReadiness = [
           <li
             v-for="item in currentFocus"
             :key="item"
-            class="rounded-2xl border border-border/60 bg-card/80 px-4 py-3"
+            class="rounded-2xl border border-border/60 bg-linear-to-br from-card/92 to-accent/8 px-4 py-3"
           >
             {{ item }}
           </li>
@@ -139,7 +142,7 @@ const starterReadiness = [
 
     <section
       id="admin-dashboard-readiness-panel"
-      class="rounded-2xl border border-border/70 bg-card/90 p-6 shadow-(--elevation-1)"
+      class="rounded-2xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-secondary/8 p-6 shadow-(--elevation-1)"
     >
       <div
         class="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start"
@@ -164,7 +167,7 @@ const starterReadiness = [
           <article
             v-for="item in starterReadiness"
             :key="item"
-            class="rounded-2xl border border-border/60 bg-background/80 p-4 text-sm leading-6 text-muted-foreground"
+            class="rounded-2xl border border-border/60 bg-linear-to-br from-background/96 to-secondary/8 p-4 text-sm leading-6 text-muted-foreground"
           >
             {{ item }}
           </article>
