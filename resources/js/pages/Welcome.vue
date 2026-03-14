@@ -22,13 +22,16 @@ withDefaults(
     class="relative min-h-screen overflow-hidden bg-background text-foreground"
   >
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-primary/10 via-primary/4 to-transparent"
+      class="pointer-events-none absolute inset-x-0 top-0 h-96 bg-linear-to-b from-primary/18 via-primary/6 to-transparent"
     />
     <div
-      class="pointer-events-none absolute -top-24 right-0 size-80 rounded-full bg-accent/10 blur-3xl"
+      class="pointer-events-none absolute -top-20 right-0 size-96 rounded-full bg-primary/14 blur-3xl"
     />
     <div
-      class="pointer-events-none absolute -bottom-16 left-0 size-96 rounded-full bg-secondary/12 blur-3xl"
+      class="pointer-events-none absolute top-1/3 left-1/2 size-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
+    />
+    <div
+      class="pointer-events-none absolute -bottom-20 left-0 size-[28rem] rounded-full bg-secondary/18 blur-3xl"
     />
 
     <div
@@ -56,11 +59,11 @@ withDefaults(
 
       <main
         id="welcome-page-hero"
-        class="grid flex-1 items-center gap-8 rounded-3xl border border-border/70 bg-card/90 p-6 shadow-(--elevation-2) backdrop-blur-sm sm:p-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,0.85fr)] lg:p-12"
+        class="grid flex-1 items-center gap-8 rounded-3xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-primary/10 p-6 shadow-(--elevation-2) backdrop-blur-sm sm:p-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,0.85fr)] lg:p-12"
       >
         <section id="welcome-page-content" class="max-w-2xl">
           <p
-            class="mb-4 inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-primary uppercase"
+            class="mb-4 inline-flex items-center rounded-full border border-primary/24 bg-primary/12 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-primary uppercase"
           >
             Southeast Code
           </p>
@@ -117,7 +120,7 @@ withDefaults(
 
           <dl class="mt-10 grid gap-4 sm:grid-cols-3">
             <div
-              class="rounded-2xl border border-border/60 bg-background/70 p-4"
+              class="rounded-2xl border border-primary/18 bg-linear-to-br from-background/96 to-primary/10 p-4"
             >
               <dt
                 class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
@@ -130,7 +133,7 @@ withDefaults(
               </dd>
             </div>
             <div
-              class="rounded-2xl border border-border/60 bg-background/70 p-4"
+              class="rounded-2xl border border-secondary/18 bg-linear-to-br from-background/96 to-secondary/10 p-4"
             >
               <dt
                 class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
@@ -143,7 +146,7 @@ withDefaults(
               </dd>
             </div>
             <div
-              class="rounded-2xl border border-border/60 bg-background/70 p-4"
+              class="rounded-2xl border border-accent/18 bg-linear-to-br from-background/96 to-accent/10 p-4"
             >
               <dt
                 class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
@@ -160,10 +163,10 @@ withDefaults(
 
         <aside
           id="welcome-page-proof-panel"
-          class="relative overflow-hidden rounded-3xl border border-border/70 bg-background/80 p-6 shadow-(--elevation-1)"
+          class="relative overflow-hidden rounded-3xl border border-border/70 bg-linear-to-br from-background/96 via-background/92 to-accent/10 p-6 shadow-(--elevation-1)"
         >
           <div
-            class="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent"
+            class="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-transparent"
           />
           <div class="space-y-6">
             <section class="space-y-3">
