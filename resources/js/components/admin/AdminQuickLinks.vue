@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import { useAbility } from '@/composables/useAbility';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
@@ -29,37 +28,25 @@ const props = withDefaults(
 const { can } = useAbility();
 
 type QuickLinkTone = 'primary' | 'secondary' | 'accent';
-type QuickLinkVariant = 'primary' | 'secondary' | 'info';
 
 const toneClasses: Record<
   QuickLinkTone,
   {
     card: string;
     beam: string;
-    badge: string;
-    linkVariant: QuickLinkVariant;
   }
 > = {
   primary: {
-    card: 'border-primary/24 bg-linear-to-br from-primary/18 via-card to-card shadow-(--elevation-1)',
-    beam: 'via-primary/70',
-    badge:
-      'border-primary/24 bg-primary/14 text-primary shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
-    linkVariant: 'primary',
+    card: 'bg-[linear-gradient(160deg,var(--surface-panel-primary),var(--surface-panel))]',
+    beam: 'bg-primary/70',
   },
   secondary: {
-    card: 'border-secondary/26 bg-linear-to-br from-secondary/18 via-card to-card shadow-(--elevation-1)',
-    beam: 'via-secondary/70',
-    badge:
-      'border-secondary/24 bg-secondary/16 text-secondary shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
-    linkVariant: 'secondary',
+    card: 'bg-[linear-gradient(160deg,var(--surface-panel-secondary),var(--surface-panel))]',
+    beam: 'bg-secondary/70',
   },
   accent: {
-    card: 'border-accent/24 bg-linear-to-br from-accent/18 via-card to-card shadow-(--elevation-1)',
-    beam: 'via-accent/70',
-    badge:
-      'border-accent/24 bg-accent/16 text-accent shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]',
-    linkVariant: 'info',
+    card: 'bg-[linear-gradient(160deg,var(--surface-nav),var(--surface-panel))]',
+    beam: 'bg-accent/70',
   },
 };
 
@@ -111,9 +98,7 @@ const hasLinks = computed(() => links.value.length > 0);
 <template>
   <section class="space-y-4">
     <div class="max-w-xl space-y-2">
-      <p class="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-        Administration
-      </p>
+      <p class="section-kicker">Administration</p>
       <h2 class="text-2xl font-semibold tracking-tight">
         Manage access with real counts, not placeholder tiles.
       </h2>
@@ -122,56 +107,67 @@ const hasLinks = computed(() => links.value.length > 0);
       </p>
     </div>
 
-    <div v-if="hasLinks" class="grid gap-5 md:grid-cols-3">
-      <Card
-        v-for="item in links"
-        :key="item.title"
-        :class="[
-          'group relative h-full overflow-hidden px-6 py-5 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-(--elevation-2) motion-reduce:transform-none motion-reduce:transition-none',
-          toneClasses[item.tone].card,
-        ]"
-      >
-        <div
+    <div
+      v-if="hasLinks"
+      class="overflow-hidden rounded-[1.75rem] border border-border/70 shadow-(--elevation-1)"
+    >
+      <div class="grid gap-px bg-border/60 md:grid-cols-3">
+        <Link
+          v-for="item in links"
+          :key="item.title"
+          :href="item.href"
           :class="[
-            'pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent',
-            toneClasses[item.tone].beam,
+            'group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none',
+            toneClasses[item.tone].card,
           ]"
-        />
+        >
+          <span
+            :class="[
+              'absolute inset-x-0 top-0 h-1 origin-left scale-x-80 transition-transform duration-500 ease-(--motion-ease-out-quint) group-hover:scale-x-100 motion-reduce:transform-none',
+              toneClasses[item.tone].beam,
+            ]"
+          />
 
-        <div class="relative flex h-full flex-col justify-between gap-6">
-          <div class="flex items-start justify-between gap-6">
-            <div>
-              <h3 class="text-base font-semibold tracking-tight">
-                {{ item.title }}
-              </h3>
-              <p class="mt-1 text-sm text-muted-foreground">
-                {{ item.description }}
-              </p>
+          <div class="flex h-full flex-col justify-between gap-6">
+            <div class="flex items-start justify-between gap-6">
+              <div class="min-w-0">
+                <p
+                  class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
+                >
+                  Available now
+                </p>
+                <h3 class="mt-2 text-lg font-semibold tracking-tight">
+                  {{ item.title }}
+                </h3>
+                <p class="mt-2 text-sm leading-6 text-muted-foreground">
+                  {{ item.description }}
+                </p>
+              </div>
+
+              <div
+                class="text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none"
+              >
+                {{ item.count }}
+              </div>
             </div>
 
             <div
-              :class="[
-                'flex min-w-18 items-center justify-center rounded-full border px-3 py-1 text-2xl font-semibold tabular-nums',
-                toneClasses[item.tone].badge,
-              ]"
+              class="flex items-center justify-between gap-3 border-t border-border/60 pt-4"
             >
-              {{ item.count }}
+              <span
+                class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
+              >
+                Open surface
+              </span>
+              <span
+                class="text-sm font-semibold text-primary transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 group-hover:text-primary/80 motion-reduce:transform-none"
+              >
+                Open {{ item.title }}
+              </span>
             </div>
           </div>
-
-          <div>
-            <Button
-              appearance="link"
-              :variant="toneClasses[item.tone].linkVariant"
-              size="sm"
-              as-child
-              class="w-fit px-0 transition-colors motion-reduce:transition-none"
-            >
-              <Link :href="item.href">Open {{ item.title }}</Link>
-            </Button>
-          </div>
-        </div>
-      </Card>
+        </Link>
+      </div>
     </div>
 
     <Card

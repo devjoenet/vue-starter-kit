@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 
 const props = withDefaults(
   defineProps<{
+    as?: 'table' | 'toolbar';
     column: string;
     filterOptions: string[];
     formatOptionLabel?: (value: string) => string;
@@ -29,6 +30,7 @@ const props = withDefaults(
     sortDirection: 'asc' | 'desc' | 'none';
   }>(),
   {
+    as: 'table',
     formatOptionLabel: (value: string) => value,
     headClass: undefined,
   },
@@ -95,6 +97,40 @@ const hasDraftChanges = computed(() => {
 
 const hasActiveFilters = computed(() => props.selectedFilters.length > 0);
 
+const rootComponent = computed(() =>
+  props.as === 'toolbar' ? 'div' : TableHead,
+);
+
+const rootClasses = computed(() =>
+  props.as === 'toolbar'
+    ? 'rounded-[var(--radius-lg)] border border-border/70 bg-background/88 p-3 shadow-[var(--elevation-1)]'
+    : cn('align-middle', props.headClass),
+);
+
+const contentClasses = computed(() =>
+  props.as === 'toolbar'
+    ? 'flex items-start justify-between gap-3'
+    : 'flex items-center gap-2',
+);
+
+const helperText = computed(() => {
+  const states: string[] = [];
+
+  if (props.selectedFilters.length > 0) {
+    states.push(
+      `${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} active`,
+    );
+  }
+
+  if (props.sortDirection !== 'none') {
+    states.push(
+      props.sortDirection === 'asc' ? 'sorted ascending' : 'sorted descending',
+    );
+  }
+
+  return states.join(' · ') || 'Filter or sort this column';
+});
+
 const toggleDraftFilter = (value: string) => {
   if (draftFilters.value.includes(value)) {
     draftFilters.value = draftFilters.value.filter(
@@ -119,89 +155,118 @@ const clearFilters = () => {
 </script>
 
 <template>
-  <TableHead :class="cn('align-middle', headClass)">
-    <div class="flex items-center gap-2">
-      <span class="text-sm leading-none font-medium">{{ label }}</span>
+  <component :is="rootComponent" :class="rootClasses">
+    <div :class="contentClasses">
+      <div class="min-w-0">
+        <span class="text-sm leading-none font-medium">{{ label }}</span>
+        <p
+          v-if="props.as === 'toolbar'"
+          class="mt-1 text-xs leading-5 text-muted-foreground"
+        >
+          {{ helperText }}
+        </p>
+      </div>
 
-      <DropdownMenu v-model:open="menuOpen">
-        <DropdownMenuTrigger :as-child="true">
-          <Button
-            size="sm"
-            variant="muted"
-            :aria-label="filterButtonTitle"
-            :title="filterButtonTitle"
-            class="relative h-5 w-5 p-0 align-middle"
-          >
-            <FunnelIcon class="size-3" />
-            <span
-              v-if="selectedFilters.length"
-              :class="
-                cn(
-                  'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full p-0.5 text-[8px] leading-none',
-                  hasActiveFilters
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-transparent text-transparent',
-                )
-              "
-            >
-              {{ selectedFilters.length }}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" class="w-64">
-          <DropdownMenuLabel>{{ label }}</DropdownMenuLabel>
-          <DropdownMenuItem
-            :disabled="selectedFilters.length === 0"
-            @select.prevent="clearFilters"
-          >
-            Clear filters
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            v-for="option in filterOptions"
-            :key="`${column}-${option}`"
-            @select.prevent="toggleDraftFilter(option)"
-          >
-            <span
-              class="flex size-4 items-center justify-center rounded-xs border border-border/80 bg-background text-primary"
-            >
-              <CheckIcon v-if="draftFilters.includes(option)" class="size-3" />
-              <SquareIcon v-else class="size-3 text-transparent" />
-            </span>
-            {{ formatOptionLabel(option) }}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <div class="flex justify-end p-1">
+      <div class="flex shrink-0 items-center gap-2">
+        <DropdownMenu v-model:open="menuOpen">
+          <DropdownMenuTrigger :as-child="true">
             <Button
-              v-if="hasDraftChanges"
-              size="sm"
-              type="button"
-              @click="applyFilters"
+              size="iconSm"
+              rounded="full"
+              :appearance="hasActiveFilters ? 'filled' : 'outline'"
+              :variant="hasActiveFilters ? 'primary' : 'muted'"
+              :aria-label="filterButtonTitle"
+              :title="filterButtonTitle"
+              class="relative shrink-0 align-middle"
             >
-              Apply
+              <FunnelIcon
+                :class="[
+                  hasActiveFilters
+                    ? 'stroke-primary-foreground'
+                    : 'stroke-muted-foreground',
+                  'size-3',
+                ]"
+              />
+              <span
+                v-if="selectedFilters.length"
+                :class="
+                  cn(
+                    'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full p-0.5 text-[8px] leading-none',
+                    hasActiveFilters
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-transparent text-transparent',
+                  )
+                "
+              >
+                {{ selectedFilters.length }}
+              </span>
             </Button>
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" class="w-72">
+            <DropdownMenuLabel>{{ label }}</DropdownMenuLabel>
+            <DropdownMenuItem
+              variant="primary"
+              :disabled="selectedFilters.length === 0"
+              @select.prevent="clearFilters"
+            >
+              Clear filters
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              v-for="option in filterOptions"
+              :key="`${column}-${option}`"
+              variant="primary"
+              @select.prevent="toggleDraftFilter(option)"
+            >
+              <span
+                class="flex size-4 items-center justify-center rounded-xs border border-border/80 bg-background text-primary"
+              >
+                <CheckIcon
+                  v-if="draftFilters.includes(option)"
+                  class="size-3"
+                />
+                <SquareIcon v-else class="size-3 text-transparent" />
+              </span>
+              {{ formatOptionLabel(option) }}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <div class="flex justify-end p-1">
+              <Button
+                v-if="hasDraftChanges"
+                size="sm"
+                type="button"
+                @click="applyFilters"
+              >
+                Apply
+              </Button>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-      <Button
-        size="sm"
-        variant="muted"
-        :aria-label="sortButtonTitle"
-        :title="sortButtonTitle"
-        class="h-5 w-5 p-0 align-middle"
-        @click="$emit('toggle-sort', column)"
-      >
-        <ArrowDownNarrowWideIcon
-          v-if="props.sortDirection === 'asc'"
-          class="size-3"
-        />
-        <ArrowDownWideNarrowIcon
-          v-if="props.sortDirection === 'desc'"
-          class="size-3"
-        />
-        <ArrowUpDownIcon v-if="props.sortDirection === 'none'" class="size-3" />
-      </Button>
+        <Button
+          size="iconSm"
+          rounded="full"
+          :appearance="props.sortDirection === 'none' ? 'outline' : 'filled'"
+          :variant="props.sortDirection === 'none' ? 'muted' : 'primary'"
+          :aria-label="sortButtonTitle"
+          :title="sortButtonTitle"
+          class="shrink-0 align-middle"
+          @click="$emit('toggle-sort', column)"
+        >
+          <ArrowDownNarrowWideIcon
+            v-if="props.sortDirection === 'asc'"
+            class="size-3 stroke-primary-foreground"
+          />
+          <ArrowDownWideNarrowIcon
+            v-if="props.sortDirection === 'desc'"
+            class="size-3 stroke-primary-foreground"
+          />
+          <ArrowUpDownIcon
+            v-if="props.sortDirection === 'none'"
+            class="size-3 stroke-muted-foreground"
+          />
+        </Button>
+      </div>
     </div>
-  </TableHead>
+  </component>
 </template>

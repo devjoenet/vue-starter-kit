@@ -6,7 +6,7 @@ import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Southeast Code';
-const fallbackProgressColor = '#1f5fbf';
+const fallbackProgressColor = 'var(--primary)';
 
 const resolveProgressColor = () => {
   if (typeof window === 'undefined') {

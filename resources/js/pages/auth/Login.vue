@@ -60,7 +60,6 @@ defineProps<{
             variant="outlined"
             required
             autofocus
-            :tabindex="1"
             autocomplete="email"
             :state="errors.email ? 'error' : 'default'"
             :message="errors.email"
@@ -73,7 +72,6 @@ defineProps<{
                 id="auth-login-forgot-password-link"
                 :href="request()"
                 class="text-sm"
-                :tabindex="5"
               >
                 Forgot password?
               </TextLink>
@@ -86,7 +84,6 @@ defineProps<{
               label="Password"
               variant="outlined"
               required
-              :tabindex="2"
               autocomplete="current-password"
               :state="errors.password ? 'error' : 'default'"
               :message="errors.password"
@@ -98,7 +95,7 @@ defineProps<{
             for="remember"
             class="flex items-center gap-3 text-sm"
           >
-            <Checkbox id="remember" name="remember" :tabindex="3" />
+            <Checkbox id="remember" name="remember" />
             <span>Remember me</span>
           </label>
 
@@ -107,7 +104,6 @@ defineProps<{
             type="submit"
             appearance="filled"
             class="w-full"
-            :tabindex="4"
             :disabled="processing"
             data-test="login-button"
           >
@@ -128,7 +124,7 @@ defineProps<{
       class="text-center text-sm text-muted-foreground"
     >
       Need access?
-      <TextLink id="auth-login-register-link" :href="register()" :tabindex="5">
+      <TextLink id="auth-login-register-link" :href="register()">
         Create an account
       </TextLink>
     </div>

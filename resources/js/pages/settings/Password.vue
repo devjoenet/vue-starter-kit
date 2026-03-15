@@ -19,8 +19,6 @@ setLayoutProps({
 <template>
   <Head title="Password settings" />
 
-  <h1 class="sr-only">Password Settings</h1>
-
   <div id="settings-password-page">
     <Form
       id="settings-password-form"

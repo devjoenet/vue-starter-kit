@@ -2,18 +2,18 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 export const inputVariants = cva(
-  'peer w-full min-w-0 rounded-[var(--radius-sm)] text-base leading-6 text-[var(--field-text)] transition-[border-color,box-shadow,background-color,color] outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)]/30 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55',
+  'peer w-full min-w-0 rounded-[var(--radius-sm)] text-base leading-6 text-foreground transition-[border-color,box-shadow,background-color,color] outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--ring)]/30 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55',
   {
     variants: {
       variant: {
         filled:
-          'rounded-t-[var(--radius-sm)] rounded-b-none border border-transparent border-b-[color:var(--outline)] bg-[var(--field-bg)]/90 hover:bg-[var(--field-bg)] focus-visible:border-b-[color:var(--field-focus)]',
+          'rounded-t-[var(--radius-sm)] rounded-b-none border border-transparent border-b-border bg-muted/90 hover:bg-muted focus-visible:border-b-[color:var(--ring)]',
         outlined:
-          'border border-[color:var(--outline)] bg-transparent hover:border-[color:var(--field-focus)]/50 focus-visible:border-[color:var(--field-focus)]',
+          'border border-border bg-transparent hover:border-[color:var(--ring)]/50 focus-visible:border-[color:var(--ring)]',
       },
       state: {
         default: '',
-        error: 'border-[color:var(--error)] ring-[color:var(--error)]/30',
+        error: 'border-destructive ring-destructive/30',
         destructive: 'border-destructive ring-destructive/30',
         info: 'border-info ring-info/30',
         warning: 'border-warning ring-warning/30',
@@ -38,7 +38,7 @@ export const inputVariants = cva(
 );
 
 export const inputLabelVariants = cva(
-  'pointer-events-none absolute top-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top] duration-150 peer-placeholder-shown:top-4 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60 peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:scale-90',
+  'pointer-events-none absolute top-4 origin-left text-sm text-muted-foreground transition-[transform,color,top] duration-150 peer-placeholder-shown:top-4 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--ring)] peer-disabled:opacity-60 peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:scale-90',
   {
     variants: {
       variant: {
@@ -47,7 +47,7 @@ export const inputLabelVariants = cva(
       },
       state: {
         default: '',
-        error: 'text-[var(--error)] peer-focus:text-[var(--error)]',
+        error: 'text-destructive peer-focus:text-destructive',
         destructive: 'text-destructive peer-focus:text-destructive',
         info: 'text-info peer-focus:text-info',
         warning: 'text-warning peer-focus:text-warning',
@@ -64,8 +64,8 @@ export const inputLabelVariants = cva(
 export const inputAssistiveTextVariants = cva('text-xs', {
   variants: {
     state: {
-      default: 'text-[var(--field-label)]',
-      error: 'text-[var(--error)]',
+      default: 'text-muted-foreground',
+      error: 'text-destructive',
       destructive: 'text-destructive',
       info: 'text-info',
       warning: 'text-warning',

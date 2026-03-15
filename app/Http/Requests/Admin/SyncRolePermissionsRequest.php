@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -25,6 +26,7 @@ class SyncRolePermissionsRequest extends FormRequest
     }
 
     /** @return array<string, string> */
+    #[Override]
     public function messages(): array
     {
         return [

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import SurfaceBrandLockup from '@/components/SurfaceBrandLockup.vue';
 import TextLink from '@/components/TextLink.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { dashboard, login, register } from '@/routes';
@@ -39,41 +40,51 @@ withDefaults(
     >
       <header
         id="welcome-page-header"
-        class="flex items-center justify-end gap-3 pb-10 text-sm"
+        class="flex items-center justify-between gap-4 pb-10 text-sm"
       >
-        <Button
-          id="welcome-dashboard-link"
-          v-if="$page.props.auth?.user"
-          as="a"
-          :href="dashboard().url"
-          appearance="outline"
+        <div
+          id="welcome-page-brand"
+          class="motion-step shrink-0"
+          style="--motion-order: 0"
         >
-          Open Dashboard
-        </Button>
-        <template v-else>
-          <TextLink id="welcome-login-link" :href="login().url">
-            Sign in
-          </TextLink>
-        </template>
+          <SurfaceBrandLockup />
+        </div>
+
+        <div
+          class="motion-step flex items-center gap-3"
+          style="--motion-order: 1"
+        >
+          <Button
+            id="welcome-dashboard-link"
+            v-if="$page.props.auth?.user"
+            as="a"
+            :href="dashboard().url"
+            appearance="outline"
+          >
+            Open Dashboard
+          </Button>
+          <template v-else>
+            <TextLink id="welcome-login-link" :href="login().url">
+              Sign in
+            </TextLink>
+          </template>
+        </div>
       </header>
 
       <main
         id="welcome-page-hero"
-        class="grid flex-1 items-center gap-8 rounded-3xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-primary/10 p-6 shadow-(--elevation-2) backdrop-blur-sm sm:p-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,0.85fr)] lg:p-12"
+        class="surface-public-hero motion-stage grid flex-1 items-center gap-10 rounded-[1.75rem] p-6 sm:p-8 lg:grid-cols-[minmax(0,1.2fr)_22rem] lg:p-12"
       >
         <section id="welcome-page-content" class="max-w-2xl">
-          <p
-            class="mb-4 inline-flex items-center rounded-full border border-primary/24 bg-primary/12 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-primary uppercase"
-          >
-            Southeast Code
-          </p>
           <h1
-            class="max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+            class="motion-step max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+            style="--motion-order: 2"
           >
             Modern websites and web applications built for real business use.
           </h1>
           <p
-            class="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg"
+            class="motion-step mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg"
+            style="--motion-order: 3"
           >
             Southeast Code designs and builds polished marketing sites, client
             portals, internal tools, and demo-ready products that feel
@@ -83,7 +94,8 @@ withDefaults(
 
           <div
             id="welcome-page-actions"
-            class="mt-8 flex flex-col gap-3 sm:flex-row"
+            class="motion-step mt-8 flex flex-col gap-3 sm:flex-row"
+            style="--motion-order: 4"
           >
             <Button
               v-if="$page.props.auth?.user"
@@ -118,63 +130,68 @@ withDefaults(
             </template>
           </div>
 
-          <dl class="mt-10 grid gap-4 sm:grid-cols-3">
-            <div
-              class="rounded-2xl border border-primary/18 bg-linear-to-br from-background/96 to-primary/10 p-4"
-            >
-              <dt
-                class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
-              >
-                Service clarity
-              </dt>
-              <dd class="mt-2 text-sm leading-6 text-muted-foreground">
-                Clear offers for websites, portals, internal tools, and custom
-                application work.
-              </dd>
+          <div
+            class="motion-step mt-10 grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
+            style="--motion-order: 5"
+          >
+            <div class="space-y-3">
+              <p class="section-kicker">What this starter proves</p>
+              <p class="text-sm leading-6 text-muted-foreground">
+                It should read as a Southeast Code build first: clear offer,
+                sound technical footing, and a more disciplined interface than a
+                default scaffold.
+              </p>
             </div>
-            <div
-              class="rounded-2xl border border-secondary/18 bg-linear-to-br from-background/96 to-secondary/10 p-4"
-            >
-              <dt
-                class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
-              >
-                Technical depth
-              </dt>
-              <dd class="mt-2 text-sm leading-6 text-muted-foreground">
-                Laravel, Inertia, Vue, and reusable systems shaped for
-                production instead of one-off screens.
-              </dd>
-            </div>
-            <div
-              class="rounded-2xl border border-accent/18 bg-linear-to-br from-background/96 to-accent/10 p-4"
-            >
-              <dt
-                class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
-              >
-                Outcome-focused
-              </dt>
-              <dd class="mt-2 text-sm leading-6 text-muted-foreground">
-                Interfaces designed to build trust, reduce friction, and move
-                businesses toward a clear next step.
-              </dd>
-            </div>
-          </dl>
+
+            <dl class="space-y-4">
+              <div class="border-l-2 border-primary/45 pl-4">
+                <dt
+                  class="text-sm font-semibold tracking-tight text-foreground"
+                >
+                  Service clarity
+                </dt>
+                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                  Clear offers for websites, portals, internal tools, and custom
+                  application work.
+                </dd>
+              </div>
+              <div class="border-l-2 border-secondary/55 pl-4">
+                <dt
+                  class="text-sm font-semibold tracking-tight text-foreground"
+                >
+                  Technical depth
+                </dt>
+                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                  Laravel, Inertia, Vue, and reusable systems shaped for
+                  production rather than one-off screens.
+                </dd>
+              </div>
+              <div class="border-l-2 border-accent/55 pl-4">
+                <dt
+                  class="text-sm font-semibold tracking-tight text-foreground"
+                >
+                  Outcome-focused
+                </dt>
+                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                  Interfaces designed to build trust, reduce friction, and move
+                  businesses toward a clear next step.
+                </dd>
+              </div>
+            </dl>
+          </div>
         </section>
 
         <aside
           id="welcome-page-proof-panel"
-          class="relative overflow-hidden rounded-3xl border border-border/70 bg-linear-to-br from-background/96 via-background/92 to-accent/10 p-6 shadow-(--elevation-1)"
+          class="surface-public-panel motion-step relative overflow-hidden rounded-[1.75rem] p-6"
+          style="--motion-order: 6"
         >
           <div
             class="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-transparent"
           />
           <div class="space-y-6">
             <section class="space-y-3">
-              <p
-                class="text-xs font-semibold tracking-[0.16em] text-primary uppercase"
-              >
-                What clients should understand fast
-              </p>
+              <p class="section-kicker">What clients should understand fast</p>
               <h2 class="text-2xl font-semibold tracking-tight text-balance">
                 Professional execution without generic starter-kit baggage.
               </h2>
@@ -188,20 +205,38 @@ withDefaults(
               <p class="text-sm font-medium text-foreground">
                 Typical engagement areas
               </p>
-              <ul class="mt-3 space-y-3 text-sm text-muted-foreground">
-                <li class="flex items-start justify-between gap-4">
-                  <span>Custom marketing sites</span>
-                  <span class="text-foreground">Strategy + conversion</span>
-                </li>
-                <li class="flex items-start justify-between gap-4">
-                  <span>Business web applications</span>
-                  <span class="text-foreground">Workflow + clarity</span>
-                </li>
-                <li class="flex items-start justify-between gap-4">
-                  <span>Client portals and internal tools</span>
-                  <span class="text-foreground">Structure + reliability</span>
-                </li>
-              </ul>
+              <dl class="mt-4 space-y-4">
+                <div class="space-y-1">
+                  <dt
+                    class="text-sm font-semibold tracking-tight text-foreground"
+                  >
+                    Custom marketing sites
+                  </dt>
+                  <dd class="text-sm text-muted-foreground">
+                    Strategy-led pages shaped for conversion and credibility.
+                  </dd>
+                </div>
+                <div class="space-y-1">
+                  <dt
+                    class="text-sm font-semibold tracking-tight text-foreground"
+                  >
+                    Business web applications
+                  </dt>
+                  <dd class="text-sm text-muted-foreground">
+                    Workflow tools that stay clear once real teams use them.
+                  </dd>
+                </div>
+                <div class="space-y-1">
+                  <dt
+                    class="text-sm font-semibold tracking-tight text-foreground"
+                  >
+                    Client portals and internal tools
+                  </dt>
+                  <dd class="text-sm text-muted-foreground">
+                    Structure, reporting, and dependable access control.
+                  </dd>
+                </div>
+              </dl>
             </section>
 
             <section class="border-t border-border/60 pt-5">

@@ -326,17 +326,16 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect($headerCellContents)->toContain('FunnelIcon');
     expect($headerCellContents)->toContain('CheckIcon');
     expect($headerCellContents)->toContain('SquareIcon');
+    expect($headerCellContents)->toContain("as?: 'table' | 'toolbar'");
     expect($headerCellContents)->toContain('text-sm leading-none font-medium');
-    expect($headerCellContents)->toContain('class="relative h-5 w-5 p-0 align-middle"');
-    expect($headerCellContents)->toContain('class="h-5 w-5 p-0 align-middle"');
+    expect($headerCellContents)->toContain('size="iconSm"');
+    expect($headerCellContents)->toContain('rounded="full"');
+    expect($headerCellContents)->toContain("props.as === 'toolbar'");
     expect($headerCellContents)->toContain('class="size-3"');
     expect($headerCellContents)->toContain("event: 'apply-filters'");
-    expect($headerCellContents)->toContain('size="sm"');
-    expect($headerCellContents)->toContain('variant="muted"');
     expect($headerCellContents)->toContain('@select.prevent');
     expect($headerCellContents)->toContain(':title="filterButtonTitle"');
     expect($headerCellContents)->toContain(':title="sortButtonTitle"');
-    expect($headerCellContents)->toContain('text-primary-foreground');
     expect($headerCellContents)->toContain('v-model:open="menuOpen"');
     expect($headerCellContents)->toContain('Apply');
     expect($permissionTableContents)->toContain('label="Permission"');
@@ -346,6 +345,82 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect(
         mb_strpos($permissionTableContents, 'label="Permission"'),
     )->toBeLessThan(mb_strpos($permissionTableContents, 'label="Group"'));
+});
+
+it('keeps auth forms in native DOM focus order without positive tabindex values', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $loginContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Login.vue');
+    $registerContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Register.vue');
+    $textLinkContents = file_get_contents($projectRoot.'/resources/js/components/TextLink.vue');
+
+    expect($loginContents)->not->toContain(':tabindex=');
+    expect($loginContents)->not->toContain('tabindex="');
+    expect($registerContents)->not->toContain(':tabindex=');
+    expect($registerContents)->not->toContain('tabindex="');
+    expect($textLinkContents)->not->toContain('tabindex?:');
+    expect($textLinkContents)->not->toContain(':tabindex="tabindex"');
+});
+
+it('keeps the Southeast Code mark visible in the welcome-page header', function () {
+    $welcomeContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Welcome.vue');
+    $authLayoutContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/auth/AuthSimpleLayout.vue');
+    $brandLockupContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/SurfaceBrandLockup.vue');
+
+    expect($welcomeContents)->toContain("from '@/components/SurfaceBrandLockup.vue'");
+    expect($welcomeContents)->toContain('id="welcome-page-header"');
+    expect($welcomeContents)->toContain('id="welcome-page-brand"');
+    expect($welcomeContents)->toContain('<SurfaceBrandLockup');
+    expect($welcomeContents)->toContain('<h1');
+
+    expect($authLayoutContents)->toContain("from '@/components/SurfaceBrandLockup.vue'");
+    expect($authLayoutContents)->toContain('<SurfaceBrandLockup');
+
+    expect($brandLockupContents)->toContain("from '@/components/AppLogoIcon.vue'");
+    expect($brandLockupContents)->toContain('whitespace-nowrap');
+    expect($brandLockupContents)->toContain('Southeast Code');
+});
+
+it('uses the shared settings workspace shell for settings navigation and headings', function () {
+    $settingsLayoutContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/settings/Layout.vue');
+
+    expect($settingsLayoutContents)->toContain('surface-settings-shell');
+    expect($settingsLayoutContents)->toContain('surface-settings-nav');
+    expect($settingsLayoutContents)->toContain('activeNavItem.heading');
+    expect($settingsLayoutContents)->toContain('motion-sheen');
+    expect($settingsLayoutContents)->toContain('motion-step');
+});
+
+it('keeps the shared motion primitives and reduced-motion safeguards in the frontend system', function () {
+    $cssContents = file_get_contents(dirname(__DIR__, 2).'/resources/css/app.css');
+    $buttonStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/styles.ts');
+    $sidebarStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/styles.ts');
+
+    expect($cssContents)->toContain('--motion-ease-out-quart');
+    expect($cssContents)->toContain('.motion-stage');
+    expect($cssContents)->toContain('.motion-step');
+    expect($cssContents)->toContain('.motion-interactive-raise');
+    expect($cssContents)->toContain('.motion-sheen');
+    expect($cssContents)->toContain('@media (prefers-reduced-motion: reduce)');
+
+    expect($buttonStylesContents)->toContain('motion-safe:hover:-translate-y-px');
+    expect($sidebarStylesContents)->toContain('motion-interactive-slide');
+});
+
+it('uses shared motion choreography across public, auth, dashboard, and admin workspace surfaces', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $authLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/auth/AuthSimpleLayout.vue');
+    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
+    $usersIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
+    $rolesIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
+    $permissionsIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Permissions/Index.vue');
+
+    expect($welcomeContents)->toContain('motion-stage');
+    expect($authLayoutContents)->toContain('motion-stage');
+    expect($dashboardContents)->toContain('motion-stage');
+    expect($usersIndexContents)->toContain('motion-stage');
+    expect($rolesIndexContents)->toContain('motion-stage');
+    expect($permissionsIndexContents)->toContain('motion-stage');
 });
 
 it('uses inertia layout props for shared admin and settings breadcrumbs', function () {
@@ -540,6 +615,7 @@ it('keeps the admin dashboard free of decorative placeholder surfaces', function
     expect($contents)->toContain('id="admin-dashboard-main-panel"');
     expect($contents)->toContain('id="admin-dashboard-focus-panel"');
     expect($contents)->toContain('id="admin-dashboard-readiness-panel"');
+    expect($contents)->toContain('<h1 class="text-3xl font-semibold tracking-tight text-balance">');
     expect($contents)->not->toContain('PlaceholderPattern');
     expect($contents)->not->toContain('id="admin-dashboard-highlight-grid"');
 });
@@ -638,11 +714,13 @@ it('keeps two-factor recovery codes free of nested card wrappers', function () {
 it('uses reduced-motion-safe motion patterns across shared shell surfaces', function () {
     $projectRoot = dirname(__DIR__, 2);
 
+    $toastFeedContents = file_get_contents($projectRoot.'/resources/js/components/AppToasts.vue');
     $toastContents = file_get_contents($projectRoot.'/resources/js/components/toasts/AppToastItem.vue');
     $dialogContents = file_get_contents($projectRoot.'/resources/js/components/ui/dialog/styles.ts');
     $sheetContents = file_get_contents($projectRoot.'/resources/js/components/ui/sheet/styles.ts');
     $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/ui/sidebar/styles.ts');
 
+    expect($toastFeedContents)->not->toContain('transition: all');
     expect($toastContents)->toContain('transition-transform');
     expect($toastContents)->not->toContain('transition-[width]');
     expect($toastContents)->toContain('motion-reduce:transition-none');
@@ -653,18 +731,24 @@ it('uses reduced-motion-safe motion patterns across shared shell surfaces', func
 });
 
 it('keeps key touch targets at mobile-friendly sizes across shared shell controls', function () {
+    $headerCellContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AdminIndexHeaderCell.vue');
     $headerUtilityContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderUtilityActions.vue');
     $mobileNavContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderMobileNavigation.vue');
     $navigationMenuContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/navigation-menu/styles.ts');
     $inputOtpContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input-otp/styles.ts');
+    $sidebarMenuActionContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/SidebarMenuAction.vue');
+    $sidebarGroupActionContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/SidebarGroupAction.vue');
     $sidebarContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/styles.ts');
 
+    expect($headerCellContents)->toContain('size="iconSm"');
     expect($headerUtilityContents)->toContain('h-11 w-11');
     expect($headerUtilityContents)->toContain('size-11');
     expect($mobileNavContents)->toContain('min-h-11');
     expect($mobileNavContents)->toContain('h-11 w-11');
     expect($navigationMenuContents)->toContain('h-11');
     expect($inputOtpContents)->toContain('h-11 w-11');
+    expect($sidebarMenuActionContents)->toContain('size-8');
+    expect($sidebarGroupActionContents)->toContain('size-8');
     expect($sidebarContents)->toContain("sidebarTriggerVariants = cva('h-11 w-11')");
 });
 
@@ -681,6 +765,40 @@ it('keeps dashboard quick links from collapsing into a blank area when no admin 
     expect($contents)->toContain('id="admin-dashboard-quick-links-empty-state"');
     expect($contents)->toContain('No admin surfaces are assigned to this account yet.');
     expect($contents)->toContain('Open {{ item.title }}');
+});
+
+it('keeps admin index surfaces readable on narrow screens with dedicated mobile controls', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $usersContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
+    $rolesContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
+    $permissionsContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionIndexTable.vue');
+
+    expect($usersContents)->toContain('id="admin-users-index-mobile-controls"');
+    expect($usersContents)->toContain('id="admin-users-index-mobile-list"');
+    expect($usersContents)->toContain('as="toolbar"');
+    expect($usersContents)->toContain('overflow-hidden py-0 md:block');
+
+    expect($rolesContents)->toContain('id="admin-roles-index-mobile-controls"');
+    expect($rolesContents)->toContain('id="admin-roles-index-mobile-list"');
+    expect($rolesContents)->toContain('as="toolbar"');
+    expect($rolesContents)->toContain('overflow-hidden py-0 md:block');
+
+    expect($permissionsContents)->toContain('Refine permissions');
+    expect($permissionsContents)->toContain('as="toolbar"');
+    expect($permissionsContents)->toContain('overflow-hidden py-0 md:block');
+});
+
+it('keeps shared tokens and primitives free of legacy glass variants', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $cssContents = file_get_contents($projectRoot.'/resources/css/app.css');
+    $cardContents = file_get_contents($projectRoot.'/resources/js/components/ui/card/styles.ts');
+    $buttonContents = file_get_contents($projectRoot.'/resources/js/components/ui/button/styles.ts');
+    $toastContents = file_get_contents($projectRoot.'/resources/js/composables/useToast.ts');
+
+    expect($cssContents)->not->toContain('liquid-glass');
+    expect($cardContents)->not->toContain("glass: '");
+    expect($buttonContents)->not->toContain("| 'glass'");
+    expect($toastContents)->not->toContain("'glass'");
 });
 
 it('keeps starter-kit copy and fallback branding out of the shared shell', function () {

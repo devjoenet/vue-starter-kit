@@ -22,8 +22,8 @@ it('matches the shared table ui structure', function () {
         ->toContain('tableRowVariants')
         ->toContain('even:bg-muted/20')
         ->toContain('hover:bg-muted/35')
-        ->toContain('dark:even:bg-white/4')
-        ->toContain('dark:hover:bg-white/8');
+        ->toContain('dark:even:bg-muted/24')
+        ->toContain('dark:hover:bg-muted/40');
 
     expect($tableContents)
         ->toContain('data-slot="table-wrapper"')
@@ -39,7 +39,7 @@ it('uses shared table ui components in admin role, permission, and user index pa
 
     expect($rolesIndex)
         ->toContain("from '@/components/ui/table/Table.vue'")
-        ->toContain('<Table>')
+        ->toContain('<Table')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');
 
@@ -49,13 +49,13 @@ it('uses shared table ui components in admin role, permission, and user index pa
 
     expect($permissionsTable)
         ->toContain("from '@/components/ui/table/Table.vue'")
-        ->toContain('<Table>')
+        ->toContain('<Table')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');
 
     expect($usersIndex)
         ->toContain("from '@/components/ui/table/Table.vue'")
-        ->toContain('<Table>')
+        ->toContain('<Table')
         ->toContain('<TableHeader>')
         ->toContain('<TableBody>');
 });

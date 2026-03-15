@@ -25,12 +25,21 @@ const { toasts, dismissToast } = useAppToastFeed();
 <style scoped>
 .toast-enter-active,
 .toast-leave-active {
-  transition: all 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .toast-enter-from,
 .toast-leave-to {
   opacity: 0;
   transform: translateY(-8px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-enter-active,
+  .toast-leave-active {
+    transition: none;
+  }
 }
 </style>

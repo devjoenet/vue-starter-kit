@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin;
 use App\Support\PermissionNormalizer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -17,6 +18,7 @@ class StorePermissionRequest extends FormRequest
         return true;
     }
 
+    #[Override]
     protected function prepareForValidation(): void
     {
         $normalizedPermission = app(PermissionNormalizer::class)->normalize(
@@ -40,6 +42,7 @@ class StorePermissionRequest extends FormRequest
     }
 
     /** @return array<string, string> */
+    #[Override]
     public function messages(): array
     {
         return [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import AppLogo from '@/components/AppLogo.vue';
+import SurfaceBrandLockup from '@/components/SurfaceBrandLockup.vue';
 import { home } from '@/routes';
 
 defineProps<{
@@ -34,20 +34,20 @@ const accessNote =
       class="relative mx-auto flex min-h-svh w-full max-w-7xl items-center p-6 md:p-10"
     >
       <div
-        class="grid w-full gap-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:gap-14"
+        class="grid w-full gap-10 lg:grid-cols-[minmax(0,1.05fr)_24rem] lg:gap-14"
       >
-        <section class="flex flex-col justify-center">
-          <Link :href="home()" class="inline-flex w-fit items-center gap-3">
-            <AppLogo />
+        <section class="motion-stage flex flex-col justify-center">
+          <Link
+            :href="home()"
+            class="motion-step inline-flex w-fit"
+            style="--motion-order: 0"
+          >
+            <SurfaceBrandLockup />
           </Link>
 
           <div class="mt-10 max-w-xl space-y-6">
-            <div class="space-y-3">
-              <p
-                class="text-xs font-semibold tracking-[0.18em] text-primary uppercase"
-              >
-                Secure access
-              </p>
+            <div class="motion-step space-y-3" style="--motion-order: 1">
+              <p class="section-kicker">Secure access</p>
               <h1
                 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
               >
@@ -61,25 +61,39 @@ const accessNote =
             </div>
 
             <div
-              class="grid gap-3 rounded-3xl border border-border/70 bg-card/80 p-5 shadow-(--elevation-1) backdrop-blur-sm sm:grid-cols-3 lg:grid-cols-1"
+              class="surface-auth-callout motion-step rounded-[1.75rem] p-6"
+              style="--motion-order: 2"
             >
-              <div
-                v-for="point in trustPoints"
-                :key="point"
-                class="rounded-2xl border border-border/60 bg-background/80 px-4 py-3 text-sm leading-6 text-muted-foreground"
-              >
-                {{ point }}
-              </div>
-            </div>
+              <p class="text-sm font-semibold tracking-tight text-foreground">
+                Access should feel calm, capable, and specific.
+              </p>
 
-            <p class="text-sm leading-6 text-muted-foreground">
-              {{ accessNote }}
-            </p>
+              <ul class="mt-5 space-y-4">
+                <li
+                  v-for="point in trustPoints"
+                  :key="point"
+                  class="flex items-start gap-3"
+                >
+                  <span
+                    class="mt-2 size-2 rounded-full bg-secondary ring-4 ring-secondary/15"
+                  />
+                  <span class="text-sm leading-6 text-muted-foreground">
+                    {{ point }}
+                  </span>
+                </li>
+              </ul>
+
+              <p
+                class="mt-5 border-t border-border/60 pt-5 text-sm leading-6 text-muted-foreground"
+              >
+                {{ accessNote }}
+              </p>
+            </div>
           </div>
         </section>
 
         <section class="flex items-center justify-center lg:justify-end">
-          <div class="w-full max-w-md">
+          <div class="motion-step w-full max-w-md" style="--motion-order: 3">
             <slot />
           </div>
         </section>

@@ -37,25 +37,23 @@ const toneIconMap: Record<ToastTone, LucideIcon> = {
 };
 
 const toneClasses: Record<ToastTone, string> = {
-  default: 'border-[color:var(--outline)] text-foreground',
+  default: 'border-border text-foreground',
   success: 'border-success/35 text-foreground',
-  error: 'border-[var(--error)]/35 text-foreground',
+  error: 'border-destructive/35 text-foreground',
   warning: 'border-warning/40 text-foreground',
   info: 'border-info/40 text-foreground',
 };
 
 const appearanceClasses: Record<ToastAppearance, string> = {
-  default:
-    'bg-[var(--surface)]/94 backdrop-blur-xl shadow-[var(--elevation-2)]',
-  glass: 'liquid-glass liquid-glass-hover border-transparent',
-  outline: 'bg-[var(--surface)]/40 backdrop-blur-xl',
+  default: 'bg-card shadow-[var(--elevation-2)]',
+  outline: 'bg-background/92 shadow-[var(--elevation-1)]',
   solid: 'shadow-[var(--elevation-2)]',
 };
 
 const solidToneClasses: Record<ToastTone, string> = {
   default: 'bg-[var(--foreground)] text-[var(--background)] border-transparent',
   success: 'bg-success text-success-foreground border-transparent',
-  error: 'bg-[var(--error)] text-destructive-foreground border-transparent',
+  error: 'bg-destructive text-destructive-foreground border-transparent',
   warning: 'bg-warning text-warning-foreground border-transparent',
   info: 'bg-info text-info-foreground border-transparent',
 };
@@ -63,14 +61,13 @@ const solidToneClasses: Record<ToastTone, string> = {
 const progressClasses: Record<ToastTone, string> = {
   default: 'bg-[var(--foreground)]/35',
   success: 'bg-success',
-  error: 'bg-[var(--error)]',
+  error: 'bg-destructive',
   warning: 'bg-warning',
   info: 'bg-info',
 };
 
 const surfaceProgressClasses: Record<ToastAppearance, string> = {
   default: 'bg-border/70',
-  glass: 'bg-border/55',
   outline: 'bg-border/60',
   solid: 'bg-background/25',
 };

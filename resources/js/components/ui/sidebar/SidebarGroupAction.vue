@@ -19,8 +19,8 @@ const props = defineProps<
     :as-child="asChild"
     :class="
       cn(
-        'absolute top-3.5 right-3 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0',
-        'after:absolute after:-inset-2 md:after:hidden',
+        'motion-interactive-raise absolute top-2.5 right-2.5 flex size-8 items-center justify-center rounded-lg p-0 text-sidebar-foreground ring-sidebar-ring outline-hidden transition-transform hover:bg-sidebar-primary/14 hover:text-sidebar-primary focus-visible:ring-2 motion-reduce:transform-none [&>svg]:size-4 [&>svg]:shrink-0',
+        'after:absolute after:-inset-1.5 md:after:hidden',
         'group-data-[collapsible=icon]:hidden',
         props.class,
       )

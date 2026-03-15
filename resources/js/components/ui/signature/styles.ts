@@ -14,8 +14,8 @@ export const signatureSurfaceVariants = cva(
   {
     variants: {
       state: {
-        default: 'border-[color:var(--outline)]',
-        error: 'border-[var(--error)]',
+        default: 'border-border',
+        error: 'border-destructive',
         destructive: 'border-destructive',
         info: 'border-info',
         warning: 'border-warning',

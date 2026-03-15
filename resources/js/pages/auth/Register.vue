@@ -54,7 +54,6 @@ defineOptions({
           variant="outlined"
           required
           autofocus
-          :tabindex="1"
           autocomplete="name"
           :state="errors.name ? 'error' : 'default'"
           :message="errors.name"
@@ -67,7 +66,6 @@ defineOptions({
           label="Email address"
           variant="outlined"
           required
-          :tabindex="2"
           autocomplete="email"
           :state="errors.email ? 'error' : 'default'"
           :message="errors.email"
@@ -80,7 +78,6 @@ defineOptions({
           label="Password"
           variant="outlined"
           required
-          :tabindex="3"
           autocomplete="new-password"
           :state="errors.password ? 'error' : 'default'"
           :message="errors.password"
@@ -93,7 +90,6 @@ defineOptions({
           label="Confirm password"
           variant="outlined"
           required
-          :tabindex="4"
           autocomplete="new-password"
           :state="errors.password_confirmation ? 'error' : 'default'"
           :message="errors.password_confirmation"
@@ -104,7 +100,6 @@ defineOptions({
           type="submit"
           appearance="filled"
           class="w-full"
-          tabindex="5"
           :disabled="processing"
           data-test="register-user-button"
         >
@@ -128,7 +123,6 @@ defineOptions({
         id="auth-register-login-link"
         :href="login()"
         class="underline underline-offset-4"
-        :tabindex="6"
         >Sign in</TextLink
       >
     </div>

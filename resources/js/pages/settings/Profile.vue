@@ -29,8 +29,6 @@ const user = computed(() => page.props.auth.user);
 <template>
   <Head title="Profile settings" />
 
-  <h1 class="sr-only">Profile Settings</h1>
-
   <div id="settings-profile-page" v-if="user" class="space-y-6">
     <Form
       id="settings-profile-information-form"
