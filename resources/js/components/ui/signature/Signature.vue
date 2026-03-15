@@ -107,8 +107,8 @@ const assistiveTextClasses = computed(() =>
 
 const labelClasses = computed(() =>
   cn(
-    'text-sm font-medium text-[var(--field-label)]',
-    fieldState.value === 'error' && 'text-[var(--error)]',
+    'text-sm font-medium text-muted-foreground',
+    fieldState.value === 'error' && 'text-destructive',
     fieldState.value === 'destructive' && 'text-destructive',
     fieldState.value === 'info' && 'text-info',
     fieldState.value === 'warning' && 'text-warning',

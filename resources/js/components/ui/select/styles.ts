@@ -9,7 +9,7 @@ export type SelectOption = {
 };
 
 export const selectLabelVariants = cva(
-  'absolute top-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top,background-color] duration-150 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60 peer-data-[filled=true]:top-2 peer-data-[filled=true]:scale-90 peer-data-[open=true]:top-2 peer-data-[open=true]:scale-90 peer-data-[open=true]:text-[var(--field-focus)]',
+  'absolute top-4 origin-left text-sm text-muted-foreground transition-[transform,color,top,background-color] duration-150 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--ring)] peer-disabled:opacity-60 peer-data-[filled=true]:top-2 peer-data-[filled=true]:scale-90 peer-data-[open=true]:top-2 peer-data-[open=true]:scale-90 peer-data-[open=true]:text-[var(--ring)]',
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ export const selectLabelVariants = cva(
       state: {
         default: '',
         error:
-          'text-[var(--error)] peer-focus:text-[var(--error)] peer-data-[open=true]:text-[var(--error)]',
+          'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
         destructive:
           'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
         info: 'text-info peer-focus:text-info peer-data-[open=true]:text-info',

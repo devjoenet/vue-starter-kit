@@ -113,7 +113,7 @@ const triggerClasses = computed(() =>
       label: hasLabel.value,
     }),
     'group relative flex w-full items-center justify-between gap-3 px-4 pr-12 text-left',
-    !hasValue.value && 'text-[var(--field-label)]',
+    !hasValue.value && 'text-muted-foreground',
     props.class,
     props.triggerClass,
   ),
@@ -121,9 +121,9 @@ const triggerClasses = computed(() =>
 
 const labelClasses = computed(() =>
   cn(
-    'pointer-events-none absolute top-4 left-4 origin-left text-sm text-[var(--field-label)] transition-[transform,color,top] duration-150 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--field-focus)] peer-disabled:opacity-60 peer-data-[filled=true]:top-2 peer-data-[filled=true]:scale-90 peer-data-[open=true]:top-2 peer-data-[open=true]:scale-90 peer-data-[open=true]:text-[var(--field-focus)]',
+    'pointer-events-none absolute top-4 left-4 origin-left text-sm text-muted-foreground transition-[transform,color,top] duration-150 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--ring)] peer-disabled:opacity-60 peer-data-[filled=true]:top-2 peer-data-[filled=true]:scale-90 peer-data-[open=true]:top-2 peer-data-[open=true]:scale-90 peer-data-[open=true]:text-[var(--ring)]',
     fieldState.value === 'error' &&
-      'text-[var(--error)] peer-focus:text-[var(--error)] peer-data-[open=true]:text-[var(--error)]',
+      'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
     fieldState.value === 'destructive' &&
       'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
     fieldState.value === 'info' &&
@@ -373,14 +373,14 @@ function selectToday(): void {
             <FieldClearControl
               v-if="hasClearControl"
               as="span"
-              class="absolute top-1/2 right-11 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-[var(--field-label)] transition-colors duration-150 hover:text-[var(--field-focus)]"
+              class="absolute top-1/2 right-11 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:text-[var(--ring)]"
               :disabled="disabled || readonly"
               ariaLabel="Clear date"
               @clear="clearValue"
             />
 
             <FieldAdornmentIcon
-              class="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-[var(--field-label)]"
+              class="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-muted-foreground"
             >
               <CalendarDays class="size-4" />
             </FieldAdornmentIcon>

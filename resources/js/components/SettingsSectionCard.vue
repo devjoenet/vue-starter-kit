@@ -13,13 +13,7 @@ withDefaults(
     footerClass?: HTMLAttributes['class'];
     headerClass?: HTMLAttributes['class'];
     title: string;
-    variant?:
-      | 'default'
-      | 'destructive'
-      | 'info'
-      | 'warning'
-      | 'success'
-      | 'glass';
+    variant?: 'default' | 'destructive' | 'info' | 'warning' | 'success';
   }>(),
   {
     variant: 'default',

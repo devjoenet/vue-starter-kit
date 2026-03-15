@@ -28,7 +28,7 @@ defineProps<Props>();
   </DropdownMenuLabel>
   <DropdownMenuSeparator />
   <DropdownMenuGroup>
-    <DropdownMenuItem :as-child="true">
+    <DropdownMenuItem :as-child="true" variant="primary">
       <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
         <Settings class="mr-2 h-4 w-4" />
         Settings
@@ -36,7 +36,7 @@ defineProps<Props>();
     </DropdownMenuItem>
   </DropdownMenuGroup>
   <DropdownMenuSeparator />
-  <DropdownMenuItem :as-child="true">
+  <DropdownMenuItem :as-child="true" variant="primary">
     <Link
       class="block w-full cursor-pointer"
       :href="logout()"

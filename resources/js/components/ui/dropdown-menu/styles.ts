@@ -8,6 +8,8 @@ export const dropdownMenuItemVariants = cva(
       variant: {
         default:
           "focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground",
+        primary:
+          "focus:bg-primary/12 focus:text-primary dark:focus:bg-primary/20 [&_svg:not([class*='text-'])]:text-muted-foreground",
         destructive:
           'text-destructive focus:bg-destructive/10 focus:text-destructive dark:focus:bg-destructive/20 [&_svg]:text-destructive',
       },

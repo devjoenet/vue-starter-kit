@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin;
 use App\Support\RoleNameNormalizer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -17,6 +18,7 @@ class StoreRoleRequest extends FormRequest
         return true;
     }
 
+    #[Override]
     protected function prepareForValidation(): void
     {
         $this->merge([
@@ -37,6 +39,7 @@ class StoreRoleRequest extends FormRequest
     /**
      * @return array<string, string>
      */
+    #[Override]
     public function messages(): array
     {
         return [

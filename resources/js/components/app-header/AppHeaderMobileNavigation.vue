@@ -45,7 +45,7 @@ const activeItemStyles = 'bg-muted text-foreground';
               v-for="item in items"
               :key="item.title"
               :href="item.href"
-              class="flex min-h-11 items-center gap-x-3 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent"
+              class="flex min-h-11 items-center gap-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-[background-color,color] duration-200 hover:bg-primary/10 hover:text-primary"
               :class="whenCurrentUrl(item.href, activeItemStyles)"
             >
               <component :is="item.icon" v-if="item.icon" class="h-5 w-5" />

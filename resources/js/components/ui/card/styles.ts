@@ -6,14 +6,12 @@ export const cardVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'border border-[color:var(--outline)] bg-[var(--surface)] shadow-[var(--elevation-1)]',
+        default: 'border border-border bg-card shadow-[var(--elevation-1)]',
         destructive:
           'border-destructive/35 bg-destructive/8 shadow-[var(--elevation-1)]',
         info: 'border-info/35 bg-info/8 shadow-[var(--elevation-1)]',
         warning: 'border-warning/35 bg-warning/10 shadow-[var(--elevation-1)]',
         success: 'border-success/35 bg-success/8 shadow-[var(--elevation-1)]',
-        glass: 'liquid-glass liquid-glass-hover',
       },
     },
     defaultVariants: {

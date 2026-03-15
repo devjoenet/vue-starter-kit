@@ -176,7 +176,7 @@ const triggerClasses = computed(() =>
     'group relative flex w-full items-center text-left',
     leftPadding.value,
     rightPadding.value,
-    !hasValue.value && 'text-[var(--field-label)]',
+    !hasValue.value && 'text-muted-foreground',
     props.class,
     props.triggerClass,
   ),
@@ -208,9 +208,9 @@ const optionStateClasses = computed(() =>
 
 const chevronClasses = computed(() =>
   cn(
-    'size-4 shrink-0 text-[var(--field-label)] transition-transform duration-150',
+    'size-4 shrink-0 text-muted-foreground transition-transform duration-150',
     open.value && 'rotate-180',
-    hasError.value && 'text-[var(--error)]',
+    hasError.value && 'text-destructive',
   ),
 );
 
@@ -276,7 +276,7 @@ function clearValue(): void {
           >
             <FieldAdornmentIcon
               v-if="hasLeadingIcon"
-              class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-[var(--field-label)]"
+              class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-muted-foreground"
             >
               <slot name="leading-icon">
                 <slot name="prepend-icon">
@@ -307,7 +307,7 @@ function clearValue(): void {
               as="span"
               :class="
                 cn(
-                  'absolute top-1/2 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-[var(--field-label)] transition-colors duration-150 hover:text-[var(--field-focus)] focus-visible:ring-2 focus-visible:ring-[color:var(--field-focus)] focus-visible:outline-none',
+                  'absolute top-1/2 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:text-[var(--ring)] focus-visible:ring-2 focus-visible:ring-[color:var(--ring)] focus-visible:outline-none',
                   clearOffset,
                 )
               "
@@ -325,7 +325,7 @@ function clearValue(): void {
               v-if="hasTrailingIcon"
               :class="
                 cn(
-                  'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-[var(--field-label)]',
+                  'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-muted-foreground',
                   trailingOffset,
                 )
               "

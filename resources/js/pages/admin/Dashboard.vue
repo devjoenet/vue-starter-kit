@@ -55,7 +55,7 @@ const starterReadiness = [
 
   <div
     id="admin-dashboard-page"
-    class="relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-2xl border border-border/60 bg-linear-to-br from-background via-background to-primary/12 p-6 shadow-(--elevation-2)"
+    class="surface-dashboard-shell motion-stage relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-[1.75rem] p-6"
   >
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/14 via-primary/5 to-transparent"
@@ -67,21 +67,34 @@ const starterReadiness = [
       class="pointer-events-none absolute -bottom-24 left-12 size-72 rounded-full bg-secondary/12 blur-3xl"
     />
 
-    <AdminQuickLinks id="admin-dashboard-quick-links" :counts="props.counts" />
+    <header class="motion-step max-w-3xl space-y-3" style="--motion-order: 0">
+      <p class="section-kicker">Workspace overview</p>
+      <h1 class="text-3xl font-semibold tracking-tight text-balance">
+        Access, roles, and permissions at a glance.
+      </h1>
+      <p class="text-sm leading-6 text-muted-foreground">
+        This starter stays honest about what it manages today while still
+        looking ready for demos, internal tools, and client-facing handoff.
+      </p>
+    </header>
+
+    <AdminQuickLinks
+      id="admin-dashboard-quick-links"
+      :counts="props.counts"
+      class="motion-step"
+      style="--motion-order: 1"
+    />
 
     <div
       class="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)]"
     >
       <section
         id="admin-dashboard-main-panel"
-        class="rounded-2xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-primary/10 p-6 shadow-(--elevation-1)"
+        class="surface-dashboard-primary motion-step rounded-3xl p-6"
+        style="--motion-order: 2"
       >
         <div class="max-w-2xl space-y-3">
-          <p
-            class="text-xs font-semibold tracking-[0.16em] text-primary uppercase"
-          >
-            Operational overview
-          </p>
+          <p class="section-kicker">Operational overview</p>
           <h2 class="text-2xl font-semibold tracking-tight text-balance">
             The dashboard now reflects what this workspace actually manages.
           </h2>
@@ -92,14 +105,14 @@ const starterReadiness = [
           </p>
         </div>
 
-        <dl class="mt-6 grid gap-4 md:grid-cols-3">
+        <dl class="mt-8 grid gap-6 md:grid-cols-3">
           <div
             v-for="item in accessOverview"
             :key="item.id"
-            class="rounded-2xl border border-border/60 bg-linear-to-br from-background/96 to-primary/8 p-4"
+            class="border-l-2 border-primary/35 pl-4"
           >
             <dt
-              class="text-xs font-semibold tracking-[0.14em] text-primary uppercase"
+              class="text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
             >
               {{ item.label }}
             </dt>
@@ -115,14 +128,11 @@ const starterReadiness = [
 
       <aside
         id="admin-dashboard-focus-panel"
-        class="rounded-2xl border border-border/70 bg-linear-to-br from-background/96 to-accent/10 p-6 shadow-(--elevation-1)"
+        class="surface-dashboard-secondary motion-step rounded-3xl p-6"
+        style="--motion-order: 3"
       >
         <div class="space-y-3">
-          <p
-            class="text-xs font-semibold tracking-[0.16em] text-primary uppercase"
-          >
-            Current focus
-          </p>
+          <p class="section-kicker">Current focus</p>
           <h2 class="text-xl font-semibold tracking-tight">
             What this starter is actively improving
           </h2>
@@ -132,9 +142,12 @@ const starterReadiness = [
           <li
             v-for="item in currentFocus"
             :key="item"
-            class="rounded-2xl border border-border/60 bg-linear-to-br from-card/92 to-accent/8 px-4 py-3"
+            class="flex gap-3 border-t border-border/60 pt-4 first:border-t-0 first:pt-0"
           >
-            {{ item }}
+            <span
+              class="mt-2 size-2 rounded-full bg-accent ring-4 ring-accent/15"
+            />
+            <span>{{ item }}</span>
           </li>
         </ul>
       </aside>
@@ -142,17 +155,14 @@ const starterReadiness = [
 
     <section
       id="admin-dashboard-readiness-panel"
-      class="rounded-2xl border border-border/70 bg-linear-to-br from-card/96 via-card/92 to-secondary/8 p-6 shadow-(--elevation-1)"
+      class="surface-dashboard-secondary motion-step rounded-3xl p-6"
+      style="--motion-order: 4"
     >
       <div
         class="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start"
       >
         <div class="space-y-3">
-          <p
-            class="text-xs font-semibold tracking-[0.16em] text-primary uppercase"
-          >
-            Ready for next use
-          </p>
+          <p class="section-kicker">Ready for next use</p>
           <h2 class="text-2xl font-semibold tracking-tight text-balance">
             A starter should explain what it is ready to become.
           </h2>
@@ -163,15 +173,15 @@ const starterReadiness = [
           </p>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-3">
-          <article
+        <ul class="grid gap-4 md:grid-cols-3">
+          <li
             v-for="item in starterReadiness"
             :key="item"
-            class="rounded-2xl border border-border/60 bg-linear-to-br from-background/96 to-secondary/8 p-4 text-sm leading-6 text-muted-foreground"
+            class="border-t border-border/60 pt-4 text-sm leading-6 text-muted-foreground"
           >
             {{ item }}
-          </article>
-        </div>
+          </li>
+        </ul>
       </div>
     </section>
   </div>

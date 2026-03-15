@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Support\RoleNameNormalizer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -18,6 +19,7 @@ class UpdateRoleRequest extends FormRequest
         return true;
     }
 
+    #[Override]
     protected function prepareForValidation(): void
     {
         $this->merge([
@@ -42,6 +44,7 @@ class UpdateRoleRequest extends FormRequest
     }
 
     /** @return array<string, string> */
+    #[Override]
     public function messages(): array
     {
         return [

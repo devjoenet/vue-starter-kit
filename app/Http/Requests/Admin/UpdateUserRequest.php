@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -17,6 +18,7 @@ class UpdateUserRequest extends FormRequest
         return true;
     }
 
+    #[Override]
     protected function prepareForValidation(): void
     {
         if (mb_trim((string) $this->input('password', '')) === '') {
@@ -44,6 +46,7 @@ class UpdateUserRequest extends FormRequest
     }
 
     /** @return array<string, string> */
+    #[Override]
     public function messages(): array
     {
         return [

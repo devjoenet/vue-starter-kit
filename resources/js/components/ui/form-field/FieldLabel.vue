@@ -11,7 +11,7 @@ const props = withDefaults(
   }>(),
   {
     showAsterisk: false,
-    asteriskClass: 'text-[var(--error)]',
+    asteriskClass: 'text-destructive',
   },
 );
 </script>

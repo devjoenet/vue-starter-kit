@@ -37,8 +37,6 @@ onUnmounted(() => {
 <template>
   <Head title="Two-Factor Authentication" />
 
-  <h1 class="sr-only">Two-Factor Authentication Settings</h1>
-
   <div id="settings-two-factor-page">
     <SettingsSectionCard
       id="settings-two-factor-card"

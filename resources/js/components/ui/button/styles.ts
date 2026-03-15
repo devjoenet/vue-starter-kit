@@ -8,8 +8,7 @@ type ButtonAppearance =
   | 'elevated'
   | 'text'
   | 'ghost'
-  | 'link'
-  | 'glass';
+  | 'link';
 type ButtonVariantName =
   | 'muted'
   | 'primary'
@@ -100,34 +99,24 @@ const buttonAppearanceVariantClasses: Record<
     success: 'text-success hover:text-success/80',
     destructive: 'text-destructive hover:text-destructive/80',
   },
-  glass: {
-    muted: 'text-foreground',
-    primary: 'border-primary/35 bg-primary/15 text-primary hover:bg-primary/24',
-    secondary:
-      'border-secondary/35 bg-secondary/15 text-secondary hover:bg-secondary/24',
-    info: 'border-info/35 bg-info/15 text-info hover:bg-info/24',
-    warning: 'border-warning/35 bg-warning/15 text-warning hover:bg-warning/24',
-    success: 'border-success/35 bg-success/15 text-success hover:bg-success/24',
-    destructive:
-      'border-destructive/35 bg-destructive/15 text-destructive hover:bg-destructive/24',
-  },
 };
 
 export const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[background-color,box-shadow,color,transform] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-[var(--field-focus)] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[background-color,border-color,box-shadow,color,transform] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-current",
   {
     variants: {
       appearance: {
-        filled: 'shadow-[var(--elevation-1)] hover:shadow-[var(--elevation-2)]',
+        filled:
+          'shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
         tonal:
-          'border shadow-[var(--elevation-1)] hover:shadow-[var(--elevation-2)]',
-        outline: 'border bg-transparent',
+          'border shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+        outline:
+          'border bg-transparent motion-safe:hover:-translate-y-px motion-safe:active:translate-y-px motion-reduce:transform-none',
         text: 'border border-transparent bg-transparent shadow-none',
         elevated:
-          'border shadow-[var(--elevation-2)] hover:shadow-[var(--elevation-3)]',
+          'border shadow-[var(--elevation-2)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-3)] motion-safe:active:translate-y-px motion-reduce:transform-none',
         ghost: 'border border-transparent bg-transparent shadow-none',
         link: 'border border-transparent bg-transparent underline-offset-4 shadow-none hover:underline',
-        glass: 'liquid-glass liquid-glass-hover',
       },
       variant: {
         muted: '',

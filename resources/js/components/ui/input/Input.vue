@@ -304,7 +304,7 @@ const assistiveTextClasses = computed(() =>
 
 const activeLineClasses = computed(() => {
   if (fieldState.value === 'error') {
-    return 'bg-[var(--error)]';
+    return 'bg-destructive';
   }
 
   if (fieldState.value === 'destructive') {
@@ -323,7 +323,7 @@ const activeLineClasses = computed(() => {
     return 'bg-success';
   }
 
-  return 'bg-[var(--field-focus)]';
+  return 'bg-[var(--ring)]';
 });
 
 const showBottomLine = computed(() => props.variant === 'filled');

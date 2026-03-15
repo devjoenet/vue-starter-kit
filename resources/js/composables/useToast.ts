@@ -2,7 +2,7 @@ import type { Component, DeepReadonly, Ref } from 'vue';
 import { readonly, ref } from 'vue';
 
 export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info';
-export type ToastAppearance = 'default' | 'glass' | 'outline' | 'solid';
+export type ToastAppearance = 'default' | 'outline' | 'solid';
 
 export type ToastPayload = {
   message: string;

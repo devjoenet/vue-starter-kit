@@ -17,8 +17,6 @@ setLayoutProps({
 <template>
   <Head title="Appearance settings" />
 
-  <h1 class="sr-only">Appearance Settings</h1>
-
   <div id="settings-appearance-page">
     <SettingsSectionCard
       id="settings-appearance-card"
