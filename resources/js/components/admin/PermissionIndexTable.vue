@@ -15,15 +15,25 @@ import type {
   AdminPermissionsIndexColumn,
   AdminPermissionsIndexFilterOptions,
   AdminIndexQuery,
+  PermissionGroupOption,
   PermissionIndexItem,
 } from '@/types/page-props';
+import { computed } from 'vue';
 
 const props = defineProps<{
   canUpdate: boolean;
   filterOptions: AdminPermissionsIndexFilterOptions;
+  groups: PermissionGroupOption[];
   permissions: PermissionIndexItem[];
   query: AdminIndexQuery<AdminPermissionsIndexColumn>;
 }>();
+
+const groupLabelMap = computed(
+  () => new Map(props.groups.map((group) => [group.slug, group.label])),
+);
+const formatGroupOptionLabel = (value: string) =>
+  groupLabelMap.value.get(value) ?? toTitleCase(value);
+const formatIdentityOptionLabel = (value: string) => value;
 
 const {
   clearFilters,
@@ -40,7 +50,7 @@ const {
         page: undefined,
       },
     }),
-  only: ['permissions', 'filterOptions', 'query'],
+  only: ['permissions', 'groups', 'filterOptions', 'query'],
 });
 </script>
 
@@ -60,7 +70,7 @@ const {
         label="Permission"
         column="permission"
         :filter-options="props.filterOptions.permission"
-        :format-option-label="toTitleCase"
+        :format-option-label="formatIdentityOptionLabel"
         :selected-filters="selectedFiltersFor('permission')"
         :sort-direction="sortDirectionFor('permission')"
         @clear-filters="
@@ -83,7 +93,7 @@ const {
         label="Group"
         column="group"
         :filter-options="props.filterOptions.group"
-        :format-option-label="toTitleCase"
+        :format-option-label="formatGroupOptionLabel"
         :selected-filters="selectedFiltersFor('group')"
         :sort-direction="sortDirectionFor('group')"
         @clear-filters="
@@ -141,18 +151,31 @@ const {
             :href="edit.url(permission.id)"
             class="block text-lg font-semibold tracking-tight text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
           >
-            {{ toTitleCase(permission.suffix) }}
+            {{ permission.label }}
           </Link>
           <p v-else class="text-lg font-semibold tracking-tight">
-            {{ toTitleCase(permission.suffix) }}
+            {{ permission.label }}
           </p>
-          <p class="text-sm wrap-break-word text-muted-foreground">
+          <p
+            v-if="permission.description"
+            class="text-sm leading-6 text-muted-foreground"
+          >
+            {{ permission.description }}
+          </p>
+          <p class="text-sm font-medium wrap-break-word text-muted-foreground">
             {{ permission.name }}
           </p>
         </div>
 
-        <Badge variant="info">{{ toTitleCase(permission.group) }}</Badge>
+        <Badge variant="info">{{ permission.group_label }}</Badge>
       </div>
+
+      <p
+        v-if="permission.group_description"
+        class="text-sm leading-6 text-muted-foreground"
+      >
+        {{ permission.group_description }}
+      </p>
     </Card>
   </div>
 
@@ -172,7 +195,7 @@ const {
             label="Permission"
             column="permission"
             :filter-options="props.filterOptions.permission"
-            :format-option-label="toTitleCase"
+            :format-option-label="formatIdentityOptionLabel"
             :selected-filters="selectedFiltersFor('permission')"
             :sort-direction="sortDirectionFor('permission')"
             @clear-filters="
@@ -194,7 +217,7 @@ const {
             label="Group"
             column="group"
             :filter-options="props.filterOptions.group"
-            :format-option-label="toTitleCase"
+            :format-option-label="formatGroupOptionLabel"
             :selected-filters="selectedFiltersFor('group')"
             :sort-direction="sortDirectionFor('group')"
             @clear-filters="
@@ -243,14 +266,28 @@ const {
               :href="edit.url(permission.id)"
               class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
             >
-              {{ toTitleCase(permission.suffix) }}
+              {{ permission.label }}
             </Link>
-            <span v-else>{{ toTitleCase(permission.suffix) }}</span>
+            <span v-else>{{ permission.label }}</span>
+            <p
+              v-if="permission.description"
+              class="mt-1 text-sm leading-6 text-muted-foreground"
+            >
+              {{ permission.description }}
+            </p>
           </TableCell>
           <TableCell class="text-muted-foreground">
-            {{ toTitleCase(permission.group) }}
+            <p class="font-medium text-foreground">
+              {{ permission.group_label }}
+            </p>
+            <p
+              v-if="permission.group_description"
+              class="mt-1 text-sm leading-6 text-muted-foreground"
+            >
+              {{ permission.group_description }}
+            </p>
           </TableCell>
-          <TableCell class="text-muted-foreground">
+          <TableCell class="font-mono text-xs text-muted-foreground">
             {{ permission.name }}
           </TableCell>
         </TableRow>

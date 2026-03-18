@@ -55,7 +55,7 @@ const starterReadiness = [
 
   <div
     id="admin-dashboard-page"
-    class="surface-dashboard-shell motion-stage relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-[1.75rem] p-6"
+    class="surface-dashboard-shell motion-stage relative flex h-full flex-1 flex-col gap-6 overflow-hidden rounded-[1.75rem] p-5 sm:p-6"
   >
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/14 via-primary/5 to-transparent"
@@ -67,15 +67,41 @@ const starterReadiness = [
       class="pointer-events-none absolute -bottom-24 left-12 size-72 rounded-full bg-secondary/12 blur-3xl"
     />
 
-    <header class="motion-step max-w-3xl space-y-3" style="--motion-order: 0">
-      <p class="section-kicker">Workspace overview</p>
-      <h1 class="text-3xl font-semibold tracking-tight text-balance">
-        Access, roles, and permissions at a glance.
-      </h1>
-      <p class="text-sm leading-6 text-muted-foreground">
-        This starter stays honest about what it manages today while still
-        looking ready for demos, internal tools, and client-facing handoff.
-      </p>
+    <header
+      class="surface-dashboard-primary motion-step rounded-[1.75rem] p-6 lg:p-8"
+      style="--motion-order: 0"
+    >
+      <div
+        class="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(16rem,0.85fr)] xl:items-start"
+      >
+        <div class="space-y-4">
+          <p class="section-kicker">Workspace overview</p>
+          <h1
+            class="max-w-4xl text-[clamp(2.4rem,4.8vw,4.4rem)] leading-[0.94] font-semibold tracking-[-0.04em] text-balance"
+          >
+            Access, roles, and permissions at a glance.
+          </h1>
+          <p class="max-w-2xl text-sm leading-6 text-muted-foreground">
+            This starter stays honest about what it manages today while still
+            reading like a capable command surface for demos, internal tools,
+            and client-facing handoff.
+          </p>
+        </div>
+
+        <aside class="surface-dashboard-secondary rounded-[1.4rem] p-5">
+          <p class="text-[0.68rem] font-semibold tracking-[0.18em] text-secondary uppercase">
+            Current signal
+          </p>
+          <p class="mt-3 text-lg font-semibold tracking-tight text-balance">
+            The dashboard now leads with actual access work instead of starter
+            filler.
+          </p>
+          <p class="mt-3 text-sm leading-6 text-muted-foreground">
+            Counts, quick links, and admin status all point at what this
+            workspace can do right now.
+          </p>
+        </aside>
+      </div>
     </header>
 
     <AdminQuickLinks
@@ -109,7 +135,7 @@ const starterReadiness = [
           <div
             v-for="item in accessOverview"
             :key="item.id"
-            class="border-l-2 border-primary/35 pl-4"
+            class="rounded-[1.3rem] border border-border/65 bg-background/28 px-4 py-4"
           >
             <dt
               class="text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"

@@ -22,7 +22,11 @@ const { isCurrentUrl } = useCurrentUrl();
 
 <template>
   <SidebarGroup class="px-2 py-0">
-    <SidebarGroupLabel>{{ props.label }}</SidebarGroupLabel>
+    <SidebarGroupLabel
+      class="px-2 text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/70 uppercase"
+    >
+      {{ props.label }}
+    </SidebarGroupLabel>
     <SidebarMenu>
       <SidebarMenuItem v-for="item in items" :key="item.title">
         <SidebarMenuButton

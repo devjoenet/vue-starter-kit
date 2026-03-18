@@ -29,8 +29,12 @@ defineOptions({
 <template>
   <Head title="Register" />
 
-  <section id="auth-register-page" class="space-y-6">
-    <Card id="auth-register-card" variant="default" class="px-6">
+  <section id="auth-register-page" class="space-y-5">
+    <Card
+      id="auth-register-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <Form
         id="auth-register-form"
         v-bind="store.form()"
@@ -99,7 +103,7 @@ defineOptions({
           id="auth-register-submit-button"
           type="submit"
           appearance="filled"
-          class="w-full"
+          class="min-h-12 w-full"
           :disabled="processing"
           data-test="register-user-button"
         >
@@ -116,9 +120,9 @@ defineOptions({
 
     <div
       id="auth-register-login-link-row"
-      class="text-center text-sm text-muted-foreground"
+      class="flex items-center justify-center gap-1.5 px-2 text-sm text-muted-foreground"
     >
-      Already have access?
+      <span>Already have access?</span>
       <TextLink
         id="auth-register-login-link"
         :href="login()"

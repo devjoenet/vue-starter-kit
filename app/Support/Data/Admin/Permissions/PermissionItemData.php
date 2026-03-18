@@ -12,7 +12,11 @@ final class PermissionItemData extends Data
     public function __construct(
         public int $id,
         public string $name,
+        public string $label,
+        public ?string $description,
         public string $group,
+        public string $group_label,
+        public ?string $group_description,
     ) {}
 
     public static function fromModel(Permission $permission): self
@@ -20,7 +24,11 @@ final class PermissionItemData extends Data
         return new self(
             id: (int) $permission->id,
             name: $permission->name,
+            label: $permission->display_label,
+            description: $permission->description,
             group: $permission->group,
+            group_label: $permission->group_label,
+            group_description: $permission->group_description,
         );
     }
 }

@@ -18,7 +18,7 @@ use App\Support\Data\Admin\Permissions\PermissionIndexFilterOptionsData;
 use App\Support\Data\Admin\Permissions\PermissionIndexItemData;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
-use App\Support\GroupedPermissions;
+use App\Support\PermissionGroupCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,6 +26,10 @@ use Inertia\Response;
 
 final class PermissionsController extends Controller
 {
+    public function __construct(
+        private readonly PermissionGroupCatalog $permissionGroupCatalog,
+    ) {}
+
     public function index(Request $request): Response
     {
         $indexQuery = AdminIndexQuery::fromRequest(
@@ -35,7 +39,14 @@ final class PermissionsController extends Controller
         );
 
         $permissions = Permission::query()
-            ->select(['id', 'name', 'group'])
+            ->with('permissionGroup')
+            ->select([
+                'id',
+                'permission_group_id',
+                'name',
+                'label',
+                'description',
+            ])
             ->get()
             ->map(fn (Permission $permission): array => PermissionIndexItemData::fromModel($permission)->all());
 
@@ -46,7 +57,7 @@ final class PermissionsController extends Controller
             )
             ->when(
                 $indexQuery->filterValues('permission') !== [],
-                fn ($collection) => $collection->whereIn('suffix', $indexQuery->filterValues('permission')),
+                fn ($collection) => $collection->whereIn('label', $indexQuery->filterValues('permission')),
             )
             ->when(
                 $indexQuery->filterValues('permission_check') !== [],
@@ -54,27 +65,32 @@ final class PermissionsController extends Controller
             );
 
         $sortedPermissions = match ($indexQuery->sort) {
-            'group' => $filteredPermissions->sortBy('group', SORT_NATURAL, $indexQuery->direction === 'desc'),
-            'permission' => $filteredPermissions->sortBy('suffix', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            'group' => $filteredPermissions->sortBy(
+                fn (array $permission): string => sprintf('%s|%s', $permission['group_label'], $permission['group']),
+                SORT_NATURAL,
+                $indexQuery->direction === 'desc',
+            ),
+            'permission' => $filteredPermissions->sortBy('label', SORT_NATURAL, $indexQuery->direction === 'desc'),
             'permission_check' => $filteredPermissions->sortBy('name', SORT_NATURAL, $indexQuery->direction === 'desc'),
             default => $filteredPermissions->sortBy('id', SORT_NUMERIC, $indexQuery->direction === 'desc'),
         };
 
         return Inertia::render('admin/Permissions/Index', [
             'permissions' => $sortedPermissions->values()->all(),
+            'groups' => $this->permissionGroupCatalog->options(),
             'filterOptions' => PermissionIndexFilterOptionsData::from([
                 'group' => $permissions->pluck('group')->unique()->sort()->values()->all(),
-                'permission' => $permissions->pluck('suffix')->unique()->sort()->values()->all(),
+                'permission' => $permissions->pluck('label')->unique()->sort()->values()->all(),
                 'permission_check' => $permissions->pluck('name')->unique()->sort()->values()->all(),
             ])->all(),
             'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
 
-    public function create(GroupedPermissions $groupedPermissions): Response
+    public function create(): Response
     {
         return Inertia::render('admin/Permissions/Create', [
-            'groups' => $groupedPermissions->groups(),
+            'groups' => $this->permissionGroupCatalog->options(),
         ]);
     }
 
@@ -84,7 +100,11 @@ final class PermissionsController extends Controller
     ): RedirectResponse {
         $permission = $createPermission->handle(new CreatePermissionData(
             name: (string) $request->validated('name'),
+            label: (string) $request->validated('label'),
+            description: $request->validated('description'),
             group: (string) $request->validated('group'),
+            groupLabel: (string) $request->validated('group_label'),
+            groupDescription: $request->validated('group_description'),
         ));
 
         return $this->redirectRouteWithSuccess(
@@ -94,19 +114,13 @@ final class PermissionsController extends Controller
         );
     }
 
-    public function edit(Permission $permission, GroupedPermissions $groupedPermissions): Response
+    public function edit(Permission $permission): Response
     {
-        $groups = collect($groupedPermissions->groups())
-            ->push($permission->group)
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
+        $permission->load('permissionGroup');
 
         return Inertia::render('admin/Permissions/Edit', [
             'permission' => PermissionItemData::fromModel($permission)->all(),
-            'groups' => $groups,
+            'groups' => $this->permissionGroupCatalog->options(),
         ]);
     }
 
@@ -116,8 +130,11 @@ final class PermissionsController extends Controller
         UpdatePermission $updatePermission,
     ): RedirectResponse {
         $updatePermission->handle($permission, new UpdatePermissionData(
-            name: (string) $request->validated('name'),
+            label: (string) $request->validated('label'),
+            description: $request->validated('description'),
             group: (string) $request->validated('group'),
+            groupLabel: (string) $request->validated('group_label'),
+            groupDescription: $request->validated('group_description'),
         ));
 
         if ($request->boolean('quiet_success')) {

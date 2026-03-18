@@ -34,19 +34,31 @@ const toneClasses: Record<
   {
     card: string;
     beam: string;
+    eyebrow: string;
+    count: string;
+    action: string;
   }
 > = {
   primary: {
-    card: 'bg-[linear-gradient(160deg,var(--surface-panel-primary),var(--surface-panel))]',
+    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-primary)_72%,var(--primary)_28%)_0%,color-mix(in_oklab,var(--surface-panel)_88%,var(--background)_12%)_100%)]',
     beam: 'bg-primary/70',
+    eyebrow: 'text-primary/82',
+    count: 'text-primary',
+    action: 'text-primary group-hover:text-primary/80',
   },
   secondary: {
-    card: 'bg-[linear-gradient(160deg,var(--surface-panel-secondary),var(--surface-panel))]',
+    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-secondary)_74%,var(--secondary)_26%)_0%,color-mix(in_oklab,var(--surface-panel)_88%,var(--background)_12%)_100%)]',
     beam: 'bg-secondary/70',
+    eyebrow: 'text-secondary/86',
+    count: 'text-secondary',
+    action: 'text-secondary group-hover:text-secondary/80',
   },
   accent: {
-    card: 'bg-[linear-gradient(160deg,var(--surface-nav),var(--surface-panel))]',
-    beam: 'bg-accent/70',
+    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-primary)_64%,var(--accent)_36%)_0%,color-mix(in_oklab,var(--surface-panel)_76%,var(--accent)_24%)_100%)]',
+    beam: 'bg-accent',
+    eyebrow: 'text-accent/88',
+    count: 'text-accent',
+    action: 'text-accent group-hover:text-accent/80',
   },
 };
 
@@ -75,7 +87,7 @@ const links = computed(() => {
       description: 'Keep access grouped into reusable policies.',
       href: adminRolesIndex.url(),
       count: props.counts.roles,
-      tone: 'secondary',
+      tone: 'accent',
     });
   }
 
@@ -85,7 +97,7 @@ const links = computed(() => {
       description: 'Define the checks that secure each workflow.',
       href: adminPermissionsIndex.url(),
       count: props.counts.permissions,
-      tone: 'accent',
+      tone: 'secondary',
     });
   }
 
@@ -97,10 +109,10 @@ const hasLinks = computed(() => links.value.length > 0);
 
 <template>
   <section class="space-y-4">
-    <div class="max-w-xl space-y-2">
+    <div class="max-w-2xl space-y-2">
       <p class="section-kicker">Administration</p>
-      <h2 class="text-2xl font-semibold tracking-tight">
-        Manage access with real counts, not placeholder tiles.
+      <h2 class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">
+        Open the live admin surfaces from a single command strip.
       </h2>
       <p class="text-sm leading-6 text-muted-foreground">
         These are the active admin surfaces available in the starter right now.
@@ -132,7 +144,10 @@ const hasLinks = computed(() => links.value.length > 0);
             <div class="flex items-start justify-between gap-6">
               <div class="min-w-0">
                 <p
-                  class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
+                  :class="[
+                    'text-[0.68rem] font-semibold tracking-[0.18em] uppercase',
+                    toneClasses[item.tone].eyebrow,
+                  ]"
                 >
                   Available now
                 </p>
@@ -145,7 +160,10 @@ const hasLinks = computed(() => links.value.length > 0);
               </div>
 
               <div
-                class="text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none"
+                :class="[
+                  'text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none',
+                  toneClasses[item.tone].count,
+                ]"
               >
                 {{ item.count }}
               </div>
@@ -160,7 +178,10 @@ const hasLinks = computed(() => links.value.length > 0);
                 Open surface
               </span>
               <span
-                class="text-sm font-semibold text-primary transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 group-hover:text-primary/80 motion-reduce:transform-none"
+                :class="[
+                  'text-sm font-semibold transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 motion-reduce:transform-none',
+                  toneClasses[item.tone].action,
+                ]"
               >
                 Open {{ item.title }}
               </span>

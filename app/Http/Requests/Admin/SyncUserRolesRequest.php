@@ -22,7 +22,13 @@ class SyncUserRolesRequest extends FormRequest
     {
         return [
             'roles' => ['array'],
-            'roles.*' => ['string', 'distinct', Rule::exists('roles', 'name')],
+            'roles.*' => [
+                'string',
+                'distinct',
+                Rule::exists('roles', 'name')->where(
+                    fn ($query) => $query->whereNull('deleted_at'),
+                ),
+            ],
         ];
     }
 

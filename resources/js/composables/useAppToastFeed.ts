@@ -2,30 +2,6 @@ import { router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import { useToast } from '@/composables/useToast';
 
-const normalizeMessages = (errors: unknown): string[] => {
-  if (!errors || typeof errors !== 'object') {
-    return [];
-  }
-
-  const values = Object.values(errors as Record<string, unknown>);
-
-  return values
-    .flatMap((value) => {
-      if (Array.isArray(value)) {
-        return value.map((item) => String(item));
-      }
-
-      if (typeof value === 'string') {
-        return [value];
-      }
-
-      return [];
-    })
-    .filter(
-      (message, index, list) => message && list.indexOf(message) === index,
-    );
-};
-
 export const useAppToastFeed = () => {
   const page = usePage();
   const {
@@ -38,26 +14,31 @@ export const useAppToastFeed = () => {
   } = useToast();
 
   const flash = computed(() => page.props.flash ?? {});
-  let removeErrorListener: (() => void) | undefined;
+  let removeHttpExceptionListener: (() => void) | undefined;
+  let removeNetworkErrorListener: (() => void) | undefined;
 
   onMounted(() => {
-    removeErrorListener = router.on('error', (errors) => {
-      const messages = normalizeMessages(errors);
-      if (messages.length === 0) {
-        pushError('Unable to complete the request.', {
+    removeHttpExceptionListener = router.on('httpException', (event) => {
+      pushError(
+        event.detail.response.status >= 500
+          ? 'The server was unable to complete the request.'
+          : 'Unable to complete the request.',
+        {
           duration: 5200,
-        });
-        return;
-      }
+        },
+      );
+    });
 
-      pushError(messages[0], {
+    removeNetworkErrorListener = router.on('networkError', () => {
+      pushError('Unable to reach the server.', {
         duration: 5200,
       });
     });
   });
 
   onBeforeUnmount(() => {
-    removeErrorListener?.();
+    removeHttpExceptionListener?.();
+    removeNetworkErrorListener?.();
   });
 
   watch(

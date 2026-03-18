@@ -60,11 +60,18 @@ const passwordInput = useTemplateRef('passwordInput');
                   >Are you sure you want to delete your account?</DialogTitle
                 >
                 <DialogDescription>
-                  Once your account is deleted, all of its resources and data
-                  will also be permanently deleted. Please enter your password
-                  to confirm you would like to permanently delete your account.
+                  This removes the account and every resource that depends on
+                  it. Enter your password only if you intend to complete that
+                  deletion now.
                 </DialogDescription>
               </DialogHeader>
+
+              <div
+                class="rounded-[1rem] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm leading-6 text-muted-foreground"
+              >
+                This action takes effect immediately after confirmation and
+                cannot be recovered from this workspace.
+              </div>
 
               <Input
                 id="password"

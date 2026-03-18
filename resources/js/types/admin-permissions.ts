@@ -1,5 +1,3 @@
-import type { AdminPermission } from '@/types/wayfinder-generated';
-
 export const adminPermissions = {
   usersView: 'users.view',
   usersCreate: 'users.create',
@@ -15,4 +13,4 @@ export const adminPermissions = {
   permissionsCreate: 'permissions.create',
   permissionsUpdate: 'permissions.update',
   permissionsDelete: 'permissions.delete',
-} as const satisfies Record<string, AdminPermission>;
+} as const satisfies Record<string, string>;

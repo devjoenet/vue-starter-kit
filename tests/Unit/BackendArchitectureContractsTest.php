@@ -17,6 +17,8 @@ use App\Actions\Settings\DeleteProfile;
 use App\Actions\Settings\UpdatePassword;
 use App\Actions\Settings\UpdateProfile;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
+use App\Support\Data\Admin\Permissions\PermissionGroupOptionData;
+use App\Support\Data\Admin\Permissions\PermissionIndexItemData;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\Data\Admin\Roles\AssignableUserData;
@@ -69,6 +71,8 @@ dataset('backend_data_classes', [
     CreatePermissionData::class,
     UpdatePermissionData::class,
     PermissionItemData::class,
+    PermissionIndexItemData::class,
+    PermissionGroupOptionData::class,
     AuthenticatedUserData::class,
     SharedAuthData::class,
     UpdateProfileData::class,

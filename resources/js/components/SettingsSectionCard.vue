@@ -23,16 +23,19 @@ withDefaults(
 
 <template>
   <Card :variant="variant" class="overflow-hidden">
-    <CardHeader :class="cn('gap-1.5 px-6 pb-0', headerClass)">
+    <CardHeader :class="cn('gap-2 px-6 pb-0', headerClass)">
       <h2 class="text-lg font-semibold tracking-tight">
         {{ title }}
       </h2>
-      <p v-if="description" class="text-sm text-muted-foreground">
+      <p
+        v-if="description"
+        class="max-w-2xl text-sm leading-6 text-muted-foreground"
+      >
         {{ description }}
       </p>
     </CardHeader>
 
-    <CardContent :class="cn('space-y-4 px-6', contentClass)">
+    <CardContent :class="cn('space-y-5 px-6', contentClass)">
       <slot />
     </CardContent>
 

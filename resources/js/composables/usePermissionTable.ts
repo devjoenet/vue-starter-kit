@@ -1,15 +1,17 @@
 import { computed, ref } from 'vue';
-import { toTitleCase } from '@/lib/utils';
 import type { PermissionsByGroup } from '@/types/page-props';
 
 type PermissionSortDirection = 'none' | 'asc' | 'desc';
 export type PermissionSortColumn = 'group' | 'permission' | 'permission_check';
 
 export type PermissionTableRow = {
+  description: string | null;
   group: string;
+  groupDescription: string | null;
+  groupLabel: string;
   id: number;
+  label: string;
   name: string;
-  suffix: string;
 };
 
 const nextSortDirection = (
@@ -38,11 +40,13 @@ export function usePermissionTable(
   const permissionRows = computed<PermissionTableRow[]>(() =>
     Object.entries(permissionsByGroup()).flatMap(([group, items]) =>
       items.map((permission) => ({
-        ...permission,
-        group,
-        suffix: permission.name.startsWith(`${group}.`)
-          ? permission.name.slice(group.length + 1)
-          : permission.name,
+        id: permission.id,
+        name: permission.name,
+        label: permission.label,
+        description: permission.description,
+        group: permission.group || group,
+        groupLabel: permission.group_label,
+        groupDescription: permission.group_description,
       })),
     ),
   );
@@ -52,7 +56,7 @@ export function usePermissionTable(
       new Set(permissionRows.value.map((permission) => permission.group)),
     ).sort(),
     permission: Array.from(
-      new Set(permissionRows.value.map((permission) => permission.suffix)),
+      new Set(permissionRows.value.map((permission) => permission.label)),
     ).sort(),
     permission_check: Array.from(
       new Set(permissionRows.value.map((permission) => permission.name)),
@@ -72,7 +76,7 @@ export function usePermissionTable(
     permissionRows.value.filter(
       (permission) =>
         matchesSelectedFilters('group', permission.group) &&
-        matchesSelectedFilters('permission', permission.suffix) &&
+        matchesSelectedFilters('permission', permission.label) &&
         matchesSelectedFilters('permission_check', permission.name),
     ),
   );
@@ -86,11 +90,11 @@ export function usePermissionTable(
       const direction = activeSortDirection.value === 'asc' ? 1 : -1;
 
       if (activeSortColumn.value === 'group') {
-        return left.group.localeCompare(right.group) * direction;
+        return left.groupLabel.localeCompare(right.groupLabel) * direction;
       }
 
       if (activeSortColumn.value === 'permission') {
-        return left.suffix.localeCompare(right.suffix) * direction;
+        return left.label.localeCompare(right.label) * direction;
       }
 
       return left.name.localeCompare(right.name) * direction;
@@ -151,6 +155,5 @@ export function usePermissionTable(
     sortDirectionFor,
     sortedRows,
     toggleSort,
-    toFilterLabel: toTitleCase,
   };
 }

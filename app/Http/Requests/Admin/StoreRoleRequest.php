@@ -30,9 +30,22 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles', 'name')],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->where(
+                    fn ($query) => $query->whereNull('deleted_at'),
+                ),
+            ],
             'user_ids' => ['array'],
-            'user_ids.*' => ['integer', 'distinct', Rule::exists('users', 'id')],
+            'user_ids.*' => [
+                'integer',
+                'distinct',
+                Rule::exists('users', 'id')->where(
+                    fn ($query) => $query->whereNull('deleted_at'),
+                ),
+            ],
         ];
     }
 

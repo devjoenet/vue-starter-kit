@@ -97,12 +97,12 @@ it('breaks shell support components into extracted header, toast, and two-factor
     expect($toastContents)->toContain('w-[min(94vw,18rem)]');
 
     expect($toastItemContents)->toContain('w-72');
-    expect($toastItemContents)->toContain('border-l-[3px]');
+    expect($toastItemContents)->toContain('rounded-[1.375rem]');
     expect($toastItemContents)->toContain('pt-4 pr-4 pb-4 pl-4');
-    expect($toastItemContents)->toContain('size-12');
-    expect($toastItemContents)->toContain('pt-4 pr-4');
-    expect($toastItemContents)->toContain("item.title ? 'mt-4' : 'mt-0.5'");
-    expect($toastItemContents)->toContain("item.title ? 'mb-6 opacity-95' : 'mb-4 font-medium'");
+    expect($toastItemContents)->toContain('size-10');
+    expect($toastItemContents)->toContain('toneBadgeClasses');
+    expect($toastItemContents)->toContain('toneLabelMap');
+    expect($toastItemContents)->toContain('rounded-full');
 
     expect($twoFactorModalContents)->toContain("from '@/components/two-factor/TwoFactorSetupStep.vue'");
     expect($twoFactorModalContents)->toContain("from '@/components/two-factor/TwoFactorConfirmationForm.vue'");
@@ -216,8 +216,8 @@ it('uses an extracted table-based permission assignment surface in the role mana
     expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
     expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
     expect($pageContents)->toContain('quiet_success: true');
-    expect($pageContents)->toContain("'Save and Close'");
-    expect($pageContents)->toContain("'Close'");
+    expect($pageContents)->toContain('save-label="Save and Close"');
+    expect($pageContents)->toContain('close-label="Close"');
     expect($pageContents)->toContain('router.visit(index.url())');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('Collapsible');
@@ -260,10 +260,9 @@ it('prefills the role name in the role management edit page details form', funct
     expect($pageContents)->toContain('name: toTitleCase(roleName),');
     expect($pageContents)->toContain('name: toKebabCase(data.name),');
     expect($pageContents)->toContain('{ immediate: true },');
-    expect($createPageContents)->toContain("from '@/lib/utils'");
-    expect($createPageContents)->toContain('toTitleCase');
+    expect($createPageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
     expect($createPageContents)->toContain('name: toKebabCase(data.name),');
-    expect($createPageContents)->toContain('@blur="normalizeRoleNameForDisplay"');
+    expect($createPageContents)->toContain('name-id="create-role-name"');
     expect($createPageContents)->not->toContain('lg:grid-cols-2');
     expect($formContents)->toContain('v-model="form.name"');
     expect($formContents)->toContain(':default-value="form.name"');
@@ -281,11 +280,10 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
     expect($pageContents)->toContain("from '@/composables/useSequentialSave'");
     expect($pageContents)->toContain('quiet_success: true');
-    expect($pageContents)->toContain("'Save and Close'");
-    expect($pageContents)->toContain("'Close'");
+    expect($pageContents)->toContain('save-label="Save and Close"');
+    expect($pageContents)->toContain('close-label="Close"');
     expect($pageContents)->toContain('router.visit(index.url())');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
-    expect($pageContents)->not->toContain('space-y-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');
 
     expect($detailsContents)->toContain("from '@/components/UserIdentityFields.vue'");
@@ -615,7 +613,8 @@ it('keeps the admin dashboard free of decorative placeholder surfaces', function
     expect($contents)->toContain('id="admin-dashboard-main-panel"');
     expect($contents)->toContain('id="admin-dashboard-focus-panel"');
     expect($contents)->toContain('id="admin-dashboard-readiness-panel"');
-    expect($contents)->toContain('<h1 class="text-3xl font-semibold tracking-tight text-balance">');
+    expect($contents)->toContain('Access, roles, and permissions at a glance.');
+    expect($contents)->toContain('Current signal');
     expect($contents)->not->toContain('PlaceholderPattern');
     expect($contents)->not->toContain('id="admin-dashboard-highlight-grid"');
 });
@@ -626,14 +625,15 @@ it('keeps permission edit delete actions in the shared form footer', function ()
 
     expect($pageContents)->toContain(':can-delete="canDelete"');
     expect($pageContents)->toContain('@delete="destroyPermission"');
-    expect($pageContents)->toContain("'Save and Close'");
-    expect($pageContents)->toContain("'Close'");
+    expect($pageContents)->toContain('submit-label="Save and Close"');
+    expect($pageContents)->toContain('close-label="Close"');
     expect($pageContents)->toContain('quiet_success: true');
     expect($pageContents)->toContain('router.visit(index.url())');
     expect($pageContents)->not->toContain("from '@/components/ui/button/Button.vue'");
 
     expect($formContents)->toContain("event: 'delete'");
-    expect($formContents)->toContain('variant="destructive"');
+    expect($formContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
+    expect($formContents)->toContain('@delete="$emit(\'delete\')"');
 });
 
 it('reuses the shared user identity fields across admin and settings user detail forms', function () {
@@ -644,12 +644,16 @@ it('reuses the shared user identity fields across admin and settings user detail
         'resources/js/pages/settings/Profile.vue',
     ];
 
-    foreach ($views as $view) {
-        $contents = file_get_contents($projectRoot.'/'.$view);
+    $detailsContents = file_get_contents($projectRoot.'/resources/js/components/admin/UserDetailsForm.vue');
+    $createPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Create.vue');
+    $settingsContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Profile.vue');
 
-        expect($contents)->toContain("from '@/components/UserIdentityFields.vue'");
-        expect($contents)->toContain('UserIdentityFields');
-    }
+    expect($detailsContents)->toContain("from '@/components/UserIdentityFields.vue'");
+    expect($detailsContents)->toContain('UserIdentityFields');
+    expect($createPageContents)->toContain("from '@/components/admin/UserDetailsForm.vue'");
+    expect($createPageContents)->toContain('UserDetailsForm');
+    expect($settingsContents)->toContain("from '@/components/UserIdentityFields.vue'");
+    expect($settingsContents)->toContain('UserIdentityFields');
 });
 
 it('uses partial reload budgets for settings form submissions', function () {

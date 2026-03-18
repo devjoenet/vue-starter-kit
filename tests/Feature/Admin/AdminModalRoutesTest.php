@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use App\Models\Permission;
+use App\Models\PermissionGroup;
+use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
-use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
     $this->seed(AdminAclSeeder::class);
@@ -158,6 +159,8 @@ test('permissions create route renders create page', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Permissions/Create')
             ->has('groups')
+            ->has('groups.0.slug')
+            ->has('groups.0.label')
         );
 });
 
@@ -167,11 +170,13 @@ test('permissions index route supports partial reloads for permission table stat
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Permissions/Index')
             ->has('permissions')
+            ->has('groups')
             ->has('filterOptions.group')
             ->where('query.sort', 'id')
             ->where('query.direction', 'asc')
-            ->reloadOnly(['permissions', 'filterOptions', 'query'], fn (Assert $reload) => $reload
+            ->reloadOnly(['permissions', 'groups', 'filterOptions', 'query'], fn (Assert $reload) => $reload
                 ->has('permissions')
+                ->has('groups')
                 ->has('filterOptions.group')
                 ->has('query')
             )
@@ -179,9 +184,15 @@ test('permissions index route supports partial reloads for permission table stat
 });
 
 test('permissions edit route renders edit page', function () {
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
     $permission = Permission::query()->create([
         'name' => 'custom.view',
-        'group' => 'users',
+        'label' => 'View Custom Records',
+        'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
 
@@ -191,7 +202,9 @@ test('permissions edit route renders edit page', function () {
             ->component('admin/Permissions/Edit')
             ->where('permission.id', $permission->id)
             ->where('permission.name', $permission->name)
+            ->where('permission.label', 'View Custom Records')
             ->where('permission.group', $permission->group)
+            ->where('permission.group_label', 'User Administration')
             ->has('groups')
         );
 });

@@ -6,7 +6,7 @@ it('exports settings form request payload types', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/types/wayfinder-generated.d.ts');
 
     expect($contents)
-        ->toContain('type AdminPermission')
+        ->not->toContain('type AdminPermission')
         ->toContain('type StoreUserRequest')
         ->toContain('type UpdateUserRequest')
         ->toContain('type SyncUserRolesRequest')

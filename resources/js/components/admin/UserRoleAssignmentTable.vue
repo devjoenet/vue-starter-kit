@@ -118,15 +118,114 @@ const sortedRoles = computed(() =>
     );
   }),
 );
+
+const resultsLabel = computed(() => {
+  const count = sortedRoles.value.length;
+
+  return `${count} role${count === 1 ? '' : 's'} available`;
+});
 </script>
 
 <template>
   <AssignmentTableCard
     :error="error"
-    description="Filter and assign roles from one table."
-    title="Roles"
+    description="Filter, review, and assign roles without leaving this editor."
+    :results-label="resultsLabel"
+    title="Role assignments"
   >
-    <Table wrapper-class="rounded-none border-0">
+    <div class="border-b border-border/60 px-6 py-5 md:hidden">
+      <div class="space-y-1.5">
+        <p class="section-kicker">Refine roles</p>
+        <p class="text-sm leading-6 text-muted-foreground">
+          Sort or filter the available roles before you change this account's
+          access.
+        </p>
+      </div>
+
+      <div class="mt-4 grid gap-3">
+        <AdminIndexHeaderCell
+          as="toolbar"
+          label="Display Name"
+          column="display_name"
+          :filter-options="filterOptions.display_name"
+          :format-option-label="toTitleCase"
+          :selected-filters="selectedFiltersFor('display_name')"
+          :sort-direction="sortDirectionFor('display_name')"
+          @apply-filters="
+            (column, values) => setFilters(column as RoleSortColumn, values)
+          "
+          @clear-filters="
+            (column) => {
+              clearFilters(column as RoleSortColumn);
+            }
+          "
+          @toggle-sort="
+            (column) => {
+              toggleSort(column as RoleSortColumn);
+            }
+          "
+        />
+        <AdminIndexHeaderCell
+          as="toolbar"
+          label="Slug"
+          column="slug"
+          :filter-options="filterOptions.slug"
+          :selected-filters="selectedFiltersFor('slug')"
+          :sort-direction="sortDirectionFor('slug')"
+          @apply-filters="
+            (column, values) => setFilters(column as RoleSortColumn, values)
+          "
+          @clear-filters="
+            (column) => {
+              clearFilters(column as RoleSortColumn);
+            }
+          "
+          @toggle-sort="
+            (column) => {
+              toggleSort(column as RoleSortColumn);
+            }
+          "
+        />
+      </div>
+    </div>
+
+    <div v-if="sortedRoles.length" class="grid gap-3 p-4 md:hidden">
+      <label
+        v-for="role in sortedRoles"
+        :key="role.id"
+        class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4"
+        :class="!canAssign ? 'opacity-70' : ''"
+      >
+        <Checkbox
+          class="mt-0.5 size-5"
+          :disabled="!canAssign"
+          :model-value="selectedRoleNames.includes(role.name)"
+          @update:model-value="
+            (value) => $emit('toggle-role', role.name, value)
+          "
+        />
+
+        <span class="min-w-0 space-y-1">
+          <span class="block text-sm font-semibold">
+            {{ toTitleCase(role.name) }}
+          </span>
+          <span class="block text-sm text-muted-foreground italic">
+            {{ role.name }}
+          </span>
+        </span>
+      </label>
+    </div>
+
+    <div v-else class="p-4 md:hidden">
+      <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
+        <p class="text-sm font-semibold">No roles match the current filters.</p>
+        <p class="mt-1 text-sm leading-6 text-muted-foreground">
+          Clear the filters or keep the existing assignments as they are.
+        </p>
+      </div>
+    </div>
+
+    <Table wrapper-class="hidden rounded-none border-0 md:block">
       <TableHeader>
         <TableRow>
           <TableHead class="w-14 text-center">Access</TableHead>
@@ -178,6 +277,7 @@ const sortedRoles = computed(() =>
         <TableRow v-for="role in sortedRoles" :key="role.id">
           <TableCell class="text-center">
             <Checkbox
+              class="size-5"
               :disabled="!canAssign"
               :model-value="selectedRoleNames.includes(role.name)"
               @update:model-value="
@@ -201,5 +301,11 @@ const sortedRoles = computed(() =>
         </TableRow>
       </TableBody>
     </Table>
+
+    <template #footer>
+      <p class="text-xs leading-5 text-muted-foreground">
+        Role changes apply only when you save this editor.
+      </p>
+    </template>
   </AssignmentTableCard>
 </template>

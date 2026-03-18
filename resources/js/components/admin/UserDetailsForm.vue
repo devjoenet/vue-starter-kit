@@ -1,24 +1,54 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
-import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
-import type { UpdateUserRequest } from '@/types/wayfinder-generated';
 
-defineProps<{
-  canUpdate: boolean;
-  form: InertiaForm<UpdateUserRequest>;
-}>();
+withDefaults(
+  defineProps<{
+    canUpdate: boolean;
+    description?: string;
+    emailId?: string;
+    form: InertiaForm<{
+      email: string;
+      name: string;
+      password?: string;
+      password_confirmation?: string;
+    }>;
+    nameId?: string;
+    passwordConfirmationId?: string;
+    passwordConfirmationLabel?: string;
+    passwordId?: string;
+    passwordLabel?: string;
+    title?: string;
+  }>(),
+  {
+    emailId: 'edit-user-email',
+    nameId: 'edit-user-name',
+    passwordConfirmationId: 'edit-user-password-confirmation',
+    passwordId: 'edit-user-password',
+  },
+);
 </script>
 
 <template>
-  <Card variant="default" class="px-6">
-    <h2 class="text-lg font-semibold">Details</h2>
+  <div class="surface-editor-panel rounded-[1.5rem] px-6 py-6">
+    <div class="space-y-2">
+      <p class="section-kicker">Account details</p>
+      <h2 class="text-lg font-semibold tracking-tight">
+        {{ title ?? 'Update the identity tied to this account.' }}
+      </h2>
+      <p class="text-sm leading-6 text-muted-foreground">
+        {{
+          description ??
+          'Keep the account name, email, and password state ready for handoff and access reviews.'
+        }}
+      </p>
+    </div>
 
-    <div class="mt-4 space-y-4">
+    <div class="mt-6 space-y-4">
       <UserIdentityFields
-        name-id="edit-user-name"
-        email-id="edit-user-email"
+        :name-id="nameId"
+        :email-id="emailId"
         v-model:name="form.name"
         v-model:email="form.email"
         :disabled="!canUpdate"
@@ -27,11 +57,11 @@ defineProps<{
       />
 
       <Input
-        id="edit-user-password"
+        :id="passwordId"
         v-model="form.password"
         type="password"
         name="password"
-        label="New password (optional)"
+        :label="passwordLabel ?? 'New password (optional)'"
         variant="outlined"
         :disabled="!canUpdate"
         :state="form.errors.password ? 'error' : 'default'"
@@ -39,16 +69,16 @@ defineProps<{
       />
 
       <Input
-        id="edit-user-password-confirmation"
+        :id="passwordConfirmationId"
         v-model="form.password_confirmation"
         type="password"
         name="password_confirmation"
-        label="Confirm new password"
+        :label="passwordConfirmationLabel ?? 'Confirm new password'"
         variant="outlined"
         :disabled="!canUpdate"
         :state="form.errors.password_confirmation ? 'error' : 'default'"
         :message="form.errors.password_confirmation"
       />
     </div>
-  </Card>
+  </div>
 </template>

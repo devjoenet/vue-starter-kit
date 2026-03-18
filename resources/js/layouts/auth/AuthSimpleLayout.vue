@@ -9,34 +9,23 @@ defineProps<{
 }>();
 
 const trustPoints = [
-  'Built for secure business workflows.',
-  'Designed to stay clear under pressure.',
-  'Consistent with the Southeast Code product system.',
+  'Secure sign-in for demos, client portals, and internal tools.',
+  'Plain-language flows that keep the next step obvious.',
+  'A stronger product feel without decorative noise.',
 ];
-
-const accessNote =
-  'Each screen is meant to keep the next step obvious: enter the right details, confirm access, and continue without guesswork.';
 </script>
 
 <template>
-  <div class="relative min-h-svh overflow-hidden bg-background text-foreground">
+  <div
+    class="surface-auth-stage relative min-h-svh overflow-hidden text-foreground"
+  >
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/10 via-primary/4 to-transparent"
-    />
-    <div
-      class="pointer-events-none absolute top-24 -left-20 size-72 rounded-full bg-secondary/10 blur-3xl"
-    />
-    <div
-      class="pointer-events-none absolute -right-24 bottom-0 size-96 rounded-full bg-accent/10 blur-3xl"
-    />
-
-    <div
-      class="relative mx-auto flex min-h-svh w-full max-w-7xl items-center p-6 md:p-10"
+      class="relative mx-auto flex min-h-svh w-full max-w-7xl items-center px-6 py-10 md:px-10"
     >
       <div
-        class="grid w-full gap-10 lg:grid-cols-[minmax(0,1.05fr)_24rem] lg:gap-14"
+        class="grid w-full gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,25rem)] lg:gap-16"
       >
-        <section class="motion-stage flex flex-col justify-center">
+        <section class="motion-stage flex flex-col justify-center lg:pr-6">
           <Link
             :href="home()"
             class="motion-step inline-flex w-fit"
@@ -45,49 +34,45 @@ const accessNote =
             <SurfaceBrandLockup />
           </Link>
 
-          <div class="mt-10 max-w-xl space-y-6">
-            <div class="motion-step space-y-3" style="--motion-order: 1">
+          <div class="mt-10 max-w-xl space-y-8">
+            <div class="motion-step space-y-4" style="--motion-order: 1">
               <p class="section-kicker">Secure access</p>
               <h1
-                class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+                class="max-w-xl text-[clamp(2.5rem,4.7vw,4.25rem)] leading-[0.96] font-semibold tracking-[-0.04em] text-balance"
               >
                 {{ title }}
               </h1>
               <p
-                class="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg"
+                class="max-w-md text-base leading-7 text-muted-foreground sm:text-lg"
               >
                 {{ description }}
               </p>
             </div>
 
             <div
-              class="surface-auth-callout motion-step rounded-[1.75rem] p-6"
+              class="motion-step border-t border-border/55 pt-6"
               style="--motion-order: 2"
             >
-              <p class="text-sm font-semibold tracking-tight text-foreground">
-                Access should feel calm, capable, and specific.
+              <p
+                class="text-[0.68rem] font-semibold tracking-[0.18em] text-secondary uppercase"
+              >
+                Built for real teams
               </p>
 
-              <ul class="mt-5 space-y-4">
+              <ul class="mt-4 space-y-3">
                 <li
                   v-for="point in trustPoints"
                   :key="point"
                   class="flex items-start gap-3"
                 >
                   <span
-                    class="mt-2 size-2 rounded-full bg-secondary ring-4 ring-secondary/15"
+                    class="mt-2 size-2 rounded-full bg-secondary ring-4 ring-secondary/18"
                   />
                   <span class="text-sm leading-6 text-muted-foreground">
                     {{ point }}
                   </span>
                 </li>
               </ul>
-
-              <p
-                class="mt-5 border-t border-border/60 pt-5 text-sm leading-6 text-muted-foreground"
-              >
-                {{ accessNote }}
-              </p>
             </div>
           </div>
         </section>

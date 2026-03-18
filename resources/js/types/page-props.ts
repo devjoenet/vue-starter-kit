@@ -39,16 +39,31 @@ export type EditableRole = {
   name: string;
 };
 
+export type PermissionGroupOption = {
+  slug: string;
+  label: string;
+  description: string | null;
+  permissions_count: number;
+};
+
 export type PermissionItem = {
   id: number;
   name: string;
   group: string;
+  label: string;
+  description: string | null;
+  group_label: string;
+  group_description: string | null;
 };
 
 export type PermissionIndexItem = {
   id: number;
   group: string;
+  group_label: string;
+  group_description: string | null;
   name: string;
+  label: string;
+  description: string | null;
   suffix: string;
 };
 
@@ -128,17 +143,18 @@ export type AdminRolesEditPageProps = {
 
 export type AdminPermissionsIndexPageProps = {
   permissions: PermissionIndexItem[];
+  groups: PermissionGroupOption[];
   filterOptions: AdminPermissionsIndexFilterOptions;
   query: AdminIndexQuery<AdminPermissionsIndexColumn>;
 };
 
 export type AdminPermissionsCreatePageProps = {
-  groups: string[];
+  groups: PermissionGroupOption[];
 };
 
 export type AdminPermissionsEditPageProps = {
   permission: PermissionItem;
-  groups: string[];
+  groups: PermissionGroupOption[];
 };
 
 export type SettingsProfilePageProps = {

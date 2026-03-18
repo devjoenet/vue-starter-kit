@@ -4,23 +4,30 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\AdminPermission;
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 final class AdminAclSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (AdminPermission::cases() as $perm) {
-            Permission::query()->firstOrCreate(
-                ['name' => $perm->value, 'guard_name' => 'web'],
-                ['group' => $perm->group()],
-            );
-        }
+        $this->call([
+            PermissionGroupsSeeder::class,
+            PermissionsSeeder::class,
+            RolesSeeder::class,
+        ]);
 
-        $role = Role::query()->firstOrCreate(['name' => 'super-admin', 'guard_name' => 'web']);
+        $role = Role::withTrashed()->firstOrNew([
+            'name' => 'super-admin',
+            'guard_name' => 'web',
+        ]);
+        $role->forceFill([
+            'name' => 'super-admin',
+            'guard_name' => 'web',
+            'deleted_at' => null,
+        ])->save();
+
         $role->syncPermissions(Permission::all());
     }
 }

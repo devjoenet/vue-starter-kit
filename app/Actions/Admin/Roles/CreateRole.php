@@ -11,10 +11,16 @@ final class CreateRole
 {
     public function handle(CreateRoleData $data): Role
     {
-        $role = Role::query()->create([
+        $role = Role::withTrashed()->firstOrNew([
             'name' => $data->name,
             'guard_name' => 'web',
         ]);
+
+        $role->forceFill([
+            'name' => $data->name,
+            'guard_name' => 'web',
+            'deleted_at' => null,
+        ])->save();
 
         $role->users()->sync($data->user_ids);
 

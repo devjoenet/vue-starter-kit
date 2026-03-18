@@ -12,7 +12,7 @@ defineProps<{
 }>();
 
 const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
-const activeItemStyles = 'bg-muted text-foreground';
+const activeItemStyles = 'bg-primary/10 text-primary';
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const activeItemStyles = 'bg-muted text-foreground';
             :class="[
               navigationMenuTriggerStyle(),
               whenCurrentUrl(item.href, activeItemStyles),
-              'cursor-pointer px-3',
+              'cursor-pointer rounded-full border border-transparent px-4 hover:border-primary/18 hover:bg-primary/6',
             ]"
             :href="item.href"
           >

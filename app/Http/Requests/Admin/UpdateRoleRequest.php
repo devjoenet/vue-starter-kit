@@ -32,7 +32,9 @@ class UpdateRoleRequest extends FormRequest
     {
         /** @var Role|null $role */
         $role = $this->route('role');
-        $nameUniqueRule = Rule::unique('roles', 'name');
+        $nameUniqueRule = Rule::unique('roles', 'name')->where(
+            fn ($query) => $query->whereNull('deleted_at'),
+        );
 
         if ($role !== null) {
             $nameUniqueRule->ignore($role->getKey());

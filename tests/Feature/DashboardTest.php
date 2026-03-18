@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Permission;
+use App\Models\PermissionGroup;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -28,9 +29,13 @@ test('authenticated users can visit the admin dashboard', function () {
         'name' => 'reviewer',
         'guard_name' => 'web',
     ]);
+    $reportsGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'reports'],
+        ['label' => 'Reports'],
+    );
     Permission::query()->create([
         'name' => 'reports.view',
-        'group' => 'reports',
+        'permission_group_id' => $reportsGroup->id,
         'guard_name' => 'web',
     ]);
 

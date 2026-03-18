@@ -35,7 +35,11 @@ const inputEmail = ref(props.email);
   <Head title="Reset password" />
 
   <section id="auth-reset-password-page">
-    <Card id="auth-reset-password-card" variant="default" class="px-6">
+    <Card
+      id="auth-reset-password-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <Form
         id="auth-reset-password-form"
         v-bind="update.form()"
@@ -92,7 +96,7 @@ const inputEmail = ref(props.email);
           id="auth-reset-password-submit-button"
           type="submit"
           appearance="filled"
-          class="w-full"
+          class="min-h-12 w-full"
           :disabled="processing"
           data-test="reset-password-button"
         >

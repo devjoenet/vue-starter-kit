@@ -6,24 +6,29 @@ namespace App\Support;
 
 use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 final class GroupedPermissions
 {
-    /** @return Collection<int|string, EloquentCollection<int, Permission>> */
+    /** @return Collection<int|string, Collection<int, Permission>> */
     public function all(): Collection
     {
         return Permission::query()
-            ->select(['id', 'name', 'group'])
-            ->orderBy('group')
-            ->orderBy('name')
+            ->with('permissionGroup')
+            ->select(['id', 'permission_group_id', 'name', 'label', 'description'])
             ->get()
-            ->groupBy('group')
-            ->map(fn (Collection $items) => $items->values());
+            ->sortBy([
+                fn (Permission $permission): string => $permission->group_label,
+                fn (Permission $permission): string => $permission->display_label,
+                fn (Permission $permission): string => $permission->name,
+            ])
+            ->groupBy(fn (Permission $permission): string => $permission->group)
+            ->map(
+                fn (Collection $items): Collection => collect($items->all())->values(),
+            );
     }
 
-    /** @return array<string, array<int, array{id: int, name: string, group: string}>> */
+    /** @return array<string, array<int, array{id: int, name: string, label: string, description: string|null, group: string, group_label: string, group_description: string|null}>> */
     public function allData(): array
     {
         return $this->all()
@@ -31,19 +36,6 @@ final class GroupedPermissions
                 ->map(fn (Permission $permission): array => PermissionItemData::fromModel($permission)->all())
                 ->values()
                 ->all())
-            ->all();
-    }
-
-    /** @return array<int, string> */
-    public function groups(): array
-    {
-        return Permission::query()
-            ->select('group')
-            ->distinct()
-            ->orderBy('group')
-            ->pluck('group')
-            ->filter()
-            ->values()
             ->all();
     }
 }

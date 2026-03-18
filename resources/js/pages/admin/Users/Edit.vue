@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { Head, router, setLayoutProps, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
+import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
 import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
@@ -96,18 +97,20 @@ watch(selectedRoles, (roleNames) => {
 const detailsDirty = computed(() => canUpdate.value && userForm.isDirty);
 const rolesDirty = computed(() => canAssignRoles.value && rolesForm.isDirty);
 const isDirty = computed(() => detailsDirty.value || rolesDirty.value);
-const saveLabel = computed(() => (isDirty.value ? 'Save and Close' : 'Close'));
+const actionStatus = computed(() =>
+  isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.',
+);
+const actionDescription = computed(() =>
+  isDirty.value
+    ? 'Save the updated account details and access assignments together, then return to the users index.'
+    : 'You can close this editor now, or keep reviewing the account before you leave.',
+);
 
 const closeToIndex = () => {
   router.visit(index.url());
 };
 
-const saveOrClose = async () => {
-  if (!isDirty.value) {
-    closeToIndex();
-    return;
-  }
-
+const saveAndClose = async () => {
   const succeeded = await run([
     detailsDirty.value
       ? createStep((callbacks) => {
@@ -171,39 +174,70 @@ const destroyUser = () => {
 </script>
 
 <template>
-  <div id="admin-users-edit-page" class="space-y-6 px-4">
-    <div
-      id="admin-users-edit-page-header"
-      class="flex flex-wrap items-center justify-between gap-3"
+  <Head :title="`Edit ${userLabel}`" />
+
+  <div id="admin-users-edit-page" class="motion-stage px-4">
+    <section
+      class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
     >
-      <h1 class="text-2xl font-semibold">Edit {{ userLabel }}</h1>
-    </div>
+      <div class="relative space-y-6">
+        <AdminPageIntro
+          id="admin-users-edit-page-header"
+          class="motion-step"
+          :description="`Update identity details, adjust assigned roles, and keep this account ready for secure handoff.`"
+          kicker="User editor"
+          style="--motion-order: 0"
+          :title="`Edit ${userLabel}`"
+        />
 
-    <div id="admin-users-edit-sections" class="space-y-6">
-      <UserDetailsForm
-        id="admin-users-edit-details-card"
-        :can-update="canUpdate"
-        :form="userForm"
-      />
+        <div
+          id="admin-users-edit-sections"
+          class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]"
+        >
+          <div class="space-y-6">
+            <UserDetailsForm
+              id="admin-users-edit-details-card"
+              class="motion-step"
+              style="--motion-order: 1"
+              :can-update="canUpdate"
+              :form="userForm"
+            />
 
-      <UserRoleAssignmentTable
-        id="admin-users-edit-roles-card"
-        :can-assign="canAssignRoles"
-        :error="rolesForm.errors.roles"
-        :roles="roles"
-        :selected-role-names="selectedRoles"
-        @toggle-role="(name, value) => toggleSelectedValue(name, value)"
-      />
+            <UserRoleAssignmentTable
+              id="admin-users-edit-roles-card"
+              class="motion-step"
+              style="--motion-order: 2"
+              :can-assign="canAssignRoles"
+              :error="rolesForm.errors.roles"
+              :roles="roles"
+              :selected-role-names="selectedRoles"
+              @toggle-role="(name, value) => toggleSelectedValue(name, value)"
+            />
+          </div>
 
-      <EditPageActionRow
-        id="admin-users-edit-actions"
-        :can-delete="canDelete"
-        :delete-label="`Delete ${userLabel}`"
-        :processing="saveProcessing"
-        :save-label="saveLabel"
-        @delete="destroyUser"
-        @save="saveOrClose"
-      />
-    </div>
+          <aside
+            class="motion-step xl:sticky xl:top-6 xl:self-start"
+            style="--motion-order: 3"
+          >
+            <EditPageActionRow
+              id="admin-users-edit-actions"
+              :can-delete="canDelete"
+              :can-save="isDirty"
+              close-label="Close"
+              :delete-label="`Delete ${userLabel}`"
+              :description="actionDescription"
+              heading="Finish this account update"
+              :processing="saveProcessing"
+              save-label="Save and Close"
+              :status="actionStatus"
+              :status-tone="isDirty ? 'info' : 'muted'"
+              @close="closeToIndex"
+              @delete="destroyUser"
+              @save="saveAndClose"
+            />
+          </aside>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
