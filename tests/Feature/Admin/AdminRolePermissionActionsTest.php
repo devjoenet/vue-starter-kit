@@ -10,6 +10,7 @@ use App\Actions\Admin\Roles\DeleteRole;
 use App\Actions\Admin\Roles\SyncRolePermissions;
 use App\Actions\Admin\Roles\UpdateRole;
 use App\Models\Permission;
+use App\Models\PermissionGroup;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
@@ -32,6 +33,23 @@ test('create role action persists a role and syncs users', function (): void {
     expect($users[1]->fresh()?->hasRole('auditor'))->toBeTrue();
 });
 
+test('create role action restores a soft deleted role with the same name', function (): void {
+    $role = Role::query()->create([
+        'name' => 'auditor',
+        'guard_name' => 'web',
+    ]);
+
+    $role->delete();
+
+    $restoredRole = app(CreateRole::class)->handle(new CreateRoleData(
+        name: 'auditor',
+        user_ids: [],
+    ));
+
+    expect($restoredRole->id)->toBe($role->id);
+    expect($restoredRole->trashed())->toBeFalse();
+});
+
 test('update role action updates the role name', function (): void {
     $role = Role::query()->create([
         'name' => 'old-role',
@@ -45,7 +63,7 @@ test('update role action updates the role name', function (): void {
     expect($role->fresh()?->name)->toBe('new-role');
 });
 
-test('delete role action removes the role', function (): void {
+test('delete role action soft deletes the role', function (): void {
     $role = Role::query()->create([
         'name' => 'temporary-role',
         'guard_name' => 'web',
@@ -54,6 +72,7 @@ test('delete role action removes the role', function (): void {
     app(DeleteRole::class)->handle($role);
 
     expect(Role::query()->find($role->id))->toBeNull();
+    expect(Role::withTrashed()->find($role->id)?->trashed())->toBeTrue();
 });
 
 test('sync role permissions action syncs the selected permissions by name', function (): void {
@@ -61,16 +80,20 @@ test('sync role permissions action syncs the selected permissions by name', func
         'name' => 'editor',
         'guard_name' => 'web',
     ]);
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
 
     Permission::query()->create([
         'name' => 'users.viewReports',
-        'group' => 'users',
+        'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
 
     Permission::query()->create([
         'name' => 'users.manageMembers',
-        'group' => 'users',
+        'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
 
@@ -110,37 +133,91 @@ test('sync role permissions action throws a domain exception when permissions ar
 test('create permission action persists a permission', function (): void {
     $permission = app(CreatePermission::class)->handle(new CreatePermissionData(
         name: 'users.manageMembers',
+        label: 'Manage Members',
+        description: 'Create, update, and remove member relationships.',
         group: 'users',
+        groupLabel: 'User Administration',
+        groupDescription: 'Identity, lifecycle, and role assignment controls.',
     ));
 
     expect($permission->exists)->toBeTrue();
     expect($permission->guard_name)->toBe('web');
+    expect($permission->label)->toBe('Manage Members');
+    expect($permission->permissionGroup?->label)->toBe('User Administration');
 });
 
-test('update permission action updates name and group', function (): void {
+test('create permission action restores a soft deleted permission with the same key', function (): void {
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
+    $permission = Permission::query()->create([
+        'name' => 'users.manageMembers',
+        'label' => 'Manage Members',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    $permission->delete();
+
+    $restoredPermission = app(CreatePermission::class)->handle(new CreatePermissionData(
+        name: 'users.manageMembers',
+        label: 'Manage Team Members',
+        description: 'Restore the permission with updated catalog copy.',
+        group: 'users',
+        groupLabel: 'User Administration',
+        groupDescription: 'Identity, lifecycle, and role assignment controls.',
+    ));
+
+    expect($restoredPermission->id)->toBe($permission->id);
+    expect($restoredPermission->trashed())->toBeFalse();
+    expect($restoredPermission->label)->toBe('Manage Team Members');
+});
+
+test('update permission action keeps the key stable while updating catalog metadata', function (): void {
+    $permissionGroup = PermissionGroup::query()->create([
+        'slug' => 'users',
+        'label' => 'User Administration',
+        'description' => 'Identity and account lifecycle controls.',
+    ]);
+
     $permission = Permission::query()->create([
         'name' => 'users.viewReports',
-        'group' => 'users',
+        'label' => 'View Reports',
+        'permission_group_id' => $permissionGroup->id,
         'guard_name' => 'web',
     ]);
 
     app(UpdatePermission::class)->handle($permission, new UpdatePermissionData(
-        name: 'roles.manageUsers',
+        label: 'Manage Report Access',
+        description: 'Review and maintain report visibility across teams.',
         group: 'roles',
+        groupLabel: 'Role Management',
+        groupDescription: 'Role creation, maintenance, and permission-footprint controls.',
     ));
 
-    expect($permission->fresh()?->name)->toBe('roles.manageUsers');
+    expect($permission->fresh()?->name)->toBe('users.viewReports');
+    expect($permission->fresh()?->label)->toBe('Manage Report Access');
+    expect($permission->fresh()?->description)->toBe('Review and maintain report visibility across teams.');
     expect($permission->fresh()?->group)->toBe('roles');
+    expect($permission->fresh()?->permissionGroup?->label)->toBe('Role Management');
 });
 
-test('delete permission action removes the permission', function (): void {
+test('delete permission action soft deletes the permission', function (): void {
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
     $permission = Permission::query()->create([
         'name' => 'users.removeMembers',
-        'group' => 'users',
+        'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
 
     app(DeletePermission::class)->handle($permission);
 
     expect(Permission::query()->find($permission->id))->toBeNull();
+    expect(Permission::withTrashed()->find($permission->id)?->trashed())->toBeTrue();
 });

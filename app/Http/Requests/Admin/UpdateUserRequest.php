@@ -31,7 +31,9 @@ class UpdateUserRequest extends FormRequest
     {
         /** @var User|null $user */
         $user = $this->route('user');
-        $emailUniqueRule = Rule::unique('users', 'email');
+        $emailUniqueRule = Rule::unique('users', 'email')->where(
+            fn ($query) => $query->whereNull('deleted_at'),
+        );
 
         if ($user !== null) {
             $emailUniqueRule->ignore($user->getKey());

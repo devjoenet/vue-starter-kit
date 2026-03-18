@@ -3,11 +3,27 @@ import { computed, ref, watch } from 'vue';
 import Input from '@/components/ui/input/Input.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
 import { toSnakeCase, toTitleCase } from '@/lib/utils';
+import type { PermissionGroupOption } from '@/types/page-props';
 
 const defaultGroups = [
-  { value: 'users', label: 'Users' },
-  { value: 'roles', label: 'Roles' },
-  { value: 'permissions', label: 'Permissions' },
+  {
+    slug: 'users',
+    label: 'User Administration',
+    description: 'Identity, lifecycle, and role assignment controls.',
+    permissions_count: 0,
+  },
+  {
+    slug: 'roles',
+    label: 'Role Management',
+    description: 'Role definitions and access-footprint maintenance.',
+    permissions_count: 0,
+  },
+  {
+    slug: 'permissions',
+    label: 'Permission Catalog',
+    description: 'Permission definitions and ACL catalog maintenance.',
+    permissions_count: 0,
+  },
 ];
 
 const props = withDefaults(
@@ -18,7 +34,7 @@ const props = withDefaults(
     label?: string;
     id?: string;
     variant?: InputVariants['variant'];
-    groups?: string[];
+    groups?: PermissionGroupOption[];
   }>(),
   {
     label: 'Group',
@@ -41,17 +57,33 @@ const isOpen = ref(false);
 const searchQuery = ref('');
 
 const groupSuggestions = computed(() => {
-  return Array.from(
-    new Set([
-      ...defaultGroups.map((group) => group.value),
-      ...props.groups.map((group) => toSnakeCase(group)),
-    ]),
-  )
-    .filter(Boolean)
-    .sort();
+  const suggestions = new Map<string, PermissionGroupOption>();
+
+  [...defaultGroups, ...props.groups].forEach((group) => {
+    const slug = toSnakeCase(group.slug);
+
+    if (!slug) {
+      return;
+    }
+
+    suggestions.set(slug, {
+      ...group,
+      slug,
+      label: group.label || toTitleCase(slug),
+    });
+  });
+
+  return Array.from(suggestions.values()).sort((left, right) =>
+    left.label.localeCompare(right.label),
+  );
 });
 
 const normalizedQuery = computed(() => toSnakeCase(searchQuery.value));
+const selectedGroup = computed(() =>
+  groupSuggestions.value.find(
+    (group) => group.slug === toSnakeCase(props.modelValue),
+  ),
+);
 
 const filteredSuggestions = computed(() => {
   if (!normalizedQuery.value) {
@@ -59,7 +91,10 @@ const filteredSuggestions = computed(() => {
   }
 
   return groupSuggestions.value.filter((group) =>
-    group.includes(normalizedQuery.value),
+    [group.slug, group.label, group.description ?? '']
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedQuery.value.toLowerCase()),
   );
 });
 
@@ -74,8 +109,8 @@ const closeSuggestions = () => {
   }, 100);
 };
 
-const selectGroup = (group: string) => {
-  modelValue.value = group;
+const selectGroup = (group: PermissionGroupOption) => {
+  modelValue.value = group.slug;
   searchQuery.value = '';
   isOpen.value = false;
 };
@@ -99,7 +134,7 @@ watch(
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative space-y-2">
     <Input
       :id="id"
       :model-value="modelValue"
@@ -121,14 +156,42 @@ watch(
     >
       <button
         v-for="group in filteredSuggestions"
-        :key="group"
+        :key="group.slug"
         type="button"
-        class="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm hover:bg-muted/70"
+        class="w-full rounded-lg px-3 py-3 text-left transition-colors hover:bg-muted/70"
         @mousedown.prevent="selectGroup(group)"
       >
-        <span>{{ toTitleCase(group) }}</span>
-        <span class="ml-auto text-xs opacity-70">{{ group }}</span>
+        <span class="flex items-start justify-between gap-4">
+          <span class="min-w-0 space-y-1">
+            <span class="block text-sm font-semibold">{{ group.label }}</span>
+            <span
+              v-if="group.description"
+              class="block text-xs leading-5 text-muted-foreground"
+            >
+              {{ group.description }}
+            </span>
+          </span>
+
+          <span
+            class="shrink-0 text-right text-[0.7rem] tracking-[0.18em] text-muted-foreground uppercase"
+          >
+            <span class="block">{{ group.slug }}</span>
+            <span class="block"
+              >{{ group.permissions_count }} permission<span
+                v-if="group.permissions_count !== 1"
+                >s</span
+              ></span
+            >
+          </span>
+        </span>
       </button>
     </div>
+
+    <p class="text-xs leading-5 text-muted-foreground">
+      {{
+        selectedGroup?.description ??
+        'Use groups to organize permissions into a shared catalog across internal and customer-facing access areas.'
+      }}
+    </p>
   </div>
 </template>

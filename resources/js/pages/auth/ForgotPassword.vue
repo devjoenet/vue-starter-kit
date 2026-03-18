@@ -33,8 +33,12 @@ defineProps<{
 <template>
   <Head title="Forgot password" />
 
-  <section id="auth-forgot-password-page" class="space-y-6">
-    <Card id="auth-forgot-password-card" variant="default" class="px-6">
+  <section id="auth-forgot-password-page" class="space-y-5">
+    <Card
+      id="auth-forgot-password-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <div class="space-y-4">
         <Alert v-if="status" id="auth-forgot-password-status" variant="success">
           <AlertTitle>Check your inbox</AlertTitle>
@@ -63,7 +67,7 @@ defineProps<{
 
           <Button
             id="auth-forgot-password-submit-button"
-            class="w-full"
+            class="min-h-12 w-full"
             appearance="filled"
             :disabled="processing"
             data-test="email-password-reset-link-button"
@@ -81,7 +85,7 @@ defineProps<{
 
     <div
       id="auth-forgot-password-login-link-row"
-      class="space-x-1 text-center text-sm text-muted-foreground"
+      class="flex items-center justify-center gap-1.5 px-2 text-sm text-muted-foreground"
     >
       <span>Remembered it?</span>
       <TextLink id="auth-forgot-password-login-link" :href="login()">

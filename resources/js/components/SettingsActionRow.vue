@@ -8,7 +8,7 @@ const props = withDefaults(
     align?: 'auto' | 'between' | 'end';
     class?: HTMLAttributes['class'];
     status?: string;
-    statusTone?: 'muted' | 'success' | 'destructive';
+    statusTone?: 'destructive' | 'info' | 'muted' | 'success' | 'warning';
   }>(),
   {
     align: 'auto',
@@ -32,9 +32,14 @@ const alignmentClass = computed(() => {
   return hasMetaContent.value ? 'sm:justify-between' : 'sm:justify-end';
 });
 
-const statusClassNames: Record<'muted' | 'success' | 'destructive', string> = {
+const statusClassNames: Record<
+  'destructive' | 'info' | 'muted' | 'success' | 'warning',
+  string
+> = {
   muted: 'text-muted-foreground',
   success: 'text-success',
+  info: 'text-info',
+  warning: 'text-warning',
   destructive: 'text-destructive',
 };
 </script>

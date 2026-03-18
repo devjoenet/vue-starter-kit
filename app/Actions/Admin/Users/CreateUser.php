@@ -12,10 +12,17 @@ final class CreateUser
 {
     public function handle(CreateUserData $data): User
     {
-        return User::query()->create([
+        $user = User::withTrashed()->firstOrNew([
+            'email' => $data->email,
+        ]);
+
+        $user->forceFill([
             'name' => $data->name,
             'email' => $data->email,
             'password' => Hash::make($data->password),
-        ]);
+            'deleted_at' => null,
+        ])->save();
+
+        return $user;
     }
 }

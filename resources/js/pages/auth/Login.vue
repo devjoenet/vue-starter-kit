@@ -37,8 +37,12 @@ defineProps<{
 <template>
   <Head title="Log in" />
 
-  <section id="auth-login-page" class="space-y-6">
-    <Card id="auth-login-card" variant="default" class="px-6">
+  <section id="auth-login-page" class="space-y-5">
+    <Card
+      id="auth-login-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <div class="space-y-4">
         <Alert v-if="status" id="auth-login-status" variant="success">
           <AlertTitle>Ready to sign in</AlertTitle>
@@ -93,17 +97,17 @@ defineProps<{
           <label
             id="auth-login-remember-row"
             for="remember"
-            class="flex items-center gap-3 text-sm"
+            class="flex items-center gap-3 text-sm text-muted-foreground"
           >
             <Checkbox id="remember" name="remember" />
-            <span>Remember me</span>
+            <span class="text-foreground">Remember me</span>
           </label>
 
           <Button
             id="auth-login-submit-button"
             type="submit"
             appearance="filled"
-            class="w-full"
+            class="min-h-12 w-full"
             :disabled="processing"
             data-test="login-button"
           >
@@ -121,9 +125,9 @@ defineProps<{
     <div
       v-if="canRegister"
       id="auth-login-register-link-row"
-      class="text-center text-sm text-muted-foreground"
+      class="flex items-center justify-center gap-1.5 px-2 text-sm text-muted-foreground"
     >
-      Need access?
+      <span>Need access?</span>
       <TextLink id="auth-login-register-link" :href="register()">
         Create an account
       </TextLink>

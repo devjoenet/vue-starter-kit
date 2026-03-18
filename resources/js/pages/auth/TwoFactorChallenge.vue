@@ -59,7 +59,11 @@ const code = ref<string>('');
   <Head title="Two-Factor Authentication" />
 
   <section id="auth-two-factor-challenge-page">
-    <Card id="auth-two-factor-challenge-card" variant="default" class="px-6">
+    <Card
+      id="auth-two-factor-challenge-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <div class="space-y-4">
         <Alert variant="info">
           <AlertTitle>{{ authConfigContent.title }}</AlertTitle>
@@ -123,7 +127,7 @@ const code = ref<string>('');
               id="auth-two-factor-code-submit-button"
               type="submit"
               appearance="filled"
-              class="w-full"
+              class="min-h-12 w-full"
               :disabled="processing"
             >
               <Spinner v-if="processing" />
@@ -176,7 +180,7 @@ const code = ref<string>('');
               id="auth-two-factor-recovery-submit-button"
               type="submit"
               appearance="filled"
-              class="w-full"
+              class="min-h-12 w-full"
               :disabled="processing"
             >
               <Spinner v-if="processing" />

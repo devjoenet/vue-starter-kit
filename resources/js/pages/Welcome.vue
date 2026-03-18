@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import SurfaceBrandLockup from '@/components/SurfaceBrandLockup.vue';
-import TextLink from '@/components/TextLink.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { dashboard, login, register } from '@/routes';
 
@@ -27,9 +26,6 @@ withDefaults(
     />
     <div
       class="pointer-events-none absolute -top-20 right-0 size-96 rounded-full bg-primary/14 blur-3xl"
-    />
-    <div
-      class="pointer-events-none absolute top-1/3 left-1/2 size-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
     />
     <div
       class="pointer-events-none absolute -bottom-20 left-0 size-[28rem] rounded-full bg-secondary/18 blur-3xl"
@@ -64,26 +60,35 @@ withDefaults(
             Open Dashboard
           </Button>
           <template v-else>
-            <TextLink id="welcome-login-link" :href="login().url">
+            <Button
+              id="welcome-login-link"
+              as="a"
+              :href="login().url"
+              appearance="outline"
+              variant="primary"
+            >
               Sign in
-            </TextLink>
+            </Button>
           </template>
         </div>
       </header>
 
       <main
         id="welcome-page-hero"
-        class="surface-public-hero motion-stage grid flex-1 items-center gap-10 rounded-[1.75rem] p-6 sm:p-8 lg:grid-cols-[minmax(0,1.2fr)_22rem] lg:p-12"
+        class="surface-public-hero motion-stage grid flex-1 items-center gap-10 rounded-[1.75rem] p-6 sm:p-8 lg:grid-cols-[minmax(0,1.05fr)_22rem] lg:p-12"
       >
-        <section id="welcome-page-content" class="max-w-2xl">
+        <section
+          id="welcome-page-content"
+          class="flex max-w-2xl flex-col justify-center"
+        >
           <h1
-            class="motion-step max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+            class="motion-step max-w-3xl text-[clamp(2.65rem,5.4vw,4.8rem)] leading-[0.96] font-semibold tracking-[-0.05em] text-balance"
             style="--motion-order: 2"
           >
             Modern websites and web applications built for real business use.
           </h1>
           <p
-            class="motion-step mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg"
+            class="motion-step mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg"
             style="--motion-order: 3"
           >
             Southeast Code designs and builds polished marketing sites, client
@@ -94,7 +99,7 @@ withDefaults(
 
           <div
             id="welcome-page-actions"
-            class="motion-step mt-8 flex flex-col gap-3 sm:flex-row"
+            class="motion-step mt-9 flex flex-col gap-3 sm:flex-row"
             style="--motion-order: 4"
           >
             <Button
@@ -131,48 +136,39 @@ withDefaults(
           </div>
 
           <div
-            class="motion-step mt-10 grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
+            class="motion-step mt-10 border-t border-border/55 pt-6"
             style="--motion-order: 5"
           >
-            <div class="space-y-3">
-              <p class="section-kicker">What this starter proves</p>
-              <p class="text-sm leading-6 text-muted-foreground">
-                It should read as a Southeast Code build first: clear offer,
-                sound technical footing, and a more disciplined interface than a
-                default scaffold.
-              </p>
-            </div>
-
-            <dl class="space-y-4">
-              <div class="border-l-2 border-primary/45 pl-4">
+            <dl class="grid gap-5 sm:grid-cols-3">
+              <div class="space-y-2 sm:pr-4">
                 <dt
-                  class="text-sm font-semibold tracking-tight text-foreground"
+                  class="text-[0.72rem] font-semibold tracking-[0.18em] text-primary uppercase"
                 >
                   Service clarity
                 </dt>
-                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                <dd class="text-sm leading-6 text-foreground/90">
                   Clear offers for websites, portals, internal tools, and custom
                   application work.
                 </dd>
               </div>
-              <div class="border-l-2 border-secondary/55 pl-4">
+              <div class="space-y-2 sm:px-2">
                 <dt
-                  class="text-sm font-semibold tracking-tight text-foreground"
+                  class="text-[0.72rem] font-semibold tracking-[0.18em] text-secondary uppercase"
                 >
                   Technical depth
                 </dt>
-                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                <dd class="text-sm leading-6 text-foreground/90">
                   Laravel, Inertia, Vue, and reusable systems shaped for
                   production rather than one-off screens.
                 </dd>
               </div>
-              <div class="border-l-2 border-accent/55 pl-4">
+              <div class="space-y-2 sm:pl-4">
                 <dt
-                  class="text-sm font-semibold tracking-tight text-foreground"
+                  class="text-[0.72rem] font-semibold tracking-[0.18em] text-accent uppercase"
                 >
                   Outcome-focused
                 </dt>
-                <dd class="mt-1 text-sm leading-6 text-muted-foreground">
+                <dd class="text-sm leading-6 text-foreground/90">
                   Interfaces designed to build trust, reduce friction, and move
                   businesses toward a clear next step.
                 </dd>
@@ -183,16 +179,15 @@ withDefaults(
 
         <aside
           id="welcome-page-proof-panel"
-          class="surface-public-panel motion-step relative overflow-hidden rounded-[1.75rem] p-6"
+          class="surface-public-panel motion-step relative overflow-hidden rounded-[1.75rem] p-6 lg:p-7"
           style="--motion-order: 6"
         >
-          <div
-            class="pointer-events-none absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-transparent"
-          />
           <div class="space-y-6">
             <section class="space-y-3">
               <p class="section-kicker">What clients should understand fast</p>
-              <h2 class="text-2xl font-semibold tracking-tight text-balance">
+              <h2
+                class="text-[clamp(1.85rem,3vw,2.8rem)] font-semibold tracking-[-0.03em] text-balance"
+              >
                 Professional execution without generic starter-kit baggage.
               </h2>
               <p class="text-sm leading-6 text-muted-foreground">
@@ -206,7 +201,7 @@ withDefaults(
                 Typical engagement areas
               </p>
               <dl class="mt-4 space-y-4">
-                <div class="space-y-1">
+                <div class="space-y-1 border-l-2 border-primary/40 pl-4">
                   <dt
                     class="text-sm font-semibold tracking-tight text-foreground"
                   >
@@ -216,7 +211,7 @@ withDefaults(
                     Strategy-led pages shaped for conversion and credibility.
                   </dd>
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1 border-l-2 border-secondary/40 pl-4">
                   <dt
                     class="text-sm font-semibold tracking-tight text-foreground"
                   >
@@ -226,7 +221,7 @@ withDefaults(
                     Workflow tools that stay clear once real teams use them.
                   </dd>
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1 border-l-2 border-accent/40 pl-4">
                   <dt
                     class="text-sm font-semibold tracking-tight text-foreground"
                   >

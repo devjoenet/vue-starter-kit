@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { CheckCircle2, TriangleAlert } from 'lucide-vue-next';
 import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
 import SettingsActionRow from '@/components/SettingsActionRow.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import TextLink from '@/components/TextLink.vue';
+import Alert from '@/components/ui/alert/Alert.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -58,29 +62,39 @@ const user = computed(() => page.props.auth.user);
           email-required
         />
 
-        <div
+        <Alert
           v-if="props.mustVerifyEmail && !user.email_verified_at"
-          class="rounded-xl border border-warning/20 bg-warning/8 px-4 py-3"
+          variant="warning"
         >
-          <p class="text-sm text-muted-foreground">
-            Your email address is unverified.
-            <TextLink
-              id="settings-profile-resend-verification-link"
-              :href="send()"
-              as="button"
-            >
-              Click here to resend the verification email.
-            </TextLink>
-          </p>
+          <TriangleAlert class="size-4" />
+          <AlertTitle>Email verification needed</AlertTitle>
+          <AlertDescription>
+            <p class="text-sm">
+              This address has not been verified yet.
+              <TextLink
+                id="settings-profile-resend-verification-link"
+                :href="send()"
+                as="button"
+              >
+                Resend the verification email.
+              </TextLink>
+            </p>
+          </AlertDescription>
+        </Alert>
 
-          <div
-            v-if="props.status === 'verification-link-sent'"
-            id="settings-profile-verification-status"
-            class="mt-2 text-sm font-medium text-success"
-          >
-            A new verification link has been sent to your email address.
-          </div>
-        </div>
+        <Alert
+          v-if="props.status === 'verification-link-sent'"
+          id="settings-profile-verification-status"
+          variant="success"
+        >
+          <CheckCircle2 class="size-4" />
+          <AlertTitle>Verification email sent</AlertTitle>
+          <AlertDescription>
+            <p class="text-sm">
+              A fresh verification link is on its way to this inbox.
+            </p>
+          </AlertDescription>
+        </Alert>
 
         <template #footer>
           <SettingsActionRow

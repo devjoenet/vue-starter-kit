@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Permission;
+use App\Models\PermissionGroup;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\AdminAclSeeder;
@@ -140,19 +141,31 @@ test('roles index sorts filtered rows by a single active column', function (): v
 });
 
 test('permissions index uses a flat listing contract and exact-match filters', function (): void {
+    $auditLogsGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'audit_logs'],
+        ['label' => 'Audit Logs'],
+    );
+    $billingGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'billing'],
+        ['label' => 'Billing'],
+    );
+
     Permission::query()->create([
         'name' => 'audit_logs.view',
-        'group' => 'audit_logs',
+        'label' => 'View Audit Logs',
+        'permission_group_id' => $auditLogsGroup->id,
         'guard_name' => 'web',
     ]);
     Permission::query()->create([
-        'name' => 'audit_logs.edit',
-        'group' => 'audit_logs',
+        'name' => 'audit_logs.update',
+        'label' => 'Update Audit Logs',
+        'permission_group_id' => $auditLogsGroup->id,
         'guard_name' => 'web',
     ]);
     Permission::query()->create([
         'name' => 'billing.export',
-        'group' => 'billing',
+        'label' => 'Export Billing',
+        'permission_group_id' => $billingGroup->id,
         'guard_name' => 'web',
     ]);
 
@@ -161,19 +174,20 @@ test('permissions index uses a flat listing contract and exact-match filters', f
         'direction' => 'asc',
         'filters' => [
             'group' => ['audit_logs'],
-            'permission' => ['view', 'edit'],
+            'permission' => ['Update Audit Logs', 'View Audit Logs'],
         ],
     ]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Permissions/Index')
             ->missing('permissionsByGroup')
+            ->has('groups')
             ->where('query.sort', 'permission_check')
             ->where('query.direction', 'asc')
             ->where('query.filters.group', ['audit_logs'])
-            ->where('query.filters.permission', ['view', 'edit'])
+            ->where('query.filters.permission', ['Update Audit Logs', 'View Audit Logs'])
             ->where('permissions', fn ($permissions): bool => collect($permissions)->pluck('name')->all() === [
-                'audit_logs.edit',
+                'audit_logs.update',
                 'audit_logs.view',
             ])
         );

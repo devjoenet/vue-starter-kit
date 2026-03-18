@@ -18,7 +18,7 @@ defineProps<{
 }>();
 
 const { whenCurrentUrl } = useCurrentUrl();
-const activeItemStyles = 'bg-muted text-foreground';
+const activeItemStyles = 'bg-primary/10 text-primary';
 </script>
 
 <template>
@@ -34,7 +34,7 @@ const activeItemStyles = 'bg-muted text-foreground';
           <Menu class="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" class="w-75 p-6">
+      <SheetContent side="left" class="w-75 border-sidebar-border/70 bg-sidebar p-6">
         <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
         <SheetHeader class="flex justify-start text-left">
           <AppLogoIcon class="size-6 fill-current text-foreground" />
@@ -45,7 +45,7 @@ const activeItemStyles = 'bg-muted text-foreground';
               v-for="item in items"
               :key="item.title"
               :href="item.href"
-              class="flex min-h-11 items-center gap-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-[background-color,color] duration-200 hover:bg-primary/10 hover:text-primary"
+              class="flex min-h-11 items-center gap-x-3 rounded-xl border border-transparent px-3 py-3 text-sm font-medium transition-[background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-primary"
               :class="whenCurrentUrl(item.href, activeItemStyles)"
             >
               <component :is="item.icon" v-if="item.icon" class="h-5 w-5" />

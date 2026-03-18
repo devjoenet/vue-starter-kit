@@ -48,7 +48,7 @@ it('forwards feedback variants through vue wrappers', function () {
             'tooltipArrowVariants({ variant: props.variant })',
         ],
         'resources/js/components/ui/button/Button.vue' => [
-            'appearance?: ButtonVariants["appearance"]',
+            "appearance?: ButtonVariants['appearance'];",
             'buttonVariants({ appearance, variant, size, rounded })',
         ],
     ];

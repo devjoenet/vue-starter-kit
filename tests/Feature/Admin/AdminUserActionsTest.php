@@ -6,13 +6,13 @@ use App\Actions\Admin\Users\CreateUser;
 use App\Actions\Admin\Users\DeleteUser;
 use App\Actions\Admin\Users\SyncUserRoles;
 use App\Actions\Admin\Users\UpdateUser;
+use App\Models\Role;
 use App\Models\User;
 use App\Support\Data\Admin\Users\CreateUserData;
 use App\Support\Data\Admin\Users\SyncUserRolesData;
 use App\Support\Data\Admin\Users\UpdateUserData;
 use App\Support\Exceptions\UnknownRolesSelected;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 test('create user action persists a user with a hashed password', function (): void {
     $user = app(CreateUser::class)->handle(new CreateUserData(
@@ -25,6 +25,26 @@ test('create user action persists a user with a hashed password', function (): v
     expect($user->name)->toBe('Taylor Otwell');
     expect($user->email)->toBe('taylor@example.com');
     expect(Hash::check('secret-password', $user->password))->toBeTrue();
+});
+
+test('create user action restores a soft deleted user with the same email', function (): void {
+    $user = User::factory()->create([
+        'name' => 'Archived User',
+        'email' => 'archived@example.com',
+    ]);
+
+    $user->delete();
+
+    $restoredUser = app(CreateUser::class)->handle(new CreateUserData(
+        name: 'Restored User',
+        email: 'archived@example.com',
+        password: 'restored-password',
+    ));
+
+    expect($restoredUser->id)->toBe($user->id);
+    expect($restoredUser->trashed())->toBeFalse();
+    expect($restoredUser->name)->toBe('Restored User');
+    expect(Hash::check('restored-password', $restoredUser->password))->toBeTrue();
 });
 
 test('update user action updates profile fields and password when provided', function (): void {
@@ -43,12 +63,13 @@ test('update user action updates profile fields and password when provided', fun
     expect(Hash::check('new-password', (string) $user->fresh()?->password))->toBeTrue();
 });
 
-test('delete user action removes the user', function (): void {
+test('delete user action soft deletes the user', function (): void {
     $user = User::factory()->create();
 
     app(DeleteUser::class)->handle($user);
 
     expect(User::query()->find($user->id))->toBeNull();
+    expect(User::withTrashed()->find($user->id)?->trashed())->toBeTrue();
 });
 
 test('sync user roles action syncs the selected roles by name', function (): void {

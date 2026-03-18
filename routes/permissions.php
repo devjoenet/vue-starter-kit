@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\AdminPermission;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
@@ -28,31 +27,31 @@ Route::middleware(['auth', 'verified'])
             ->name('users.')
             ->group(function (): void {
                 Route::get('/', [UsersController::class, 'index'])
-                    ->middleware('can:'.AdminPermission::UsersView->value)
+                    ->middleware('can:users.view')
                     ->name('index');
 
                 Route::get('/create', [UsersController::class, 'create'])
-                    ->middleware('can:'.AdminPermission::UsersCreate->value)
+                    ->middleware('can:users.create')
                     ->name('create');
 
                 Route::post('/', [UsersController::class, 'store'])
-                    ->middleware('can:'.AdminPermission::UsersCreate->value)
+                    ->middleware('can:users.create')
                     ->name('store');
 
                 Route::get('/{user}/edit', [UsersController::class, 'edit'])
-                    ->middleware('can:'.AdminPermission::UsersUpdate->value)
+                    ->middleware('can:users.update')
                     ->name('edit');
 
                 Route::put('/{user}', [UsersController::class, 'update'])
-                    ->middleware('can:'.AdminPermission::UsersUpdate->value)
+                    ->middleware('can:users.update')
                     ->name('update');
 
                 Route::delete('/{user}', [UsersController::class, 'destroy'])
-                    ->middleware('can:'.AdminPermission::UsersDelete->value)
+                    ->middleware('can:users.delete')
                     ->name('destroy');
 
                 Route::put('/{user}/roles', [UsersController::class, 'syncRoles'])
-                    ->middleware('can:'.AdminPermission::UsersAssignRoles->value)
+                    ->middleware('can:users.assignRoles')
                     ->name('roles.sync');
             });
 
@@ -60,31 +59,31 @@ Route::middleware(['auth', 'verified'])
             ->name('roles.')
             ->group(function (): void {
                 Route::get('/', [RolesController::class, 'index'])
-                    ->middleware('can:'.AdminPermission::RolesView->value)
+                    ->middleware('can:roles.view')
                     ->name('index');
 
                 Route::get('/create', [RolesController::class, 'create'])
-                    ->middleware('can:'.AdminPermission::RolesCreate->value)
+                    ->middleware('can:roles.create')
                     ->name('create');
 
                 Route::post('/', [RolesController::class, 'store'])
-                    ->middleware('can:'.AdminPermission::RolesCreate->value)
+                    ->middleware('can:roles.create')
                     ->name('store');
 
                 Route::get('/{role}/edit', [RolesController::class, 'edit'])
-                    ->middleware('can:'.AdminPermission::RolesUpdate->value)
+                    ->middleware('can:roles.update')
                     ->name('edit');
 
                 Route::put('/{role}', [RolesController::class, 'update'])
-                    ->middleware('can:'.AdminPermission::RolesUpdate->value)
+                    ->middleware('can:roles.update')
                     ->name('update');
 
                 Route::delete('/{role}', [RolesController::class, 'destroy'])
-                    ->middleware('can:'.AdminPermission::RolesDelete->value)
+                    ->middleware('can:roles.delete')
                     ->name('destroy');
 
                 Route::put('/{role}/permissions', [RolesController::class, 'syncPermissions'])
-                    ->middleware('can:'.AdminPermission::RolesAssignPermissions->value)
+                    ->middleware('can:roles.assignPermissions')
                     ->name('permissions.sync');
             });
 
@@ -92,27 +91,27 @@ Route::middleware(['auth', 'verified'])
             ->name('permissions.')
             ->group(function (): void {
                 Route::get('/', [PermissionsController::class, 'index'])
-                    ->middleware('can:'.AdminPermission::PermissionsView->value)
+                    ->middleware('can:permissions.view')
                     ->name('index');
 
                 Route::get('/create', [PermissionsController::class, 'create'])
-                    ->middleware('can:'.AdminPermission::PermissionsCreate->value)
+                    ->middleware('can:permissions.create')
                     ->name('create');
 
                 Route::post('/', [PermissionsController::class, 'store'])
-                    ->middleware('can:'.AdminPermission::PermissionsCreate->value)
+                    ->middleware('can:permissions.create')
                     ->name('store');
 
                 Route::get('/{permission}/edit', [PermissionsController::class, 'edit'])
-                    ->middleware('can:'.AdminPermission::PermissionsUpdate->value)
+                    ->middleware('can:permissions.update')
                     ->name('edit');
 
                 Route::put('/{permission}', [PermissionsController::class, 'update'])
-                    ->middleware('can:'.AdminPermission::PermissionsUpdate->value)
+                    ->middleware('can:permissions.update')
                     ->name('update');
 
                 Route::delete('/{permission}', [PermissionsController::class, 'destroy'])
-                    ->middleware('can:'.AdminPermission::PermissionsDelete->value)
+                    ->middleware('can:permissions.delete')
                     ->name('destroy');
             });
     });

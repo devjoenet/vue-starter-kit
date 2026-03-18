@@ -52,6 +52,7 @@ const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
         id="admin-permissions-index-table-card"
         :can-update="canUpdate"
         :filter-options="props.filterOptions"
+        :groups="props.groups"
         :permissions="props.permissions"
         :query="props.query"
       />

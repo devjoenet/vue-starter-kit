@@ -37,7 +37,7 @@ const toneIconMap: Record<ToastTone, LucideIcon> = {
 };
 
 const toneClasses: Record<ToastTone, string> = {
-  default: 'border-border text-foreground',
+  default: 'border-border/80 text-foreground',
   success: 'border-success/35 text-foreground',
   error: 'border-destructive/35 text-foreground',
   warning: 'border-warning/40 text-foreground',
@@ -45,8 +45,8 @@ const toneClasses: Record<ToastTone, string> = {
 };
 
 const appearanceClasses: Record<ToastAppearance, string> = {
-  default: 'bg-card shadow-[var(--elevation-2)]',
-  outline: 'bg-background/92 shadow-[var(--elevation-1)]',
+  default: 'bg-card/98 shadow-[var(--elevation-2)]',
+  outline: 'bg-background/95 shadow-[var(--elevation-1)]',
   solid: 'shadow-[var(--elevation-2)]',
 };
 
@@ -64,6 +64,22 @@ const progressClasses: Record<ToastTone, string> = {
   error: 'bg-destructive',
   warning: 'bg-warning',
   info: 'bg-info',
+};
+
+const toneBadgeClasses: Record<ToastTone, string> = {
+  default: 'bg-muted text-foreground',
+  success: 'bg-success/18 text-success',
+  error: 'bg-destructive/16 text-destructive',
+  warning: 'bg-warning/18 text-warning',
+  info: 'bg-info/16 text-info',
+};
+
+const toneLabelMap: Record<ToastTone, string> = {
+  default: 'Update',
+  success: 'Success',
+  error: 'Error',
+  warning: 'Warning',
+  info: 'Info',
 };
 
 const surfaceProgressClasses: Record<ToastAppearance, string> = {
@@ -85,14 +101,14 @@ const resolvedIcon = computed<LucideIcon | null>(() => {
 const toastClasses = computed(() => {
   if (props.item.appearance === 'solid') {
     return cn(
-      'pointer-events-auto relative w-72 overflow-hidden rounded-2xl border border-l-[3px] pt-4 pr-4 pb-4 pl-4',
+      'pointer-events-auto relative w-72 overflow-hidden rounded-[1.375rem] border pt-4 pr-4 pb-4 pl-4',
       appearanceClasses.solid,
       solidToneClasses[props.item.tone],
     );
   }
 
   return cn(
-    'pointer-events-auto relative w-72 overflow-hidden rounded-2xl border border-l-[3px] pt-4 pr-4 pb-4 pl-4',
+    'pointer-events-auto relative w-72 overflow-hidden rounded-[1.375rem] border pt-4 pr-4 pb-4 pl-4',
     toneClasses[props.item.tone],
     appearanceClasses[props.item.appearance],
   );
@@ -103,26 +119,38 @@ const toastClasses = computed(() => {
   <div :class="toastClasses" role="status" aria-live="polite">
     <button
       type="button"
-      class="absolute top-0 right-0 flex size-12 items-start justify-end rounded-tr-2xl pt-4 pr-4 opacity-70 transition hover:opacity-100"
+      class="absolute top-2 right-2 flex size-10 items-center justify-center rounded-full opacity-70 transition hover:opacity-100"
       @click="$emit('dismiss', item.id)"
     >
       <X class="size-4" />
     </button>
 
-    <div class="flex items-start gap-2.5 pr-4">
-      <component
-        :is="resolvedIcon"
+    <div class="flex items-start gap-3 pr-8">
+      <span
         v-if="resolvedIcon"
-        :class="cn('size-4 shrink-0', item.title ? 'mt-4' : 'mt-0.5')"
-      />
+        :class="
+          cn(
+            'mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full',
+            toneBadgeClasses[item.tone],
+          )
+        "
+      >
+        <component :is="resolvedIcon" class="size-4" />
+      </span>
 
-      <div class="min-w-0 pr-4">
-        <p v-if="item.title" class="mt-4 text-sm font-semibold">
+      <div class="min-w-0 pr-2">
+        <p
+          class="text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
+          :class="toneBadgeClasses[item.tone]"
+        >
+          {{ toneLabelMap[item.tone] }}
+        </p>
+        <p v-if="item.title" class="mt-1 text-sm font-semibold">
           {{ item.title }}
         </p>
         <p
-          class="text-sm"
-          :class="item.title ? 'mb-6 opacity-95' : 'mb-4 font-medium'"
+          class="mt-1 text-sm leading-6"
+          :class="item.title ? 'opacity-95' : 'font-medium'"
         >
           {{ item.message }}
         </p>

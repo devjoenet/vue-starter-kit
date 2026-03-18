@@ -30,7 +30,7 @@
 
       html.dark {
         background-color: color-mix(in srgb, black 82%, #294360 18%);
-        color: color-mix(in srgb, white 92%, #1c96ce 8%);
+        color: color-mix(in srgb, white 92%, #7b63e6 8%);
       }
     </style>
 

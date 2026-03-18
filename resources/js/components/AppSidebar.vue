@@ -68,7 +68,7 @@ const footerNavItems: NavItem[] = [];
 
 <template>
   <Sidebar collapsible="icon" variant="inset">
-    <SidebarHeader>
+    <SidebarHeader class="gap-4 border-b border-sidebar-border/70 pb-4">
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" as-child>
@@ -78,9 +78,31 @@ const footerNavItems: NavItem[] = [];
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
+
+      <div
+        class="group-data-[collapsible=icon]:hidden"
+      >
+        <div
+          class="relative overflow-hidden rounded-[1.5rem] border border-sidebar-border/70 bg-sidebar-accent/55 px-4 py-4 shadow-[var(--elevation-1)]"
+        >
+          <div
+            class="pointer-events-none absolute inset-y-4 right-4 w-[0.1875rem] rounded-full bg-linear-to-b from-secondary via-primary to-accent opacity-70"
+          />
+          <p
+            class="text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/70 uppercase"
+          >
+          Workspace
+          </p>
+          <p class="mt-1 pr-6 text-sm font-semibold">Southeast Code</p>
+          <p class="mt-1 pr-6 text-xs leading-5 text-sidebar-foreground/75">
+            Access control, settings, and starter surfaces shaped for
+            client-ready demos.
+          </p>
+        </div>
+      </div>
     </SidebarHeader>
 
-    <SidebarContent>
+    <SidebarContent class="gap-4 pt-3">
       <NavMain :items="mainNavItems" label="Platform" />
       <NavMain
         v-if="adminNavItems.length"

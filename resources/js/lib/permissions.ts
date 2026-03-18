@@ -47,3 +47,18 @@ export function normalizePermissionName(
 
   return prefixPermissionWithGroup(group, actionSegment);
 }
+
+export function inferPermissionLabel(permissionName: string): string {
+  const actionSegment = extractPermissionActionSegment(permissionName, '');
+
+  if (!actionSegment) {
+    return '';
+  }
+
+  return actionSegment
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}

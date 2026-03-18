@@ -11,7 +11,7 @@ type Props = {
 };
 
 const props = withDefaults(defineProps<Props>(), {
-  title: 'Something went wrong.',
+  title: 'Check this request.',
 });
 
 const uniqueErrors = computed(() => normalizeErrorMessages(props.errors));
@@ -25,11 +25,14 @@ const uniqueErrors = computed(() => normalizeErrorMessages(props.errors));
       <p v-if="uniqueErrors.length === 1" class="text-sm">
         {{ uniqueErrors[0] }}
       </p>
-      <ul v-else class="list-inside list-disc text-sm">
-        <li v-for="(error, index) in uniqueErrors" :key="index">
-          {{ error }}
-        </li>
-      </ul>
+      <div v-else class="space-y-2 text-sm">
+        <p>Resolve the following before you continue:</p>
+        <ul class="list-inside list-disc space-y-1">
+          <li v-for="(error, index) in uniqueErrors" :key="index">
+            {{ error }}
+          </li>
+        </ul>
+      </div>
     </AlertDescription>
   </Alert>
 </template>

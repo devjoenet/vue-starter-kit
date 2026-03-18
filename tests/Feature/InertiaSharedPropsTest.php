@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Enums\AdminPermission;
 use App\Models\Permission;
+use App\Models\PermissionGroup;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\CarbonInterface;
@@ -57,9 +57,14 @@ test('shared flash warning and info are available to inertia pages', function ()
 test('authenticated inertia pages include shared auth props and sidebar cookie state', function () {
     app(PermissionRegistrar::class)->forgetCachedPermissions();
 
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
     $permission = Permission::query()->create([
-        'name' => AdminPermission::UsersView->value,
-        'group' => 'users',
+        'name' => 'users.view',
+        'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
 
@@ -94,7 +99,7 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
                         : null,
                 ],
                 'roles' => ['admin'],
-                'permissions' => [AdminPermission::UsersView->value],
+                'permissions' => ['users.view'],
             ])
         );
 });

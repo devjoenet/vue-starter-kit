@@ -85,3 +85,31 @@ test('quiet success user edit requests do not flash duplicate success messages',
 
     expect($user->fresh()?->hasRole($role))->toBeTrue();
 });
+
+test('admin can recreate a soft deleted user email by restoring the existing record', function (): void {
+    $user = User::factory()->create([
+        'name' => 'Archived User',
+        'email' => 'archived@example.test',
+    ]);
+
+    $user->delete();
+
+    $response = $this->post(route('admin.users.store'), [
+        'name' => 'Restored User',
+        'email' => 'archived@example.test',
+        'password' => 'new-password-123',
+        'password_confirmation' => 'new-password-123',
+    ]);
+
+    $restoredUser = User::query()
+        ->where('email', 'archived@example.test')
+        ->first();
+
+    expect($restoredUser)->not->toBeNull();
+    expect($restoredUser?->id)->toBe($user->id);
+    expect($restoredUser?->trashed())->toBeFalse();
+    expect($restoredUser?->name)->toBe('Restored User');
+    expect(Hash::check('new-password-123', $restoredUser->password))->toBeTrue();
+
+    $response->assertRedirect(route('admin.users.edit', $restoredUser));
+});

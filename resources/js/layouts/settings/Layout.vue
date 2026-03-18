@@ -85,33 +85,35 @@ const activeNavItem = computed(
         </p>
       </header>
 
-      <nav
-        id="settings-layout-nav"
-        class="surface-settings-nav motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 sm:flex-row sm:flex-wrap"
-        style="--motion-order: 1"
-        aria-label="Settings"
-      >
-        <Button
-          v-for="item in settingsNavItems"
-          :key="toUrl(item.href)"
-          :appearance="isCurrentUrl(item.href) ? 'filled' : 'outline'"
-          :variant="isCurrentUrl(item.href) ? 'primary' : 'muted'"
-          rounded="xl"
-          as-child
-          class="motion-sheen min-h-11 justify-start px-4"
+      <div class="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
+        <nav
+          id="settings-layout-nav"
+          class="surface-settings-nav motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 lg:sticky lg:top-6"
+          style="--motion-order: 1"
+          aria-label="Settings"
         >
-          <Link :href="item.href">
-            {{ item.title }}
-          </Link>
-        </Button>
-      </nav>
+          <Button
+            v-for="item in settingsNavItems"
+            :key="toUrl(item.href)"
+            :appearance="isCurrentUrl(item.href) ? 'filled' : 'outline'"
+            :variant="isCurrentUrl(item.href) ? 'primary' : 'muted'"
+            rounded="xl"
+            as-child
+            class="motion-sheen min-h-11 justify-start px-4"
+          >
+            <Link :href="item.href">
+              {{ item.title }}
+            </Link>
+          </Button>
+        </nav>
 
-      <section
-        class="motion-step w-full max-w-4xl space-y-6"
-        style="--motion-order: 2"
-      >
-        <slot />
-      </section>
+        <section
+          class="motion-step w-full max-w-4xl space-y-6"
+          style="--motion-order: 2"
+        >
+          <slot />
+        </section>
+      </div>
     </div>
   </div>
 </template>

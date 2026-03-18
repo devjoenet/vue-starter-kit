@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Models\Permission;
+use App\Models\PermissionGroup;
 use App\Support\PermissionNormalizer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -22,14 +23,30 @@ class UpdatePermissionRequest extends FormRequest
     #[Override]
     protected function prepareForValidation(): void
     {
-        $normalizedPermission = app(PermissionNormalizer::class)->normalize(
-            (string) $this->input('group'),
-            (string) $this->input('name'),
+        /** @var Permission|null $permission */
+        $permission = $this->route('permission');
+        $permissionNormalizer = app(PermissionNormalizer::class);
+        $currentGroup = $permission instanceof Permission ? $permission->group : '';
+        $currentName = $permission instanceof Permission ? $permission->name : '';
+        $normalizedGroup = $permissionNormalizer->normalizeGroup(
+            (string) ($this->input('group') ?: $currentGroup),
+        );
+        $existingGroup = PermissionGroup::withTrashed()
+            ->where('slug', $normalizedGroup)
+            ->first();
+
+        $normalizedPermission = $permissionNormalizer->normalize(
+            $normalizedGroup,
+            (string) ($this->input('name') ?: $currentName),
+            $this->input('label'),
+            $this->input('description'),
+            $this->filled('group_label') ? $this->input('group_label') : $existingGroup?->label,
+            $this->filled('group_description') ? $this->input('group_description') : $existingGroup?->description,
         );
 
-        $this->merge([
-            'name' => $normalizedPermission['name'],
-            'group' => $normalizedPermission['group'],
+        $this->replace([
+            ...$this->all(),
+            ...$normalizedPermission,
         ]);
     }
 
@@ -38,15 +55,21 @@ class UpdatePermissionRequest extends FormRequest
     {
         /** @var Permission|null $permission */
         $permission = $this->route('permission');
-        $nameUniqueRule = Rule::unique('permissions', 'name');
-
-        if ($permission !== null) {
-            $nameUniqueRule->ignore($permission->getKey());
-        }
+        $currentKey = $permission instanceof Permission ? $permission->name : '';
 
         return [
-            'name' => ['required', 'string', 'max:255', $nameUniqueRule],
-            'group' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-z0-9_]+(?:\.[A-Za-z][A-Za-z0-9]*)+$/',
+                Rule::in([$currentKey]),
+            ],
+            'label' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'group' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'group_label' => ['required', 'string', 'max:255'],
+            'group_description' => ['nullable', 'string', 'max:500'],
         ];
     }
 
@@ -55,7 +78,9 @@ class UpdatePermissionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'A permission with this name already exists.',
+            'name.in' => 'Permission keys cannot be changed after creation.',
+            'name.regex' => 'Permission keys must look like users.view or reports.exportData.',
+            'group.regex' => 'Permission groups must use lowercase letters, numbers, or underscores.',
         ];
     }
 }

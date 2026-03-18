@@ -33,7 +33,11 @@ defineProps<{
   <Head title="Email verification" />
 
   <section id="auth-verify-email-page">
-    <Card id="auth-verify-email-card" variant="default" class="px-6">
+    <Card
+      id="auth-verify-email-card"
+      variant="default"
+      class="surface-auth-card px-6 py-6"
+    >
       <Form
         id="auth-verify-email-form"
         v-bind="send.form()"
@@ -55,7 +59,7 @@ defineProps<{
         <Button
           id="auth-verify-email-submit-button"
           appearance="filled"
-          class="w-full"
+          class="min-h-12 w-full"
           :disabled="processing"
         >
           <Spinner v-if="processing" />
