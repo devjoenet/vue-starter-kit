@@ -22,11 +22,7 @@ function toWords(value: string): string[] {
     .replace(/[_\-.]+/g, ' ')
     .replace(/\s+/g, ' ');
 
-  return !normalizedValue
-    ? []
-    : (normalizedValue.match(/[A-Za-z0-9]+/g) ?? []).map((word) =>
-        word.toLowerCase(),
-      );
+  return !normalizedValue ? [] : (normalizedValue.match(/[A-Za-z0-9]+/g) ?? []).map((word) => word.toLowerCase());
 }
 
 /** Capitalizes the first character of a normalized word. */

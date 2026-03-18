@@ -6,9 +6,7 @@ import { DialogTitle, useForwardProps } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { dialogTitleVariants } from './styles';
 
-const props = defineProps<
-  DialogTitleProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<DialogTitleProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = reactiveOmit(props, 'class');
 
@@ -16,11 +14,7 @@ const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <DialogTitle
-    data-slot="dialog-title"
-    v-bind="forwardedProps"
-    :class="cn(dialogTitleVariants(), props.class)"
-  >
+  <DialogTitle data-slot="dialog-title" v-bind="forwardedProps" :class="cn(dialogTitleVariants(), props.class)">
     <slot />
   </DialogTitle>
 </template>

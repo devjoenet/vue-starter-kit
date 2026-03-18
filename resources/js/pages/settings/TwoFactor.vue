@@ -38,69 +38,34 @@ onUnmounted(() => {
   <Head title="Two-Factor Authentication" />
 
   <div id="settings-two-factor-page">
-    <SettingsSectionCard
-      id="settings-two-factor-card"
-      title="Two-factor authentication"
-      description="Protect sign-in with an authenticator app and keep your recovery path current."
-      content-class="space-y-5"
-    >
-      <div
-        v-if="!props.twoFactorEnabled"
-        id="settings-two-factor-disabled-state"
-        class="space-y-4"
-      >
+    <SettingsSectionCard id="settings-two-factor-card" title="Two-factor authentication" description="Protect sign-in with an authenticator app and keep your recovery path current." content-class="space-y-5">
+      <div v-if="!props.twoFactorEnabled" id="settings-two-factor-disabled-state" class="space-y-4">
         <div class="flex flex-wrap items-center gap-3">
-          <Badge id="settings-two-factor-disabled-badge" variant="destructive"
-            >Disabled</Badge
-          >
-          <p class="text-sm text-muted-foreground">
-            Add a second factor before this account is used in shared demos or
-            client-facing environments.
-          </p>
+          <Badge id="settings-two-factor-disabled-badge" variant="destructive">Disabled</Badge>
+          <p class="text-sm text-muted-foreground">Add a second factor before this account is used in shared demos or client-facing environments.</p>
         </div>
 
-        <p class="text-muted-foreground">
-          When you enable two-factor authentication, you will connect an
-          authenticator app and confirm a one-time code before the setting is
-          fully active.
-        </p>
+        <p class="text-muted-foreground">When you enable two-factor authentication, you will connect an authenticator app and confirm a one-time code before the setting is fully active.</p>
       </div>
 
       <div v-else id="settings-two-factor-enabled-state" class="space-y-5">
         <div class="flex flex-wrap items-center gap-3">
-          <Badge id="settings-two-factor-enabled-badge" variant="success"
-            >Enabled</Badge
-          >
-          <p class="text-sm text-muted-foreground">
-            This account now requires an authenticator code during sign-in.
-          </p>
+          <Badge id="settings-two-factor-enabled-badge" variant="success">Enabled</Badge>
+          <p class="text-sm text-muted-foreground">This account now requires an authenticator code during sign-in.</p>
         </div>
 
-        <p class="text-muted-foreground">
-          Keep your recovery codes available so you can regain access if you
-          lose your phone or reset your authenticator app.
-        </p>
+        <p class="text-muted-foreground">Keep your recovery codes available so you can regain access if you lose your phone or reset your authenticator app.</p>
 
         <TwoFactorRecoveryCodes id="settings-two-factor-recovery-codes" />
       </div>
 
       <template #footer>
-        <SettingsActionRow
-          v-if="!props.twoFactorEnabled"
-          id="settings-two-factor-enable-actions"
-        >
+        <SettingsActionRow v-if="!props.twoFactorEnabled" id="settings-two-factor-enable-actions">
           <template #meta>
-            <p class="text-sm text-muted-foreground">
-              You will review the QR code and recovery details in the next step.
-            </p>
+            <p class="text-sm text-muted-foreground">You will review the QR code and recovery details in the next step.</p>
           </template>
 
-          <Button
-            v-if="hasSetupData"
-            id="settings-two-factor-continue-setup-button"
-            appearance="filled"
-            @click="showSetupModal = true"
-          >
+          <Button v-if="hasSetupData" id="settings-two-factor-continue-setup-button" appearance="filled" @click="showSetupModal = true">
             <ShieldCheck />
             Continue setup
           </Button>
@@ -116,23 +81,14 @@ onUnmounted(() => {
             @success="showSetupModal = true"
             #default="{ processing }"
           >
-            <Button
-              id="settings-two-factor-enable-button"
-              type="submit"
-              appearance="filled"
-              :disabled="processing"
-            >
+            <Button id="settings-two-factor-enable-button" type="submit" appearance="filled" :disabled="processing">
               <ShieldCheck />
               Enable 2FA
             </Button>
           </Form>
         </SettingsActionRow>
 
-        <SettingsActionRow
-          v-else
-          id="settings-two-factor-disable-actions"
-          align="end"
-        >
+        <SettingsActionRow v-else id="settings-two-factor-disable-actions" align="end">
           <Form
             id="settings-two-factor-disable-form"
             v-bind="disable.form()"
@@ -142,13 +98,7 @@ onUnmounted(() => {
             }"
             #default="{ processing }"
           >
-            <Button
-              id="settings-two-factor-disable-button"
-              appearance="filled"
-              variant="destructive"
-              type="submit"
-              :disabled="processing"
-            >
+            <Button id="settings-two-factor-disable-button" appearance="filled" variant="destructive" type="submit" :disabled="processing">
               <ShieldBan />
               Disable 2FA
             </Button>
@@ -156,12 +106,7 @@ onUnmounted(() => {
         </SettingsActionRow>
       </template>
 
-      <TwoFactorSetupModal
-        id="settings-two-factor-setup-modal"
-        v-model:isOpen="showSetupModal"
-        :requiresConfirmation="props.requiresConfirmation"
-        :twoFactorEnabled="props.twoFactorEnabled"
-      />
+      <TwoFactorSetupModal id="settings-two-factor-setup-modal" v-model:isOpen="showSetupModal" :requiresConfirmation="props.requiresConfirmation" :twoFactorEnabled="props.twoFactorEnabled" />
     </SettingsSectionCard>
   </div>
 </template>

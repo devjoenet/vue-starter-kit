@@ -28,41 +28,14 @@ setLayoutProps({
         preserveScroll: true,
       }"
       reset-on-success
-      :reset-on-error="[
-        'password',
-        'password_confirmation',
-        'current_password',
-      ]"
+      :reset-on-error="['password', 'password_confirmation', 'current_password']"
       class="space-y-4"
       v-slot="{ errors, processing, recentlySuccessful }"
     >
-      <SettingsSectionCard
-        id="settings-password-card"
-        title="Password"
-        description="Update the credential used to sign in to this account."
-        content-class="space-y-4"
-      >
-        <Input
-          id="current_password"
-          name="current_password"
-          type="password"
-          label="Current password"
-          variant="outlined"
-          autocomplete="current-password"
-          :state="errors.current_password ? 'error' : 'default'"
-          :message="errors.current_password"
-        />
+      <SettingsSectionCard id="settings-password-card" title="Password" description="Update the credential used to sign in to this account." content-class="space-y-4">
+        <Input id="current_password" name="current_password" type="password" label="Current password" variant="outlined" autocomplete="current-password" :state="errors.current_password ? 'error' : 'default'" :message="errors.current_password" />
 
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          label="New password"
-          variant="outlined"
-          autocomplete="new-password"
-          :state="errors.password ? 'error' : 'default'"
-          :message="errors.password"
-        />
+        <Input id="password" name="password" type="password" label="New password" variant="outlined" autocomplete="new-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
         <Input
           id="password_confirmation"
@@ -76,24 +49,12 @@ setLayoutProps({
         />
 
         <template #footer>
-          <SettingsActionRow
-            id="settings-password-actions"
-            :status="recentlySuccessful ? 'Password updated.' : undefined"
-            status-tone="success"
-          >
+          <SettingsActionRow id="settings-password-actions" :status="recentlySuccessful ? 'Password updated.' : undefined" status-tone="success">
             <template #meta>
-              <p class="text-sm text-muted-foreground">
-                Password fields clear after a successful save.
-              </p>
+              <p class="text-sm text-muted-foreground">Password fields clear after a successful save.</p>
             </template>
 
-            <Button
-              id="settings-password-save-button"
-              appearance="filled"
-              :disabled="processing"
-              data-test="update-password-button"
-              >Save password</Button
-            >
+            <Button id="settings-password-save-button" appearance="filled" :disabled="processing" data-test="update-password-button">Save password</Button>
           </SettingsActionRow>
         </template>
       </SettingsSectionCard>

@@ -12,12 +12,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <Link
-    :href="href"
-    :method="method"
-    :as="as"
-    class="text-foreground underline decoration-border underline-offset-4 transition-colors duration-300 ease-out hover:text-primary hover:decoration-primary/50"
-  >
+  <Link :href="href" :method="method" :as="as" class="text-foreground underline decoration-border underline-offset-4 transition-colors duration-300 ease-out hover:text-primary hover:decoration-primary/50">
     <slot />
   </Link>
 </template>

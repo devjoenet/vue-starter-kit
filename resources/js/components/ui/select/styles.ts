@@ -18,15 +18,11 @@ export const selectLabelVariants = cva(
       },
       state: {
         default: '',
-        error:
-          'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
-        destructive:
-          'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
+        error: 'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
+        destructive: 'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
         info: 'text-info peer-focus:text-info peer-data-[open=true]:text-info',
-        warning:
-          'text-warning peer-focus:text-warning peer-data-[open=true]:text-warning',
-        success:
-          'text-success peer-focus:text-success peer-data-[open=true]:text-success',
+        warning: 'text-warning peer-focus:text-warning peer-data-[open=true]:text-warning',
+        success: 'text-success peer-focus:text-success peer-data-[open=true]:text-success',
       },
     },
     defaultVariants: {
@@ -36,31 +32,22 @@ export const selectLabelVariants = cva(
   },
 );
 
-export const selectOptionVariants = cva(
-  'data-[state=checked]:bg-muted/65 data-[state=checked]:text-foreground',
-  {
-    variants: {
-      variant: {
-        muted:
-          'hover:bg-muted/80 hover:text-foreground focus:bg-muted/80 focus:text-foreground',
-        primary:
-          'hover:bg-primary/12 hover:text-primary focus:bg-primary/12 focus:text-primary',
-        secondary:
-          'hover:bg-secondary/12 hover:text-secondary focus:bg-secondary/12 focus:text-secondary',
-        info: 'hover:bg-info/12 hover:text-info focus:bg-info/12 focus:text-info',
-        warning:
-          'hover:bg-warning/12 hover:text-warning focus:bg-warning/12 focus:text-warning',
-        success:
-          'hover:bg-success/12 hover:text-success focus:bg-success/12 focus:text-success',
-        destructive:
-          'hover:bg-destructive/12 hover:text-destructive focus:bg-destructive/12 focus:text-destructive',
-      },
-    },
-    defaultVariants: {
-      variant: 'primary',
+export const selectOptionVariants = cva('data-[state=checked]:bg-muted/65 data-[state=checked]:text-foreground', {
+  variants: {
+    variant: {
+      muted: 'hover:bg-muted/80 hover:text-foreground focus:bg-muted/80 focus:text-foreground',
+      primary: 'hover:bg-primary/12 hover:text-primary focus:bg-primary/12 focus:text-primary',
+      secondary: 'hover:bg-secondary/12 hover:text-secondary focus:bg-secondary/12 focus:text-secondary',
+      info: 'hover:bg-info/12 hover:text-info focus:bg-info/12 focus:text-info',
+      warning: 'hover:bg-warning/12 hover:text-warning focus:bg-warning/12 focus:text-warning',
+      success: 'hover:bg-success/12 hover:text-success focus:bg-success/12 focus:text-success',
+      destructive: 'hover:bg-destructive/12 hover:text-destructive focus:bg-destructive/12 focus:text-destructive',
     },
   },
-);
+  defaultVariants: {
+    variant: 'primary',
+  },
+});
 
 export type SelectVariants = {
   variant?: InputVariants['variant'];

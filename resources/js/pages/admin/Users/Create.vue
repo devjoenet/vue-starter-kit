@@ -50,9 +50,7 @@ const closeToIndex = () => {
   <Head title="Create user" />
 
   <div id="admin-users-create-page" class="motion-stage px-4">
-    <section
-      class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
-    >
+    <section class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
       <div class="relative space-y-6">
         <AdminPageIntro
           id="admin-users-create-page-header"
@@ -63,11 +61,7 @@ const closeToIndex = () => {
           title="Create a workspace account"
         />
 
-        <form
-          id="admin-users-create-form"
-          class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]"
-          @submit.prevent="submit"
-        >
+        <form id="admin-users-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]" @submit.prevent="submit">
           <UserDetailsForm
             id="admin-users-create-form-card"
             class="motion-step"
@@ -85,19 +79,10 @@ const closeToIndex = () => {
           />
 
           <aside class="space-y-4">
-            <Card
-              class="surface-editor-rail motion-step gap-4 px-5 py-5"
-              style="--motion-order: 2"
-            >
+            <Card class="surface-editor-rail motion-step gap-4 px-5 py-5" style="--motion-order: 2">
               <p class="section-kicker">Before you create</p>
-              <h2 class="text-lg font-semibold tracking-tight">
-                Start with the details that will stay stable.
-              </h2>
-              <p class="text-sm leading-6 text-muted-foreground">
-                Use the real account name and primary email now. Passwords can
-                change later, but identity details are what teammates and
-                clients will scan first.
-              </p>
+              <h2 class="text-lg font-semibold tracking-tight">Start with the details that will stay stable.</h2>
+              <p class="text-sm leading-6 text-muted-foreground">Use the real account name and primary email now. Passwords can change later, but identity details are what teammates and clients will scan first.</p>
             </Card>
 
             <EditPageActionRow

@@ -28,13 +28,7 @@ const props = withDefaults(
     :as-child="asChild"
     :data-size="size"
     :data-active="isActive"
-    :class="
-      cn(
-        sidebarMenuSubButtonVariants({ size, active: isActive }),
-        'group-data-[collapsible=icon]:hidden',
-        props.class,
-      )
-    "
+    :class="cn(sidebarMenuSubButtonVariants({ size, active: isActive }), 'group-data-[collapsible=icon]:hidden', props.class)"
   >
     <slot />
   </Primitive>

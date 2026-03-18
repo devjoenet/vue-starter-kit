@@ -111,46 +111,19 @@ const hasLinks = computed(() => links.value.length > 0);
   <section class="space-y-4">
     <div class="max-w-2xl space-y-2">
       <p class="section-kicker">Administration</p>
-      <h2 class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">
-        Open the live admin surfaces from a single command strip.
-      </h2>
-      <p class="text-sm leading-6 text-muted-foreground">
-        These are the active admin surfaces available in the starter right now.
-      </p>
+      <h2 class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">Open the live admin surfaces from a single command strip.</h2>
+      <p class="text-sm leading-6 text-muted-foreground">These are the active admin surfaces available in the starter right now.</p>
     </div>
 
-    <div
-      v-if="hasLinks"
-      class="overflow-hidden rounded-[1.75rem] border border-border/70 shadow-(--elevation-1)"
-    >
+    <div v-if="hasLinks" class="overflow-hidden rounded-[1.75rem] border border-border/70 shadow-(--elevation-1)">
       <div class="grid gap-px bg-border/60 md:grid-cols-3">
-        <Link
-          v-for="item in links"
-          :key="item.title"
-          :href="item.href"
-          :class="[
-            'group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none',
-            toneClasses[item.tone].card,
-          ]"
-        >
-          <span
-            :class="[
-              'absolute inset-x-0 top-0 h-1 origin-left scale-x-80 transition-transform duration-500 ease-(--motion-ease-out-quint) group-hover:scale-x-100 motion-reduce:transform-none',
-              toneClasses[item.tone].beam,
-            ]"
-          />
+        <Link v-for="item in links" :key="item.title" :href="item.href" :class="['group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none', toneClasses[item.tone].card]">
+          <span :class="['absolute inset-x-0 top-0 h-1 origin-left scale-x-80 transition-transform duration-500 ease-(--motion-ease-out-quint) group-hover:scale-x-100 motion-reduce:transform-none', toneClasses[item.tone].beam]" />
 
           <div class="flex h-full flex-col justify-between gap-6">
             <div class="flex items-start justify-between gap-6">
               <div class="min-w-0">
-                <p
-                  :class="[
-                    'text-[0.68rem] font-semibold tracking-[0.18em] uppercase',
-                    toneClasses[item.tone].eyebrow,
-                  ]"
-                >
-                  Available now
-                </p>
+                <p :class="['text-[0.68rem] font-semibold tracking-[0.18em] uppercase', toneClasses[item.tone].eyebrow]">Available now</p>
                 <h3 class="mt-2 text-lg font-semibold tracking-tight">
                   {{ item.title }}
                 </h3>
@@ -159,52 +132,24 @@ const hasLinks = computed(() => links.value.length > 0);
                 </p>
               </div>
 
-              <div
-                :class="[
-                  'text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none',
-                  toneClasses[item.tone].count,
-                ]"
-              >
+              <div :class="['text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none', toneClasses[item.tone].count]">
                 {{ item.count }}
               </div>
             </div>
 
-            <div
-              class="flex items-center justify-between gap-3 border-t border-border/60 pt-4"
-            >
-              <span
-                class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
-              >
-                Open surface
-              </span>
-              <span
-                :class="[
-                  'text-sm font-semibold transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 motion-reduce:transform-none',
-                  toneClasses[item.tone].action,
-                ]"
-              >
-                Open {{ item.title }}
-              </span>
+            <div class="flex items-center justify-between gap-3 border-t border-border/60 pt-4">
+              <span class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"> Open surface </span>
+              <span :class="['text-sm font-semibold transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 motion-reduce:transform-none', toneClasses[item.tone].action]"> Open {{ item.title }} </span>
             </div>
           </div>
         </Link>
       </div>
     </div>
 
-    <Card
-      v-else
-      id="admin-dashboard-quick-links-empty-state"
-      class="border-dashed px-6 py-6"
-    >
+    <Card v-else id="admin-dashboard-quick-links-empty-state" class="border-dashed px-6 py-6">
       <div class="max-w-2xl space-y-2">
-        <h3 class="text-base font-semibold tracking-tight">
-          No admin surfaces are assigned to this account yet.
-        </h3>
-        <p class="text-sm leading-6 text-muted-foreground">
-          This workspace can still be reviewed as a product shell, but user,
-          role, and permission tools will appear only when this account is given
-          access to them.
-        </p>
+        <h3 class="text-base font-semibold tracking-tight">No admin surfaces are assigned to this account yet.</h3>
+        <p class="text-sm leading-6 text-muted-foreground">This workspace can still be reviewed as a product shell, but user, role, and permission tools will appear only when this account is given access to them.</p>
       </div>
     </Card>
   </section>

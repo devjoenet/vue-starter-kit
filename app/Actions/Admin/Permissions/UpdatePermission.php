@@ -8,10 +8,10 @@ use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\PermissionGroupCatalog;
 
-final class UpdatePermission
+final readonly class UpdatePermission
 {
     public function __construct(
-        private readonly PermissionGroupCatalog $permissionGroupCatalog,
+        private PermissionGroupCatalog $permissionGroupCatalog,
     ) {}
 
     public function handle(Permission $permission, UpdatePermissionData $data): Permission

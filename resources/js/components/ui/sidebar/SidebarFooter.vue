@@ -9,11 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="sidebar-footer"
-    data-sidebar="footer"
-    :class="cn(sidebarFooterVariants(), props.class)"
-  >
+  <div data-slot="sidebar-footer" data-sidebar="footer" :class="cn(sidebarFooterVariants(), props.class)">
     <slot />
   </div>
 </template>

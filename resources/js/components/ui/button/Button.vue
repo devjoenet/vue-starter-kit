@@ -23,14 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <Primitive
-    data-slot="button"
-    :as="as"
-    :as-child="asChild"
-    :class="
-      cn(buttonVariants({ appearance, variant, size, rounded }), props.class)
-    "
-  >
+  <Primitive data-slot="button" :as="as" :as-child="asChild" :class="cn(buttonVariants({ appearance, variant, size, rounded }), props.class)">
     <slot />
   </Primitive>
 </template>

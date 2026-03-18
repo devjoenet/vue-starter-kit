@@ -19,17 +19,9 @@ const slot = computed(() => context?.value.slots[props.index]);
 </script>
 
 <template>
-  <div
-    v-bind="forwarded"
-    data-slot="input-otp-slot"
-    :data-active="slot?.isActive"
-    :class="cn(inputOtpSlotVariants(), props.class)"
-  >
+  <div v-bind="forwarded" data-slot="input-otp-slot" :data-active="slot?.isActive" :class="cn(inputOtpSlotVariants(), props.class)">
     {{ slot?.char }}
-    <div
-      v-if="slot?.hasFakeCaret"
-      class="pointer-events-none absolute inset-0 flex items-center justify-center"
-    >
+    <div v-if="slot?.hasFakeCaret" class="pointer-events-none absolute inset-0 flex items-center justify-center">
       <div class="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
     </div>
   </div>

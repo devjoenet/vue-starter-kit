@@ -4,14 +4,7 @@ import { useToast } from '@/composables/useToast';
 
 export const useAppToastFeed = () => {
   const page = usePage();
-  const {
-    toasts,
-    success: pushSuccess,
-    error: pushError,
-    warning: pushWarning,
-    info: pushInfo,
-    dismissToast,
-  } = useToast();
+  const { toasts, success: pushSuccess, error: pushError, warning: pushWarning, info: pushInfo, dismissToast } = useToast();
 
   const flash = computed(() => page.props.flash ?? {});
   let removeHttpExceptionListener: (() => void) | undefined;
@@ -19,14 +12,9 @@ export const useAppToastFeed = () => {
 
   onMounted(() => {
     removeHttpExceptionListener = router.on('httpException', (event) => {
-      pushError(
-        event.detail.response.status >= 500
-          ? 'The server was unable to complete the request.'
-          : 'Unable to complete the request.',
-        {
-          duration: 5200,
-        },
-      );
+      pushError(event.detail.response.status >= 500 ? 'The server was unable to complete the request.' : 'Unable to complete the request.', {
+        duration: 5200,
+      });
     });
 
     removeNetworkErrorListener = router.on('networkError', () => {
@@ -42,16 +30,9 @@ export const useAppToastFeed = () => {
   });
 
   watch(
-    () =>
-      [
-        flash.value.success,
-        flash.value.error,
-        flash.value.warning,
-        flash.value.info,
-      ] as const,
+    () => [flash.value.success, flash.value.error, flash.value.warning, flash.value.info] as const,
     ([success, error, warning, info], previousValue) => {
-      const [previousSuccess, previousError, previousWarning, previousInfo] =
-        previousValue ?? [undefined, undefined, undefined, undefined];
+      const [previousSuccess, previousError, previousWarning, previousInfo] = previousValue ?? [undefined, undefined, undefined, undefined];
 
       if (success && success !== previousSuccess) {
         pushSuccess(success);

@@ -21,9 +21,7 @@ withDefaults(
 <template>
   <Card variant="default" class="surface-editor-panel overflow-hidden py-0">
     <div class="border-b border-border/60 px-6 py-5">
-      <div
-        class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"
-      >
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div class="space-y-2">
           <p v-if="kicker" class="section-kicker">{{ kicker }}</p>
           <h2 class="text-lg font-semibold tracking-tight">{{ title }}</h2>
@@ -32,10 +30,7 @@ withDefaults(
           </p>
         </div>
 
-        <p
-          v-if="resultsLabel"
-          class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"
-        >
+        <p v-if="resultsLabel" class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">
           {{ resultsLabel }}
         </p>
       </div>
@@ -43,10 +38,7 @@ withDefaults(
 
     <slot />
 
-    <div
-      v-if="error || $slots.footer"
-      class="space-y-3 border-t border-border/60 px-6 py-4"
-    >
+    <div v-if="error || $slots.footer" class="space-y-3 border-t border-border/60 px-6 py-4">
       <Alert v-if="error" variant="destructive">
         <AlertTitle>Resolve this assignment issue</AlertTitle>
         <AlertDescription>

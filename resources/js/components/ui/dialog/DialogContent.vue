@@ -4,12 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import type { DialogContentVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
-import {
-  DialogClose,
-  DialogContent,
-  DialogPortal,
-  useForwardPropsEmits,
-} from 'reka-ui';
+import { DialogClose, DialogContent, DialogPortal, useForwardPropsEmits } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { dialogCloseVariants, dialogContentVariants } from './styles';
 import DialogOverlay from './DialogOverlay.vue';
@@ -41,20 +36,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 <template>
   <DialogPortal>
     <DialogOverlay />
-    <DialogContent
-      data-slot="dialog-content"
-      v-bind="{ ...$attrs, ...forwarded }"
-      :class="
-        cn(dialogContentVariants({ variant: props.variant }), props.class)
-      "
-    >
+    <DialogContent data-slot="dialog-content" v-bind="{ ...$attrs, ...forwarded }" :class="cn(dialogContentVariants({ variant: props.variant }), props.class)">
       <slot />
 
-      <DialogClose
-        v-if="showCloseButton"
-        data-slot="dialog-close"
-        :class="dialogCloseVariants({ variant: props.variant })"
-      >
+      <DialogClose v-if="showCloseButton" data-slot="dialog-close" :class="dialogCloseVariants({ variant: props.variant })">
         <X />
         <span class="sr-only">Close</span>
       </DialogClose>

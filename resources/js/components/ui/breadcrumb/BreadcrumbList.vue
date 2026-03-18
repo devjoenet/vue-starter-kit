@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <ol
-    data-slot="breadcrumb-list"
-    :class="cn(breadcrumbListVariants(), props.class)"
-  >
+  <ol data-slot="breadcrumb-list" :class="cn(breadcrumbListVariants(), props.class)">
     <slot />
   </ol>
 </template>

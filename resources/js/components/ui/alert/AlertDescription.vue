@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="alert-description"
-    :class="cn(alertDescriptionVariants(), props.class)"
-  >
+  <div data-slot="alert-description" :class="cn(alertDescriptionVariants(), props.class)">
     <slot />
   </div>
 </template>

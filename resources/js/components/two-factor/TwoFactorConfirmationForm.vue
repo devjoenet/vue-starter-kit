@@ -37,9 +37,7 @@ onMounted(async () => {
   >
     <input type="hidden" name="code" :value="code" />
     <div ref="pinInputContainerRef" class="relative w-full space-y-3">
-      <div
-        class="flex w-full flex-col items-center justify-center space-y-3 py-2"
-      >
+      <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
         <InputOTP id="otp" v-model="code" :maxlength="6" :disabled="processing">
           <InputOTPGroup>
             <InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" />
@@ -53,22 +51,8 @@ onMounted(async () => {
       </div>
 
       <div class="flex w-full items-center space-x-5">
-        <Button
-          type="button"
-          appearance="outline"
-          class="w-auto flex-1"
-          :disabled="processing"
-          @click="$emit('back')"
-        >
-          Back
-        </Button>
-        <Button
-          type="submit"
-          class="w-auto flex-1"
-          :disabled="processing || code.length < 6"
-        >
-          Confirm
-        </Button>
+        <Button type="button" appearance="outline" class="w-auto flex-1" :disabled="processing" @click="$emit('back')"> Back </Button>
+        <Button type="submit" class="w-auto flex-1" :disabled="processing || code.length < 6"> Confirm </Button>
       </div>
     </div>
   </Form>

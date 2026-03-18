@@ -14,7 +14,6 @@ abstract class BaseInteractiveCreateCommand extends Command
      * @param  array<string, mixed>  $rules
      * @param  array<string, string>  $messages
      */
-
     protected function validationMessage(
         array $data,
         array $rules,

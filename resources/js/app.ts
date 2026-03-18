@@ -13,11 +13,7 @@ const resolveProgressColor = () => {
     return fallbackProgressColor;
   }
 
-  return (
-    getComputedStyle(document.documentElement)
-      .getPropertyValue('--primary')
-      .trim() || fallbackProgressColor
-  );
+  return getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || fallbackProgressColor;
 };
 
 createInertiaApp({
@@ -25,8 +21,7 @@ createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
   setup({ el, App, props, plugin }) {
     createApp({
-      render: () =>
-        h(Fragment, [h(App, props), h(AppToasts), h(DeleteConfirmationDialog)]),
+      render: () => h(Fragment, [h(App, props), h(AppToasts), h(DeleteConfirmationDialog)]),
     })
       .use(plugin)
       .mount(el!);

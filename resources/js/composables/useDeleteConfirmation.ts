@@ -41,13 +41,7 @@ const confirm = () => {
 };
 
 export function useDeleteConfirmation() {
-  const confirmDelete = ({
-    confirmLabel = 'Delete',
-    enabled = true,
-    message,
-    onConfirm,
-    title = 'Confirm deletion',
-  }: DeleteConfirmationOptions): boolean => {
+  const confirmDelete = ({ confirmLabel = 'Delete', enabled = true, message, onConfirm, title = 'Confirm deletion' }: DeleteConfirmationOptions): boolean => {
     if (!enabled) {
       return false;
     }

@@ -27,10 +27,7 @@ withDefaults(
       <h2 class="text-lg font-semibold tracking-tight">
         {{ title }}
       </h2>
-      <p
-        v-if="description"
-        class="max-w-2xl text-sm leading-6 text-muted-foreground"
-      >
+      <p v-if="description" class="max-w-2xl text-sm leading-6 text-muted-foreground">
         {{ description }}
       </p>
     </CardHeader>
@@ -39,10 +36,7 @@ withDefaults(
       <slot />
     </CardContent>
 
-    <CardFooter
-      v-if="$slots.footer"
-      :class="cn('border-t border-border/70 px-6 pt-5', footerClass)"
-    >
+    <CardFooter v-if="$slots.footer" :class="cn('border-t border-border/70 px-6 pt-5', footerClass)">
       <slot name="footer" />
     </CardFooter>
   </Card>

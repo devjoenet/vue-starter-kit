@@ -50,9 +50,7 @@ export function resolveFieldState(source: FieldStateSource): FieldState {
   return 'default';
 }
 
-export function resolveSupportingText(
-  source: FieldStateSource,
-): string | undefined {
+export function resolveSupportingText(source: FieldStateSource): string | undefined {
   if (resolveHasError(source)) {
     if (typeof source.error === 'string') {
       return source.error;

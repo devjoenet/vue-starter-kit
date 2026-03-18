@@ -24,31 +24,15 @@ defineProps<{
 
 <template>
   <div class="ml-auto flex items-center gap-2">
-    <div
-      v-if="items.length"
-      class="relative hidden items-center space-x-1 lg:flex"
-    >
+    <div v-if="items.length" class="relative hidden items-center space-x-1 lg:flex">
       <template v-for="item in items" :key="item.title">
         <TooltipProvider :delay-duration="0">
           <Tooltip>
             <TooltipTrigger>
-              <Button
-                appearance="ghost"
-                size="icon"
-                as-child
-                class="group h-11 w-11 cursor-pointer"
-              >
-                <a
-                  :href="toUrl(item.href)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <Button appearance="ghost" size="icon" as-child class="group h-11 w-11 cursor-pointer">
+                <a :href="toUrl(item.href)" target="_blank" rel="noopener noreferrer">
                   <span class="sr-only">{{ item.title }}</span>
-                  <component
-                    :is="item.icon"
-                    v-if="item.icon"
-                    class="size-5 opacity-80 group-hover:opacity-100"
-                  />
+                  <component :is="item.icon" v-if="item.icon" class="size-5 opacity-80 group-hover:opacity-100" />
                 </a>
               </Button>
             </TooltipTrigger>
@@ -62,21 +46,10 @@ defineProps<{
 
     <DropdownMenu v-if="user">
       <DropdownMenuTrigger :as-child="true">
-        <Button
-          appearance="ghost"
-          size="icon"
-          aria-label="Open user menu"
-          class="relative size-11 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
-        >
+        <Button appearance="ghost" size="icon" aria-label="Open user menu" class="relative size-11 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary">
           <Avatar class="size-9 overflow-hidden rounded-full">
-            <AvatarImage
-              v-if="user.avatar"
-              :src="user.avatar"
-              :alt="user.name"
-            />
-            <AvatarFallback
-              class="rounded-lg bg-muted font-semibold text-foreground"
-            >
+            <AvatarImage v-if="user.avatar" :src="user.avatar" :alt="user.name" />
+            <AvatarFallback class="rounded-lg bg-muted font-semibold text-foreground">
               {{ getInitials(user.name) }}
             </AvatarFallback>
           </Avatar>

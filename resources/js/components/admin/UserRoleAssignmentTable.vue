@@ -23,11 +23,7 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
-  (
-    event: 'toggle-role',
-    roleName: string,
-    value: boolean | 'indeterminate',
-  ): void;
+  (event: 'toggle-role', roleName: string, value: boolean | 'indeterminate'): void;
 }>();
 
 const activeSortColumn = ref<RoleSortColumn>('display_name');
@@ -35,14 +31,11 @@ const activeSortDirection = ref<SortDirection>('asc');
 const selectedFilters = ref<Partial<Record<RoleSortColumn, string[]>>>({});
 
 const filterOptions = computed(() => ({
-  display_name: Array.from(
-    new Set(props.roles.map((role) => role.name)),
-  ).sort(),
+  display_name: Array.from(new Set(props.roles.map((role) => role.name))).sort(),
   slug: Array.from(new Set(props.roles.map((role) => role.name))).sort(),
 }));
 
-const selectedFiltersFor = (column: RoleSortColumn): string[] =>
-  selectedFilters.value[column] ?? [];
+const selectedFiltersFor = (column: RoleSortColumn): string[] => selectedFilters.value[column] ?? [];
 
 const setFilters = (column: RoleSortColumn, values: string[]) => {
   selectedFilters.value = {
@@ -63,8 +56,7 @@ const clearFilters = (column: RoleSortColumn) => {
   selectedFilters.value = nextFilters;
 };
 
-const sortDirectionFor = (column: RoleSortColumn): SortDirection =>
-  activeSortColumn.value === column ? activeSortDirection.value : 'none';
+const sortDirectionFor = (column: RoleSortColumn): SortDirection => (activeSortColumn.value === column ? activeSortDirection.value : 'none');
 
 const toggleSort = (column: RoleSortColumn) => {
   if (activeSortColumn.value !== column) {
@@ -94,10 +86,7 @@ const filteredRoles = computed(() =>
     const displayNameFilters = selectedFiltersFor('display_name');
     const slugFilters = selectedFiltersFor('slug');
 
-    return (
-      (!displayNameFilters.length || displayNameFilters.includes(role.name)) &&
-      (!slugFilters.length || slugFilters.includes(role.name))
-    );
+    return (!displayNameFilters.length || displayNameFilters.includes(role.name)) && (!slugFilters.length || slugFilters.includes(role.name));
   }),
 );
 
@@ -113,9 +102,7 @@ const sortedRoles = computed(() =>
       return left.name.localeCompare(right.name) * direction;
     }
 
-    return (
-      toTitleCase(left.name).localeCompare(toTitleCase(right.name)) * direction
-    );
+    return toTitleCase(left.name).localeCompare(toTitleCase(right.name)) * direction;
   }),
 );
 
@@ -127,19 +114,11 @@ const resultsLabel = computed(() => {
 </script>
 
 <template>
-  <AssignmentTableCard
-    :error="error"
-    description="Filter, review, and assign roles without leaving this editor."
-    :results-label="resultsLabel"
-    title="Role assignments"
-  >
+  <AssignmentTableCard :error="error" description="Filter, review, and assign roles without leaving this editor." :results-label="resultsLabel" title="Role assignments">
     <div class="border-b border-border/60 px-6 py-5 md:hidden">
       <div class="space-y-1.5">
         <p class="section-kicker">Refine roles</p>
-        <p class="text-sm leading-6 text-muted-foreground">
-          Sort or filter the available roles before you change this account's
-          access.
-        </p>
+        <p class="text-sm leading-6 text-muted-foreground">Sort or filter the available roles before you change this account's access.</p>
       </div>
 
       <div class="mt-4 grid gap-3">
@@ -151,9 +130,7 @@ const resultsLabel = computed(() => {
           :format-option-label="toTitleCase"
           :selected-filters="selectedFiltersFor('display_name')"
           :sort-direction="sortDirectionFor('display_name')"
-          @apply-filters="
-            (column, values) => setFilters(column as RoleSortColumn, values)
-          "
+          @apply-filters="(column, values) => setFilters(column as RoleSortColumn, values)"
           @clear-filters="
             (column) => {
               clearFilters(column as RoleSortColumn);
@@ -172,9 +149,7 @@ const resultsLabel = computed(() => {
           :filter-options="filterOptions.slug"
           :selected-filters="selectedFiltersFor('slug')"
           :sort-direction="sortDirectionFor('slug')"
-          @apply-filters="
-            (column, values) => setFilters(column as RoleSortColumn, values)
-          "
+          @apply-filters="(column, values) => setFilters(column as RoleSortColumn, values)"
           @clear-filters="
             (column) => {
               clearFilters(column as RoleSortColumn);
@@ -190,20 +165,8 @@ const resultsLabel = computed(() => {
     </div>
 
     <div v-if="sortedRoles.length" class="grid gap-3 p-4 md:hidden">
-      <label
-        v-for="role in sortedRoles"
-        :key="role.id"
-        class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4"
-        :class="!canAssign ? 'opacity-70' : ''"
-      >
-        <Checkbox
-          class="mt-0.5 size-5"
-          :disabled="!canAssign"
-          :model-value="selectedRoleNames.includes(role.name)"
-          @update:model-value="
-            (value) => $emit('toggle-role', role.name, value)
-          "
-        />
+      <label v-for="role in sortedRoles" :key="role.id" class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4" :class="!canAssign ? 'opacity-70' : ''">
+        <Checkbox class="mt-0.5 size-5" :disabled="!canAssign" :model-value="selectedRoleNames.includes(role.name)" @update:model-value="(value) => $emit('toggle-role', role.name, value)" />
 
         <span class="min-w-0 space-y-1">
           <span class="block text-sm font-semibold">
@@ -219,9 +182,7 @@ const resultsLabel = computed(() => {
     <div v-else class="p-4 md:hidden">
       <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
         <p class="text-sm font-semibold">No roles match the current filters.</p>
-        <p class="mt-1 text-sm leading-6 text-muted-foreground">
-          Clear the filters or keep the existing assignments as they are.
-        </p>
+        <p class="mt-1 text-sm leading-6 text-muted-foreground">Clear the filters or keep the existing assignments as they are.</p>
       </div>
     </div>
 
@@ -236,9 +197,7 @@ const resultsLabel = computed(() => {
             :format-option-label="toTitleCase"
             :selected-filters="selectedFiltersFor('display_name')"
             :sort-direction="sortDirectionFor('display_name')"
-            @apply-filters="
-              (column, values) => setFilters(column as RoleSortColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as RoleSortColumn, values)"
             @clear-filters="
               (column) => {
                 clearFilters(column as RoleSortColumn);
@@ -257,9 +216,7 @@ const resultsLabel = computed(() => {
             :filter-options="filterOptions.slug"
             :selected-filters="selectedFiltersFor('slug')"
             :sort-direction="sortDirectionFor('slug')"
-            @apply-filters="
-              (column, values) => setFilters(column as RoleSortColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as RoleSortColumn, values)"
             @clear-filters="
               (column) => {
                 clearFilters(column as RoleSortColumn);
@@ -276,36 +233,23 @@ const resultsLabel = computed(() => {
       <TableBody>
         <TableRow v-for="role in sortedRoles" :key="role.id">
           <TableCell class="text-center">
-            <Checkbox
-              class="size-5"
-              :disabled="!canAssign"
-              :model-value="selectedRoleNames.includes(role.name)"
-              @update:model-value="
-                (value) => $emit('toggle-role', role.name, value)
-              "
-            />
+            <Checkbox class="size-5" :disabled="!canAssign" :model-value="selectedRoleNames.includes(role.name)" @update:model-value="(value) => $emit('toggle-role', role.name, value)" />
           </TableCell>
           <TableCell class="font-medium">
             {{ toTitleCase(role.name) }}
           </TableCell>
-          <TableCell
-            class="hidden text-xs font-medium text-muted-foreground italic md:table-cell"
-          >
+          <TableCell class="hidden text-xs font-medium text-muted-foreground italic md:table-cell">
             {{ role.name }}
           </TableCell>
         </TableRow>
         <TableRow v-if="sortedRoles.length === 0">
-          <TableCell colspan="3" class="text-center text-muted-foreground">
-            No roles match the current filters.
-          </TableCell>
+          <TableCell colspan="3" class="text-center text-muted-foreground"> No roles match the current filters. </TableCell>
         </TableRow>
       </TableBody>
     </Table>
 
     <template #footer>
-      <p class="text-xs leading-5 text-muted-foreground">
-        Role changes apply only when you save this editor.
-      </p>
+      <p class="text-xs leading-5 text-muted-foreground">Role changes apply only when you save this editor.</p>
     </template>
   </AssignmentTableCard>
 </template>

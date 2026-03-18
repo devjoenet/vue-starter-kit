@@ -18,20 +18,13 @@ import { destroy, index, update } from '@/routes/admin/roles';
 import { sync } from '@/routes/admin/roles/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminRolesEditPageProps } from '@/types/page-props';
-import type {
-  SyncRolePermissionsRequest,
-  UpdateRoleRequest,
-} from '@/types/wayfinder-generated';
+import type { SyncRolePermissionsRequest, UpdateRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: AppLayout,
 });
 
 setLayoutProps({
-  breadcrumbs: [
-    { title: 'Dashboard', href: dashboard.url() },
-    { title: 'Roles', href: index.url() },
-    { title: 'Edit' },
-  ],
+  breadcrumbs: [{ title: 'Dashboard', href: dashboard.url() }, { title: 'Roles', href: index.url() }, { title: 'Edit' }],
 });
 
 const props = defineProps<AdminRolesEditPageProps>();
@@ -49,11 +42,7 @@ const roleForm = useForm<UpdateRoleRequest>({
 const permsForm = useForm<SyncRolePermissionsRequest>({
   permissions: [...props.rolePermissions],
 });
-const {
-  replaceSelectedValues,
-  selectedValues: selectedPermissions,
-  toggleSelectedValue,
-} = useSelectionList<string>(props.rolePermissions);
+const { replaceSelectedValues, selectedValues: selectedPermissions, toggleSelectedValue } = useSelectionList<string>(props.rolePermissions);
 const { createStep, processing: saveProcessing, run } = useSequentialSave();
 
 watch(
@@ -87,17 +76,9 @@ watch(selectedPermissions, (permissions) => {
 const detailsDirty = computed(() => canUpdate.value && roleForm.isDirty);
 const permissionsDirty = computed(() => canAssign.value && permsForm.isDirty);
 const isDirty = computed(() => detailsDirty.value || permissionsDirty.value);
-const permissionGroupCount = computed(
-  () => Object.keys(props.permissionsByGroup).length,
-);
-const actionStatus = computed(() =>
-  isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.',
-);
-const actionDescription = computed(() =>
-  isDirty.value
-    ? 'Save the role details and permission assignments together, then return to the roles index.'
-    : 'You can close this editor now, or keep reviewing the current permission footprint.',
-);
+const permissionGroupCount = computed(() => Object.keys(props.permissionsByGroup).length);
+const actionStatus = computed(() => (isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.'));
+const actionDescription = computed(() => (isDirty.value ? 'Save the role details and permission assignments together, then return to the roles index.' : 'You can close this editor now, or keep reviewing the current permission footprint.'));
 
 const closeToIndex = () => {
   router.visit(index.url());
@@ -112,38 +93,32 @@ const saveAndClose = async () => {
               ...data,
               name: toKebabCase(data.name),
             }))
-            .put(
-              update.url(props.role.id, { query: { quiet_success: true } }),
-              {
-                only: ['role', 'flash'],
-                preserveScroll: true,
-                onSuccess: () => {
-                  roleForm.defaults({
-                    name: roleForm.name,
-                  });
-                  callbacks.onSuccess();
-                },
-                onCancel: callbacks.onCancel,
-                onError: callbacks.onError,
-                onFinish: callbacks.onFinish,
+            .put(update.url(props.role.id, { query: { quiet_success: true } }), {
+              only: ['role', 'flash'],
+              preserveScroll: true,
+              onSuccess: () => {
+                roleForm.defaults({
+                  name: roleForm.name,
+                });
+                callbacks.onSuccess();
               },
-            );
+              onCancel: callbacks.onCancel,
+              onError: callbacks.onError,
+              onFinish: callbacks.onFinish,
+            });
         })
       : null,
     permissionsDirty.value
       ? createStep((callbacks) => {
           permsForm.permissions = [...selectedPermissions.value];
-          permsForm.put(
-            sync.url(props.role.id, { query: { quiet_success: true } }),
-            {
-              only: ['rolePermissions', 'flash'],
-              preserveScroll: true,
-              onSuccess: callbacks.onSuccess,
-              onCancel: callbacks.onCancel,
-              onError: callbacks.onError,
-              onFinish: callbacks.onFinish,
-            },
-          );
+          permsForm.put(sync.url(props.role.id, { query: { quiet_success: true } }), {
+            only: ['rolePermissions', 'flash'],
+            preserveScroll: true,
+            onSuccess: callbacks.onSuccess,
+            onCancel: callbacks.onCancel,
+            onError: callbacks.onError,
+            onFinish: callbacks.onFinish,
+          });
         })
       : null,
   ]);
@@ -171,9 +146,7 @@ const destroyRole = () => {
   <Head :title="`Edit ${toTitleCase(props.role.name)}`" />
 
   <div id="admin-roles-edit-page" class="motion-stage px-4">
-    <section
-      class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
-    >
+    <section class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
       <div class="relative space-y-6">
         <AdminPageIntro
           id="admin-roles-edit-page-header"
@@ -184,31 +157,14 @@ const destroyRole = () => {
           :title="`Edit ${toTitleCase(props.role.name)}`"
         >
           <template #aside>
-            <Badge variant="secondary">
-              {{ selectedPermissions.length }} permission{{
-                selectedPermissions.length === 1 ? '' : 's'
-              }}
-            </Badge>
-            <Badge variant="info">
-              {{ permissionGroupCount }} group{{
-                permissionGroupCount === 1 ? '' : 's'
-              }}
-            </Badge>
+            <Badge variant="secondary"> {{ selectedPermissions.length }} permission{{ selectedPermissions.length === 1 ? '' : 's' }} </Badge>
+            <Badge variant="info"> {{ permissionGroupCount }} group{{ permissionGroupCount === 1 ? '' : 's' }} </Badge>
           </template>
         </AdminPageIntro>
 
-        <div
-          id="admin-roles-edit-sections"
-          class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]"
-        >
+        <div id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
           <div class="space-y-6">
-            <RoleDetailsForm
-              id="admin-roles-edit-details-card"
-              class="motion-step"
-              style="--motion-order: 1"
-              :can-update="canUpdate"
-              :form="roleForm"
-            />
+            <RoleDetailsForm id="admin-roles-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="roleForm" />
 
             <RolePermissionAssignmentTable
               id="admin-roles-edit-permissions-card"
@@ -218,16 +174,11 @@ const destroyRole = () => {
               :error="permsForm.errors.permissions"
               :permissions-by-group="permissionsByGroup"
               :selected-permission-names="selectedPermissions"
-              @toggle-permission="
-                (name, value) => toggleSelectedValue(name, value)
-              "
+              @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
             />
           </div>
 
-          <aside
-            class="motion-step xl:sticky xl:top-6 xl:self-start"
-            style="--motion-order: 3"
-          >
+          <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
             <EditPageActionRow
               id="admin-roles-edit-actions"
               :can-delete="canDelete"

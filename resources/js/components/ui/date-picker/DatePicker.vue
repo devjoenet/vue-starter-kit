@@ -7,10 +7,7 @@ import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
-import {
-  inputAssistiveTextVariants,
-  inputVariants,
-} from '@/components/ui/input/variants';
+import { inputAssistiveTextVariants, inputVariants } from '@/components/ui/input/variants';
 import { cn } from '@/lib/utils';
 import FieldAdornmentIcon from '../form-field/FieldAdornmentIcon.vue';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
@@ -78,17 +75,12 @@ const modelValue = useVModel(props, 'modelValue', emit, {
 const hasLabel = computed(() => Boolean(props.label));
 const fieldId = computed(() => props.id ?? `date-picker-${generatedId}`);
 const menuId = computed(() => `${fieldId.value}-menu`);
-const { hasError, fieldState, supportingText, showAsterisk } =
-  useFieldState(props);
-const assistiveTextId = computed(() =>
-  supportingText.value ? `${fieldId.value}-assistive` : undefined,
-);
+const { hasError, fieldState, supportingText, showAsterisk } = useFieldState(props);
+const assistiveTextId = computed(() => (supportingText.value ? `${fieldId.value}-assistive` : undefined));
 const describedBy = computed(() => assistiveTextId.value ?? undefined);
 
 const hasValue = computed(() => Boolean(modelValue.value));
-const hasClearControl = computed(
-  () => props.clearable && hasValue.value && !props.disabled && !props.readonly,
-);
+const hasClearControl = computed(() => props.clearable && hasValue.value && !props.disabled && !props.readonly);
 
 const selectedDate = computed(() => parseIsoDate(modelValue.value));
 const visibleMonth = ref<Date>(selectedDate.value ?? startOfMonth(new Date()));
@@ -122,16 +114,11 @@ const triggerClasses = computed(() =>
 const labelClasses = computed(() =>
   cn(
     'pointer-events-none absolute top-4 left-4 origin-left text-sm text-muted-foreground transition-[transform,color,top] duration-150 peer-focus:top-2 peer-focus:scale-90 peer-focus:text-[var(--ring)] peer-disabled:opacity-60 peer-data-[filled=true]:top-2 peer-data-[filled=true]:scale-90 peer-data-[open=true]:top-2 peer-data-[open=true]:scale-90 peer-data-[open=true]:text-[var(--ring)]',
-    fieldState.value === 'error' &&
-      'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
-    fieldState.value === 'destructive' &&
-      'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
-    fieldState.value === 'info' &&
-      'text-info peer-focus:text-info peer-data-[open=true]:text-info',
-    fieldState.value === 'warning' &&
-      'text-warning peer-focus:text-warning peer-data-[open=true]:text-warning',
-    fieldState.value === 'success' &&
-      'text-success peer-focus:text-success peer-data-[open=true]:text-success',
+    fieldState.value === 'error' && 'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
+    fieldState.value === 'destructive' && 'text-destructive peer-focus:text-destructive peer-data-[open=true]:text-destructive',
+    fieldState.value === 'info' && 'text-info peer-focus:text-info peer-data-[open=true]:text-info',
+    fieldState.value === 'warning' && 'text-warning peer-focus:text-warning peer-data-[open=true]:text-warning',
+    fieldState.value === 'success' && 'text-success peer-focus:text-success peer-data-[open=true]:text-success',
   ),
 );
 
@@ -182,9 +169,7 @@ const weekdayLabels = computed(() => {
   return labels;
 });
 
-const dayCells = computed(() =>
-  buildCalendarGrid(visibleMonth.value, props.weekStartsOn),
-);
+const dayCells = computed(() => buildCalendarGrid(visibleMonth.value, props.weekStartsOn));
 
 const { handleTriggerKeydown } = useDisclosureTrigger({
   open,
@@ -201,23 +186,14 @@ function parseIsoDate(value?: string): Date | null {
 
   const parts = value.split('-').map((part) => Number(part));
 
-  if (
-    parts.length !== 3 ||
-    Number.isNaN(parts[0]) ||
-    Number.isNaN(parts[1]) ||
-    Number.isNaN(parts[2])
-  ) {
+  if (parts.length !== 3 || Number.isNaN(parts[0]) || Number.isNaN(parts[1]) || Number.isNaN(parts[2])) {
     return null;
   }
 
   const [year, month, day] = parts;
   const date = new Date(year, month - 1, day);
 
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
     return null;
   }
 
@@ -258,18 +234,11 @@ function isSameDay(left: Date | null, right: Date): boolean {
     return false;
   }
 
-  return (
-    left.getFullYear() === right.getFullYear() &&
-    left.getMonth() === right.getMonth() &&
-    left.getDate() === right.getDate()
-  );
+  return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth() && left.getDate() === right.getDate();
 }
 
 function isInCurrentMonth(date: Date): boolean {
-  return (
-    date.getMonth() === visibleMonth.value.getMonth() &&
-    date.getFullYear() === visibleMonth.value.getFullYear()
-  );
+  return date.getMonth() === visibleMonth.value.getMonth() && date.getFullYear() === visibleMonth.value.getFullYear();
 }
 
 function isBeforeMin(date: Date): boolean {
@@ -379,50 +348,27 @@ function selectToday(): void {
               @clear="clearValue"
             />
 
-            <FieldAdornmentIcon
-              class="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-muted-foreground"
-            >
+            <FieldAdornmentIcon class="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-muted-foreground">
               <CalendarDays class="size-4" />
             </FieldAdornmentIcon>
           </button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          :id="menuId"
-          align="start"
-          :side-offset="4"
-          :class="
-            cn('w-82 border-border/60 p-3 shadow-(--elevation-2)', contentClass)
-          "
-        >
+        <DropdownMenuContent :id="menuId" align="start" :side-offset="4" :class="cn('w-82 border-border/60 p-3 shadow-(--elevation-2)', contentClass)">
           <div class="flex items-center justify-between">
-            <button
-              type="button"
-              class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              :disabled="disabled || readonly"
-              @click="goToPreviousMonth"
-            >
+            <button type="button" class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" :disabled="disabled || readonly" @click="goToPreviousMonth">
               <ChevronLeft class="size-4" />
             </button>
 
             <p class="text-sm font-semibold">{{ monthLabel }}</p>
 
-            <button
-              type="button"
-              class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              :disabled="disabled || readonly"
-              @click="goToNextMonth"
-            >
+            <button type="button" class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" :disabled="disabled || readonly" @click="goToNextMonth">
               <ChevronRight class="size-4" />
             </button>
           </div>
 
           <div class="mt-3 grid grid-cols-7 gap-1">
-            <p
-              v-for="weekday in weekdayLabels"
-              :key="weekday"
-              class="flex h-8 items-center justify-center text-xs font-medium text-muted-foreground"
-            >
+            <p v-for="weekday in weekdayLabels" :key="weekday" class="flex h-8 items-center justify-center text-xs font-medium text-muted-foreground">
               {{ weekday }}
             </p>
 
@@ -434,13 +380,7 @@ function selectToday(): void {
               :class="
                 cn(
                   datePickerDayVariants({
-                    variant: isSameDay(selectedDate, date)
-                      ? 'selected'
-                      : isSameDay(new Date(), date)
-                        ? 'today'
-                        : isInCurrentMonth(date)
-                          ? 'default'
-                          : 'muted',
+                    variant: isSameDay(selectedDate, date) ? 'selected' : isSameDay(new Date(), date) ? 'today' : isInCurrentMonth(date) ? 'default' : 'muted',
                   }),
                 )
               "
@@ -450,17 +390,8 @@ function selectToday(): void {
             </button>
           </div>
 
-          <div
-            class="mt-3 flex items-center justify-between gap-2 border-t border-border/70 pt-3"
-          >
-            <button
-              type="button"
-              class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-              :disabled="disabled || readonly"
-              @click="clearValue"
-            >
-              Clear
-            </button>
+          <div class="mt-3 flex items-center justify-between gap-2 border-t border-border/70 pt-3">
+            <button type="button" class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground" :disabled="disabled || readonly" @click="clearValue">Clear</button>
 
             <button
               type="button"
@@ -474,20 +405,11 @@ function selectToday(): void {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <FieldLabel
-        :label="label"
-        :for-id="fieldId"
-        :class="labelClasses"
-        :show-asterisk="showAsterisk"
-      />
+      <FieldLabel :label="label" :for-id="fieldId" :class="labelClasses" :show-asterisk="showAsterisk" />
     </div>
 
     <div v-if="supportingText" class="mt-2">
-      <FieldAssistiveText
-        :id="assistiveTextId"
-        :text="supportingText"
-        :class="assistiveTextClasses"
-      />
+      <FieldAssistiveText :id="assistiveTextId" :text="supportingText" :class="assistiveTextClasses" />
     </div>
   </div>
 </template>

@@ -23,8 +23,7 @@ const content = computed(() => {
     case 503:
       return {
         title: 'Service unavailable',
-        message:
-          'The app is temporarily unavailable. Please try again shortly.',
+        message: 'The app is temporarily unavailable. Please try again shortly.',
       };
     default:
       return {
@@ -38,21 +37,11 @@ const content = computed(() => {
 <template>
   <Head :title="`${content.title} (${status})`" />
 
-  <div
-    id="error-page"
-    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-muted/60 px-6 py-16"
-  >
-    <div
-      id="error-page-card"
-      class="w-full max-w-2xl rounded-3xl border border-border/70 bg-card/95 p-8 shadow-(--elevation-2) sm:p-10"
-    >
+  <div id="error-page" class="flex min-h-screen items-center justify-center bg-linear-to-br from-background via-background to-muted/60 px-6 py-16">
+    <div id="error-page-card" class="w-full max-w-2xl rounded-3xl border border-border/70 bg-card/95 p-8 shadow-(--elevation-2) sm:p-10">
       <div id="error-page-content" class="space-y-6">
         <div id="error-page-copy" class="space-y-3">
-          <p
-            class="text-sm font-semibold tracking-[0.2em] text-primary uppercase"
-          >
-            Error {{ status }}
-          </p>
+          <p class="text-sm font-semibold tracking-[0.2em] text-primary uppercase">Error {{ status }}</p>
           <div class="space-y-2">
             <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
               {{ content.title }}

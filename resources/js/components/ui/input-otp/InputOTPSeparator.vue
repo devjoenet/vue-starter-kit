@@ -13,12 +13,7 @@ const forwarded = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <div
-    data-slot="input-otp-separator"
-    role="separator"
-    v-bind="forwarded"
-    :class="cn(inputOtpSeparatorVariants(), props.class)"
-  >
+  <div data-slot="input-otp-separator" role="separator" v-bind="forwarded" :class="cn(inputOtpSeparatorVariants(), props.class)">
     <slot>
       <MinusIcon />
     </slot>

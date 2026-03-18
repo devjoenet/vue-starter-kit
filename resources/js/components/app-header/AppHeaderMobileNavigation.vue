@@ -25,12 +25,7 @@ const activeItemStyles = 'bg-primary/10 text-primary';
   <div class="lg:hidden">
     <Sheet>
       <SheetTrigger :as-child="true">
-        <Button
-          appearance="ghost"
-          size="icon"
-          aria-label="Open navigation menu"
-          class="mr-2 h-11 w-11"
-        >
+        <Button appearance="ghost" size="icon" aria-label="Open navigation menu" class="mr-2 h-11 w-11">
           <Menu class="h-5 w-5" />
         </Button>
       </SheetTrigger>
@@ -53,14 +48,7 @@ const activeItemStyles = 'bg-primary/10 text-primary';
             </Link>
           </nav>
           <div v-if="utilityItems.length" class="flex flex-col space-y-4">
-            <a
-              v-for="item in utilityItems"
-              :key="item.title"
-              :href="toUrl(item.href)"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex min-h-11 items-center space-x-2 rounded-lg px-3 py-3 text-sm font-medium"
-            >
+            <a v-for="item in utilityItems" :key="item.title" :href="toUrl(item.href)" target="_blank" rel="noopener noreferrer" class="flex min-h-11 items-center space-x-2 rounded-lg px-3 py-3 text-sm font-medium">
               <component :is="item.icon" v-if="item.icon" class="h-5 w-5" />
               <span>{{ item.title }}</span>
             </a>

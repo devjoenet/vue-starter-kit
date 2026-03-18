@@ -17,20 +17,13 @@ import { destroy, index, update } from '@/routes/admin/users';
 import { sync } from '@/routes/admin/users/roles';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminUsersEditPageProps } from '@/types/page-props';
-import type {
-  SyncUserRolesRequest,
-  UpdateUserRequest,
-} from '@/types/wayfinder-generated';
+import type { SyncUserRolesRequest, UpdateUserRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: AppLayout,
 });
 
 setLayoutProps({
-  breadcrumbs: [
-    { title: 'Dashboard', href: dashboard.url() },
-    { title: 'Users', href: index.url() },
-    { title: 'Edit' },
-  ],
+  breadcrumbs: [{ title: 'Dashboard', href: dashboard.url() }, { title: 'Users', href: index.url() }, { title: 'Edit' }],
 });
 
 const props = defineProps<AdminUsersEditPageProps>();
@@ -54,11 +47,7 @@ const userForm = useForm<UpdateUserRequest>({
 const rolesForm = useForm<SyncUserRolesRequest>({
   roles: [...props.userRoles],
 });
-const {
-  replaceSelectedValues,
-  selectedValues: selectedRoles,
-  toggleSelectedValue,
-} = useSelectionList<string>(props.userRoles);
+const { replaceSelectedValues, selectedValues: selectedRoles, toggleSelectedValue } = useSelectionList<string>(props.userRoles);
 const { createStep, processing: saveProcessing, run } = useSequentialSave();
 
 watch(
@@ -97,14 +86,8 @@ watch(selectedRoles, (roleNames) => {
 const detailsDirty = computed(() => canUpdate.value && userForm.isDirty);
 const rolesDirty = computed(() => canAssignRoles.value && rolesForm.isDirty);
 const isDirty = computed(() => detailsDirty.value || rolesDirty.value);
-const actionStatus = computed(() =>
-  isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.',
-);
-const actionDescription = computed(() =>
-  isDirty.value
-    ? 'Save the updated account details and access assignments together, then return to the users index.'
-    : 'You can close this editor now, or keep reviewing the account before you leave.',
-);
+const actionStatus = computed(() => (isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.'));
+const actionDescription = computed(() => (isDirty.value ? 'Save the updated account details and access assignments together, then return to the users index.' : 'You can close this editor now, or keep reviewing the account before you leave.'));
 
 const closeToIndex = () => {
   router.visit(index.url());
@@ -114,42 +97,36 @@ const saveAndClose = async () => {
   const succeeded = await run([
     detailsDirty.value
       ? createStep((callbacks) => {
-          userForm.put(
-            update.url(props.user.id, { query: { quiet_success: true } }),
-            {
-              only: ['user', 'auth', 'flash'],
-              preserveScroll: true,
-              onSuccess: () => {
-                userForm.defaults({
-                  name: userForm.name,
-                  email: userForm.email,
-                  password: '',
-                  password_confirmation: '',
-                });
-                userForm.reset('password', 'password_confirmation');
-                callbacks.onSuccess();
-              },
-              onCancel: callbacks.onCancel,
-              onError: callbacks.onError,
-              onFinish: callbacks.onFinish,
+          userForm.put(update.url(props.user.id, { query: { quiet_success: true } }), {
+            only: ['user', 'auth', 'flash'],
+            preserveScroll: true,
+            onSuccess: () => {
+              userForm.defaults({
+                name: userForm.name,
+                email: userForm.email,
+                password: '',
+                password_confirmation: '',
+              });
+              userForm.reset('password', 'password_confirmation');
+              callbacks.onSuccess();
             },
-          );
+            onCancel: callbacks.onCancel,
+            onError: callbacks.onError,
+            onFinish: callbacks.onFinish,
+          });
         })
       : null,
     rolesDirty.value
       ? createStep((callbacks) => {
           rolesForm.roles = [...selectedRoles.value];
-          rolesForm.put(
-            sync.url(props.user.id, { query: { quiet_success: true } }),
-            {
-              only: ['userRoles', 'flash'],
-              preserveScroll: true,
-              onSuccess: callbacks.onSuccess,
-              onCancel: callbacks.onCancel,
-              onError: callbacks.onError,
-              onFinish: callbacks.onFinish,
-            },
-          );
+          rolesForm.put(sync.url(props.user.id, { query: { quiet_success: true } }), {
+            only: ['userRoles', 'flash'],
+            preserveScroll: true,
+            onSuccess: callbacks.onSuccess,
+            onCancel: callbacks.onCancel,
+            onError: callbacks.onError,
+            onFinish: callbacks.onFinish,
+          });
         })
       : null,
   ]);
@@ -177,9 +154,7 @@ const destroyUser = () => {
   <Head :title="`Edit ${userLabel}`" />
 
   <div id="admin-users-edit-page" class="motion-stage px-4">
-    <section
-      class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
-    >
+    <section class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
       <div class="relative space-y-6">
         <AdminPageIntro
           id="admin-users-edit-page-header"
@@ -190,18 +165,9 @@ const destroyUser = () => {
           :title="`Edit ${userLabel}`"
         />
 
-        <div
-          id="admin-users-edit-sections"
-          class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]"
-        >
+        <div id="admin-users-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
           <div class="space-y-6">
-            <UserDetailsForm
-              id="admin-users-edit-details-card"
-              class="motion-step"
-              style="--motion-order: 1"
-              :can-update="canUpdate"
-              :form="userForm"
-            />
+            <UserDetailsForm id="admin-users-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="userForm" />
 
             <UserRoleAssignmentTable
               id="admin-users-edit-roles-card"
@@ -215,10 +181,7 @@ const destroyUser = () => {
             />
           </div>
 
-          <aside
-            class="motion-step xl:sticky xl:top-6 xl:self-start"
-            style="--motion-order: 3"
-          >
+          <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
             <EditPageActionRow
               id="admin-users-edit-actions"
               :can-delete="canDelete"

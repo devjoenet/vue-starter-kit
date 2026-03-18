@@ -10,12 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <span
-    data-slot="breadcrumb-ellipsis"
-    role="presentation"
-    aria-hidden="true"
-    :class="cn(breadcrumbEllipsisVariants(), props.class)"
-  >
+  <span data-slot="breadcrumb-ellipsis" role="presentation" aria-hidden="true" :class="cn(breadcrumbEllipsisVariants(), props.class)">
     <slot>
       <MoreHorizontal class="size-4" />
     </slot>

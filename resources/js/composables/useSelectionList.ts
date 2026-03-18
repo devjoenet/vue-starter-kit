@@ -4,13 +4,10 @@ import type { Ref } from 'vue';
 type SelectableValue = number | string;
 type SelectionState = boolean | 'indeterminate';
 
-export function useSelectionList<T extends SelectableValue>(
-  initialValues: T[] = [],
-) {
+export function useSelectionList<T extends SelectableValue>(initialValues: T[] = []) {
   const selectedValues = ref([...initialValues]) as Ref<T[]>;
 
-  const hasSelectedValue = (value: T): boolean =>
-    selectedValues.value.includes(value);
+  const hasSelectedValue = (value: T): boolean => selectedValues.value.includes(value);
 
   const replaceSelectedValues = (values: T[]) => {
     selectedValues.value = [...values];

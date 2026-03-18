@@ -11,13 +11,7 @@ import TableRow from '@/components/ui/table/TableRow.vue';
 import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
 import { toTitleCase } from '@/lib/utils';
 import { edit, index } from '@/routes/admin/permissions';
-import type {
-  AdminPermissionsIndexColumn,
-  AdminPermissionsIndexFilterOptions,
-  AdminIndexQuery,
-  PermissionGroupOption,
-  PermissionIndexItem,
-} from '@/types/page-props';
+import type { AdminPermissionsIndexColumn, AdminPermissionsIndexFilterOptions, AdminIndexQuery, PermissionGroupOption, PermissionIndexItem } from '@/types/page-props';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -28,20 +22,11 @@ const props = defineProps<{
   query: AdminIndexQuery<AdminPermissionsIndexColumn>;
 }>();
 
-const groupLabelMap = computed(
-  () => new Map(props.groups.map((group) => [group.slug, group.label])),
-);
-const formatGroupOptionLabel = (value: string) =>
-  groupLabelMap.value.get(value) ?? toTitleCase(value);
+const groupLabelMap = computed(() => new Map(props.groups.map((group) => [group.slug, group.label])));
+const formatGroupOptionLabel = (value: string) => groupLabelMap.value.get(value) ?? toTitleCase(value);
 const formatIdentityOptionLabel = (value: string) => value;
 
-const {
-  clearFilters,
-  setFilters,
-  selectedFiltersFor,
-  sortDirectionFor,
-  toggleSort,
-} = useAdminIndexTableQuery<AdminPermissionsIndexColumn>({
+const { clearFilters, setFilters, selectedFiltersFor, sortDirectionFor, toggleSort } = useAdminIndexTableQuery<AdminPermissionsIndexColumn>({
   getQuery: () => props.query,
   getUrl: (query) =>
     index.url({
@@ -58,10 +43,7 @@ const {
   <Card variant="default" class="gap-4 px-4 py-4 md:hidden">
     <div class="space-y-1.5">
       <p class="section-kicker">Refine permissions</p>
-      <p class="text-sm leading-6 text-muted-foreground">
-        Keep the permission checks readable while preserving the same filter and
-        sort controls used on desktop.
-      </p>
+      <p class="text-sm leading-6 text-muted-foreground">Keep the permission checks readable while preserving the same filter and sort controls used on desktop.</p>
     </div>
 
     <div class="grid gap-3">
@@ -78,10 +60,7 @@ const {
             clearFilters(column as AdminPermissionsIndexColumn);
           }
         "
-        @apply-filters="
-          (column, values) =>
-            setFilters(column as AdminPermissionsIndexColumn, values)
-        "
+        @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
         @toggle-sort="
           (column) => {
             toggleSort(column as AdminPermissionsIndexColumn);
@@ -101,10 +80,7 @@ const {
             clearFilters(column as AdminPermissionsIndexColumn);
           }
         "
-        @apply-filters="
-          (column, values) =>
-            setFilters(column as AdminPermissionsIndexColumn, values)
-        "
+        @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
         @toggle-sort="
           (column) => {
             toggleSort(column as AdminPermissionsIndexColumn);
@@ -123,10 +99,7 @@ const {
             clearFilters(column as AdminPermissionsIndexColumn);
           }
         "
-        @apply-filters="
-          (column, values) =>
-            setFilters(column as AdminPermissionsIndexColumn, values)
-        "
+        @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
         @toggle-sort="
           (column) => {
             toggleSort(column as AdminPermissionsIndexColumn);
@@ -137,29 +110,17 @@ const {
   </Card>
 
   <div v-if="props.permissions.length" class="grid gap-3 md:hidden">
-    <Card
-      v-for="permission in props.permissions"
-      :key="permission.id"
-      variant="default"
-      class="gap-4 px-5 py-5"
-    >
+    <Card v-for="permission in props.permissions" :key="permission.id" variant="default" class="gap-4 px-5 py-5">
       <div class="flex items-start justify-between gap-4">
         <div class="min-w-0 space-y-1">
           <p class="section-kicker">Permission</p>
-          <Link
-            v-if="canUpdate"
-            :href="edit.url(permission.id)"
-            class="block text-lg font-semibold tracking-tight text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
-          >
+          <Link v-if="canUpdate" :href="edit.url(permission.id)" class="block text-lg font-semibold tracking-tight text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary">
             {{ permission.label }}
           </Link>
           <p v-else class="text-lg font-semibold tracking-tight">
             {{ permission.label }}
           </p>
-          <p
-            v-if="permission.description"
-            class="text-sm leading-6 text-muted-foreground"
-          >
+          <p v-if="permission.description" class="text-sm leading-6 text-muted-foreground">
             {{ permission.description }}
           </p>
           <p class="text-sm font-medium wrap-break-word text-muted-foreground">
@@ -170,22 +131,13 @@ const {
         <Badge variant="info">{{ permission.group_label }}</Badge>
       </div>
 
-      <p
-        v-if="permission.group_description"
-        class="text-sm leading-6 text-muted-foreground"
-      >
+      <p v-if="permission.group_description" class="text-sm leading-6 text-muted-foreground">
         {{ permission.group_description }}
       </p>
     </Card>
   </div>
 
-  <Card
-    v-else
-    variant="default"
-    class="px-5 py-5 text-sm text-muted-foreground md:hidden"
-  >
-    No permissions match the current filters.
-  </Card>
+  <Card v-else variant="default" class="px-5 py-5 text-sm text-muted-foreground md:hidden"> No permissions match the current filters. </Card>
 
   <Card variant="default" class="hidden overflow-hidden py-0 md:block">
     <Table>
@@ -203,10 +155,7 @@ const {
                 clearFilters(column as AdminPermissionsIndexColumn);
               }
             "
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as AdminPermissionsIndexColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
             @toggle-sort="
               (column) => {
                 toggleSort(column as AdminPermissionsIndexColumn);
@@ -225,10 +174,7 @@ const {
                 clearFilters(column as AdminPermissionsIndexColumn);
               }
             "
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as AdminPermissionsIndexColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
             @toggle-sort="
               (column) => {
                 toggleSort(column as AdminPermissionsIndexColumn);
@@ -246,10 +192,7 @@ const {
                 clearFilters(column as AdminPermissionsIndexColumn);
               }
             "
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as AdminPermissionsIndexColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as AdminPermissionsIndexColumn, values)"
             @toggle-sort="
               (column) => {
                 toggleSort(column as AdminPermissionsIndexColumn);
@@ -261,18 +204,11 @@ const {
       <TableBody>
         <TableRow v-for="permission in props.permissions" :key="permission.id">
           <TableCell class="font-medium">
-            <Link
-              v-if="canUpdate"
-              :href="edit.url(permission.id)"
-              class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
-            >
+            <Link v-if="canUpdate" :href="edit.url(permission.id)" class="font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary">
               {{ permission.label }}
             </Link>
             <span v-else>{{ permission.label }}</span>
-            <p
-              v-if="permission.description"
-              class="mt-1 text-sm leading-6 text-muted-foreground"
-            >
+            <p v-if="permission.description" class="mt-1 text-sm leading-6 text-muted-foreground">
               {{ permission.description }}
             </p>
           </TableCell>
@@ -280,10 +216,7 @@ const {
             <p class="font-medium text-foreground">
               {{ permission.group_label }}
             </p>
-            <p
-              v-if="permission.group_description"
-              class="mt-1 text-sm leading-6 text-muted-foreground"
-            >
+            <p v-if="permission.group_description" class="mt-1 text-sm leading-6 text-muted-foreground">
               {{ permission.group_description }}
             </p>
           </TableCell>
@@ -292,9 +225,7 @@ const {
           </TableCell>
         </TableRow>
         <TableRow v-if="!props.permissions.length">
-          <TableCell colspan="3" class="text-center text-muted-foreground">
-            No permissions match the current filters.
-          </TableCell>
+          <TableCell colspan="3" class="text-center text-muted-foreground"> No permissions match the current filters. </TableCell>
         </TableRow>
       </TableBody>
     </Table>

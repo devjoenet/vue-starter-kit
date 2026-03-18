@@ -38,23 +38,12 @@ withDefaults(
         {{ title ?? 'Update the identity tied to this account.' }}
       </h2>
       <p class="text-sm leading-6 text-muted-foreground">
-        {{
-          description ??
-          'Keep the account name, email, and password state ready for handoff and access reviews.'
-        }}
+        {{ description ?? 'Keep the account name, email, and password state ready for handoff and access reviews.' }}
       </p>
     </div>
 
     <div class="mt-6 space-y-4">
-      <UserIdentityFields
-        :name-id="nameId"
-        :email-id="emailId"
-        v-model:name="form.name"
-        v-model:email="form.email"
-        :disabled="!canUpdate"
-        :name-error="form.errors.name"
-        :email-error="form.errors.email"
-      />
+      <UserIdentityFields :name-id="nameId" :email-id="emailId" v-model:name="form.name" v-model:email="form.email" :disabled="!canUpdate" :name-error="form.errors.name" :email-error="form.errors.email" />
 
       <Input
         :id="passwordId"

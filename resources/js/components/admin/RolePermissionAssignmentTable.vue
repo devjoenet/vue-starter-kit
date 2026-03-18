@@ -22,50 +22,20 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (
-    event: 'toggle-permission',
-    permissionName: string,
-    value: boolean | 'indeterminate',
-  ): void;
+  (event: 'toggle-permission', permissionName: string, value: boolean | 'indeterminate'): void;
 }>();
 
-const {
-  clearFilters,
-  filterOptions,
-  permissionRows,
-  resultsLabel,
-  selectedFiltersFor,
-  setFilters,
-  sortDirectionFor,
-  sortedRows,
-  toggleSort,
-} = usePermissionTable(() => props.permissionsByGroup);
-const groupLabelMap = computed(
-  () =>
-    new Map(
-      permissionRows.value.map((permission) => [
-        permission.group,
-        permission.groupLabel,
-      ]),
-    ),
-);
-const formatGroupFilterLabel = (value: string) =>
-  groupLabelMap.value.get(value) ?? toTitleCase(value);
+const { clearFilters, filterOptions, permissionRows, resultsLabel, selectedFiltersFor, setFilters, sortDirectionFor, sortedRows, toggleSort } = usePermissionTable(() => props.permissionsByGroup);
+const groupLabelMap = computed(() => new Map(permissionRows.value.map((permission) => [permission.group, permission.groupLabel])));
+const formatGroupFilterLabel = (value: string) => groupLabelMap.value.get(value) ?? toTitleCase(value);
 </script>
 
 <template>
-  <AssignmentTableCard
-    :error="error"
-    description="Filter, sort, and assign permissions without leaving this role editor."
-    :results-label="resultsLabel"
-    title="Permission assignments"
-  >
+  <AssignmentTableCard :error="error" description="Filter, sort, and assign permissions without leaving this role editor." :results-label="resultsLabel" title="Permission assignments">
     <div class="border-b border-border/60 px-6 py-5 md:hidden">
       <div class="space-y-1.5">
         <p class="section-kicker">Refine permissions</p>
-        <p class="text-sm leading-6 text-muted-foreground">
-          Narrow the permission list before you change what this role can do.
-        </p>
+        <p class="text-sm leading-6 text-muted-foreground">Narrow the permission list before you change what this role can do.</p>
       </div>
 
       <div class="mt-4 grid gap-3">
@@ -77,10 +47,7 @@ const formatGroupFilterLabel = (value: string) =>
           :format-option-label="formatGroupFilterLabel"
           :selected-filters="selectedFiltersFor('group')"
           :sort-direction="sortDirectionFor('group')"
-          @apply-filters="
-            (column, values) =>
-              setFilters(column as PermissionSortColumn, values)
-          "
+          @apply-filters="(column, values) => setFilters(column as PermissionSortColumn, values)"
           @clear-filters="
             (column) => {
               clearFilters(column as PermissionSortColumn);
@@ -100,10 +67,7 @@ const formatGroupFilterLabel = (value: string) =>
           :format-option-label="(value) => value"
           :selected-filters="selectedFiltersFor('permission')"
           :sort-direction="sortDirectionFor('permission')"
-          @apply-filters="
-            (column, values) =>
-              setFilters(column as PermissionSortColumn, values)
-          "
+          @apply-filters="(column, values) => setFilters(column as PermissionSortColumn, values)"
           @clear-filters="
             (column) => {
               clearFilters(column as PermissionSortColumn);
@@ -119,29 +83,14 @@ const formatGroupFilterLabel = (value: string) =>
     </div>
 
     <div v-if="sortedRows.length" class="grid gap-3 p-4 md:hidden">
-      <label
-        v-for="permission in sortedRows"
-        :key="permission.id"
-        class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4"
-        :class="!canAssign ? 'opacity-70' : ''"
-      >
-        <Checkbox
-          class="mt-0.5 size-5"
-          :disabled="!canAssign"
-          :model-value="selectedPermissionNames.includes(permission.name)"
-          @update:model-value="
-            (value) => $emit('toggle-permission', permission.name, value)
-          "
-        />
+      <label v-for="permission in sortedRows" :key="permission.id" class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4" :class="!canAssign ? 'opacity-70' : ''">
+        <Checkbox class="mt-0.5 size-5" :disabled="!canAssign" :model-value="selectedPermissionNames.includes(permission.name)" @update:model-value="(value) => $emit('toggle-permission', permission.name, value)" />
 
         <span class="min-w-0 space-y-1">
           <span class="block text-sm font-semibold">
             {{ permission.label }}
           </span>
-          <span
-            v-if="permission.description"
-            class="block text-sm leading-6 text-muted-foreground"
-          >
+          <span v-if="permission.description" class="block text-sm leading-6 text-muted-foreground">
             {{ permission.description }}
           </span>
           <span class="block text-sm font-medium text-muted-foreground">
@@ -150,10 +99,7 @@ const formatGroupFilterLabel = (value: string) =>
           <span class="block text-xs text-muted-foreground/90">
             {{ permission.name }}
           </span>
-          <span
-            v-if="permission.groupDescription"
-            class="block text-xs leading-5 text-muted-foreground/80"
-          >
+          <span v-if="permission.groupDescription" class="block text-xs leading-5 text-muted-foreground/80">
             {{ permission.groupDescription }}
           </span>
         </span>
@@ -162,12 +108,8 @@ const formatGroupFilterLabel = (value: string) =>
 
     <div v-else class="p-4 md:hidden">
       <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
-        <p class="text-sm font-semibold">
-          No permissions match the current filters.
-        </p>
-        <p class="mt-1 text-sm leading-6 text-muted-foreground">
-          Clear the filters or keep this role's current access footprint.
-        </p>
+        <p class="text-sm font-semibold">No permissions match the current filters.</p>
+        <p class="mt-1 text-sm leading-6 text-muted-foreground">Clear the filters or keep this role's current access footprint.</p>
       </div>
     </div>
 
@@ -182,10 +124,7 @@ const formatGroupFilterLabel = (value: string) =>
             :format-option-label="formatGroupFilterLabel"
             :selected-filters="selectedFiltersFor('group')"
             :sort-direction="sortDirectionFor('group')"
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as PermissionSortColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as PermissionSortColumn, values)"
             @clear-filters="
               (column) => {
                 clearFilters(column as PermissionSortColumn);
@@ -204,10 +143,7 @@ const formatGroupFilterLabel = (value: string) =>
             :format-option-label="(value) => value"
             :selected-filters="selectedFiltersFor('permission')"
             :sort-direction="sortDirectionFor('permission')"
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as PermissionSortColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as PermissionSortColumn, values)"
             @clear-filters="
               (column) => {
                 clearFilters(column as PermissionSortColumn);
@@ -226,10 +162,7 @@ const formatGroupFilterLabel = (value: string) =>
             :filter-options="filterOptions.permission_check"
             :selected-filters="selectedFiltersFor('permission_check')"
             :sort-direction="sortDirectionFor('permission_check')"
-            @apply-filters="
-              (column, values) =>
-                setFilters(column as PermissionSortColumn, values)
-            "
+            @apply-filters="(column, values) => setFilters(column as PermissionSortColumn, values)"
             @clear-filters="
               (column) => {
                 clearFilters(column as PermissionSortColumn);
@@ -246,32 +179,19 @@ const formatGroupFilterLabel = (value: string) =>
       <TableBody>
         <TableRow v-for="permission in sortedRows" :key="permission.id">
           <TableCell class="text-center">
-            <Checkbox
-              class="size-5"
-              :disabled="!canAssign"
-              :model-value="selectedPermissionNames.includes(permission.name)"
-              @update:model-value="
-                (value) => $emit('toggle-permission', permission.name, value)
-              "
-            />
+            <Checkbox class="size-5" :disabled="!canAssign" :model-value="selectedPermissionNames.includes(permission.name)" @update:model-value="(value) => $emit('toggle-permission', permission.name, value)" />
           </TableCell>
           <TableCell class="text-muted-foreground">
             <p class="font-medium text-foreground">
               {{ permission.groupLabel }}
             </p>
-            <p
-              v-if="permission.groupDescription"
-              class="mt-1 text-sm leading-6 text-muted-foreground"
-            >
+            <p v-if="permission.groupDescription" class="mt-1 text-sm leading-6 text-muted-foreground">
               {{ permission.groupDescription }}
             </p>
           </TableCell>
           <TableCell class="font-medium">
             <p>{{ permission.label }}</p>
-            <p
-              v-if="permission.description"
-              class="mt-1 text-sm leading-6 text-muted-foreground"
-            >
+            <p v-if="permission.description" class="mt-1 text-sm leading-6 text-muted-foreground">
               {{ permission.description }}
             </p>
           </TableCell>
@@ -280,17 +200,13 @@ const formatGroupFilterLabel = (value: string) =>
           </TableCell>
         </TableRow>
         <TableRow v-if="!sortedRows.length">
-          <TableCell colspan="4" class="text-center text-muted-foreground">
-            No permissions match the current filters.
-          </TableCell>
+          <TableCell colspan="4" class="text-center text-muted-foreground"> No permissions match the current filters. </TableCell>
         </TableRow>
       </TableBody>
     </Table>
 
     <template #footer>
-      <p class="text-xs leading-5 text-muted-foreground">
-        Permission changes apply only when you save this editor.
-      </p>
+      <p class="text-xs leading-5 text-muted-foreground">Permission changes apply only when you save this editor.</p>
     </template>
   </AssignmentTableCard>
 </template>

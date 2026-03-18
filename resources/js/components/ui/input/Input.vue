@@ -9,11 +9,7 @@ import FieldClearControl from '../form-field/FieldClearControl.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';
 import { useFieldState } from '../form-field/useFieldState';
 import type { InputVariants } from './styles';
-import {
-  inputAssistiveTextVariants,
-  inputLabelVariants,
-  inputVariants,
-} from './styles';
+import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from './styles';
 
 defineOptions({
   inheritAttrs: false,
@@ -98,70 +94,31 @@ watch(
   },
 );
 
-const isMultiline = computed(
-  () => props.multiline || props.textarea || props.type === 'textarea',
-);
+const isMultiline = computed(() => props.multiline || props.textarea || props.type === 'textarea');
 const hasLabel = computed(() => Boolean(props.label));
 const hasClearIconSlot = computed(() => Boolean(slots['clear-icon']));
-const { hasError, fieldState, supportingText, showAsterisk } =
-  useFieldState(props);
+const { hasError, fieldState, supportingText, showAsterisk } = useFieldState(props);
 
-const hasLeadingIcon = computed(
-  () =>
-    Boolean(props.leadingIcon) ||
-    Boolean(slots['leading-icon']) ||
-    Boolean(slots['prepend-icon']),
-);
-const hasTrailingIcon = computed(
-  () =>
-    Boolean(props.trailingIcon) ||
-    Boolean(slots['trailing-icon']) ||
-    Boolean(slots['append-icon']),
-);
-const hasPrefix = computed(
-  () => Boolean(props.prefixText) || Boolean(slots.prefix),
-);
-const hasSuffix = computed(
-  () => Boolean(props.suffixText) || Boolean(slots.suffix),
-);
-const normalizedType = computed(() =>
-  props.type === 'number' ? 'text' : props.type,
-);
-const placeholderValue = computed(() =>
-  props.label ? (props.placeholder ?? ' ') : props.placeholder,
-);
+const hasLeadingIcon = computed(() => Boolean(props.leadingIcon) || Boolean(slots['leading-icon']) || Boolean(slots['prepend-icon']));
+const hasTrailingIcon = computed(() => Boolean(props.trailingIcon) || Boolean(slots['trailing-icon']) || Boolean(slots['append-icon']));
+const hasPrefix = computed(() => Boolean(props.prefixText) || Boolean(slots.prefix));
+const hasSuffix = computed(() => Boolean(props.suffixText) || Boolean(slots.suffix));
+const normalizedType = computed(() => (props.type === 'number' ? 'text' : props.type));
+const placeholderValue = computed(() => (props.label ? (props.placeholder ?? ' ') : props.placeholder));
 
 const showCounter = computed(() => typeof props.maxLength === 'number');
 const currentLength = computed(() => String(modelValue.value ?? '').length);
-const inputId = computed(
-  () => (attrs.id as string | undefined) ?? `input-${generatedId}`,
-);
-const customDescribedBy = computed(
-  () => attrs['aria-describedby'] as string | undefined,
-);
-const assistiveTextId = computed(() =>
-  supportingText.value ? `${inputId.value}-assistive` : undefined,
-);
-const counterId = computed(() =>
-  showCounter.value ? `${inputId.value}-counter` : undefined,
-);
+const inputId = computed(() => (attrs.id as string | undefined) ?? `input-${generatedId}`);
+const customDescribedBy = computed(() => attrs['aria-describedby'] as string | undefined);
+const assistiveTextId = computed(() => (supportingText.value ? `${inputId.value}-assistive` : undefined));
+const counterId = computed(() => (showCounter.value ? `${inputId.value}-counter` : undefined));
 const describedBy = computed(() => {
-  const ids = [
-    customDescribedBy.value,
-    assistiveTextId.value,
-    counterId.value,
-  ].filter(Boolean);
+  const ids = [customDescribedBy.value, assistiveTextId.value, counterId.value].filter(Boolean);
 
   return ids.length ? ids.join(' ') : undefined;
 });
 
-const hasClearControl = computed(
-  () =>
-    props.clearable &&
-    !props.disabled &&
-    !props.readonly &&
-    String(modelValue.value ?? '').length > 0,
-);
+const hasClearControl = computed(() => props.clearable && !props.disabled && !props.readonly && String(modelValue.value ?? '').length > 0);
 
 const leftPadding = computed(() => {
   if (hasLeadingIcon.value && hasPrefix.value) {
@@ -229,9 +186,7 @@ const labelOffset = computed(() => {
   return 'left-4';
 });
 
-const prefixOffset = computed(() =>
-  hasLeadingIcon.value ? 'left-12' : 'left-4',
-);
+const prefixOffset = computed(() => (hasLeadingIcon.value ? 'left-12' : 'left-4'));
 
 const trailingOffset = computed(() => {
   if (hasSuffix.value && hasClearControl.value) {
@@ -351,10 +306,7 @@ function normalizeNumberValue(value: string): string {
   const dotIndex = normalizedValue.indexOf('.');
 
   if (minusIndex > -1) {
-    normalizedValue =
-      minusIndex === 0
-        ? `-${normalizedValue.replace(/-/g, '')}`
-        : normalizedValue.replace(/-/g, '');
+    normalizedValue = minusIndex === 0 ? `-${normalizedValue.replace(/-/g, '')}` : normalizedValue.replace(/-/g, '');
   }
 
   if (dotIndex > -1) {
@@ -474,45 +426,22 @@ defineExpose({
 <template>
   <div class="w-full">
     <div class="group relative" @mousedown="handleMousedown">
-      <FieldAdornmentIcon
-        v-if="hasLeadingIcon"
-        class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-(--field-label) transition-colors duration-150 peer-focus:text-(--field-focus) peer-disabled:opacity-60"
-      >
+      <FieldAdornmentIcon v-if="hasLeadingIcon" class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-(--field-label) transition-colors duration-150 peer-focus:text-(--field-focus) peer-disabled:opacity-60">
         <slot name="leading-icon">
           <slot name="prepend-icon">
-            <component
-              v-if="leadingIcon && typeof leadingIcon !== 'string'"
-              :is="leadingIcon"
-              class="size-5"
-            />
-            <span v-else-if="leadingIcon" class="text-sm font-medium">{{
-              leadingIcon
-            }}</span>
+            <component v-if="leadingIcon && typeof leadingIcon !== 'string'" :is="leadingIcon" class="size-5" />
+            <span v-else-if="leadingIcon" class="text-sm font-medium">{{ leadingIcon }}</span>
           </slot>
         </slot>
       </FieldAdornmentIcon>
 
-      <span
-        v-if="hasPrefix"
-        :class="
-          cn(
-            'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-sm text-(--field-label) peer-disabled:opacity-60',
-            prefixOffset,
-          )
-        "
-      >
+      <span v-if="hasPrefix" :class="cn('absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-sm text-(--field-label) peer-disabled:opacity-60', prefixOffset)">
         <slot name="prefix">
           {{ prefixText }}
         </slot>
       </span>
 
-      <input
-        v-if="normalizedType === 'password' && preventAutoFill && !isMultiline"
-        tabindex="-1"
-        autocomplete="new-password"
-        class="h-0 w-0 border-0 p-0 text-[0] opacity-0"
-        aria-hidden="true"
-      />
+      <input v-if="normalizedType === 'password' && preventAutoFill && !isMultiline" tabindex="-1" autocomplete="new-password" class="h-0 w-0 border-0 p-0 text-[0] opacity-0" aria-hidden="true" />
 
       <component
         :is="isMultiline ? 'textarea' : 'input'"
@@ -543,38 +472,16 @@ defineExpose({
         @compositionend="handleCompositionEnd"
       />
 
-      <FieldAdornmentIcon
-        v-if="hasTrailingIcon"
-        :class="
-          cn(
-            'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-(--field-label) transition-colors duration-150 peer-focus:text-(--field-focus) peer-disabled:opacity-60',
-            trailingOffset,
-          )
-        "
-      >
+      <FieldAdornmentIcon v-if="hasTrailingIcon" :class="cn('absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-(--field-label) transition-colors duration-150 peer-focus:text-(--field-focus) peer-disabled:opacity-60', trailingOffset)">
         <slot name="trailing-icon">
           <slot name="append-icon">
-            <component
-              v-if="trailingIcon && typeof trailingIcon !== 'string'"
-              :is="trailingIcon"
-              class="size-5"
-            />
-            <span v-else-if="trailingIcon" class="text-sm font-medium">{{
-              trailingIcon
-            }}</span>
+            <component v-if="trailingIcon && typeof trailingIcon !== 'string'" :is="trailingIcon" class="size-5" />
+            <span v-else-if="trailingIcon" class="text-sm font-medium">{{ trailingIcon }}</span>
           </slot>
         </slot>
       </FieldAdornmentIcon>
 
-      <span
-        v-if="hasSuffix"
-        :class="
-          cn(
-            'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-sm text-(--field-label) peer-disabled:opacity-60',
-            suffixOffset,
-          )
-        "
-      >
+      <span v-if="hasSuffix" :class="cn('absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-sm text-(--field-label) peer-disabled:opacity-60', suffixOffset)">
         <slot name="suffix">
           {{ suffixText }}
         </slot>
@@ -599,41 +506,16 @@ defineExpose({
         </template>
       </FieldClearControl>
 
-      <FieldLabel
-        :label="label"
-        :for-id="inputId"
-        :class="labelClasses"
-        :show-asterisk="showAsterisk"
-      />
+      <FieldLabel :label="label" :for-id="inputId" :class="labelClasses" :show-asterisk="showAsterisk" />
 
-      <div
-        v-if="showBottomLine"
-        class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 overflow-hidden rounded-full bg-(--outline)/70"
-      >
-        <span
-          :class="
-            cn(
-              'block h-full w-full origin-center scale-x-0 transition-transform duration-200 group-focus-within:scale-x-100',
-              activeLineClasses,
-              hasError && 'scale-x-100',
-            )
-          "
-        />
+      <div v-if="showBottomLine" class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 overflow-hidden rounded-full bg-(--outline)/70">
+        <span :class="cn('block h-full w-full origin-center scale-x-0 transition-transform duration-200 group-focus-within:scale-x-100', activeLineClasses, hasError && 'scale-x-100')" />
       </div>
     </div>
 
-    <div
-      v-if="supportingText || showCounter"
-      class="mt-2 flex items-start justify-between gap-3"
-    >
-      <FieldAssistiveText
-        :id="assistiveTextId"
-        :text="supportingText"
-        :class="assistiveTextClasses"
-      />
-      <p v-if="showCounter" :id="counterId" :class="assistiveTextClasses">
-        {{ currentLength }} / {{ maxLength }}
-      </p>
+    <div v-if="supportingText || showCounter" class="mt-2 flex items-start justify-between gap-3">
+      <FieldAssistiveText :id="assistiveTextId" :text="supportingText" :class="assistiveTextClasses" />
+      <p v-if="showCounter" :id="counterId" :class="assistiveTextClasses">{{ currentLength }} / {{ maxLength }}</p>
     </div>
   </div>
 </template>

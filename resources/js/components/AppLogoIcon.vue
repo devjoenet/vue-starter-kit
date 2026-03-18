@@ -27,20 +27,8 @@ const codeIconPath = `M809.097 585.25C806.886 591.078 780.591 668.076 760.518 72
 </script>
 
 <template>
-  <svg
-    v-bind="attrs"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 976 1081"
-    fill="none"
-    aria-hidden="true"
-    class="inline-block shrink-0"
-    role="img"
-  >
-    <path
-      :class="props.gaOutlineClass"
-      fill-rule="evenodd"
-      :d="gaOutlinePath"
-    />
+  <svg v-bind="attrs" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 976 1081" fill="none" aria-hidden="true" class="inline-block shrink-0" role="img">
+    <path :class="props.gaOutlineClass" fill-rule="evenodd" :d="gaOutlinePath" />
 
     <path class="fill-none" fill-rule="evenodd" :d="gaFillPath" />
 

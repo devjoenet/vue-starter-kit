@@ -6,15 +6,11 @@ export const checkboxVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'focus-visible:ring-ring/50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
-        destructive:
-          'focus-visible:ring-destructive/30 data-[state=checked]:border-destructive data-[state=checked]:bg-destructive data-[state=checked]:text-destructive-foreground',
+        default: 'focus-visible:ring-ring/50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+        destructive: 'focus-visible:ring-destructive/30 data-[state=checked]:border-destructive data-[state=checked]:bg-destructive data-[state=checked]:text-destructive-foreground',
         info: 'focus-visible:ring-info/30 data-[state=checked]:border-info data-[state=checked]:bg-info data-[state=checked]:text-info-foreground',
-        warning:
-          'focus-visible:ring-warning/30 data-[state=checked]:border-warning data-[state=checked]:bg-warning data-[state=checked]:text-warning-foreground',
-        success:
-          'focus-visible:ring-success/30 data-[state=checked]:border-success data-[state=checked]:bg-success data-[state=checked]:text-success-foreground',
+        warning: 'focus-visible:ring-warning/30 data-[state=checked]:border-warning data-[state=checked]:bg-warning data-[state=checked]:text-warning-foreground',
+        success: 'focus-visible:ring-success/30 data-[state=checked]:border-success data-[state=checked]:bg-success data-[state=checked]:text-success-foreground',
       },
     },
     defaultVariants: {

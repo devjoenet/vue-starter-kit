@@ -29,8 +29,7 @@ const props = withDefaults(
         'peer-data-[size=default]/menu-button:top-1',
         'peer-data-[size=lg]/menu-button:top-2',
         'group-data-[collapsible=icon]:hidden',
-        showOnHover &&
-          'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-primary-foreground data-[state=open]:opacity-100 md:opacity-0',
+        showOnHover && 'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-primary-foreground data-[state=open]:opacity-100 md:opacity-0',
         props.class,
       )
     "

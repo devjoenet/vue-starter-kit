@@ -2,14 +2,7 @@
 import { useVModel } from '@vueuse/core';
 import { Check, Eraser } from 'lucide-vue-next';
 import type { HTMLAttributes } from 'vue';
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
 import { inputAssistiveTextVariants } from '@/components/ui/input/variants';
@@ -127,9 +120,7 @@ const surfaceClasses = computed(() =>
 );
 
 const canDraw = computed(() => !props.disabled && !props.readonly);
-const canClear = computed(
-  () => props.clearable && canDraw.value && hasValue.value,
-);
+const canClear = computed(() => props.clearable && canDraw.value && hasValue.value);
 
 watch(
   () => [props.height, props.backgroundColor],
@@ -235,9 +226,7 @@ function resolveStrokeColor(): string {
   return getComputedStyle(rootRef.value).color;
 }
 
-function getRelativePoint(
-  event: PointerEvent,
-): { x: number; y: number } | null {
+function getRelativePoint(event: PointerEvent): { x: number; y: number } | null {
   if (!canvasRef.value) {
     return null;
   }
@@ -427,20 +416,9 @@ defineExpose({
   <div class="w-full space-y-2">
     <FieldHiddenInput :name="name" :value="modelValue" />
 
-    <FieldLabel
-      :label="label"
-      :for-id="id"
-      :class="labelClasses"
-      :show-asterisk="showAsterisk"
-    />
+    <FieldLabel :label="label" :for-id="id" :class="labelClasses" :show-asterisk="showAsterisk" />
 
-    <div
-      ref="rootRef"
-      :id="id"
-      :class="surfaceClasses"
-      :style="{ height: `${height}px` }"
-      v-bind="$attrs"
-    >
+    <div ref="rootRef" :id="id" :class="surfaceClasses" :style="{ height: `${height}px` }" v-bind="$attrs">
       <canvas
         ref="canvasRef"
         class="h-full w-full touch-none"
@@ -453,26 +431,13 @@ defineExpose({
         @pointerleave="finishDrawing"
       />
 
-      <div
-        v-if="showActions"
-        class="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-border/70 bg-background/85 px-2 py-2 backdrop-blur-sm"
-      >
-        <Button
-          appearance="text"
-          size="sm"
-          :disabled="!canClear"
-          @click="reset"
-        >
+      <div v-if="showActions" class="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-border/70 bg-background/85 px-2 py-2 backdrop-blur-sm">
+        <Button appearance="text" size="sm" :disabled="!canClear" @click="reset">
           <Eraser class="size-4" />
           {{ clearText }}
         </Button>
 
-        <Button
-          appearance="tonal"
-          size="sm"
-          :disabled="!hasValue"
-          @click="confirm"
-        >
+        <Button appearance="tonal" size="sm" :disabled="!hasValue" @click="confirm">
           <Check class="size-4" />
           {{ confirmText }}
         </Button>
@@ -480,10 +445,7 @@ defineExpose({
     </div>
 
     <div v-if="supportingText" class="mt-1">
-      <FieldAssistiveText
-        :text="supportingText"
-        :class="assistiveTextClasses"
-      />
+      <FieldAssistiveText :text="supportingText" :class="assistiveTextClasses" />
     </div>
   </div>
 </template>

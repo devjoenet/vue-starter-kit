@@ -61,15 +61,9 @@
   --sheen: oklch(98.56% 0.008 236.2 / 0.72);
   --sheen-clear: oklch(98.56% 0.008 236.2 / 0);
   --overlay-backdrop: oklch(27.81% 0.047 255.6 / 0.34);
-  --elevation-1:
-    0 0.0625em 0.125em 0 oklch(29.15% 0.031 258 / 0.08),
-    0 0.5em 1em -0.875em oklch(29.15% 0.031 258 / 0.1);
-  --elevation-2:
-    0 1.125em 2.25em -1.5em oklch(29.15% 0.031 258 / 0.2),
-    0 0.75em 1.25em -1em oklch(29.15% 0.031 258 / 0.16);
-  --elevation-3:
-    0 1.5em 3em -1.75em oklch(29.15% 0.031 258 / 0.26),
-    0 1.125em 1.875em -1.375em oklch(29.15% 0.031 258 / 0.18);
+  --elevation-1: 0 0.0625em 0.125em 0 oklch(29.15% 0.031 258 / 0.08), 0 0.5em 1em -0.875em oklch(29.15% 0.031 258 / 0.1);
+  --elevation-2: 0 1.125em 2.25em -1.5em oklch(29.15% 0.031 258 / 0.2), 0 0.75em 1.25em -1em oklch(29.15% 0.031 258 / 0.16);
+  --elevation-3: 0 1.5em 3em -1.75em oklch(29.15% 0.031 258 / 0.26), 0 1.125em 1.875em -1.375em oklch(29.15% 0.031 258 / 0.18);
   --motion-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --motion-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -130,21 +124,13 @@
   --sheen: oklch(95.22% 0.008 236.1 / 0.24);
   --sheen-clear: oklch(95.22% 0.008 236.1 / 0);
   --overlay-backdrop: oklch(18.42% 0.023 253.4 / 0.62);
-  --elevation-1:
-    0 0.0625em 0.125em 0 oklch(0% 0 0 / 0.4),
-    0 0.5em 1em -0.875em oklch(0% 0 0 / 0.36);
-  --elevation-2:
-    0 1.125em 2.25em -1.5em oklch(0% 0 0 / 0.48),
-    0 0.75em 1.25em -1em oklch(0% 0 0 / 0.42);
-  --elevation-3:
-    0 1.5em 3em -1.75em oklch(0% 0 0 / 0.56),
-    0 1.125em 1.875em -1.25em oklch(0% 0 0 / 0.46);
+  --elevation-1: 0 0.0625em 0.125em 0 oklch(0% 0 0 / 0.4), 0 0.5em 1em -0.875em oklch(0% 0 0 / 0.36);
+  --elevation-2: 0 1.125em 2.25em -1.5em oklch(0% 0 0 / 0.48), 0 0.75em 1.25em -1em oklch(0% 0 0 / 0.42);
+  --elevation-3: 0 1.5em 3em -1.75em oklch(0% 0 0 / 0.56), 0 1.125em 1.875em -1.25em oklch(0% 0 0 / 0.46);
 }
 
 @theme inline {
-  --font-sans:
-    Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   --radius-sm: 0.2em;
   --radius-md: 0.325em;
@@ -203,22 +189,8 @@
   body {
     @apply bg-background text-foreground;
     background:
-      radial-gradient(
-        circle at 0% 0%,
-        color-mix(in oklab, var(--secondary) 16%, transparent) 0%,
-        transparent 30%
-      ),
-      radial-gradient(
-        circle at 100% 8%,
-        color-mix(in oklab, var(--primary) 14%, transparent) 0%,
-        transparent 24%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--surface-shell) 84%, var(--background) 16%) 0%,
-        var(--background) 54%,
-        color-mix(in oklab, var(--background) 92%, var(--surface-shell) 8%) 100%
-      );
+      radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--secondary) 16%, transparent) 0%, transparent 30%), radial-gradient(circle at 100% 8%, color-mix(in oklab, var(--primary) 14%, transparent) 0%, transparent 24%),
+      linear-gradient(180deg, color-mix(in oklab, var(--surface-shell) 84%, var(--background) 16%) 0%, var(--background) 54%, color-mix(in oklab, var(--background) 92%, var(--surface-shell) 8%) 100%);
     min-height: 100svh;
     position: relative;
   }
@@ -335,12 +307,7 @@
   }
 
   .motion-sheen::after {
-    background: linear-gradient(
-      115deg,
-      var(--sheen-clear) 0%,
-      var(--sheen) 48%,
-      var(--sheen-clear) 100%
-    );
+    background: linear-gradient(115deg, var(--sheen-clear) 0%, var(--sheen) 48%, var(--sheen-clear) 100%);
     content: '';
     inset: -15% auto -15% -35%;
     opacity: 0.34;
@@ -415,37 +382,18 @@
 
   .surface-shell-canvas {
     background:
-      radial-gradient(
-        circle at top right,
-        var(--primary-glow) 0%,
-        var(--primary-glow-clear) 28%
-      ),
-      radial-gradient(
-        circle at bottom left,
-        var(--secondary-glow) 0%,
-        var(--secondary-glow-clear) 26%
-      ),
-      linear-gradient(
-        155deg,
-        var(--surface-shell-strong) 0%,
-        var(--surface-shell) 100%
-      );
+      radial-gradient(circle at top right, var(--primary-glow) 0%, var(--primary-glow-clear) 28%), radial-gradient(circle at bottom left, var(--secondary-glow) 0%, var(--secondary-glow-clear) 26%),
+      linear-gradient(155deg, var(--surface-shell-strong) 0%, var(--surface-shell) 100%);
   }
 
   .surface-shell-panel {
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%)
-        0%,
-      color-mix(in oklab, var(--surface-shell) 90%, var(--background) 10%) 100%
-    );
+    background: linear-gradient(135deg, color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%) 0%, color-mix(in oklab, var(--surface-shell) 90%, var(--background) 10%) 100%);
   }
 
   .shell-header-band {
     background: linear-gradient(
       115deg,
-      color-mix(in oklab, var(--surface-shell-strong) 76%, var(--primary) 24%)
-        0%,
+      color-mix(in oklab, var(--surface-shell-strong) 76%, var(--primary) 24%) 0%,
       color-mix(in oklab, var(--surface-shell) 92%, var(--background) 8%) 52%,
       color-mix(in oklab, var(--surface-shell) 84%, var(--accent) 16%) 100%
     );
@@ -453,82 +401,35 @@
 
   .surface-public-hero {
     background:
-      radial-gradient(
-        circle at 12% 16%,
-        color-mix(in oklab, var(--secondary) 24%, transparent) 0%,
-        transparent 24%
-      ),
-      radial-gradient(
-        circle at 88% 12%,
-        color-mix(in oklab, var(--accent) 16%, transparent) 0%,
-        transparent 20%
-      ),
+      radial-gradient(circle at 12% 16%, color-mix(in oklab, var(--secondary) 24%, transparent) 0%, transparent 24%), radial-gradient(circle at 88% 12%, color-mix(in oklab, var(--accent) 16%, transparent) 0%, transparent 20%),
       linear-gradient(
         132deg,
-        color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%)
-          0%,
-        color-mix(
-            in oklab,
-            var(--surface-panel-primary) 86%,
-            var(--surface-shell) 14%
-          )
-          44%,
-        color-mix(
-            in oklab,
-            var(--surface-panel-secondary) 76%,
-            var(--secondary) 24%
-          )
-          100%
+        color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%) 0%,
+        color-mix(in oklab, var(--surface-panel-primary) 86%, var(--surface-shell) 14%) 44%,
+        color-mix(in oklab, var(--surface-panel-secondary) 76%, var(--secondary) 24%) 100%
       );
     border-color: color-mix(in oklab, var(--primary) 14%, var(--border));
   }
 
   .surface-public-panel {
     background:
-      radial-gradient(
-        circle at top right,
-        color-mix(in oklab, var(--accent) 12%, transparent) 0%,
-        transparent 24%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(
-            in oklab,
-            var(--surface-panel-secondary) 72%,
-            var(--primary) 28%
-          )
-          0%,
-        color-mix(in oklab, var(--surface-panel) 94%, var(--background) 6%) 100%
-      );
+      radial-gradient(circle at top right, color-mix(in oklab, var(--accent) 12%, transparent) 0%, transparent 24%),
+      linear-gradient(180deg, color-mix(in oklab, var(--surface-panel-secondary) 72%, var(--primary) 28%) 0%, color-mix(in oklab, var(--surface-panel) 94%, var(--background) 6%) 100%);
     border-color: color-mix(in oklab, var(--primary) 15%, var(--border));
     box-shadow: var(--elevation-2);
   }
 
   .surface-auth-callout {
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--surface-rail) 74%, var(--secondary) 26%) 0%,
-      color-mix(in oklab, var(--surface-panel) 94%, var(--background) 6%) 100%
-    );
+    background: linear-gradient(180deg, color-mix(in oklab, var(--surface-rail) 74%, var(--secondary) 26%) 0%, color-mix(in oklab, var(--surface-panel) 94%, var(--background) 6%) 100%);
     border-color: color-mix(in oklab, var(--secondary) 16%, var(--border));
   }
 
   .surface-auth-stage {
     background:
-      radial-gradient(
-        circle at 10% 18%,
-        color-mix(in oklab, var(--secondary) 22%, transparent) 0%,
-        transparent 24%
-      ),
-      radial-gradient(
-        circle at 82% 10%,
-        color-mix(in oklab, var(--primary) 20%, transparent) 0%,
-        transparent 24%
-      ),
+      radial-gradient(circle at 10% 18%, color-mix(in oklab, var(--secondary) 22%, transparent) 0%, transparent 24%), radial-gradient(circle at 82% 10%, color-mix(in oklab, var(--primary) 20%, transparent) 0%, transparent 24%),
       linear-gradient(
         135deg,
-        color-mix(in oklab, var(--surface-shell-strong) 74%, var(--primary) 26%)
-          0%,
+        color-mix(in oklab, var(--surface-shell-strong) 74%, var(--primary) 26%) 0%,
         color-mix(in oklab, var(--background) 94%, var(--surface-shell) 6%) 46%,
         color-mix(in oklab, var(--surface-shell) 82%, var(--secondary) 18%) 100%
       );
@@ -537,18 +438,8 @@
   }
 
   .surface-auth-panel {
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--surface-panel) 84%, var(--background) 16%) 0%,
-      color-mix(
-          in oklab,
-          var(--surface-panel-primary) 52%,
-          var(--surface-panel) 48%
-        )
-        100%
-    );
-    border: 0.0625em solid
-      color-mix(in oklab, var(--primary) 14%, var(--border));
+    background: linear-gradient(180deg, color-mix(in oklab, var(--surface-panel) 84%, var(--background) 16%) 0%, color-mix(in oklab, var(--surface-panel-primary) 52%, var(--surface-panel) 48%) 100%);
+    border: 0.0625em solid color-mix(in oklab, var(--primary) 14%, var(--border));
     border-radius: 1.5rem;
     box-shadow: var(--elevation-2);
     padding: 0.5rem;
@@ -556,82 +447,30 @@
 
   .surface-auth-card {
     background:
-      radial-gradient(
-        circle at top right,
-        color-mix(in oklab, var(--secondary) 10%, transparent) 0%,
-        transparent 22%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--surface-panel) 88%, var(--card) 12%) 0%,
-        color-mix(
-            in oklab,
-            var(--surface-panel-primary) 40%,
-            var(--surface-panel) 60%
-          )
-          100%
-      );
+      radial-gradient(circle at top right, color-mix(in oklab, var(--secondary) 10%, transparent) 0%, transparent 22%),
+      linear-gradient(180deg, color-mix(in oklab, var(--surface-panel) 88%, var(--card) 12%) 0%, color-mix(in oklab, var(--surface-panel-primary) 40%, var(--surface-panel) 60%) 100%);
     border-color: color-mix(in oklab, var(--primary) 14%, var(--border));
     box-shadow: var(--elevation-2);
   }
 
   .surface-dashboard-shell {
     background:
-      radial-gradient(
-        circle at 86% 12%,
-        color-mix(in oklab, var(--secondary) 26%, transparent) 0%,
-        transparent 22%
-      ),
-      radial-gradient(
-        circle at 10% 0%,
-        color-mix(in oklab, var(--primary) 18%, transparent) 0%,
-        transparent 24%
-      ),
-      linear-gradient(
-        138deg,
-        color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%)
-          0%,
-        var(--surface-panel) 40%,
-        color-mix(
-            in oklab,
-            var(--surface-panel-secondary) 68%,
-            var(--accent) 32%
-          )
-          100%
-      );
+      radial-gradient(circle at 86% 12%, color-mix(in oklab, var(--secondary) 26%, transparent) 0%, transparent 22%), radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 24%),
+      linear-gradient(138deg, color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%) 0%, var(--surface-panel) 40%, color-mix(in oklab, var(--surface-panel-secondary) 68%, var(--accent) 32%) 100%);
   }
 
   .surface-dashboard-primary {
-    background: linear-gradient(
-      145deg,
-      color-mix(in oklab, var(--surface-panel-primary) 72%, var(--primary) 28%)
-        0%,
-      color-mix(in oklab, var(--surface-panel) 82%, var(--surface-shell) 18%)
-        100%
-    );
+    background: linear-gradient(145deg, color-mix(in oklab, var(--surface-panel-primary) 72%, var(--primary) 28%) 0%, color-mix(in oklab, var(--surface-panel) 82%, var(--surface-shell) 18%) 100%);
     border-color: color-mix(in oklab, var(--primary) 18%, var(--border));
   }
 
   .surface-dashboard-secondary {
-    background: linear-gradient(
-      155deg,
-      color-mix(
-          in oklab,
-          var(--surface-panel-secondary) 78%,
-          var(--secondary) 22%
-        )
-        0%,
-      color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%
-    );
+    background: linear-gradient(155deg, color-mix(in oklab, var(--surface-panel-secondary) 78%, var(--secondary) 22%) 0%, color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%);
     border-color: color-mix(in oklab, var(--secondary) 18%, var(--border));
   }
 
   .surface-dashboard-shell::before {
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--secondary) 48%, transparent) 0%,
-      transparent 74%
-    );
+    background: linear-gradient(135deg, color-mix(in oklab, var(--secondary) 48%, transparent) 0%, transparent 74%);
     clip-path: polygon(20% 0, 100% 0, 76% 100%, 0 100%);
     content: '';
     inset: -10% -6% 58% 42%;
@@ -642,94 +481,37 @@
   }
 
   .surface-settings-shell {
-    background:
-      radial-gradient(
-        circle at top left,
-        var(--secondary-glow) 0%,
-        var(--secondary-glow-clear) 34%
-      ),
-      linear-gradient(180deg, var(--surface-panel) 0%, var(--background) 100%);
+    background: radial-gradient(circle at top left, var(--secondary-glow) 0%, var(--secondary-glow-clear) 34%), linear-gradient(180deg, var(--surface-panel) 0%, var(--background) 100%);
   }
 
   .surface-settings-nav {
-    background: linear-gradient(
-      145deg,
-      var(--surface-panel-secondary) 0%,
-      var(--surface-nav) 100%
-    );
+    background: linear-gradient(145deg, var(--surface-panel-secondary) 0%, var(--surface-nav) 100%);
   }
 
   .surface-editor-shell {
     background:
-      radial-gradient(
-        circle at 86% 10%,
-        color-mix(in oklab, var(--secondary) 24%, transparent) 0%,
-        transparent 24%
-      ),
-      radial-gradient(
-        circle at 10% 0%,
-        color-mix(in oklab, var(--primary) 18%, transparent) 0%,
-        transparent 20%
-      ),
-      linear-gradient(
-        145deg,
-        color-mix(in oklab, var(--surface-panel) 84%, var(--surface-shell) 16%)
-          0%,
-        color-mix(
-            in oklab,
-            var(--background) 84%,
-            var(--surface-panel-secondary) 16%
-          )
-          100%
-      );
+      radial-gradient(circle at 86% 10%, color-mix(in oklab, var(--secondary) 24%, transparent) 0%, transparent 24%), radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 20%),
+      linear-gradient(145deg, color-mix(in oklab, var(--surface-panel) 84%, var(--surface-shell) 16%) 0%, color-mix(in oklab, var(--background) 84%, var(--surface-panel-secondary) 16%) 100%);
     border: 0.0625em solid var(--border);
     box-shadow: var(--elevation-2);
   }
 
   .surface-editor-panel {
-    background: linear-gradient(
-      155deg,
-      color-mix(in oklab, var(--surface-panel) 82%, var(--surface-shell) 18%) 0%,
-      color-mix(in oklab, var(--surface-panel-primary) 62%, var(--primary) 38%)
-        100%
-    );
+    background: linear-gradient(155deg, color-mix(in oklab, var(--surface-panel) 82%, var(--surface-shell) 18%) 0%, color-mix(in oklab, var(--surface-panel-primary) 62%, var(--primary) 38%) 100%);
     border: 0.0625em solid var(--border);
     box-shadow: var(--elevation-1);
   }
 
   .surface-editor-rail {
-    background: linear-gradient(
-      155deg,
-      color-mix(
-          in oklab,
-          var(--surface-panel-secondary) 78%,
-          var(--secondary) 22%
-        )
-        0%,
-      color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%
-    );
+    background: linear-gradient(155deg, color-mix(in oklab, var(--surface-panel-secondary) 78%, var(--secondary) 22%) 0%, color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%);
     border: 0.0625em solid var(--border);
     box-shadow: var(--elevation-1);
   }
 
   .surface-editor-action-zone {
     background:
-      radial-gradient(
-        circle at 12% 16%,
-        color-mix(in oklab, var(--accent) 22%, transparent) 0%,
-        transparent 24%
-      ),
-      linear-gradient(
-        145deg,
-        color-mix(
-            in oklab,
-            var(--surface-panel-secondary) 76%,
-            var(--secondary) 24%
-          )
-          0%,
-        color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%)
-          100%
-      );
+      radial-gradient(circle at 12% 16%, color-mix(in oklab, var(--accent) 22%, transparent) 0%, transparent 24%),
+      linear-gradient(145deg, color-mix(in oklab, var(--surface-panel-secondary) 76%, var(--secondary) 24%) 0%, color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%);
     border: 0.0625em solid var(--border);
     box-shadow: var(--elevation-1);
   }

@@ -18,11 +18,7 @@ setLayoutProps({
   <Head title="Appearance settings" />
 
   <div id="settings-appearance-page">
-    <SettingsSectionCard
-      id="settings-appearance-card"
-      title="Appearance"
-      description="Choose the light or dark presentation that best fits how you work."
-    >
+    <SettingsSectionCard id="settings-appearance-card" title="Appearance" description="Choose the light or dark presentation that best fits how you work.">
       <AppearanceTabs id="settings-appearance-tabs" />
     </SettingsSectionCard>
   </div>

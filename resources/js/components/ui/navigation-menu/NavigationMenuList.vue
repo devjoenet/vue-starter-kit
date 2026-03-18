@@ -6,9 +6,7 @@ import { NavigationMenuList, useForwardProps } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { navigationMenuListVariants } from './styles';
 
-const props = defineProps<
-  NavigationMenuListProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<NavigationMenuListProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = reactiveOmit(props, 'class');
 
@@ -16,11 +14,7 @@ const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <NavigationMenuList
-    data-slot="navigation-menu-list"
-    v-bind="forwardedProps"
-    :class="cn(navigationMenuListVariants(), props.class)"
-  >
+  <NavigationMenuList data-slot="navigation-menu-list" v-bind="forwardedProps" :class="cn(navigationMenuListVariants(), props.class)">
     <slot />
   </NavigationMenuList>
 </template>

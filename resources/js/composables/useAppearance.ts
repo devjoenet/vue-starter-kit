@@ -1,9 +1,4 @@
-import {
-  defaultDocument,
-  defaultWindow,
-  usePreferredDark,
-  useStorage,
-} from '@vueuse/core';
+import { defaultDocument, defaultWindow, usePreferredDark, useStorage } from '@vueuse/core';
 import type { ComputedRef, Ref } from 'vue';
 import { computed, watch } from 'vue';
 import type { Appearance, ResolvedAppearance } from '@/types/ui';
@@ -20,11 +15,7 @@ const APPEARANCE_STORAGE_KEY = 'appearance';
 const APPEARANCE_COOKIE_NAME = 'appearance';
 const APPEARANCE_COOKIE_MAX_AGE = 365 * 24 * 60 * 60;
 
-const appearanceStorage = useStorage<Appearance>(
-  APPEARANCE_STORAGE_KEY,
-  'system',
-  defaultWindow?.localStorage,
-);
+const appearanceStorage = useStorage<Appearance>(APPEARANCE_STORAGE_KEY, 'system', defaultWindow?.localStorage);
 
 const prefersDark = usePreferredDark({ window: defaultWindow });
 
@@ -49,13 +40,9 @@ export function updateTheme(value: Appearance): void {
     return;
   }
 
-  const nextResolvedAppearance =
-    value === 'system' ? (prefersDark.value ? 'dark' : 'light') : value;
+  const nextResolvedAppearance = value === 'system' ? (prefersDark.value ? 'dark' : 'light') : value;
 
-  defaultDocument.documentElement.classList.toggle(
-    'dark',
-    nextResolvedAppearance === 'dark',
-  );
+  defaultDocument.documentElement.classList.toggle('dark', nextResolvedAppearance === 'dark');
 }
 
 function syncAppearance(): void {

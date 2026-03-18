@@ -7,8 +7,6 @@ import AppLogoIcon from '@/components/AppLogoIcon.vue';
     <AppLogoIcon class="size-7 p-1" />
   </div>
   <div class="ml-1 grid flex-1 text-left uppercase">
-    <span class="mb-0.5 truncate leading-tight font-semibold text-primary"
-      >Southeast Code</span
-    >
+    <span class="mb-0.5 truncate leading-tight font-semibold text-primary">Southeast Code</span>
   </div>
 </template>

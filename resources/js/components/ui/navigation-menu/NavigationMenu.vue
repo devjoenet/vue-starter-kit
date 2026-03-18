@@ -25,13 +25,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
-  <NavigationMenuRoot
-    v-slot="slotProps"
-    data-slot="navigation-menu"
-    :data-viewport="viewport"
-    v-bind="forwarded"
-    :class="cn(navigationMenuVariants(), props.class)"
-  >
+  <NavigationMenuRoot v-slot="slotProps" data-slot="navigation-menu" :data-viewport="viewport" v-bind="forwarded" :class="cn(navigationMenuVariants(), props.class)">
     <slot v-bind="slotProps" />
     <NavigationMenuViewport v-if="viewport" />
   </NavigationMenuRoot>

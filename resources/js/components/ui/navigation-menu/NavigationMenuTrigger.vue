@@ -7,9 +7,7 @@ import type { HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 import { navigationMenuTriggerStyle } from './styles';
 
-const props = defineProps<
-  NavigationMenuTriggerProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<NavigationMenuTriggerProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = reactiveOmit(props, 'class');
 
@@ -17,15 +15,8 @@ const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <NavigationMenuTrigger
-    data-slot="navigation-menu-trigger"
-    v-bind="forwardedProps"
-    :class="cn(navigationMenuTriggerStyle(), 'group', props.class)"
-  >
+  <NavigationMenuTrigger data-slot="navigation-menu-trigger" v-bind="forwardedProps" :class="cn(navigationMenuTriggerStyle(), 'group', props.class)">
     <slot />
-    <ChevronDown
-      class="relative top-[1px] ml-1 size-3 transition-transform duration-300 group-data-[state=open]:rotate-180 motion-reduce:transition-none"
-      aria-hidden="true"
-    />
+    <ChevronDown class="relative top-[1px] ml-1 size-3 transition-transform duration-300 group-data-[state=open]:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
   </NavigationMenuTrigger>
 </template>

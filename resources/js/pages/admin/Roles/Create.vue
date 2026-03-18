@@ -37,8 +37,7 @@ const form = useForm<StoreRoleRequest>({
   name: '',
   user_ids: [] as number[],
 });
-const { hasSelectedValue, selectedValues, toggleSelectedValue } =
-  useSelectionList<number>(form.user_ids ?? []);
+const { hasSelectedValue, selectedValues, toggleSelectedValue } = useSelectionList<number>(form.user_ids ?? []);
 
 const submit = () => {
   if (!canCreate.value) return;
@@ -67,9 +66,7 @@ const closeToIndex = () => {
   <Head title="Create role" />
 
   <div id="admin-roles-create-page" class="motion-stage px-4">
-    <section
-      class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
-    >
+    <section class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
       <div class="relative space-y-6">
         <AdminPageIntro
           id="admin-roles-create-page-header"
@@ -80,11 +77,7 @@ const closeToIndex = () => {
           title="Create a reusable access role"
         />
 
-        <form
-          id="admin-roles-create-form"
-          class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]"
-          @submit.prevent="submit"
-        >
+        <form id="admin-roles-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]" @submit.prevent="submit">
           <div id="admin-roles-create-sections" class="space-y-6">
             <RoleDetailsForm
               id="admin-roles-create-details-card"
@@ -107,20 +100,8 @@ const closeToIndex = () => {
               title="Initial assignees"
             >
               <div v-if="props.users.length" class="grid gap-3 p-4 sm:p-5">
-                <label
-                  v-for="user in props.users"
-                  :key="user.id"
-                  class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4"
-                  :class="!canCreate ? 'opacity-70' : ''"
-                >
-                  <Checkbox
-                    class="mt-0.5 size-5"
-                    :disabled="!canCreate"
-                    :model-value="hasSelectedValue(user.id)"
-                    @update:model-value="
-                      (value) => toggleSelectedValue(user.id, value)
-                    "
-                  />
+                <label v-for="user in props.users" :key="user.id" class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4" :class="!canCreate ? 'opacity-70' : ''">
+                  <Checkbox class="mt-0.5 size-5" :disabled="!canCreate" :model-value="hasSelectedValue(user.id)" @update:model-value="(value) => toggleSelectedValue(user.id, value)" />
 
                   <span class="min-w-0 space-y-1">
                     <span class="block truncate text-sm font-semibold">
@@ -134,42 +115,23 @@ const closeToIndex = () => {
               </div>
 
               <div v-else class="p-4 sm:p-5">
-                <div
-                  class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4"
-                >
-                  <p class="text-sm font-semibold">
-                    No users are available to assign yet.
-                  </p>
-                  <p class="mt-1 text-sm leading-6 text-muted-foreground">
-                    Create the role now and connect people from the users
-                    surface later.
-                  </p>
+                <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
+                  <p class="text-sm font-semibold">No users are available to assign yet.</p>
+                  <p class="mt-1 text-sm leading-6 text-muted-foreground">Create the role now and connect people from the users surface later.</p>
                 </div>
               </div>
 
               <template #footer>
-                <p class="text-xs leading-5 text-muted-foreground">
-                  Initial assignees are optional. A role can be created empty
-                  and connected to people later.
-                </p>
+                <p class="text-xs leading-5 text-muted-foreground">Initial assignees are optional. A role can be created empty and connected to people later.</p>
               </template>
             </AssignmentTableCard>
           </div>
 
           <aside class="space-y-4">
-            <Card
-              class="surface-editor-rail motion-step gap-4 px-5 py-5"
-              style="--motion-order: 3"
-            >
+            <Card class="surface-editor-rail motion-step gap-4 px-5 py-5" style="--motion-order: 3">
               <p class="section-kicker">Naming guidance</p>
-              <h2 class="text-lg font-semibold tracking-tight">
-                Make the role obvious in one glance.
-              </h2>
-              <p class="text-sm leading-6 text-muted-foreground">
-                Prefer names a client or teammate would understand immediately,
-                such as Support Lead or Project Manager, instead of internal
-                shorthand.
-              </p>
+              <h2 class="text-lg font-semibold tracking-tight">Make the role obvious in one glance.</h2>
+              <p class="text-sm leading-6 text-muted-foreground">Prefer names a client or teammate would understand immediately, such as Support Lead or Project Manager, instead of internal shorthand.</p>
             </Card>
 
             <EditPageActionRow

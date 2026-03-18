@@ -9,17 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <ul
-    data-slot="sidebar-menu-sub"
-    data-sidebar="menu-badge"
-    :class="
-      cn(
-        sidebarMenuSubVariants(),
-        'group-data-[collapsible=icon]:hidden',
-        props.class,
-      )
-    "
-  >
+  <ul data-slot="sidebar-menu-sub" data-sidebar="menu-badge" :class="cn(sidebarMenuSubVariants(), 'group-data-[collapsible=icon]:hidden', props.class)">
     <slot />
   </ul>
 </template>

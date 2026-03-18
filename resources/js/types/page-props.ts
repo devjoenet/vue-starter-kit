@@ -83,11 +83,7 @@ export type AdminIndexQuery<TColumn extends string = string> = {
 
 export type AdminUsersIndexColumn = 'id' | 'name' | 'email' | 'roles';
 export type AdminRolesIndexColumn = 'id' | 'display_name' | 'slug' | 'users';
-export type AdminPermissionsIndexColumn =
-  | 'id'
-  | 'group'
-  | 'permission'
-  | 'permission_check';
+export type AdminPermissionsIndexColumn = 'id' | 'group' | 'permission' | 'permission_check';
 
 export type AdminUsersIndexFilterOptions = {
   name: string[];
