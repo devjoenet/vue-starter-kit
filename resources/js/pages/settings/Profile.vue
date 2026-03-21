@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { Form, Head, usePage } from '@inertiajs/vue3';
 import { CheckCircle2, TriangleAlert } from 'lucide-vue-next';
 import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
@@ -11,18 +11,15 @@ import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
 import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { SettingsProfilePageProps } from '@/types/page-props';
 defineOptions({
-  layout: [AppLayout, SettingsLayout],
+  layout: settingsPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
-});
+setBreadcrumbs({ title: 'Profile settings', href: edit().url });
 
 const props = defineProps<SettingsProfilePageProps>();
 

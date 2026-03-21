@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { useAbility } from '@/composables/useAbility';
 import { dashboard } from '@/routes/admin';
-import { adminPermissions } from '@/types/admin-permissions';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 
 defineProps<{ title: string }>();
 

@@ -9,7 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Card variant="default" :class="cn('surface-auth-card px-6 py-6', props.class)">
+  <Card variant="default" :class="cn('surface-auth-card gap-5 rounded-[1.5rem] px-5 py-5 sm:px-6 sm:py-6', props.class)">
     <slot />
   </Card>
 </template>

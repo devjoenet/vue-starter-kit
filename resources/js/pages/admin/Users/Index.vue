@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { Link, setLayoutProps } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
+import AdminIndexMobileControlsCard from '@/components/admin/AdminIndexMobileControlsCard.vue';
+import AdminIndexPageHeader from '@/components/admin/AdminIndexPageHeader.vue';
+import AdminIndexTableCard from '@/components/admin/AdminIndexTableCard.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
@@ -12,23 +15,17 @@ import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
-import AppLayout from '@/layouts/AppLayout.vue';
+import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { toTitleCase } from '@/lib/utils';
-import { dashboard } from '@/routes/admin';
 import { create, edit, index } from '@/routes/admin/users';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminUsersIndexColumn, AdminUsersIndexPageProps } from '@/types/page-props';
 
 defineOptions({
-  layout: AppLayout,
+  layout: adminPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [
-    { title: 'Dashboard', href: dashboard.url() },
-    { title: 'Users', href: index.url() },
-  ],
-});
+setAdminBreadcrumbs({ title: 'Users', href: index.url() });
 
 const props = defineProps<AdminUsersIndexPageProps>();
 
@@ -36,7 +33,7 @@ const { can } = useAbility();
 
 const canCreate = computed(() => can(adminPermissions.usersCreate));
 const canUpdate = computed(() => can(adminPermissions.usersUpdate));
-const { clearFilters, setFilters, selectedFiltersFor, sortDirectionFor, toggleSort } = useAdminIndexTableQuery<AdminUsersIndexColumn>({
+const { headerCellBindings } = useAdminIndexTableQuery<AdminUsersIndexColumn>({
   getQuery: () => props.query,
   getUrl: (query) =>
     index.url({
@@ -47,86 +44,53 @@ const { clearFilters, setFilters, selectedFiltersFor, sortDirectionFor, toggleSo
     }),
   only: ['users', 'filterOptions', 'query'],
 });
+
+type UserIndexHeaderCell = {
+  column: AdminUsersIndexColumn;
+  filterOptions: string[];
+  formatOptionLabel?: (value: string) => string;
+  label: string;
+};
+
+const headerCells = computed<UserIndexHeaderCell[]>(() => [
+  {
+    label: 'Name',
+    column: 'name',
+    filterOptions: props.filterOptions.name,
+    formatOptionLabel: toTitleCase,
+  },
+  {
+    label: 'Email',
+    column: 'email',
+    filterOptions: props.filterOptions.email,
+  },
+  {
+    label: 'Roles',
+    column: 'roles',
+    filterOptions: props.filterOptions.roles,
+    formatOptionLabel: toTitleCase,
+  },
+]);
+
+const getHeaderCellProps = (headerCell: UserIndexHeaderCell) => ({
+  ...headerCell,
+  ...headerCellBindings(headerCell.column),
+});
 </script>
 
 <template>
   <div id="admin-users-index-page" class="motion-stage space-y-6 px-4">
-    <div id="admin-users-index-page-header" class="motion-step flex flex-wrap items-center justify-between gap-3" style="--motion-order: 0">
-      <h1 class="text-2xl font-semibold">Users</h1>
+    <AdminIndexPageHeader id="admin-users-index-page-header" title="Users" style="--motion-order: 0">
+      <template #actions>
+        <Button v-if="canCreate" id="admin-users-index-create-button" appearance="outline" as-child class="motion-sheen">
+          <Link :href="create.url()">Create New User</Link>
+        </Button>
+      </template>
+    </AdminIndexPageHeader>
 
-      <Button v-if="canCreate" id="admin-users-index-create-button" appearance="outline" as-child class="motion-sheen">
-        <Link :href="create.url()">Create New User</Link>
-      </Button>
-    </div>
-
-    <Card id="admin-users-index-mobile-controls" variant="default" class="motion-step gap-4 px-4 py-4 md:hidden" style="--motion-order: 1">
-      <div class="space-y-1.5">
-        <p class="section-kicker">Refine users</p>
-        <p class="text-sm leading-6 text-muted-foreground">Filter or sort each column without relying on the desktop table header.</p>
-      </div>
-
-      <div class="grid gap-3">
-        <AdminIndexHeaderCell
-          as="toolbar"
-          label="Name"
-          column="name"
-          :filter-options="props.filterOptions.name"
-          :format-option-label="toTitleCase"
-          :selected-filters="selectedFiltersFor('name')"
-          :sort-direction="sortDirectionFor('name')"
-          @clear-filters="
-            (column) => {
-              clearFilters(column as AdminUsersIndexColumn);
-            }
-          "
-          @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-          @toggle-sort="
-            (column) => {
-              toggleSort(column as AdminUsersIndexColumn);
-            }
-          "
-        />
-        <AdminIndexHeaderCell
-          as="toolbar"
-          label="Email"
-          column="email"
-          :filter-options="props.filterOptions.email"
-          :selected-filters="selectedFiltersFor('email')"
-          :sort-direction="sortDirectionFor('email')"
-          @clear-filters="
-            (column) => {
-              clearFilters(column as AdminUsersIndexColumn);
-            }
-          "
-          @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-          @toggle-sort="
-            (column) => {
-              toggleSort(column as AdminUsersIndexColumn);
-            }
-          "
-        />
-        <AdminIndexHeaderCell
-          as="toolbar"
-          label="Roles"
-          column="roles"
-          :filter-options="props.filterOptions.roles"
-          :format-option-label="toTitleCase"
-          :selected-filters="selectedFiltersFor('roles')"
-          :sort-direction="sortDirectionFor('roles')"
-          @clear-filters="
-            (column) => {
-              clearFilters(column as AdminUsersIndexColumn);
-            }
-          "
-          @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-          @toggle-sort="
-            (column) => {
-              toggleSort(column as AdminUsersIndexColumn);
-            }
-          "
-        />
-      </div>
-    </Card>
+    <AdminIndexMobileControlsCard id="admin-users-index-mobile-controls" kicker="Refine users" description="Filter or sort each column without relying on the desktop table header." style="--motion-order: 1">
+      <AdminIndexHeaderCell v-for="headerCell in headerCells" :key="`toolbar-${headerCell.column}`" as="toolbar" v-bind="getHeaderCellProps(headerCell)" />
+    </AdminIndexMobileControlsCard>
 
     <div v-if="props.users.data.length" id="admin-users-index-mobile-list" class="motion-step grid gap-3 md:hidden" style="--motion-order: 2">
       <Card v-for="user in props.users.data" :key="user.id" variant="default" class="gap-4 px-5 py-5">
@@ -161,66 +125,11 @@ const { clearFilters, setFilters, selectedFiltersFor, sortDirectionFor, toggleSo
 
     <Card v-else id="admin-users-index-mobile-empty-state" variant="default" class="motion-step px-5 py-5 text-sm text-muted-foreground md:hidden" style="--motion-order: 2"> No users match the current filters. </Card>
 
-    <Card id="admin-users-index-table-card" variant="default" class="motion-step hidden overflow-hidden py-0 md:block" style="--motion-order: 2">
+    <AdminIndexTableCard id="admin-users-index-table-card" style="--motion-order: 2">
       <Table id="admin-users-index-table">
         <TableHeader>
           <TableRow>
-            <AdminIndexHeaderCell
-              label="Name"
-              column="name"
-              :filter-options="props.filterOptions.name"
-              :format-option-label="toTitleCase"
-              :selected-filters="selectedFiltersFor('name')"
-              :sort-direction="sortDirectionFor('name')"
-              @clear-filters="
-                (column) => {
-                  clearFilters(column as AdminUsersIndexColumn);
-                }
-              "
-              @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-              @toggle-sort="
-                (column) => {
-                  toggleSort(column as AdminUsersIndexColumn);
-                }
-              "
-            />
-            <AdminIndexHeaderCell
-              label="Email"
-              column="email"
-              :filter-options="props.filterOptions.email"
-              :selected-filters="selectedFiltersFor('email')"
-              :sort-direction="sortDirectionFor('email')"
-              @clear-filters="
-                (column) => {
-                  clearFilters(column as AdminUsersIndexColumn);
-                }
-              "
-              @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-              @toggle-sort="
-                (column) => {
-                  toggleSort(column as AdminUsersIndexColumn);
-                }
-              "
-            />
-            <AdminIndexHeaderCell
-              label="Roles"
-              column="roles"
-              :filter-options="props.filterOptions.roles"
-              :format-option-label="toTitleCase"
-              :selected-filters="selectedFiltersFor('roles')"
-              :sort-direction="sortDirectionFor('roles')"
-              @clear-filters="
-                (column) => {
-                  clearFilters(column as AdminUsersIndexColumn);
-                }
-              "
-              @apply-filters="(column, values) => setFilters(column as AdminUsersIndexColumn, values)"
-              @toggle-sort="
-                (column) => {
-                  toggleSort(column as AdminUsersIndexColumn);
-                }
-              "
-            />
+            <AdminIndexHeaderCell v-for="headerCell in headerCells" :key="headerCell.column" v-bind="getHeaderCellProps(headerCell)" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -246,6 +155,6 @@ const { clearFilters, setFilters, selectedFiltersFor, sortDirectionFor, toggleSo
           </TableRow>
         </TableBody>
       </Table>
-    </Card>
+    </AdminIndexTableCard>
   </div>
 </template>

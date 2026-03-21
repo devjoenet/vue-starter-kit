@@ -14,7 +14,7 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   gaFillClass: 'fill-transparent',
   gaOutlineClass: 'fill-primary',
-  codeIconClass: 'fill-accent',
+  codeIconClass: 'fill-secondary',
 });
 
 const attrs = useAttrs();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
-import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import Input from '@/components/ui/input/Input.vue';
+import UserIdentityFields from '@/components/UserIdentityFields.vue';
 
 withDefaults(
   defineProps<{

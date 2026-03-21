@@ -372,10 +372,39 @@ it('keeps the Southeast Code mark visible in the welcome-page header', function 
 
     expect($authLayoutContents)->toContain("from '@/components/SurfaceBrandLockup.vue'");
     expect($authLayoutContents)->toContain('<SurfaceBrandLockup');
+    expect($authLayoutContents)->toContain('auth-page-theme');
+    expect($authLayoutContents)->toContain('surface-auth-stage');
+    expect($authLayoutContents)->toContain('surface-auth-callout');
 
     expect($brandLockupContents)->toContain("from '@/components/AppLogoIcon.vue'");
+    expect($brandLockupContents)->toContain('gaOutlineClass="fill-primary"');
+    expect($brandLockupContents)->toContain('codeIconClass="fill-secondary"');
     expect($brandLockupContents)->toContain('whitespace-nowrap');
     expect($brandLockupContents)->toContain('Southeast Code');
+});
+
+it('anchors the welcome page around the shared hero illustration and custom systems positioning', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $cssContents = file_get_contents($projectRoot.'/resources/css/app.css');
+
+    expect($welcomeContents)->toContain("from '@/components/WelcomeHeroIllustration.vue'");
+    expect($welcomeContents)->toContain('<WelcomeHeroIllustration');
+    expect($welcomeContents)->toContain('Custom systems that help real teams operate better.');
+    expect($welcomeContents)->toContain('welcome-page-theme');
+    expect($welcomeContents)->toContain('id="welcome-page-hero"');
+    expect($welcomeContents)->toContain('id="welcome-page-visual"');
+    expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
+    expect($welcomeContents)->toContain('One starter. Many surfaces.');
+    expect($welcomeContents)->toContain('From one starting point');
+    expect($welcomeContents)->not->toContain('welcome-hero-frame');
+    expect($welcomeContents)->not->toContain('welcome-hero-chrome');
+
+    expect($cssContents)->toContain('.welcome-page-theme');
+    expect($cssContents)->toContain('.welcome-hero-shell');
+    expect($cssContents)->toContain('.welcome-hero-media');
+    expect($cssContents)->toContain('.welcome-copy-surface');
+    expect($cssContents)->toContain('.welcome-foundation-shell');
 });
 
 it('uses the shared settings workspace shell for settings navigation and headings', function () {

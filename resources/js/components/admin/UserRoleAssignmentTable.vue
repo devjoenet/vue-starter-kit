@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
+import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';

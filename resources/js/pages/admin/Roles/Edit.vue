@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Head, router, setLayoutProps, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
+import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
@@ -11,21 +12,18 @@ import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
 import { useSequentialSave } from '@/composables/useSequentialSave';
 import { useToast } from '@/composables/useToast';
-import AppLayout from '@/layouts/AppLayout.vue';
+import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { toKebabCase, toTitleCase } from '@/lib/utils';
-import { dashboard } from '@/routes/admin';
 import { destroy, index, update } from '@/routes/admin/roles';
 import { sync } from '@/routes/admin/roles/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminRolesEditPageProps } from '@/types/page-props';
 import type { SyncRolePermissionsRequest, UpdateRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
-  layout: AppLayout,
+  layout: adminPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [{ title: 'Dashboard', href: dashboard.url() }, { title: 'Roles', href: index.url() }, { title: 'Edit' }],
-});
+setAdminBreadcrumbs({ title: 'Roles', href: index.url() }, { title: 'Edit' });
 
 const props = defineProps<AdminRolesEditPageProps>();
 
@@ -146,58 +144,56 @@ const destroyRole = () => {
   <Head :title="`Edit ${toTitleCase(props.role.name)}`" />
 
   <div id="admin-roles-edit-page" class="motion-stage px-4">
-    <section class="surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
-      <div class="relative space-y-6">
-        <AdminPageIntro
-          id="admin-roles-edit-page-header"
-          class="motion-step"
-          :description="`Adjust the role name and permission footprint together so access reviews stay clean and easy to explain.`"
-          kicker="Role editor"
-          style="--motion-order: 0"
-          :title="`Edit ${toTitleCase(props.role.name)}`"
-        >
-          <template #aside>
-            <Badge variant="secondary"> {{ selectedPermissions.length }} permission{{ selectedPermissions.length === 1 ? '' : 's' }} </Badge>
-            <Badge variant="info"> {{ permissionGroupCount }} group{{ permissionGroupCount === 1 ? '' : 's' }} </Badge>
-          </template>
-        </AdminPageIntro>
+    <AdminEditorShell>
+      <AdminPageIntro
+        id="admin-roles-edit-page-header"
+        class="motion-step"
+        :description="`Adjust the role name and permission footprint together so access reviews stay clean and easy to explain.`"
+        kicker="Role editor"
+        style="--motion-order: 0"
+        :title="`Edit ${toTitleCase(props.role.name)}`"
+      >
+        <template #aside>
+          <Badge variant="secondary"> {{ selectedPermissions.length }} permission{{ selectedPermissions.length === 1 ? '' : 's' }} </Badge>
+          <Badge variant="info"> {{ permissionGroupCount }} group{{ permissionGroupCount === 1 ? '' : 's' }} </Badge>
+        </template>
+      </AdminPageIntro>
 
-        <div id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
-          <div class="space-y-6">
-            <RoleDetailsForm id="admin-roles-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="roleForm" />
+      <div id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
+        <div class="space-y-6">
+          <RoleDetailsForm id="admin-roles-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="roleForm" />
 
-            <RolePermissionAssignmentTable
-              id="admin-roles-edit-permissions-card"
-              class="motion-step"
-              style="--motion-order: 2"
-              :can-assign="canAssign"
-              :error="permsForm.errors.permissions"
-              :permissions-by-group="permissionsByGroup"
-              :selected-permission-names="selectedPermissions"
-              @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
-            />
-          </div>
-
-          <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
-            <EditPageActionRow
-              id="admin-roles-edit-actions"
-              :can-delete="canDelete"
-              :can-save="isDirty"
-              close-label="Close"
-              delete-label="Delete Role"
-              :description="actionDescription"
-              heading="Finish this role update"
-              :processing="saveProcessing"
-              save-label="Save and Close"
-              :status="actionStatus"
-              :status-tone="isDirty ? 'info' : 'muted'"
-              @close="closeToIndex"
-              @delete="destroyRole"
-              @save="saveAndClose"
-            />
-          </aside>
+          <RolePermissionAssignmentTable
+            id="admin-roles-edit-permissions-card"
+            class="motion-step"
+            style="--motion-order: 2"
+            :can-assign="canAssign"
+            :error="permsForm.errors.permissions"
+            :permissions-by-group="permissionsByGroup"
+            :selected-permission-names="selectedPermissions"
+            @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
+          />
         </div>
+
+        <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
+          <EditPageActionRow
+            id="admin-roles-edit-actions"
+            :can-delete="canDelete"
+            :can-save="isDirty"
+            close-label="Close"
+            delete-label="Delete Role"
+            :description="actionDescription"
+            heading="Finish this role update"
+            :processing="saveProcessing"
+            save-label="Save and Close"
+            :status="actionStatus"
+            :status-tone="isDirty ? 'info' : 'muted'"
+            @close="closeToIndex"
+            @delete="destroyRole"
+            @save="saveAndClose"
+          />
+        </aside>
       </div>
-    </section>
+    </AdminEditorShell>
   </div>
 </template>

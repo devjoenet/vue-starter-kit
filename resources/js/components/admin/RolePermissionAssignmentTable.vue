@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
+import { computed } from 'vue';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
+import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
@@ -9,10 +10,9 @@ import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
 import { usePermissionTable } from '@/composables/usePermissionTable';
+import type { PermissionSortColumn } from '@/composables/usePermissionTable';
 import { toTitleCase } from '@/lib/utils';
 import type { PermissionsByGroup } from '@/types/page-props';
-import type { PermissionSortColumn } from '@/composables/usePermissionTable';
-import { computed } from 'vue';
 
 const props = defineProps<{
   canAssign: boolean;

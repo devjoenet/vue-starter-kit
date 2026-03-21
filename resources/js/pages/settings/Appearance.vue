@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { Head, setLayoutProps } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { edit } from '@/routes/appearance';
 defineOptions({
-  layout: [AppLayout, SettingsLayout],
+  layout: settingsPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [{ title: 'Appearance settings', href: edit().url }],
-});
+setBreadcrumbs({ title: 'Appearance settings', href: edit().url });
 </script>
 
 <template>

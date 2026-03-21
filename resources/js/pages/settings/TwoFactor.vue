@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
 import SettingsActionRow from '@/components/SettingsActionRow.vue';
@@ -9,17 +9,14 @@ import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { disable, enable, show } from '@/routes/two-factor';
 import type { SettingsTwoFactorPageProps } from '@/types/page-props';
 defineOptions({
-  layout: [AppLayout, SettingsLayout],
+  layout: settingsPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [{ title: 'Two-Factor Authentication', href: show.url() }],
-});
+setBreadcrumbs({ title: 'Two-Factor Authentication', href: show.url() });
 
 const props = withDefaults(defineProps<SettingsTwoFactorPageProps>(), {
   requiresConfirmation: false,

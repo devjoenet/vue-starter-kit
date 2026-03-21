@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import SurfaceBrandLockup from '@/components/SurfaceBrandLockup.vue';
+import Button from '@/components/ui/button/Button.vue';
 import { home } from '@/routes';
 
 defineProps<{
@@ -8,50 +9,71 @@ defineProps<{
   description?: string;
 }>();
 
-const trustPoints = ['Secure sign-in for demos, client portals, and internal tools.', 'Plain-language flows that keep the next step obvious.', 'A stronger product feel without decorative noise.'];
+const trustPoints = ['Secure sign-in for demos, client portals, and internal tools.', 'Clear recovery, verification, and confirmation steps when access changes.', 'The same visual system clients and teams see after they sign in.'];
 </script>
 
 <template>
-  <div class="surface-auth-stage relative min-h-svh overflow-hidden text-foreground">
-    <div class="relative mx-auto flex min-h-svh w-full max-w-7xl items-center px-6 py-10 md:px-10">
-      <div class="grid w-full gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,25rem)] lg:gap-16">
-        <section class="motion-stage flex flex-col justify-center lg:pr-6">
-          <Link :href="home()" class="motion-step inline-flex w-fit" style="--motion-order: 0">
-            <SurfaceBrandLockup />
-          </Link>
+  <div class="auth-page-theme relative isolate min-h-svh overflow-hidden text-foreground">
+    <div class="relative mx-auto flex min-h-svh w-full max-w-7xl flex-col px-5 py-6 sm:px-6 lg:px-8">
+      <header id="auth-page-header" class="flex flex-col items-start gap-3 pb-8 text-sm sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:pb-10">
+        <Link :href="home()" id="auth-page-brand" class="motion-step inline-flex shrink-0" style="--motion-order: 0">
+          <SurfaceBrandLockup />
+        </Link>
 
-          <div class="mt-10 max-w-xl space-y-8">
-            <div class="motion-step space-y-4" style="--motion-order: 1">
-              <p class="section-kicker">Secure access</p>
-              <h1 class="max-w-xl text-[clamp(2.5rem,4.7vw,4.25rem)] leading-[0.96] font-semibold tracking-[-0.04em] text-balance">
-                {{ title }}
-              </h1>
-              <p class="max-w-md text-base leading-7 text-muted-foreground sm:text-lg">
-                {{ description }}
-              </p>
-            </div>
+        <Button
+          id="auth-page-home-link"
+          as-child
+          appearance="text"
+          variant="muted"
+          size="sm"
+          rounded="full"
+          class="motion-step border border-border/45 bg-background/22 px-4 shadow-(--elevation-1) backdrop-blur-xl hover:bg-background/40 hover:text-foreground"
+          style="--motion-order: 1"
+        >
+          <Link :href="home()">Back home</Link>
+        </Button>
+      </header>
 
-            <div class="motion-step border-t border-border/55 pt-6" style="--motion-order: 2">
-              <p class="text-[0.68rem] font-semibold tracking-[0.18em] text-secondary uppercase">Built for real teams</p>
+      <main class="relative flex flex-1 items-center pb-10 sm:pb-12 lg:pb-16">
+        <section class="surface-auth-stage motion-stage relative w-full overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6">
+          <div class="surface-auth-grid relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,29rem)] xl:gap-x-14">
+            <section class="surface-auth-copy max-w-[38rem] px-3 py-3 sm:px-4 lg:px-6 lg:py-5">
+              <div class="motion-step" style="--motion-order: 2">
+                <p class="font-handwritten text-xl font-semibold text-primary sm:text-2xl">Secure access</p>
+              </div>
 
-              <ul class="mt-4 space-y-3">
-                <li v-for="point in trustPoints" :key="point" class="flex items-start gap-3">
-                  <span class="mt-2 size-2 rounded-full bg-secondary ring-4 ring-secondary/18" />
-                  <span class="text-sm leading-6 text-muted-foreground">
+              <div class="motion-step mt-5 space-y-5" style="--motion-order: 3">
+                <h1 class="max-w-[11ch] text-[clamp(2.9rem,5.2vw,5.2rem)] leading-[0.93] font-semibold tracking-[-0.055em] text-balance">
+                  {{ title }}
+                </h1>
+                <p class="max-w-xl border-t border-border/45 pt-5 text-base leading-7 text-muted-foreground sm:text-lg">
+                  {{ description }}
+                </p>
+              </div>
+            </section>
+
+            <section class="surface-auth-form-slot motion-step flex items-start lg:col-start-2 lg:row-span-2" style="--motion-order: 4">
+              <div class="w-full max-w-xl lg:max-w-none">
+                <slot />
+              </div>
+            </section>
+
+            <aside class="surface-auth-callout motion-step px-5 py-5 sm:px-6 sm:py-6 lg:row-start-2 lg:max-w-[34rem]" style="--motion-order: 5">
+              <p class="text-[0.72rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase">Built for real teams</p>
+              <p class="mt-3 max-w-md text-sm leading-6 text-muted-foreground sm:text-[0.96rem] sm:leading-7">Every auth step should feel like part of the same system clients and teams use after they sign in.</p>
+
+              <ul class="mt-5 space-y-3.5">
+                <li v-for="point in trustPoints" :key="point" class="surface-auth-trust-point">
+                  <span class="surface-auth-trust-point-bullet" />
+                  <span class="text-sm leading-6 text-muted-foreground sm:text-[0.96rem]">
                     {{ point }}
                   </span>
                 </li>
               </ul>
-            </div>
+            </aside>
           </div>
         </section>
-
-        <section class="flex items-center justify-center lg:justify-end">
-          <div class="motion-step w-full max-w-md" style="--motion-order: 3">
-            <slot />
-          </div>
-        </section>
-      </div>
+      </main>
     </div>
   </div>
 </template>

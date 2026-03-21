@@ -1,24 +1,19 @@
 <script setup lang="ts">
-import { Link, setLayoutProps } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import AdminIndexPageHeader from '@/components/admin/AdminIndexPageHeader.vue';
 import PermissionIndexTable from '@/components/admin/PermissionIndexTable.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useAbility } from '@/composables/useAbility';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes/admin';
+import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { create, index } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
 import type { AdminPermissionsIndexPageProps } from '@/types/page-props';
 defineOptions({
-  layout: AppLayout,
+  layout: adminPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [
-    { title: 'Dashboard', href: dashboard.url() },
-    { title: 'Permissions', href: index.url() },
-  ],
-});
+setAdminBreadcrumbs({ title: 'Permissions', href: index.url() });
 
 const props = defineProps<AdminPermissionsIndexPageProps>();
 
@@ -29,13 +24,13 @@ const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 
 <template>
   <div id="admin-permissions-index-page" class="motion-stage space-y-6 px-4">
-    <div id="admin-permissions-index-page-header" class="motion-step flex flex-wrap items-center justify-between gap-3" style="--motion-order: 0">
-      <h1 class="text-2xl font-semibold">Permissions</h1>
-
-      <Button v-if="canCreate" id="admin-permissions-index-create-button" appearance="outline" as-child class="motion-sheen">
-        <Link :href="create.url()">Create New Permission</Link>
-      </Button>
-    </div>
+    <AdminIndexPageHeader id="admin-permissions-index-page-header" title="Permissions" style="--motion-order: 0">
+      <template #actions>
+        <Button v-if="canCreate" id="admin-permissions-index-create-button" appearance="outline" as-child class="motion-sheen">
+          <Link :href="create.url()">Create New Permission</Link>
+        </Button>
+      </template>
+    </AdminIndexPageHeader>
 
     <div class="motion-step" style="--motion-order: 1">
       <PermissionIndexTable id="admin-permissions-index-table-card" :can-update="canUpdate" :filter-options="props.filterOptions" :groups="props.groups" :permissions="props.permissions" :query="props.query" />

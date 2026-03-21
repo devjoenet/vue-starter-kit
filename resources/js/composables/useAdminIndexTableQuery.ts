@@ -117,8 +117,19 @@ export function useAdminIndexTableQuery<TColumn extends string>({ getQuery, getU
     });
   };
 
+  const headerCellBindings = (column: TColumn) => {
+    return {
+      selectedFilters: selectedFiltersFor(column),
+      sortDirection: sortDirectionFor(column),
+      onApplyFilters: (_ignoredColumn: string, values: string[]) => setFilters(column, values),
+      onClearFilters: () => clearFilters(column),
+      onToggleSort: () => toggleSort(column),
+    };
+  };
+
   return {
     clearFilters,
+    headerCellBindings,
     selectedFiltersFor,
     setFilters,
     sortDirectionFor,
