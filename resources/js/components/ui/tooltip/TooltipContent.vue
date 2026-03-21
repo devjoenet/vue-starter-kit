@@ -3,12 +3,7 @@ import type { TooltipContentEmits, TooltipContentProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 import type { TooltipContentVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
-import {
-  TooltipArrow,
-  TooltipContent,
-  TooltipPortal,
-  useForwardPropsEmits,
-} from 'reka-ui';
+import { TooltipArrow, TooltipContent, TooltipPortal, useForwardPropsEmits } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { tooltipArrowVariants, tooltipContentVariants } from './styles';
 
@@ -37,13 +32,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 
 <template>
   <TooltipPortal>
-    <TooltipContent
-      data-slot="tooltip-content"
-      v-bind="{ ...forwarded, ...$attrs }"
-      :class="
-        cn(tooltipContentVariants({ variant: props.variant }), props.class)
-      "
-    >
+    <TooltipContent data-slot="tooltip-content" v-bind="{ ...forwarded, ...$attrs }" :class="cn(tooltipContentVariants({ variant: props.variant }), props.class)">
       <slot />
 
       <TooltipArrow :class="tooltipArrowVariants({ variant: props.variant })" />

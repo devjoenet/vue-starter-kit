@@ -19,26 +19,12 @@ const activeItemStyles = 'bg-primary/10 text-primary';
   <div class="hidden h-full lg:flex lg:flex-1">
     <NavigationMenu class="ml-10 flex h-full items-stretch">
       <NavigationMenuList class="flex h-full items-stretch space-x-2">
-        <NavigationMenuItem
-          v-for="item in items"
-          :key="item.title"
-          class="relative flex h-full items-center"
-        >
-          <Link
-            :class="[
-              navigationMenuTriggerStyle(),
-              whenCurrentUrl(item.href, activeItemStyles),
-              'cursor-pointer rounded-full border border-transparent px-4 hover:border-primary/18 hover:bg-primary/6',
-            ]"
-            :href="item.href"
-          >
+        <NavigationMenuItem v-for="item in items" :key="item.title" class="relative flex h-full items-center">
+          <Link :class="[navigationMenuTriggerStyle(), whenCurrentUrl(item.href, activeItemStyles), 'cursor-pointer rounded-full border border-transparent px-4 hover:border-primary/18 hover:bg-primary/6']" :href="item.href">
             <component :is="item.icon" v-if="item.icon" class="mr-2 h-4 w-4" />
             {{ item.title }}
           </Link>
-          <div
-            v-if="isCurrentUrl(item.href)"
-            class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-primary"
-          />
+          <div v-if="isCurrentUrl(item.href)" class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-primary" />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

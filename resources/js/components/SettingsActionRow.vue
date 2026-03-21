@@ -32,10 +32,7 @@ const alignmentClass = computed(() => {
   return hasMetaContent.value ? 'sm:justify-between' : 'sm:justify-end';
 });
 
-const statusClassNames: Record<
-  'destructive' | 'info' | 'muted' | 'success' | 'warning',
-  string
-> = {
+const statusClassNames: Record<'destructive' | 'info' | 'muted' | 'success' | 'warning', string> = {
   muted: 'text-muted-foreground',
   success: 'text-success',
   info: 'text-info',
@@ -45,16 +42,7 @@ const statusClassNames: Record<
 </script>
 
 <template>
-  <div
-    data-slot="settings-action-row"
-    :class="
-      cn(
-        'flex flex-col gap-3 sm:flex-row sm:items-center',
-        alignmentClass,
-        props.class,
-      )
-    "
-  >
+  <div data-slot="settings-action-row" :class="cn('flex flex-col gap-3 sm:flex-row sm:items-center', alignmentClass, props.class)">
     <div v-if="hasMetaContent" class="space-y-1">
       <p v-if="status" :class="cn('text-sm', statusClassNames[statusTone])">
         {{ status }}

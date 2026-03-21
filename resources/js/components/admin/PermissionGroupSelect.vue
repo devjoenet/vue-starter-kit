@@ -73,29 +73,18 @@ const groupSuggestions = computed(() => {
     });
   });
 
-  return Array.from(suggestions.values()).sort((left, right) =>
-    left.label.localeCompare(right.label),
-  );
+  return Array.from(suggestions.values()).sort((left, right) => left.label.localeCompare(right.label));
 });
 
 const normalizedQuery = computed(() => toSnakeCase(searchQuery.value));
-const selectedGroup = computed(() =>
-  groupSuggestions.value.find(
-    (group) => group.slug === toSnakeCase(props.modelValue),
-  ),
-);
+const selectedGroup = computed(() => groupSuggestions.value.find((group) => group.slug === toSnakeCase(props.modelValue)));
 
 const filteredSuggestions = computed(() => {
   if (!normalizedQuery.value) {
     return groupSuggestions.value;
   }
 
-  return groupSuggestions.value.filter((group) =>
-    [group.slug, group.label, group.description ?? '']
-      .join(' ')
-      .toLowerCase()
-      .includes(normalizedQuery.value.toLowerCase()),
-  );
+  return groupSuggestions.value.filter((group) => [group.slug, group.label, group.description ?? ''].join(' ').toLowerCase().includes(normalizedQuery.value.toLowerCase()));
 });
 
 const openSuggestions = () => {
@@ -150,48 +139,26 @@ watch(
       @blur="closeSuggestions"
     />
 
-    <div
-      v-if="isOpen && filteredSuggestions.length > 0"
-      class="absolute z-30 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-(--outline) bg-(--surface) p-1 shadow-(--elevation-2)"
-    >
-      <button
-        v-for="group in filteredSuggestions"
-        :key="group.slug"
-        type="button"
-        class="w-full rounded-lg px-3 py-3 text-left transition-colors hover:bg-muted/70"
-        @mousedown.prevent="selectGroup(group)"
-      >
+    <div v-if="isOpen && filteredSuggestions.length > 0" class="absolute z-30 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-(--outline) bg-(--surface) p-1 shadow-(--elevation-2)">
+      <button v-for="group in filteredSuggestions" :key="group.slug" type="button" class="w-full rounded-lg px-3 py-3 text-left transition-colors hover:bg-muted/70" @mousedown.prevent="selectGroup(group)">
         <span class="flex items-start justify-between gap-4">
           <span class="min-w-0 space-y-1">
             <span class="block text-sm font-semibold">{{ group.label }}</span>
-            <span
-              v-if="group.description"
-              class="block text-xs leading-5 text-muted-foreground"
-            >
+            <span v-if="group.description" class="block text-xs leading-5 text-muted-foreground">
               {{ group.description }}
             </span>
           </span>
 
-          <span
-            class="shrink-0 text-right text-[0.7rem] tracking-[0.18em] text-muted-foreground uppercase"
-          >
+          <span class="shrink-0 text-right text-[0.7rem] tracking-[0.18em] text-muted-foreground uppercase">
             <span class="block">{{ group.slug }}</span>
-            <span class="block"
-              >{{ group.permissions_count }} permission<span
-                v-if="group.permissions_count !== 1"
-                >s</span
-              ></span
-            >
+            <span class="block">{{ group.permissions_count }} permission<span v-if="group.permissions_count !== 1">s</span></span>
           </span>
         </span>
       </button>
     </div>
 
     <p class="text-xs leading-5 text-muted-foreground">
-      {{
-        selectedGroup?.description ??
-        'Use groups to organize permissions into a shared catalog across internal and customer-facing access areas.'
-      }}
+      {{ selectedGroup?.description ?? 'Use groups to organize permissions into a shared catalog across internal and customer-facing access areas.' }}
     </p>
   </div>
 </template>

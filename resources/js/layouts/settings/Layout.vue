@@ -20,62 +20,41 @@ const settingsNavItems: SettingsNavItem[] = [
     title: 'Profile',
     href: editProfile(),
     heading: 'Profile settings',
-    description:
-      'Update the identity and contact details attached to this account.',
+    description: 'Update the identity and contact details attached to this account.',
   },
   {
     title: 'Password',
     href: editPassword(),
     heading: 'Password settings',
-    description:
-      'Change the credential used for sign-in and keep access secure.',
+    description: 'Change the credential used for sign-in and keep access secure.',
   },
   {
     title: 'Two-Factor Auth',
     href: show(),
     heading: 'Two-factor authentication',
-    description:
-      'Protect sign-in with an authenticator app and a dependable recovery path.',
+    description: 'Protect sign-in with an authenticator app and a dependable recovery path.',
   },
   {
     title: 'Appearance',
     href: editAppearance(),
     heading: 'Appearance settings',
-    description:
-      'Choose the light, dark, or system presentation for day-to-day use.',
+    description: 'Choose the light, dark, or system presentation for day-to-day use.',
   },
 ];
 
 const { isCurrentUrl } = useCurrentUrl();
 
-const activeNavItem = computed(
-  () =>
-    settingsNavItems.find((item) => isCurrentUrl(item.href)) ??
-    settingsNavItems[0],
-);
+const activeNavItem = computed(() => settingsNavItems.find((item) => isCurrentUrl(item.href)) ?? settingsNavItems[0]);
 </script>
 
 <template>
-  <div
-    id="settings-layout"
-    class="surface-settings-shell motion-stage relative space-y-6 overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6"
-  >
-    <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-linear-to-b from-secondary/18 via-secondary/6 to-transparent"
-    />
-    <div
-      class="pointer-events-none absolute top-8 -right-14 size-64 rounded-full bg-accent/14 blur-3xl"
-    />
-    <div
-      class="pointer-events-none absolute -bottom-24 left-8 size-72 rounded-full bg-primary/12 blur-3xl"
-    />
+  <div id="settings-layout" class="surface-settings-shell motion-stage relative space-y-6 overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-linear-to-b from-secondary/18 via-secondary/6 to-transparent" />
+    <div class="pointer-events-none absolute top-8 -right-14 size-64 rounded-full bg-accent/14 blur-3xl" />
+    <div class="pointer-events-none absolute -bottom-24 left-8 size-72 rounded-full bg-primary/12 blur-3xl" />
 
     <div class="relative space-y-6">
-      <header
-        id="settings-layout-header"
-        class="motion-step max-w-3xl space-y-3"
-        style="--motion-order: 0"
-      >
+      <header id="settings-layout-header" class="motion-step max-w-3xl space-y-3" style="--motion-order: 0">
         <p class="section-kicker">Settings workspace</p>
         <h1 class="text-3xl font-semibold tracking-tight text-balance">
           {{ activeNavItem.heading }}
@@ -86,12 +65,7 @@ const activeNavItem = computed(
       </header>
 
       <div class="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
-        <nav
-          id="settings-layout-nav"
-          class="surface-settings-nav motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 lg:sticky lg:top-6"
-          style="--motion-order: 1"
-          aria-label="Settings"
-        >
+        <nav id="settings-layout-nav" class="surface-settings-nav motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 lg:sticky lg:top-6" style="--motion-order: 1" aria-label="Settings">
           <Button
             v-for="item in settingsNavItems"
             :key="toUrl(item.href)"
@@ -107,10 +81,7 @@ const activeNavItem = computed(
           </Button>
         </nav>
 
-        <section
-          class="motion-step w-full max-w-4xl space-y-6"
-          style="--motion-order: 2"
-        >
+        <section class="motion-step w-full max-w-4xl space-y-6" style="--motion-order: 2">
           <slot />
         </section>
       </div>

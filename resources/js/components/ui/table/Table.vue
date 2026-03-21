@@ -10,10 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="table-wrapper"
-    :class="cn(tableWrapperVariants(), props.wrapperClass)"
-  >
+  <div data-slot="table-wrapper" :class="cn(tableWrapperVariants(), props.wrapperClass)">
     <table data-slot="table" :class="cn(tableVariants(), props.class)">
       <slot />
     </table>

@@ -66,8 +66,8 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
 
         $groupDescriptionInput = text(
             label: 'Group description (optional)',
-            default: $defaultGroupDescription,
             placeholder: 'What does this group govern?',
+            default: $defaultGroupDescription,
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['group_description' => $permissionNormalizer->normalizeDescription($value)],
                 ['group_description' => ['nullable', 'string', 'max:500']],

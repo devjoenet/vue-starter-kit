@@ -9,10 +9,7 @@ import DropdownMenuRadioGroup from '@/components/ui/dropdown-menu/DropdownMenuRa
 import DropdownMenuRadioItem from '@/components/ui/dropdown-menu/DropdownMenuRadioItem.vue';
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
-import {
-  inputAssistiveTextVariants,
-  inputVariants,
-} from '@/components/ui/input/variants';
+import { inputAssistiveTextVariants, inputVariants } from '@/components/ui/input/variants';
 import { cn } from '@/lib/utils';
 import FieldAdornmentIcon from '../form-field/FieldAdornmentIcon.vue';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
@@ -84,11 +81,8 @@ const hasLabel = computed(() => Boolean(props.label));
 const hasClearIconSlot = computed(() => Boolean(slots['clear-icon']));
 const fieldId = computed(() => props.id ?? `select-${generatedId}`);
 const menuId = computed(() => `${fieldId.value}-menu`);
-const { hasError, fieldState, supportingText, showAsterisk } =
-  useFieldState(props);
-const assistiveTextId = computed(() =>
-  supportingText.value ? `${fieldId.value}-assistive` : undefined,
-);
+const { hasError, fieldState, supportingText, showAsterisk } = useFieldState(props);
+const assistiveTextId = computed(() => (supportingText.value ? `${fieldId.value}-assistive` : undefined));
 const describedBy = computed(() => assistiveTextId.value ?? undefined);
 
 const hasSelectedValue = computed(() => {
@@ -127,9 +121,7 @@ const selectedLabel = computed(() => {
 
 const hasLeadingIcon = computed(() => Boolean(props.leadingIcon));
 const hasTrailingIcon = computed(() => Boolean(props.trailingIcon));
-const hasClearControl = computed(
-  () => props.clearable && hasValue.value && !props.disabled && !props.readonly,
-);
+const hasClearControl = computed(() => props.clearable && hasValue.value && !props.disabled && !props.readonly);
 
 const leftPadding = computed(() => (hasLeadingIcon.value ? 'pl-12' : 'pl-4'));
 
@@ -160,9 +152,7 @@ const rightPadding = computed(() => {
 });
 
 const arrowOffset = computed(() => 'right-3');
-const trailingOffset = computed(() =>
-  hasClearControl.value ? 'right-16' : 'right-10',
-);
+const trailingOffset = computed(() => (hasClearControl.value ? 'right-16' : 'right-10'));
 const clearOffset = computed(() => 'right-10');
 
 const triggerClasses = computed(() =>
@@ -206,13 +196,7 @@ const optionStateClasses = computed(() =>
   }),
 );
 
-const chevronClasses = computed(() =>
-  cn(
-    'size-4 shrink-0 text-muted-foreground transition-transform duration-150',
-    open.value && 'rotate-180',
-    hasError.value && 'text-destructive',
-  ),
-);
+const chevronClasses = computed(() => cn('size-4 shrink-0 text-muted-foreground transition-transform duration-150', open.value && 'rotate-180', hasError.value && 'text-destructive'));
 
 const { handleTriggerKeydown } = useDisclosureTrigger({
   open,
@@ -274,30 +258,17 @@ function clearValue(): void {
             @focus="(event) => emit('focus', event)"
             @blur="(event) => emit('blur', event)"
           >
-            <FieldAdornmentIcon
-              v-if="hasLeadingIcon"
-              class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-muted-foreground"
-            >
+            <FieldAdornmentIcon v-if="hasLeadingIcon" class="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center text-muted-foreground">
               <slot name="leading-icon">
                 <slot name="prepend-icon">
-                  <component
-                    v-if="leadingIcon && typeof leadingIcon !== 'string'"
-                    :is="leadingIcon"
-                    class="size-5"
-                  />
-                  <span v-else-if="leadingIcon" class="text-sm font-medium">{{
-                    leadingIcon
-                  }}</span>
+                  <component v-if="leadingIcon && typeof leadingIcon !== 'string'" :is="leadingIcon" class="size-5" />
+                  <span v-else-if="leadingIcon" class="text-sm font-medium">{{ leadingIcon }}</span>
                 </slot>
               </slot>
             </FieldAdornmentIcon>
 
             <span class="truncate text-left">
-              <slot
-                name="selected"
-                :option="selectedOption"
-                :value="modelValue"
-              >
+              <slot name="selected" :option="selectedOption" :value="modelValue">
                 {{ selectedLabel }}
               </slot>
             </span>
@@ -321,32 +292,16 @@ function clearValue(): void {
               </template>
             </FieldClearControl>
 
-            <FieldAdornmentIcon
-              v-if="hasTrailingIcon"
-              :class="
-                cn(
-                  'absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-muted-foreground',
-                  trailingOffset,
-                )
-              "
-            >
+            <FieldAdornmentIcon v-if="hasTrailingIcon" :class="cn('absolute top-1/2 z-10 flex -translate-y-1/2 items-center text-muted-foreground', trailingOffset)">
               <slot name="trailing-icon">
                 <slot name="append-icon">
-                  <component
-                    v-if="trailingIcon && typeof trailingIcon !== 'string'"
-                    :is="trailingIcon"
-                    class="size-5"
-                  />
-                  <span v-else-if="trailingIcon" class="text-sm font-medium">{{
-                    trailingIcon
-                  }}</span>
+                  <component v-if="trailingIcon && typeof trailingIcon !== 'string'" :is="trailingIcon" class="size-5" />
+                  <span v-else-if="trailingIcon" class="text-sm font-medium">{{ trailingIcon }}</span>
                 </slot>
               </slot>
             </FieldAdornmentIcon>
 
-            <span
-              :class="cn('absolute top-1/2 z-10 -translate-y-1/2', arrowOffset)"
-            >
+            <span :class="cn('absolute top-1/2 z-10 -translate-y-1/2', arrowOffset)">
               <slot name="arrow-icon" :open="open">
                 <ChevronDown :class="chevronClasses" />
               </slot>
@@ -354,33 +309,14 @@ function clearValue(): void {
           </button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          :id="menuId"
-          align="start"
-          :side-offset="4"
-          :class="
-            cn(
-              'max-h-70 w-(--reka-dropdown-menu-trigger-width) overflow-y-auto border-border/60 p-1 shadow-(--elevation-2)',
-              contentClass,
-            )
-          "
-        >
-          <DropdownMenuRadioGroup
-            :model-value="modelValue"
-            @update:model-value="handleSelectionChange"
-          >
+        <DropdownMenuContent :id="menuId" align="start" :side-offset="4" :class="cn('max-h-70 w-(--reka-dropdown-menu-trigger-width) overflow-y-auto border-border/60 p-1 shadow-(--elevation-2)', contentClass)">
+          <DropdownMenuRadioGroup :model-value="modelValue" @update:model-value="handleSelectionChange">
             <DropdownMenuRadioItem
               v-for="option in options"
               :key="option.value"
               :value="option.value"
               :disabled="option.disabled"
-              :class="
-                cn(
-                  'min-h-11 cursor-pointer rounded-sm px-3 py-2 pl-3 text-sm font-medium [&>span:first-child]:hidden',
-                  optionStateClasses,
-                  optionClass,
-                )
-              "
+              :class="cn('min-h-11 cursor-pointer rounded-sm px-3 py-2 pl-3 text-sm font-medium [&>span:first-child]:hidden', optionStateClasses, optionClass)"
             >
               {{ option.label }}
             </DropdownMenuRadioItem>
@@ -388,20 +324,11 @@ function clearValue(): void {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <FieldLabel
-        :label="label"
-        :for-id="fieldId"
-        :class="labelClasses"
-        :show-asterisk="showAsterisk"
-      />
+      <FieldLabel :label="label" :for-id="fieldId" :class="labelClasses" :show-asterisk="showAsterisk" />
     </div>
 
     <div v-if="supportingText" class="mt-2">
-      <FieldAssistiveText
-        :id="assistiveTextId"
-        :text="supportingText"
-        :class="assistiveTextClasses"
-      />
+      <FieldAssistiveText :id="assistiveTextId" :text="supportingText" :class="assistiveTextClasses" />
     </div>
   </div>
 </template>

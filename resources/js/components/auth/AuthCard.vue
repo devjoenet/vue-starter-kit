@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { Loader2Icon } from 'lucide-vue-next';
+import Card from '@/components/ui/card/Card.vue';
 import { cn } from '@/lib/utils';
-import { spinnerVariants } from './styles';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
@@ -10,5 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Loader2Icon role="status" aria-label="Loading" :class="cn(spinnerVariants(), props.class)" />
+  <Card variant="default" :class="cn('surface-auth-card gap-5 rounded-[1.5rem] px-5 py-5 sm:px-6 sm:py-6', props.class)">
+    <slot />
+  </Card>
 </template>

@@ -58,20 +58,11 @@ defineEmits<{
           {{ heading ?? 'Keep checks predictable and group-prefixed.' }}
         </h2>
         <p class="text-sm leading-6 text-muted-foreground">
-          {{
-            description ??
-            'Permissions should read clearly in policy checks, tables, and assignment flows.'
-          }}
+          {{ description ?? 'Permissions should read clearly in policy checks, tables, and assignment flows.' }}
         </p>
       </div>
 
-      <PermissionGroupSelect
-        :id="groupId"
-        v-model="form.group"
-        :groups="groups"
-        :disabled="!canSubmit"
-        :error="form.errors.group"
-      />
+      <PermissionGroupSelect :id="groupId" v-model="form.group" :groups="groups" :disabled="!canSubmit" :error="form.errors.group" />
 
       <div class="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
         <Input
@@ -102,13 +93,8 @@ defineEmits<{
       </div>
 
       <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
-        <p class="text-sm font-semibold tracking-tight">
-          Group metadata is shared.
-        </p>
-        <p class="mt-1 text-sm leading-6 text-muted-foreground">
-          Updating the group label or description changes how every permission
-          in this group is described across the catalog and assignment flows.
-        </p>
+        <p class="text-sm font-semibold tracking-tight">Group metadata is shared.</p>
+        <p class="mt-1 text-sm leading-6 text-muted-foreground">Updating the group label or description changes how every permission in this group is described across the catalog and assignment flows.</p>
       </div>
 
       <Input
@@ -121,10 +107,7 @@ defineEmits<{
         :readonly="nameReadonly || !canEditKey"
         :state="form.errors.name ? 'error' : 'default'"
         :message="form.errors.name"
-        :supporting-text="
-          nameSupportingText ??
-          'This machine key powers route checks and policy-style permission lookups.'
-        "
+        :supporting-text="nameSupportingText ?? 'This machine key powers route checks and policy-style permission lookups.'"
       />
 
       <Input
@@ -158,10 +141,7 @@ defineEmits<{
         :can-save="showSave ?? true"
         :close-label="closeLabel"
         :delete-label="deleteLabel"
-        :description="
-          saveDescription ??
-          'When the permission name looks right, save and return to the permissions index.'
-        "
+        :description="saveDescription ?? 'When the permission name looks right, save and return to the permissions index.'"
         :heading="saveHeading ?? 'Finish this permission change'"
         :processing="form.processing"
         :save-label="submitLabel"

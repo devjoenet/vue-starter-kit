@@ -6,10 +6,5 @@ const props = defineProps<{
 </script>
 
 <template>
-  <input
-    v-if="props.name"
-    type="hidden"
-    :name="props.name"
-    :value="props.value ?? ''"
-  />
+  <input v-if="props.name" type="hidden" :name="props.name" :value="props.value ?? ''" />
 </template>

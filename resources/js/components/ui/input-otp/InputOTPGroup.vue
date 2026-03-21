@@ -13,11 +13,7 @@ const forwarded = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <div
-    data-slot="input-otp-group"
-    v-bind="forwarded"
-    :class="cn(inputOtpGroupVariants(), props.class)"
-  >
+  <div data-slot="input-otp-group" v-bind="forwarded" :class="cn(inputOtpGroupVariants(), props.class)">
     <slot />
   </div>
 </template>

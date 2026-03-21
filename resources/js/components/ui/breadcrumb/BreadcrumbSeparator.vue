@@ -10,12 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <li
-    data-slot="breadcrumb-separator"
-    role="presentation"
-    aria-hidden="true"
-    :class="cn(breadcrumbSeparatorVariants(), props.class)"
-  >
+  <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" :class="cn(breadcrumbSeparatorVariants(), props.class)">
     <slot>
       <ChevronRight />
     </slot>

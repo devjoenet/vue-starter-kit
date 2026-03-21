@@ -14,9 +14,7 @@ export type PermissionTableRow = {
   name: string;
 };
 
-const nextSortDirection = (
-  current: PermissionSortDirection,
-): PermissionSortDirection => {
+const nextSortDirection = (current: PermissionSortDirection): PermissionSortDirection => {
   if (current === 'none') {
     return 'asc';
   }
@@ -28,14 +26,10 @@ const nextSortDirection = (
   return 'none';
 };
 
-export function usePermissionTable(
-  permissionsByGroup: () => PermissionsByGroup,
-) {
+export function usePermissionTable(permissionsByGroup: () => PermissionsByGroup) {
   const activeSortColumn = ref<PermissionSortColumn>('group');
   const activeSortDirection = ref<PermissionSortDirection>('asc');
-  const selectedFilters = ref<Partial<Record<PermissionSortColumn, string[]>>>(
-    {},
-  );
+  const selectedFilters = ref<Partial<Record<PermissionSortColumn, string[]>>>({});
 
   const permissionRows = computed<PermissionTableRow[]>(() =>
     Object.entries(permissionsByGroup()).flatMap(([group, items]) =>
@@ -52,33 +46,19 @@ export function usePermissionTable(
   );
 
   const filterOptions = computed(() => ({
-    group: Array.from(
-      new Set(permissionRows.value.map((permission) => permission.group)),
-    ).sort(),
-    permission: Array.from(
-      new Set(permissionRows.value.map((permission) => permission.label)),
-    ).sort(),
-    permission_check: Array.from(
-      new Set(permissionRows.value.map((permission) => permission.name)),
-    ).sort(),
+    group: Array.from(new Set(permissionRows.value.map((permission) => permission.group))).sort(),
+    permission: Array.from(new Set(permissionRows.value.map((permission) => permission.label))).sort(),
+    permission_check: Array.from(new Set(permissionRows.value.map((permission) => permission.name))).sort(),
   }));
 
-  const matchesSelectedFilters = (
-    column: PermissionSortColumn,
-    value: string,
-  ) => {
+  const matchesSelectedFilters = (column: PermissionSortColumn, value: string) => {
     const columnFilters = selectedFilters.value[column];
 
     return !columnFilters?.length || columnFilters.includes(value);
   };
 
   const filteredRows = computed(() =>
-    permissionRows.value.filter(
-      (permission) =>
-        matchesSelectedFilters('group', permission.group) &&
-        matchesSelectedFilters('permission', permission.label) &&
-        matchesSelectedFilters('permission_check', permission.name),
-    ),
+    permissionRows.value.filter((permission) => matchesSelectedFilters('group', permission.group) && matchesSelectedFilters('permission', permission.label) && matchesSelectedFilters('permission_check', permission.name)),
   );
 
   const sortedRows = computed(() =>
@@ -107,8 +87,7 @@ export function usePermissionTable(
     return `${count} result${count === 1 ? '' : 's'}`;
   });
 
-  const selectedFiltersFor = (column: PermissionSortColumn): string[] =>
-    selectedFilters.value[column] ?? [];
+  const selectedFiltersFor = (column: PermissionSortColumn): string[] => selectedFilters.value[column] ?? [];
 
   const setFilters = (column: PermissionSortColumn, values: string[]) => {
     selectedFilters.value = {
@@ -129,10 +108,7 @@ export function usePermissionTable(
     selectedFilters.value = nextFilters;
   };
 
-  const sortDirectionFor = (
-    column: PermissionSortColumn,
-  ): PermissionSortDirection =>
-    activeSortColumn.value === column ? activeSortDirection.value : 'none';
+  const sortDirectionFor = (column: PermissionSortColumn): PermissionSortDirection => (activeSortColumn.value === column ? activeSortDirection.value : 'none');
 
   const toggleSort = (column: PermissionSortColumn) => {
     if (activeSortColumn.value !== column) {

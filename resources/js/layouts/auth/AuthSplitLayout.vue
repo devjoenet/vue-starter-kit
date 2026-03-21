@@ -13,27 +13,16 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0"
-  >
-    <div
-      class="relative hidden h-full flex-col overflow-hidden border-r border-border/70 bg-card p-10 text-foreground lg:flex"
-    >
-      <div
-        class="absolute inset-0 bg-linear-to-br from-primary/14 via-background to-secondary/12"
-      />
-      <Link
-        :href="home()"
-        class="relative z-20 flex items-center text-lg font-medium"
-      >
+  <div class="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div class="relative hidden h-full flex-col overflow-hidden border-r border-border/70 bg-card p-10 text-foreground lg:flex">
+      <div class="absolute inset-0 bg-linear-to-br from-primary/14 via-background to-secondary/12" />
+      <Link :href="home()" class="relative z-20 flex items-center text-lg font-medium">
         <AppLogoIcon class="mr-2 size-8 fill-current text-primary" />
         {{ name }}
       </Link>
     </div>
     <div class="lg:p-8">
-      <div
-        class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-87.5"
-      >
+      <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-87.5">
         <div class="flex flex-col space-y-2 text-center">
           <h1 class="text-xl font-medium tracking-tight" v-if="title">
             {{ title }}

@@ -3,7 +3,7 @@
   "singleQuote": true,
   "singleAttributePerLine": false,
   "htmlWhitespaceSensitivity": "css",
-  "printWidth": 80,
+  "printWidth": 250,
   "tabWidth": 2,
   "tailwindFunctions": ["clsx", "cn", "cva"],
   "tailwindStylesheet": "resources/css/app.css",

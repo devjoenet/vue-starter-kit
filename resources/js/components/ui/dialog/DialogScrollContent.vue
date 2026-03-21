@@ -4,19 +4,9 @@ import type { HTMLAttributes } from 'vue';
 import type { DialogContentVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
-import {
-  DialogClose,
-  DialogContent,
-  DialogOverlay,
-  DialogPortal,
-  useForwardPropsEmits,
-} from 'reka-ui';
+import { DialogClose, DialogContent, DialogOverlay, DialogPortal, useForwardPropsEmits } from 'reka-ui';
 import { cn } from '@/lib/utils';
-import {
-  dialogScrollCloseVariants,
-  dialogScrollContentVariants,
-  dialogScrollOverlayVariants,
-} from './styles';
+import { dialogScrollCloseVariants, dialogScrollContentVariants, dialogScrollOverlayVariants } from './styles';
 
 defineOptions({
   inheritAttrs: false,
@@ -44,21 +34,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
   <DialogPortal>
     <DialogOverlay :class="dialogScrollOverlayVariants()">
       <DialogContent
-        :class="
-          cn(
-            dialogScrollContentVariants({ variant: props.variant }),
-            props.class,
-          )
-        "
+        :class="cn(dialogScrollContentVariants({ variant: props.variant }), props.class)"
         v-bind="{ ...$attrs, ...forwarded }"
         @pointer-down-outside="
           (event) => {
             const originalEvent = event.detail.originalEvent;
             const target = originalEvent.target as HTMLElement;
-            if (
-              originalEvent.offsetX > target.clientWidth ||
-              originalEvent.offsetY > target.clientHeight
-            ) {
+            if (originalEvent.offsetX > target.clientWidth || originalEvent.offsetY > target.clientHeight) {
               event.preventDefault();
             }
           }
@@ -66,9 +48,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
       >
         <slot />
 
-        <DialogClose
-          :class="dialogScrollCloseVariants({ variant: props.variant })"
-        >
+        <DialogClose :class="dialogScrollCloseVariants({ variant: props.variant })">
           <X class="h-4 w-4" />
           <span class="sr-only">Close</span>
         </DialogClose>

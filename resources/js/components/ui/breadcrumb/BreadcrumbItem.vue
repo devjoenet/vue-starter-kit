@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <li
-    data-slot="breadcrumb-item"
-    :class="cn(breadcrumbItemVariants(), props.class)"
-  >
+  <li data-slot="breadcrumb-item" :class="cn(breadcrumbItemVariants(), props.class)">
     <slot />
   </li>
 </template>

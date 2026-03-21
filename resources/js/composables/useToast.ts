@@ -29,22 +29,10 @@ export type UseToastReturn = {
   pushToast: (payload: string | ToastPayload) => number | null;
   dismissToast: (id: number) => void;
   clearToasts: () => void;
-  success: (
-    message: string,
-    options?: Omit<ToastPayload, 'message' | 'tone'>,
-  ) => number | null;
-  error: (
-    message: string,
-    options?: Omit<ToastPayload, 'message' | 'tone'>,
-  ) => number | null;
-  info: (
-    message: string,
-    options?: Omit<ToastPayload, 'message' | 'tone'>,
-  ) => number | null;
-  warning: (
-    message: string,
-    options?: Omit<ToastPayload, 'message' | 'tone'>,
-  ) => number | null;
+  success: (message: string, options?: Omit<ToastPayload, 'message' | 'tone'>) => number | null;
+  error: (message: string, options?: Omit<ToastPayload, 'message' | 'tone'>) => number | null;
+  info: (message: string, options?: Omit<ToastPayload, 'message' | 'tone'>) => number | null;
+  warning: (message: string, options?: Omit<ToastPayload, 'message' | 'tone'>) => number | null;
 };
 
 const DEFAULT_DURATION = 4200;

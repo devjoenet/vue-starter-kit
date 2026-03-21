@@ -31,10 +31,7 @@ const normalizeRoleNameForDisplay = () => {
         {{ title ?? 'Name the role for clear access reviews.' }}
       </h2>
       <p class="text-sm leading-6 text-muted-foreground">
-        {{
-          description ??
-          'Use a name that will still read clearly in assignments, filters, and policy conversations.'
-        }}
+        {{ description ?? 'Use a name that will still read clearly in assignments, filters, and policy conversations.' }}
       </p>
     </div>
 

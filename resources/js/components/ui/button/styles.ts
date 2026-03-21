@@ -1,27 +1,10 @@
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
-type ButtonAppearance =
-  | 'filled'
-  | 'tonal'
-  | 'outline'
-  | 'elevated'
-  | 'text'
-  | 'ghost'
-  | 'link';
-type ButtonVariantName =
-  | 'muted'
-  | 'primary'
-  | 'secondary'
-  | 'info'
-  | 'warning'
-  | 'success'
-  | 'destructive';
+type ButtonAppearance = 'filled' | 'tonal' | 'outline' | 'elevated' | 'text' | 'ghost' | 'link';
+type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'info' | 'warning' | 'success' | 'destructive';
 
-const buttonAppearanceVariantClasses: Record<
-  ButtonAppearance,
-  Record<ButtonVariantName, string>
-> = {
+const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVariantName, string>> = {
   filled: {
     muted: 'bg-muted text-foreground hover:bg-muted/80',
     primary: 'bg-primary text-primary-foreground hover:bg-primary/80',
@@ -29,48 +12,34 @@ const buttonAppearanceVariantClasses: Record<
     info: 'bg-info text-info-foreground hover:bg-info/80',
     warning: 'bg-warning text-warning-foreground hover:bg-warning/80',
     success: 'bg-success text-success-foreground hover:bg-success/80',
-    destructive:
-      'bg-destructive text-destructive-foreground hover:bg-destructive/80',
+    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
   },
   tonal: {
     muted: 'border-border/40 bg-muted/75 text-foreground hover:bg-muted',
     primary: 'border-primary/30 bg-primary/15 text-primary hover:bg-primary/22',
-    secondary:
-      'border-secondary/30 bg-secondary/15 text-secondary hover:bg-secondary/22',
+    secondary: 'border-secondary/30 bg-secondary/15 text-secondary hover:bg-secondary/22',
     info: 'border-info/30 bg-info/15 text-info hover:bg-info/22',
     warning: 'border-warning/30 bg-warning/15 text-warning hover:bg-warning/22',
     success: 'border-success/30 bg-success/15 text-success hover:bg-success/22',
-    destructive:
-      'border-destructive/30 bg-destructive/15 text-destructive hover:bg-destructive/22',
+    destructive: 'border-destructive/30 bg-destructive/15 text-destructive hover:bg-destructive/22',
   },
   outline: {
-    muted:
-      'border-border text-foreground hover:bg-muted hover:text-muted-foreground',
-    primary:
-      'border-primary text-primary hover:bg-primary hover:text-primary-foreground',
-    secondary:
-      'border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground',
+    muted: 'border-border text-foreground hover:bg-muted hover:text-muted-foreground',
+    primary: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground',
+    secondary: 'border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground',
     info: 'border-info text-info hover:bg-info ',
-    warning:
-      'border-warning text-warning hover:bg-warning hover:text-warning-foreground',
-    success:
-      'border-success text-success hover:bg-success hover:text-success-foreground',
-    destructive:
-      'border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground',
+    warning: 'border-warning text-warning hover:bg-warning hover:text-warning-foreground',
+    success: 'border-success text-success hover:bg-success hover:text-success-foreground',
+    destructive: 'border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground',
   },
   elevated: {
     muted: 'border-border/60 bg-card text-foreground hover:bg-muted/50',
-    primary:
-      'border-primary/35 bg-primary text-primary-foreground hover:bg-primary/65',
-    secondary:
-      'border-secondary/35 bg-secondary text-secondary-foreground hover:bg-secondary/65',
+    primary: 'border-primary/35 bg-primary text-primary-foreground hover:bg-primary/65',
+    secondary: 'border-secondary/35 bg-secondary text-secondary-foreground hover:bg-secondary/65',
     info: 'border-info/35 bg-info text-info-foreground hover:bg-info/65',
-    warning:
-      'border-warning/35 bg-warning text-warning-foreground hover:bg-warning/65',
-    success:
-      'border-success/35 bg-success text-success-foreground hover:bg-success/65',
-    destructive:
-      'border-destructive/35 bg-destructive text-destructive-foreground hover:bg-destructive/65',
+    warning: 'border-warning/35 bg-warning text-warning-foreground hover:bg-warning/65',
+    success: 'border-success/35 bg-success text-success-foreground hover:bg-success/65',
+    destructive: 'border-destructive/35 bg-destructive text-destructive-foreground hover:bg-destructive/65',
   },
   text: {
     muted: 'text-foreground hover:bg-muted/50',
@@ -106,15 +75,11 @@ export const buttonVariants = cva(
   {
     variants: {
       appearance: {
-        filled:
-          'shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
-        tonal:
-          'border shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
-        outline:
-          'border bg-transparent motion-safe:hover:-translate-y-px motion-safe:active:translate-y-px motion-reduce:transform-none',
+        filled: 'shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+        tonal: 'border shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+        outline: 'border bg-transparent motion-safe:hover:-translate-y-px motion-safe:active:translate-y-px motion-reduce:transform-none',
         text: 'border border-transparent bg-transparent shadow-none',
-        elevated:
-          'border shadow-[var(--elevation-2)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-3)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+        elevated: 'border shadow-[var(--elevation-2)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-3)] motion-safe:active:translate-y-px motion-reduce:transform-none',
         ghost: 'border border-transparent bg-transparent shadow-none',
         link: 'border border-transparent bg-transparent underline-offset-4 shadow-none hover:underline',
       },
@@ -147,13 +112,12 @@ export const buttonVariants = cva(
         full: 'rounded-full',
       },
     },
-    compoundVariants: Object.entries(buttonAppearanceVariantClasses).flatMap(
-      ([appearance, variants]) =>
-        Object.entries(variants).map(([variant, className]) => ({
-          appearance: appearance as ButtonAppearance,
-          variant: variant as ButtonVariantName,
-          class: className,
-        })),
+    compoundVariants: Object.entries(buttonAppearanceVariantClasses).flatMap(([appearance, variants]) =>
+      Object.entries(variants).map(([variant, className]) => ({
+        appearance: appearance as ButtonAppearance,
+        variant: variant as ButtonVariantName,
+        class: className,
+      })),
     ),
     defaultVariants: {
       appearance: 'filled',

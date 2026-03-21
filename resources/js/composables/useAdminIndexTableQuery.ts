@@ -14,27 +14,19 @@ type AdminIndexVisitQuery<TColumn extends string> = {
   sort?: AdminIndexQuery<TColumn>['sort'];
 };
 
-const normalizeFilters = <TColumn extends string>(
-  filters: Partial<Record<TColumn, string[]>>,
-): Partial<Record<TColumn, string[]>> => {
+const normalizeFilters = <TColumn extends string>(filters: Partial<Record<TColumn, string[]>>): Partial<Record<TColumn, string[]>> => {
   return Object.fromEntries(
     Object.entries(filters)
       .filter(([, values]) => Array.isArray(values) && values.length > 0)
       .map(([key, values]) => {
-        const normalizedValues = Array.isArray(values)
-          ? [...new Set<string>(values)].sort()
-          : [];
+        const normalizedValues = Array.isArray(values) ? [...new Set<string>(values)].sort() : [];
 
         return [key, normalizedValues];
       }),
   ) as Partial<Record<TColumn, string[]>>;
 };
 
-export function useAdminIndexTableQuery<TColumn extends string>({
-  getQuery,
-  getUrl,
-  only,
-}: UseAdminIndexTableQueryOptions<TColumn>) {
+export function useAdminIndexTableQuery<TColumn extends string>({ getQuery, getUrl, only }: UseAdminIndexTableQueryOptions<TColumn>) {
   const currentQuery = computed(() => getQuery());
 
   const visit = (nextQuery: AdminIndexVisitQuery<TColumn>) => {
@@ -86,20 +78,11 @@ export function useAdminIndexTableQuery<TColumn extends string>({
     });
   };
 
-  const toggleFilter = (
-    column: TColumn,
-    value: string,
-    checked?: boolean | 'indeterminate',
-  ) => {
+  const toggleFilter = (column: TColumn, value: string, checked?: boolean | 'indeterminate') => {
     const currentValues = selectedFiltersFor(column);
-    const shouldInclude =
-      checked === undefined
-        ? !currentValues.some((currentValue) => currentValue === value)
-        : checked === true;
+    const shouldInclude = checked === undefined ? !currentValues.some((currentValue) => currentValue === value) : checked === true;
 
-    const nextValues = shouldInclude
-      ? [...currentValues, value]
-      : currentValues.filter((currentValue) => currentValue !== value);
+    const nextValues = shouldInclude ? [...currentValues, value] : currentValues.filter((currentValue) => currentValue !== value);
 
     visit({
       sort: currentQuery.value.sort,
@@ -134,8 +117,19 @@ export function useAdminIndexTableQuery<TColumn extends string>({
     });
   };
 
+  const headerCellBindings = (column: TColumn) => {
+    return {
+      selectedFilters: selectedFiltersFor(column),
+      sortDirection: sortDirectionFor(column),
+      onApplyFilters: (_ignoredColumn: string, values: string[]) => setFilters(column, values),
+      onClearFilters: () => clearFilters(column),
+      onToggleSort: () => toggleSort(column),
+    };
+  };
+
   return {
     clearFilters,
+    headerCellBindings,
     selectedFiltersFor,
     setFilters,
     sortDirectionFor,

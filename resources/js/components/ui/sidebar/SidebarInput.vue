@@ -10,11 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Input
-    data-slot="sidebar-input"
-    data-sidebar="input"
-    :class="cn(sidebarInputVariants(), props.class)"
-  >
+  <Input data-slot="sidebar-input" data-sidebar="input" :class="cn(sidebarInputVariants(), props.class)">
     <slot />
   </Input>
 </template>

@@ -6,19 +6,13 @@ import { AvatarImage } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { avatarImageVariants } from './styles';
 
-const props = defineProps<
-  AvatarImageProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<AvatarImageProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = reactiveOmit(props, 'class');
 </script>
 
 <template>
-  <AvatarImage
-    data-slot="avatar-image"
-    v-bind="delegatedProps"
-    :class="cn(avatarImageVariants(), props.class)"
-  >
+  <AvatarImage data-slot="avatar-image" v-bind="delegatedProps" :class="cn(avatarImageVariants(), props.class)">
     <slot />
   </AvatarImage>
 </template>

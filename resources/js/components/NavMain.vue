@@ -22,18 +22,12 @@ const { isCurrentUrl } = useCurrentUrl();
 
 <template>
   <SidebarGroup class="px-2 py-0">
-    <SidebarGroupLabel
-      class="px-2 text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/70 uppercase"
-    >
+    <SidebarGroupLabel class="px-2 text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/70 uppercase">
       {{ props.label }}
     </SidebarGroupLabel>
     <SidebarMenu>
       <SidebarMenuItem v-for="item in items" :key="item.title">
-        <SidebarMenuButton
-          as-child
-          :is-active="isCurrentUrl(item.href)"
-          :tooltip="item.title"
-        >
+        <SidebarMenuButton as-child :is-active="isCurrentUrl(item.href)" :tooltip="item.title">
           <Link :href="item.href">
             <component :is="item.icon" />
             <span>{{ item.title }}</span>

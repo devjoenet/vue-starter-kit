@@ -18,30 +18,14 @@ const passwordInput = useTemplateRef('passwordInput');
 </script>
 
 <template>
-  <SettingsSectionCard
-    variant="destructive"
-    title="Delete account"
-    description="Permanently remove this account and the data tied to it."
-    content-class="space-y-3"
-  >
-    <p class="text-sm text-muted-foreground">
-      Use this only when the account should no longer exist in this starter or
-      any related environments.
-    </p>
+  <SettingsSectionCard variant="destructive" title="Delete account" description="Permanently remove this account and the data tied to it." content-class="space-y-3">
+    <p class="text-sm text-muted-foreground">Use this only when the account should no longer exist in this starter or any related environments.</p>
 
     <template #footer>
-      <SettingsActionRow
-        status="This action cannot be undone."
-        status-tone="destructive"
-      >
+      <SettingsActionRow status="This action cannot be undone." status-tone="destructive">
         <Dialog>
           <DialogTrigger as-child>
-            <Button
-              appearance="filled"
-              variant="destructive"
-              data-test="delete-user-button"
-              >Delete account</Button
-            >
+            <Button appearance="filled" variant="destructive" data-test="delete-user-button">Delete account</Button>
           </DialogTrigger>
 
           <DialogContent>
@@ -56,34 +40,13 @@ const passwordInput = useTemplateRef('passwordInput');
               v-slot="{ errors, processing, reset, clearErrors }"
             >
               <DialogHeader class="space-y-3">
-                <DialogTitle
-                  >Are you sure you want to delete your account?</DialogTitle
-                >
-                <DialogDescription>
-                  This removes the account and every resource that depends on
-                  it. Enter your password only if you intend to complete that
-                  deletion now.
-                </DialogDescription>
+                <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
+                <DialogDescription> This removes the account and every resource that depends on it. Enter your password only if you intend to complete that deletion now. </DialogDescription>
               </DialogHeader>
 
-              <div
-                class="rounded-[1rem] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm leading-6 text-muted-foreground"
-              >
-                This action takes effect immediately after confirmation and
-                cannot be recovered from this workspace.
-              </div>
+              <div class="rounded-[1rem] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm leading-6 text-muted-foreground">This action takes effect immediately after confirmation and cannot be recovered from this workspace.</div>
 
-              <Input
-                id="password"
-                ref="passwordInput"
-                type="password"
-                name="password"
-                label="Password"
-                variant="outlined"
-                placeholder="Password"
-                :state="errors.password ? 'error' : 'default'"
-                :message="errors.password"
-              />
+              <Input id="password" ref="passwordInput" type="password" name="password" label="Password" variant="outlined" placeholder="Password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
               <DialogFooter class="gap-2">
                 <DialogClose as-child>
@@ -101,15 +64,7 @@ const passwordInput = useTemplateRef('passwordInput');
                   </Button>
                 </DialogClose>
 
-                <Button
-                  type="submit"
-                  appearance="filled"
-                  variant="destructive"
-                  :disabled="processing"
-                  data-test="confirm-delete-user-button"
-                >
-                  Delete account
-                </Button>
+                <Button type="submit" appearance="filled" variant="destructive" :disabled="processing" data-test="confirm-delete-user-button"> Delete account </Button>
               </DialogFooter>
             </Form>
           </DialogContent>

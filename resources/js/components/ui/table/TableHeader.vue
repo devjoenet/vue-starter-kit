@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <thead
-    data-slot="table-header"
-    :class="cn(tableHeaderVariants(), props.class)"
-  >
+  <thead data-slot="table-header" :class="cn(tableHeaderVariants(), props.class)">
     <slot />
   </thead>
 </template>

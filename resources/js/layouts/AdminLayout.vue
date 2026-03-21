@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { useAbility } from '@/composables/useAbility';
 import { dashboard } from '@/routes/admin';
-import { adminPermissions } from '@/types/admin-permissions';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
+import { adminPermissions } from '@/types/admin-permissions';
 
 defineProps<{ title: string }>();
 
@@ -16,15 +16,9 @@ const { can } = useAbility();
 const nav = computed(() => {
   return [
     { label: 'Dashboard', href: dashboard.url() },
-    ...(can(adminPermissions.usersView)
-      ? [{ label: 'Users', href: adminUsersIndex.url() }]
-      : []),
-    ...(can(adminPermissions.rolesView)
-      ? [{ label: 'Roles', href: adminRolesIndex.url() }]
-      : []),
-    ...(can(adminPermissions.permissionsView)
-      ? [{ label: 'Permissions', href: adminPermissionsIndex.url() }]
-      : []),
+    ...(can(adminPermissions.usersView) ? [{ label: 'Users', href: adminUsersIndex.url() }] : []),
+    ...(can(adminPermissions.rolesView) ? [{ label: 'Roles', href: adminRolesIndex.url() }] : []),
+    ...(can(adminPermissions.permissionsView) ? [{ label: 'Permissions', href: adminPermissionsIndex.url() }] : []),
   ];
 });
 </script>
@@ -38,12 +32,7 @@ const nav = computed(() => {
           <span class="font-semibold">Southeast Code</span>
         </div>
         <nav class="flex gap-4">
-          <Link
-            v-for="item in nav"
-            :key="item.href"
-            :href="item.href"
-            class="text-sm opacity-90 hover:opacity-100"
-          >
+          <Link v-for="item in nav" :key="item.href" :href="item.href" class="text-sm opacity-90 hover:opacity-100">
             {{ item.label }}
           </Link>
         </nav>

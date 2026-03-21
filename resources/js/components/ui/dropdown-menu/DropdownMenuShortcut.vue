@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <span
-    data-slot="dropdown-menu-shortcut"
-    :class="cn(dropdownMenuShortcutVariants(), props.class)"
-  >
+  <span data-slot="dropdown-menu-shortcut" :class="cn(dropdownMenuShortcutVariants(), props.class)">
     <slot />
   </span>
 </template>

@@ -8,10 +8,10 @@ use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
 use App\Support\PermissionGroupCatalog;
 
-final class CreatePermission
+final readonly class CreatePermission
 {
     public function __construct(
-        private readonly PermissionGroupCatalog $permissionGroupCatalog,
+        private PermissionGroupCatalog $permissionGroupCatalog,
     ) {}
 
     public function handle(CreatePermissionData $data): Permission

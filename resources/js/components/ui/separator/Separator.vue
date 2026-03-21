@@ -6,21 +6,14 @@ import { Separator } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { separatorVariants } from './styles';
 
-const props = withDefaults(
-  defineProps<SeparatorProps & { class?: HTMLAttributes['class'] }>(),
-  {
-    orientation: 'horizontal',
-    decorative: true,
-  },
-);
+const props = withDefaults(defineProps<SeparatorProps & { class?: HTMLAttributes['class'] }>(), {
+  orientation: 'horizontal',
+  decorative: true,
+});
 
 const delegatedProps = reactiveOmit(props, 'class');
 </script>
 
 <template>
-  <Separator
-    data-slot="separator"
-    v-bind="delegatedProps"
-    :class="cn(separatorVariants(), props.class)"
-  />
+  <Separator data-slot="separator" v-bind="delegatedProps" :class="cn(separatorVariants(), props.class)" />
 </template>

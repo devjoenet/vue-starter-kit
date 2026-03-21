@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  ArrowDownNarrowWideIcon,
-  ArrowDownWideNarrowIcon,
-  ArrowUpDownIcon,
-  CheckIcon,
-  FunnelIcon,
-  SquareIcon,
-} from 'lucide-vue-next';
+import { ArrowDownNarrowWideIcon, ArrowDownWideNarrowIcon, ArrowUpDownIcon, CheckIcon, FunnelIcon, SquareIcon } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
@@ -90,42 +83,26 @@ const hasDraftChanges = computed(() => {
     return true;
   }
 
-  return draftFilters.value.some(
-    (value) => !props.selectedFilters.includes(value),
-  );
+  return draftFilters.value.some((value) => !props.selectedFilters.includes(value));
 });
 
 const hasActiveFilters = computed(() => props.selectedFilters.length > 0);
 
-const rootComponent = computed(() =>
-  props.as === 'toolbar' ? 'div' : TableHead,
-);
+const rootComponent = computed(() => (props.as === 'toolbar' ? 'div' : TableHead));
 
-const rootClasses = computed(() =>
-  props.as === 'toolbar'
-    ? 'rounded-[var(--radius-lg)] border border-border/70 bg-background/88 p-3 shadow-[var(--elevation-1)]'
-    : cn('align-middle', props.headClass),
-);
+const rootClasses = computed(() => (props.as === 'toolbar' ? 'rounded-[var(--radius-lg)] border border-border/70 bg-background/88 p-3 shadow-[var(--elevation-1)]' : cn('align-middle', props.headClass)));
 
-const contentClasses = computed(() =>
-  props.as === 'toolbar'
-    ? 'flex items-start justify-between gap-3'
-    : 'flex items-center gap-2',
-);
+const contentClasses = computed(() => (props.as === 'toolbar' ? 'flex items-start justify-between gap-3' : 'flex items-center gap-2'));
 
 const helperText = computed(() => {
   const states: string[] = [];
 
   if (props.selectedFilters.length > 0) {
-    states.push(
-      `${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} active`,
-    );
+    states.push(`${props.selectedFilters.length} filter${props.selectedFilters.length === 1 ? '' : 's'} active`);
   }
 
   if (props.sortDirection !== 'none') {
-    states.push(
-      props.sortDirection === 'asc' ? 'sorted ascending' : 'sorted descending',
-    );
+    states.push(props.sortDirection === 'asc' ? 'sorted ascending' : 'sorted descending');
   }
 
   return states.join(' · ') || 'Filter or sort this column';
@@ -133,9 +110,7 @@ const helperText = computed(() => {
 
 const toggleDraftFilter = (value: string) => {
   if (draftFilters.value.includes(value)) {
-    draftFilters.value = draftFilters.value.filter(
-      (currentValue) => currentValue !== value,
-    );
+    draftFilters.value = draftFilters.value.filter((currentValue) => currentValue !== value);
 
     return;
   }
@@ -159,10 +134,7 @@ const clearFilters = () => {
     <div :class="contentClasses">
       <div class="min-w-0">
         <span class="text-sm leading-none font-medium">{{ label }}</span>
-        <p
-          v-if="props.as === 'toolbar'"
-          class="mt-1 text-xs leading-5 text-muted-foreground"
-        >
+        <p v-if="props.as === 'toolbar'" class="mt-1 text-xs leading-5 text-muted-foreground">
           {{ helperText }}
         </p>
       </div>
@@ -179,24 +151,10 @@ const clearFilters = () => {
               :title="filterButtonTitle"
               class="relative shrink-0 align-middle"
             >
-              <FunnelIcon
-                :class="[
-                  hasActiveFilters
-                    ? 'stroke-primary-foreground'
-                    : 'stroke-muted-foreground',
-                  'size-3',
-                ]"
-              />
+              <FunnelIcon :class="[hasActiveFilters ? 'stroke-primary-foreground' : 'stroke-muted-foreground', 'size-3']" />
               <span
                 v-if="selectedFilters.length"
-                :class="
-                  cn(
-                    'absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full p-0.5 text-[8px] leading-none',
-                    hasActiveFilters
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-transparent text-transparent',
-                  )
-                "
+                :class="cn('absolute -top-1 -right-1 flex min-w-3 items-center justify-center rounded-full p-0.5 text-[8px] leading-none', hasActiveFilters ? 'bg-primary text-primary-foreground' : 'bg-transparent text-transparent')"
               >
                 {{ selectedFilters.length }}
               </span>
@@ -204,41 +162,18 @@ const clearFilters = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" class="w-72">
             <DropdownMenuLabel>{{ label }}</DropdownMenuLabel>
-            <DropdownMenuItem
-              variant="primary"
-              :disabled="selectedFilters.length === 0"
-              @select.prevent="clearFilters"
-            >
-              Clear filters
-            </DropdownMenuItem>
+            <DropdownMenuItem variant="primary" :disabled="selectedFilters.length === 0" @select.prevent="clearFilters"> Clear filters </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              v-for="option in filterOptions"
-              :key="`${column}-${option}`"
-              variant="primary"
-              @select.prevent="toggleDraftFilter(option)"
-            >
-              <span
-                class="flex size-4 items-center justify-center rounded-xs border border-border/80 bg-background text-primary"
-              >
-                <CheckIcon
-                  v-if="draftFilters.includes(option)"
-                  class="size-3"
-                />
+            <DropdownMenuItem v-for="option in filterOptions" :key="`${column}-${option}`" variant="primary" @select.prevent="toggleDraftFilter(option)">
+              <span class="flex size-4 items-center justify-center rounded-xs border border-border/80 bg-background text-primary">
+                <CheckIcon v-if="draftFilters.includes(option)" class="size-3" />
                 <SquareIcon v-else class="size-3 text-transparent" />
               </span>
               {{ formatOptionLabel(option) }}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <div class="flex justify-end p-1">
-              <Button
-                v-if="hasDraftChanges"
-                size="sm"
-                type="button"
-                @click="applyFilters"
-              >
-                Apply
-              </Button>
+              <Button v-if="hasDraftChanges" size="sm" type="button" @click="applyFilters"> Apply </Button>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -253,18 +188,9 @@ const clearFilters = () => {
           class="shrink-0 align-middle"
           @click="$emit('toggle-sort', column)"
         >
-          <ArrowDownNarrowWideIcon
-            v-if="props.sortDirection === 'asc'"
-            class="size-3 stroke-primary-foreground"
-          />
-          <ArrowDownWideNarrowIcon
-            v-if="props.sortDirection === 'desc'"
-            class="size-3 stroke-primary-foreground"
-          />
-          <ArrowUpDownIcon
-            v-if="props.sortDirection === 'none'"
-            class="size-3 stroke-muted-foreground"
-          />
+          <ArrowDownNarrowWideIcon v-if="props.sortDirection === 'asc'" class="size-3 stroke-primary-foreground" />
+          <ArrowDownWideNarrowIcon v-if="props.sortDirection === 'desc'" class="size-3 stroke-primary-foreground" />
+          <ArrowUpDownIcon v-if="props.sortDirection === 'none'" class="size-3 stroke-muted-foreground" />
         </Button>
       </div>
     </div>

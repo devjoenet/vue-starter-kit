@@ -9,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="dialog-header"
-    :class="cn(dialogHeaderVariants(), props.class)"
-  >
+  <div data-slot="dialog-header" :class="cn(dialogHeaderVariants(), props.class)">
     <slot />
   </div>
 </template>

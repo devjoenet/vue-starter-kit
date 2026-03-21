@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { Form, Head, usePage } from '@inertiajs/vue3';
 import { CheckCircle2, TriangleAlert } from 'lucide-vue-next';
 import { computed } from 'vue';
 import DeleteUser from '@/components/DeleteUser.vue';
@@ -11,18 +11,15 @@ import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
 import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import Button from '@/components/ui/button/Button.vue';
 import UserIdentityFields from '@/components/UserIdentityFields.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { SettingsProfilePageProps } from '@/types/page-props';
 defineOptions({
-  layout: [AppLayout, SettingsLayout],
+  layout: settingsPageLayout,
 });
 
-setLayoutProps({
-  breadcrumbs: [{ title: 'Profile settings', href: edit().url }],
-});
+setBreadcrumbs({ title: 'Profile settings', href: edit().url });
 
 const props = defineProps<SettingsProfilePageProps>();
 
@@ -44,12 +41,7 @@ const user = computed(() => page.props.auth.user);
       class="space-y-4"
       v-slot="{ errors, processing, recentlySuccessful }"
     >
-      <SettingsSectionCard
-        id="settings-profile-information-card"
-        title="Details"
-        description="Update the name and email attached to this account."
-        content-class="space-y-5"
-      >
+      <SettingsSectionCard id="settings-profile-information-card" title="Details" description="Update the name and email attached to this account." content-class="space-y-5">
         <UserIdentityFields
           name-id="profile-name"
           email-id="profile-email"
@@ -62,53 +54,28 @@ const user = computed(() => page.props.auth.user);
           email-required
         />
 
-        <Alert
-          v-if="props.mustVerifyEmail && !user.email_verified_at"
-          variant="warning"
-        >
+        <Alert v-if="props.mustVerifyEmail && !user.email_verified_at" variant="warning">
           <TriangleAlert class="size-4" />
           <AlertTitle>Email verification needed</AlertTitle>
           <AlertDescription>
             <p class="text-sm">
               This address has not been verified yet.
-              <TextLink
-                id="settings-profile-resend-verification-link"
-                :href="send()"
-                as="button"
-              >
-                Resend the verification email.
-              </TextLink>
+              <TextLink id="settings-profile-resend-verification-link" :href="send()" as="button"> Resend the verification email. </TextLink>
             </p>
           </AlertDescription>
         </Alert>
 
-        <Alert
-          v-if="props.status === 'verification-link-sent'"
-          id="settings-profile-verification-status"
-          variant="success"
-        >
+        <Alert v-if="props.status === 'verification-link-sent'" id="settings-profile-verification-status" variant="success">
           <CheckCircle2 class="size-4" />
           <AlertTitle>Verification email sent</AlertTitle>
           <AlertDescription>
-            <p class="text-sm">
-              A fresh verification link is on its way to this inbox.
-            </p>
+            <p class="text-sm">A fresh verification link is on its way to this inbox.</p>
           </AlertDescription>
         </Alert>
 
         <template #footer>
-          <SettingsActionRow
-            id="settings-profile-actions"
-            :status="recentlySuccessful ? 'Profile updated.' : undefined"
-            status-tone="success"
-          >
-            <Button
-              id="settings-profile-save-button"
-              appearance="filled"
-              :disabled="processing"
-              data-test="update-profile-button"
-              >Save changes</Button
-            >
+          <SettingsActionRow id="settings-profile-actions" :status="recentlySuccessful ? 'Profile updated.' : undefined" status-tone="success">
+            <Button id="settings-profile-save-button" appearance="filled" :disabled="processing" data-test="update-profile-button">Save changes</Button>
           </SettingsActionRow>
         </template>
       </SettingsSectionCard>

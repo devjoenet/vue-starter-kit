@@ -6,10 +6,8 @@ export const inputVariants = cva(
   {
     variants: {
       variant: {
-        filled:
-          'rounded-t-[var(--radius-sm)] rounded-b-none border border-transparent border-b-border bg-muted/90 hover:bg-muted focus-visible:border-b-[color:var(--ring)]',
-        outlined:
-          'border border-border bg-transparent hover:border-[color:var(--ring)]/50 focus-visible:border-[color:var(--ring)]',
+        filled: 'rounded-t-[var(--radius-sm)] rounded-b-none border border-transparent border-b-border bg-muted/90 hover:bg-muted focus-visible:border-b-[color:var(--ring)]',
+        outlined: 'border border-border bg-transparent hover:border-[color:var(--ring)]/50 focus-visible:border-[color:var(--ring)]',
       },
       state: {
         default: '',

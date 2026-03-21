@@ -6,19 +6,13 @@ import { AvatarFallback } from 'reka-ui';
 import { cn } from '@/lib/utils';
 import { avatarFallbackVariants } from './styles';
 
-const props = defineProps<
-  AvatarFallbackProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<AvatarFallbackProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = reactiveOmit(props, 'class');
 </script>
 
 <template>
-  <AvatarFallback
-    data-slot="avatar-fallback"
-    v-bind="delegatedProps"
-    :class="cn(avatarFallbackVariants(), props.class)"
-  >
+  <AvatarFallback data-slot="avatar-fallback" v-bind="delegatedProps" :class="cn(avatarFallbackVariants(), props.class)">
     <slot />
   </AvatarFallback>
 </template>

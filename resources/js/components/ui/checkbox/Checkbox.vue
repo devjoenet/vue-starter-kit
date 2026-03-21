@@ -27,16 +27,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
-  <CheckboxRoot
-    v-slot="slotProps"
-    data-slot="checkbox"
-    v-bind="forwarded"
-    :class="cn(checkboxVariants({ variant: props.variant }), props.class)"
-  >
-    <CheckboxIndicator
-      data-slot="checkbox-indicator"
-      class="grid place-content-center text-current transition-none"
-    >
+  <CheckboxRoot v-slot="slotProps" data-slot="checkbox" v-bind="forwarded" :class="cn(checkboxVariants({ variant: props.variant }), props.class)">
+    <CheckboxIndicator data-slot="checkbox-indicator" class="grid place-content-center text-current transition-none">
       <slot v-bind="slotProps">
         <Check class="size-3.5" />
       </slot>

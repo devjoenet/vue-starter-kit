@@ -16,10 +16,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <div
-    data-slot="card"
-    :class="cn(cardVariants({ variant: props.variant }), props.class)"
-  >
+  <div data-slot="card" :class="cn(cardVariants({ variant: props.variant }), props.class)">
     <slot />
   </div>
 </template>

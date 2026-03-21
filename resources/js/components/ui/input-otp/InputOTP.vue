@@ -7,9 +7,7 @@ import { OTPInput } from 'vue-input-otp';
 import { cn } from '@/lib/utils';
 import { inputOtpContainerVariants } from './styles';
 
-const props = defineProps<
-  OTPInputProps & { class?: HTMLAttributes['class'] }
->();
+const props = defineProps<OTPInputProps & { class?: HTMLAttributes['class'] }>();
 
 const emits = defineEmits<OTPInputEmits>();
 
@@ -19,13 +17,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
-  <OTPInput
-    v-slot="slotProps"
-    v-bind="forwarded"
-    :container-class="cn(inputOtpContainerVariants(), props.class)"
-    data-slot="input-otp"
-    class="disabled:cursor-not-allowed"
-  >
+  <OTPInput v-slot="slotProps" v-bind="forwarded" :container-class="cn(inputOtpContainerVariants(), props.class)" data-slot="input-otp" class="disabled:cursor-not-allowed">
     <slot v-bind="slotProps" />
   </OTPInput>
 </template>

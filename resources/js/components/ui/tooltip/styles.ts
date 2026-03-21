@@ -20,24 +20,19 @@ export const tooltipContentVariants = cva(
     },
   },
 );
-export const tooltipArrowVariants = cva(
-  'z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]',
-  {
-    variants: {
-      variant: {
-        default: 'bg-foreground fill-foreground',
-        destructive: 'bg-destructive fill-destructive',
-        info: 'bg-info fill-info',
-        warning: 'bg-warning fill-warning',
-        success: 'bg-success fill-success',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
+export const tooltipArrowVariants = cva('z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]', {
+  variants: {
+    variant: {
+      default: 'bg-foreground fill-foreground',
+      destructive: 'bg-destructive fill-destructive',
+      info: 'bg-info fill-info',
+      warning: 'bg-warning fill-warning',
+      success: 'bg-success fill-success',
     },
   },
-);
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
-export type TooltipContentVariants = VariantProps<
-  typeof tooltipContentVariants
->;
+export type TooltipContentVariants = VariantProps<typeof tooltipContentVariants>;

@@ -21,11 +21,7 @@ const props = withDefaults(
 <template>
   <span v-if="props.show" :class="cn(props.class)">
     <slot>
-      <component
-        :is="props.icon"
-        v-if="props.icon && typeof props.icon !== 'string'"
-        :class="props.iconClass"
-      />
+      <component :is="props.icon" v-if="props.icon && typeof props.icon !== 'string'" :class="props.iconClass" />
       <span v-else-if="props.icon" :class="props.textClass">
         {{ props.icon }}
       </span>

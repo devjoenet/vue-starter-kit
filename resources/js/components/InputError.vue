@@ -14,13 +14,7 @@ const messages = computed(() => normalizeErrorMessages(props.message));
 
 <template>
   <div v-if="messages.length">
-    <p
-      v-for="(message, index) in messages"
-      :key="`${index}-${message}`"
-      :class="
-        cn(inputAssistiveTextVariants({ state: 'destructive' }), props.class)
-      "
-    >
+    <p v-for="(message, index) in messages" :key="`${index}-${message}`" :class="cn(inputAssistiveTextVariants({ state: 'destructive' }), props.class)">
       {{ message }}
     </p>
   </div>
