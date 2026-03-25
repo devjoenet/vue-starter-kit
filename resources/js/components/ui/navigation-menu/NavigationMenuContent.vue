@@ -3,7 +3,7 @@ import type { NavigationMenuContentEmits, NavigationMenuContentProps } from 'rek
 import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { NavigationMenuContent, useForwardPropsEmits } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { navigationMenuContentVariants, navigationMenuContentViewportVariants } from './styles';
 
 const props = defineProps<NavigationMenuContentProps & { class?: HTMLAttributes['class'] }>();

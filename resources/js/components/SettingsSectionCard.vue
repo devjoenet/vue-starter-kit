@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
-import { cn } from '@/lib/utils';
 
 withDefaults(
   defineProps<{

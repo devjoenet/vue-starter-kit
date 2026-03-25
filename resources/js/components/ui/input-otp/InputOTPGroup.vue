@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { useForwardProps } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { inputOtpGroupVariants } from './styles';
 
 const props = defineProps<{ class?: HTMLAttributes['class'] }>();

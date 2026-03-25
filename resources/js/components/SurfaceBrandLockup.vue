@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ArrowDownNarrowWideIcon, ArrowDownWideNarrowIcon, ArrowUpDownIcon, CheckIcon, FunnelIcon, SquareIcon } from 'lucide-vue-next';
+import { cn } from 'tailwind-variants';
 import { computed, ref, watch } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
@@ -9,7 +10,6 @@ import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.v
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue';
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import TableHead from '@/components/ui/table/TableHead.vue';
-import { cn } from '@/lib/utils';
 
 const props = withDefaults(
   defineProps<{

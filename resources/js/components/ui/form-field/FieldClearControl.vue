@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CircleX } from 'lucide-vue-next';
 import type { Component, HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 
 const props = withDefaults(
   defineProps<{

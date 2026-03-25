@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
 
 defineProps<{
   asideClass?: HTMLAttributes['class'];

@@ -79,9 +79,11 @@ const buildTargets = [
         <section id="welcome-page-hero" class="welcome-hero-shell motion-stage relative flex flex-1 items-center overflow-hidden p-6 sm:px-5 sm:py-5 lg:min-h-152 lg:px-6 lg:py-6">
           <div class="welcome-hero-grid relative z-10 grid w-full items-center gap-10 lg:grid-cols-[minmax(0,33rem)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] xl:gap-12">
             <section id="welcome-page-content" class="welcome-copy-surface max-w-140 px-6 py-3 sm:py-5 lg:py-8">
-              <p class="motion-step text-2xl font-semibold text-primary font-handwritten" style="--motion-order: 2">Build for marketing, CRM, or clients</p>
-              <h1 class="motion-step mt-6 mb-8 max-w-[10ch] text-[clamp(3.15rem,6vw,6rem)] leading-[0.92] font-semibold tracking-[-0.07em] text-balance" style="--motion-order: 3">Custom systems that help real teams operate <span class="font-semibold text-primary font-handwritten underline">better</span> </h1>
-              <p class="motion-step mt-5 py-6 max-w-xl font-semibold text-base border-t leading-7 text-muted-foreground sm:text-lg" style="--motion-order: 4">
+              <p class="motion-step font-handwritten text-2xl font-semibold text-primary" style="--motion-order: 2">Build for marketing, CRM, or clients</p>
+              <h1 class="motion-step mt-6 mb-8 max-w-[10ch] text-[clamp(3.15rem,6vw,6rem)] leading-[0.92] font-semibold tracking-[-0.07em] text-balance" style="--motion-order: 3">
+                Custom systems that help real teams operate <span class="font-handwritten font-semibold text-primary underline">better</span>
+              </h1>
+              <p class="motion-step mt-5 max-w-xl border-t py-6 text-base leading-7 font-semibold text-muted-foreground sm:text-lg" style="--motion-order: 4">
                 Southeast Code builds marketing sites, demos, portals, and internal tools that share one visual system and stay useful after launch.
               </p>
 
@@ -118,12 +120,12 @@ const buildTargets = [
         <section id="welcome-page-build-targets" class="welcome-foundation-shell motion-stage relative overflow-hidden rounded-4xl px-6 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
           <div class="welcome-foundation-grid relative z-10 grid gap-8 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-12">
             <aside id="welcome-page-proof-panel" class="welcome-proof-panel motion-step" style="--motion-order: 0">
-              <p class="text-2xl font-semibold text-primary font-handwritten">One starter. Many surfaces.</p>
+              <p class="font-handwritten text-2xl font-semibold text-primary">One starter. Many surfaces.</p>
               <p class="mt-4 max-w-md text-lg leading-8 text-foreground sm:text-[1.35rem]">Marketing pages, demos, client portals, and internal tools should feel like one system, not separate products.</p>
             </aside>
 
             <section class="motion-step border-t border-border/55 pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8" style="--motion-order: 1">
-              <p class="text-2xl font-semibold text-primary font-handwritten">From one starting point</p>
+              <p class="font-handwritten text-2xl font-semibold text-primary">From one starting point</p>
               <p class="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">The same starter should flex from first impression to daily operations without feeling stitched together.</p>
               <ul class="mt-6 grid gap-3 sm:grid-cols-2">
                 <li v-for="buildTarget in buildTargets" :key="buildTarget.title" class="welcome-target-row">

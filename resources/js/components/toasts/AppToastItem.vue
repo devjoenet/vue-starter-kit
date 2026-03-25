@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { CheckCircle2, CircleAlert, Info, TriangleAlert, X } from 'lucide-vue-next';
 import type { LucideIcon } from 'lucide-vue-next';
+import { cn } from 'tailwind-variants';
 import { computed } from 'vue';
 import type { ToastAppearance, ToastTone } from '@/composables/useToast';
-import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   item: {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import Separator from '@/components/ui/separator/Separator.vue';
 import { sidebarSeparatorVariants } from './styles';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import type { AlertVariants } from './styles';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { alertVariants } from './styles';
 
 const props = defineProps<{

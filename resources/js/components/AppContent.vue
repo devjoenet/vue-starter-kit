@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import { computed } from 'vue';
 import SidebarInset from '@/components/ui/sidebar/SidebarInset.vue';
-import { cn } from '@/lib/utils';
 type Props = {
   variant?: 'header' | 'sidebar';
   class?: string;

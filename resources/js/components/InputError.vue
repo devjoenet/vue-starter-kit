@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import { computed } from 'vue';
 import { inputAssistiveTextVariants } from '@/components/ui/input/variants';
 import { normalizeErrorMessages } from '@/lib/errors';
-import { cn } from '@/lib/utils';
 
 const props = defineProps<{
   message?: unknown;

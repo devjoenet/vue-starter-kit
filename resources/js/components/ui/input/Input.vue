@@ -2,7 +2,7 @@
 import { useVModel } from '@vueuse/core';
 import type { Component, HTMLAttributes } from 'vue';
 import { computed, ref, useAttrs, useId, useSlots, watch } from 'vue';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import FieldAdornmentIcon from '../form-field/FieldAdornmentIcon.vue';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
 import FieldClearControl from '../form-field/FieldClearControl.vue';
