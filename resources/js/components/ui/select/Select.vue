@@ -10,7 +10,7 @@ import DropdownMenuRadioItem from '@/components/ui/dropdown-menu/DropdownMenuRad
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
 import { inputAssistiveTextVariants, inputVariants } from '@/components/ui/input/variants';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import FieldAdornmentIcon from '../form-field/FieldAdornmentIcon.vue';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
 import FieldClearControl from '../form-field/FieldClearControl.vue';

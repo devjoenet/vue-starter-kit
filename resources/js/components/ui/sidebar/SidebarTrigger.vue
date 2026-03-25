@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-vue-next';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import Button from '@/components/ui/button/Button.vue';
 import { sidebarTriggerVariants } from './styles';
 import { useSidebar } from './utils';

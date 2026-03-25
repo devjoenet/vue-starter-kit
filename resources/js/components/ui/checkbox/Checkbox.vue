@@ -5,7 +5,7 @@ import type { CheckboxVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { Check } from 'lucide-vue-next';
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { checkboxVariants } from './styles';
 
 const props = withDefaults(

@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import type { BadgeVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { Primitive } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { badgeVariants } from './styles';
 
 const props = defineProps<

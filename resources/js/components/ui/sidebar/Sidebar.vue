@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SidebarProps } from './styles';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import Sheet from '@/components/ui/sheet/Sheet.vue';
 import SheetContent from '@/components/ui/sheet/SheetContent.vue';
 import SheetDescription from '@/components/ui/sheet/SheetDescription.vue';

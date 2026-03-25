@@ -6,7 +6,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Button from '@/components/ui/button/Button.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
 import { inputAssistiveTextVariants } from '@/components/ui/input/variants';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
 import FieldHiddenInput from '../form-field/FieldHiddenInput.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';

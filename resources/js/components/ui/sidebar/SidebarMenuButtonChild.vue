@@ -3,7 +3,7 @@ import type { PrimitiveProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 import type { SidebarMenuButtonVariants } from './styles';
 import { Primitive } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { sidebarMenuButtonVariants } from './styles';
 
 export interface SidebarMenuButtonProps extends PrimitiveProps {

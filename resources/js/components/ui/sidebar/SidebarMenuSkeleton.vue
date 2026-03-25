@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { computed } from 'vue';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import Skeleton from '@/components/ui/skeleton/Skeleton.vue';
 import { sidebarMenuSkeletonVariants } from './styles';
 

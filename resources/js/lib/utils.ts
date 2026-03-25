@@ -1,11 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/vue3';
-import { clsx } from 'clsx';
-import type { ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export { cn } from 'tailwind-variants';
 
 /** Returns the URL string from a given string or Inertia.js `Link` object.  */
 export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {

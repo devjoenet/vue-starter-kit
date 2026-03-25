@@ -5,7 +5,7 @@ import type { DialogContentVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, useForwardPropsEmits } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { dialogScrollCloseVariants, dialogScrollContentVariants, dialogScrollOverlayVariants } from './styles';
 
 defineOptions({

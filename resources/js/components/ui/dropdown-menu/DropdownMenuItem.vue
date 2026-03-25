@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import type { DropdownMenuItemVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { DropdownMenuItem, useForwardProps } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { dropdownMenuItemVariants } from './styles';
 
 const props = withDefaults(

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
 import { MoreHorizontal } from 'lucide-vue-next';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { breadcrumbEllipsisVariants } from './styles';
 
 const props = defineProps<{

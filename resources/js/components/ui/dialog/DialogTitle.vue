@@ -3,7 +3,7 @@ import type { DialogTitleProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { DialogTitle, useForwardProps } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { dialogTitleVariants } from './styles';
 
 const props = defineProps<DialogTitleProps & { class?: HTMLAttributes['class'] }>();

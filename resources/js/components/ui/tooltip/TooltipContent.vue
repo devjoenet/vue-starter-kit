@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import type { TooltipContentVariants } from './styles';
 import { reactiveOmit } from '@vueuse/core';
 import { TooltipArrow, TooltipContent, TooltipPortal, useForwardPropsEmits } from 'reka-ui';
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 import { tooltipArrowVariants, tooltipContentVariants } from './styles';
 
 defineOptions({
