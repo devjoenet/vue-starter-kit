@@ -1,5 +1,4 @@
-import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
+import { tv, type VariantProps } from 'tailwind-variants';
 import type { InputVariants } from '@/components/ui/input/variants';
 
 export type DatePickerVariants = {
@@ -7,7 +6,8 @@ export type DatePickerVariants = {
   state?: InputVariants['state'];
 };
 
-export const datePickerDayVariants = cva('flex size-9 items-center justify-center rounded-full text-sm transition-colors duration-150 disabled:pointer-events-none disabled:opacity-45', {
+export const datePickerDayVariants = tv({
+  base: 'flex size-9 items-center justify-center rounded-full text-sm transition-colors duration-150 disabled:pointer-events-none disabled:opacity-45',
   variants: {
     variant: {
       default: 'text-foreground hover:bg-muted',

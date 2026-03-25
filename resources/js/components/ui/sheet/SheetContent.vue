@@ -5,7 +5,7 @@ import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
 import { DialogClose, DialogContent, DialogPortal, useForwardPropsEmits } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { sheetCloseVariants, sheetContentVariants } from './styles';
+import { sheetCloseVariants, sheetContentVariants } from './variants';
 import SheetOverlay from './SheetOverlay.vue';
 
 interface SheetContentProps extends DialogContentProps {

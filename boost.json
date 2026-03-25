@@ -18,6 +18,9 @@
         "inertia-vue-development",
         "tailwindcss-development",
         "fortify-development",
-        "spatie-laravel-php-standards"
+        "spatie-laravel-php-standards",
+        "complexity-guardrails",
+        "laravel-actions",
+        "laravel-interfaces-and-di"
     ]
 }

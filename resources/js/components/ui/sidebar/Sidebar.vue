@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { SidebarProps } from './styles';
+import type { SidebarProps } from './variants';
 import { cn } from 'tailwind-variants';
 import Sheet from '@/components/ui/sheet/Sheet.vue';
 import SheetContent from '@/components/ui/sheet/SheetContent.vue';
 import SheetDescription from '@/components/ui/sheet/SheetDescription.vue';
 import SheetHeader from '@/components/ui/sheet/SheetHeader.vue';
 import SheetTitle from '@/components/ui/sheet/SheetTitle.vue';
-import { sidebarContainerVariants, sidebarDesktopContainerVariants, sidebarDesktopGapVariants, sidebarDesktopPanelVariants, sidebarMobileContentVariants } from './styles';
+import { sidebarContainerVariants, sidebarDesktopContainerVariants, sidebarDesktopGapVariants, sidebarDesktopPanelVariants, sidebarMobileContentVariants } from './variants';
 import { SIDEBAR_WIDTH_MOBILE, useSidebar } from './utils';
 
 defineOptions({

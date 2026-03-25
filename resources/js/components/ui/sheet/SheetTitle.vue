@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { DialogTitle } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { sheetTitleVariants } from './styles';
+import { sheetTitleVariants } from './variants';
 
 const props = defineProps<DialogTitleProps & { class?: HTMLAttributes['class'] }>();
 

@@ -1,5 +1,4 @@
-import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
+import { tv, type VariantProps } from 'tailwind-variants';
 import type { InputVariants } from '@/components/ui/input/variants';
 
 export type SignatureDataUrlType = 'png' | 'jpg';
@@ -9,10 +8,12 @@ export type SignatureVariants = {
   state?: InputVariants['state'];
 };
 
-export const signatureSurfaceVariants = cva('relative w-full overflow-hidden rounded-[var(--radius-sm)] border bg-muted/20 transition-colors', {
+export const signatureSurfaceVariants = tv({
+  base: 'relative w-full overflow-hidden rounded-[var(--radius-sm)] border bg-muted/20 transition-colors',
   variants: {
     state: {
       default: 'border-border',
+      primary: 'border-primary',
       error: 'border-destructive',
       destructive: 'border-destructive',
       info: 'border-info',

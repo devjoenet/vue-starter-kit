@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { alertDescriptionVariants } from './styles';
+import { alertDescription } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
@@ -9,7 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div data-slot="alert-description" :class="cn(alertDescriptionVariants(), props.class)">
+  <div data-slot="alert-description" :class="cn(alertDescription, props.class)">
     <slot />
   </div>
 </template>

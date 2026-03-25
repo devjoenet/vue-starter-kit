@@ -11,6 +11,9 @@ export const alert = tv({
       destructive: ['border-destructive/35', 'bg-destructive/10', 'text-destructive-foreground', '*:data-[slot=alert-description]:text-muted-foreground', '[&>svg]:text-destructive'],
     },
   },
+  defaultVariants: {
+    variant: 'primary',
+  },
 });
 
 export const alertTitle = cx(['col-start-2', 'line-clamp-1', 'min-h-4', 'font-medium', 'tracking-tight']);

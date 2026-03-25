@@ -29,7 +29,7 @@ defineProps<Props>();
   <DropdownMenuSeparator />
   <DropdownMenuGroup>
     <DropdownMenuItem :as-child="true" variant="primary">
-      <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
+      <Link class="block w-full cursor-pointer" :href="edit()" :prefetch="['hover', 'click']">
         <Settings class="mr-2 h-4 w-4" />
         Settings
       </Link>

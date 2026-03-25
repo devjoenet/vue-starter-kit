@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { Separator } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { separatorVariants } from './styles';
+import { separatorVariants } from './variants';
 
 const props = withDefaults(defineProps<SeparatorProps & { class?: HTMLAttributes['class'] }>(), {
   orientation: 'horizontal',

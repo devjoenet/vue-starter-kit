@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'vue';
 import { computed } from 'vue';
 import { cn } from 'tailwind-variants';
 import Skeleton from '@/components/ui/skeleton/Skeleton.vue';
-import { sidebarMenuSkeletonVariants } from './styles';
+import { sidebarMenuSkeletonVariants } from './variants';
 
 const props = defineProps<{
   showIcon?: boolean;

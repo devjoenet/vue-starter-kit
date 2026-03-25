@@ -39,8 +39,8 @@ it('uses destructive base variants instead of legacy error wrappers in app views
 it('uses the correct role permission gate in admin layout navigation', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/AdminLayout.vue');
 
-    expect($contents)->toContain("...(can(adminPermissions.rolesView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
-    expect($contents)->not->toContain("...(can(adminPermissions.usersView)\n      ? [{ label: 'Roles', href: adminRolesIndex.url() }]");
+    expect($contents)->toContain("can(adminPermissions.rolesView) ? [{ label: 'Roles', href: adminRolesIndex.url() }] : []");
+    expect($contents)->not->toContain("can(adminPermissions.usersView) ? [{ label: 'Roles', href: adminRolesIndex.url() }] : []");
 });
 
 it('uses the canonical wayfinder type surface for admin form contracts', function () {
@@ -219,6 +219,11 @@ it('uses an extracted table-based permission assignment surface in the role mana
     expect($pageContents)->toContain('save-label="Save and Close"');
     expect($pageContents)->toContain('close-label="Close"');
     expect($pageContents)->toContain('router.visit(index.url())');
+    expect($pageContents)->toContain('id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start"');
+    expect($pageContents)->toContain('id="admin-roles-edit-permissions-card" class="motion-step xl:col-span-2"');
+    expect($pageContents)->toContain('class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start"');
+    expect($pageContents)->toContain('id="admin-roles-edit-actions"');
+    expect($pageContents)->toContain('class="xl:ml-auto xl:w-full"');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('Collapsible');
 
@@ -246,7 +251,8 @@ it('uses an extracted permission index table surface in the admin permissions in
 
     expect($tableContents)->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
     expect($tableContents)->toContain('<Table');
-    expect($tableContents)->toContain('column="permission"');
+    expect($tableContents)->toContain("column: 'permission'");
+    expect($tableContents)->toContain("label: 'Permission'");
     expect($tableContents)->not->toContain('permissions-search');
     expect($tableContents)->not->toContain('permissions-group-filter');
 });
@@ -270,6 +276,26 @@ it('prefills the role name in the role management edit page details form', funct
     expect($formContents)->toContain('@blur="normalizeRoleNameForDisplay"');
 });
 
+it('uses a consistent fixed-width side rail across admin editor pages', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $editorPages = [
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+
+    foreach ($editorPages as $editorPage) {
+        $contents = file_get_contents($projectRoot.'/'.$editorPage);
+
+        expect($contents)->toContain('xl:grid-cols-[minmax(0,1fr)_18rem]');
+        expect($contents)->toContain('xl:items-start');
+        expect($contents)->not->toContain('minmax(18rem,0.82fr)');
+    }
+});
+
 it('uses extracted details and table-based role assignment surfaces in the user management edit page', function () {
     $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Edit.vue');
     $detailsContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserDetailsForm.vue');
@@ -283,6 +309,10 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($pageContents)->toContain('save-label="Save and Close"');
     expect($pageContents)->toContain('close-label="Close"');
     expect($pageContents)->toContain('router.visit(index.url())');
+    expect($pageContents)->toContain('id="admin-users-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start"');
+    expect($pageContents)->toContain('id="admin-users-edit-roles-card" class="motion-step xl:col-span-2"');
+    expect($pageContents)->toContain('class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start"');
+    expect($pageContents)->toContain('class="xl:ml-auto xl:w-full"');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');
 
@@ -295,6 +325,21 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($tableContents)->toContain('label="Slug"');
     expect($tableContents)->toContain('hidden text-xs font-medium text-muted-foreground italic md:table-cell');
     expect($tableContents)->not->toContain('user-roles-search');
+});
+
+it('uses a full-width initial assignee table in the role create page', function () {
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Create.vue');
+
+    expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
+    expect($pageContents)->toContain("from '@/components/admin/EditPageActionRow.vue'");
+    expect($pageContents)->toContain('id="admin-roles-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start"');
+    expect($pageContents)->toContain('id="admin-roles-create-sections" class="contents"');
+    expect($pageContents)->toContain('id="admin-roles-create-users-card"');
+    expect($pageContents)->toContain('class="motion-step xl:col-span-2"');
+    expect($pageContents)->toContain('class="space-y-4 xl:col-start-2 xl:row-start-1 xl:self-start"');
+    expect($pageContents)->toContain('id="admin-roles-create-actions"');
+    expect($pageContents)->toContain('class="motion-step xl:w-full"');
 });
 
 it('uses shared index header controls and linked name cells on admin index pages', function () {
@@ -336,13 +381,13 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect($headerCellContents)->toContain(':title="sortButtonTitle"');
     expect($headerCellContents)->toContain('v-model:open="menuOpen"');
     expect($headerCellContents)->toContain('Apply');
-    expect($permissionTableContents)->toContain('label="Permission"');
-    expect($permissionTableContents)->toContain('label="Group"');
+    expect($permissionTableContents)->toContain("label: 'Permission'");
+    expect($permissionTableContents)->toContain("label: 'Group'");
     expect($permissionTableContents)->toContain('font-semibold text-primary underline');
 
     expect(
-        mb_strpos($permissionTableContents, 'label="Permission"'),
-    )->toBeLessThan(mb_strpos($permissionTableContents, 'label="Group"'));
+        mb_strpos($permissionTableContents, "label: 'Permission'"),
+    )->toBeLessThan(mb_strpos($permissionTableContents, "label: 'Group'"));
 });
 
 it('keeps auth forms in native DOM focus order without positive tabindex values', function () {
@@ -390,21 +435,43 @@ it('anchors the welcome page around the shared hero illustration and custom syst
 
     expect($welcomeContents)->toContain("from '@/components/WelcomeHeroIllustration.vue'");
     expect($welcomeContents)->toContain('<WelcomeHeroIllustration');
-    expect($welcomeContents)->toContain('Custom systems that help real teams operate better.');
+    expect($welcomeContents)->toContain('Custom systems that help real teams operate <span');
     expect($welcomeContents)->toContain('welcome-page-theme');
     expect($welcomeContents)->toContain('id="welcome-page-hero"');
     expect($welcomeContents)->toContain('id="welcome-page-visual"');
     expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
     expect($welcomeContents)->toContain('One starter. Many surfaces.');
     expect($welcomeContents)->toContain('From one starting point');
+    expect($welcomeContents)->toContain('relative z-[2] max-w-140');
+    expect($welcomeContents)->not->toContain('welcome-copy-surface');
     expect($welcomeContents)->not->toContain('welcome-hero-frame');
     expect($welcomeContents)->not->toContain('welcome-hero-chrome');
 
     expect($cssContents)->toContain('.welcome-page-theme');
     expect($cssContents)->toContain('.welcome-hero-shell');
     expect($cssContents)->toContain('.welcome-hero-media');
-    expect($cssContents)->toContain('.welcome-copy-surface');
     expect($cssContents)->toContain('.welcome-foundation-shell');
+    expect($cssContents)->not->toContain('.welcome-copy-surface');
+});
+
+it('keeps app css focused on shared theme and reusable surface primitives', function () {
+    $cssContents = file_get_contents(dirname(__DIR__, 2).'/resources/css/app.css');
+
+    expect($cssContents)->toContain('--primary-100');
+    expect($cssContents)->toContain('--success: var(--success-500);');
+    expect($cssContents)->toContain('--success-foreground: var(--success-900);');
+    expect($cssContents)->toContain('--color-success-500: var(--success-500);');
+    expect($cssContents)->toContain('--color-primary-600: var(--primary-600);');
+    expect($cssContents)->not->toContain('.surface-public-hero');
+    expect($cssContents)->not->toContain('.surface-public-panel');
+    expect($cssContents)->not->toContain('.surface-auth-panel');
+    expect($cssContents)->not->toContain('.surface-auth-grid');
+    expect($cssContents)->not->toContain('.surface-auth-copy');
+    expect($cssContents)->not->toContain('.surface-auth-form-slot');
+    expect($cssContents)->not->toContain('.surface-auth-trust-point');
+    expect($cssContents)->not->toContain('.welcome-proof-kicker');
+    expect($cssContents)->not->toContain('.welcome-hero-grid');
+    expect($cssContents)->not->toContain('.welcome-target-row');
 });
 
 it('uses the shared settings workspace shell for settings navigation and headings', function () {
@@ -419,8 +486,8 @@ it('uses the shared settings workspace shell for settings navigation and heading
 
 it('keeps the shared motion primitives and reduced-motion safeguards in the frontend system', function () {
     $cssContents = file_get_contents(dirname(__DIR__, 2).'/resources/css/app.css');
-    $buttonStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/styles.ts');
-    $sidebarStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/styles.ts');
+    $buttonStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/variants.ts');
+    $sidebarStylesContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/variants.ts');
 
     expect($cssContents)->toContain('--motion-ease-out-quart');
     expect($cssContents)->toContain('.motion-stage');
@@ -450,10 +517,10 @@ it('uses shared motion choreography across public, auth, dashboard, and admin wo
     expect($permissionsIndexContents)->toContain('motion-stage');
 });
 
-it('uses inertia layout props for shared admin and settings breadcrumbs', function () {
+it('uses shared breadcrumb helpers for admin and settings pages', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $pageFiles = [
-        'resources/js/pages/admin/Dashboard.vue',
+    $dashboardPageFile = 'resources/js/pages/admin/Dashboard.vue';
+    $adminPageFiles = [
         'resources/js/pages/admin/Users/Index.vue',
         'resources/js/pages/admin/Users/Create.vue',
         'resources/js/pages/admin/Users/Edit.vue',
@@ -463,6 +530,8 @@ it('uses inertia layout props for shared admin and settings breadcrumbs', functi
         'resources/js/pages/admin/Permissions/Index.vue',
         'resources/js/pages/admin/Permissions/Create.vue',
         'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+    $settingsPageFiles = [
         'resources/js/pages/settings/Profile.vue',
         'resources/js/pages/settings/Password.vue',
         'resources/js/pages/settings/TwoFactor.vue',
@@ -471,13 +540,28 @@ it('uses inertia layout props for shared admin and settings breadcrumbs', functi
 
     $layoutContents = file_get_contents($projectRoot.'/resources/js/layouts/AppLayout.vue');
 
-    expect($layoutContents)->toContain('useLayoutProps');
-    expect($layoutContents)->toContain('breadcrumbs: []');
+    expect($layoutContents)->not->toContain('useLayoutProps');
+    expect($layoutContents)->toContain('breadcrumbs: () => []');
 
-    foreach ($pageFiles as $pageFile) {
+    $dashboardContents = file_get_contents($projectRoot.'/'.$dashboardPageFile);
+
+    expect($dashboardContents)->toContain('setBreadcrumbs(');
+    expect($dashboardContents)->not->toContain('setLayoutProps({');
+    expect($dashboardContents)->not->toContain('layout: (_: unknown, page: unknown) =>');
+
+    foreach ($adminPageFiles as $pageFile) {
         $contents = file_get_contents($projectRoot.'/'.$pageFile);
 
-        expect($contents)->toContain('setLayoutProps({');
+        expect($contents)->toContain('setAdminBreadcrumbs(');
+        expect($contents)->not->toContain('setLayoutProps({');
+        expect($contents)->not->toContain('layout: (_: unknown, page: unknown) =>');
+    }
+
+    foreach ($settingsPageFiles as $pageFile) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        expect($contents)->toContain('setBreadcrumbs(');
+        expect($contents)->not->toContain('setLayoutProps({');
         expect($contents)->not->toContain('layout: (_: unknown, page: unknown) =>');
     }
 });
@@ -749,9 +833,9 @@ it('uses reduced-motion-safe motion patterns across shared shell surfaces', func
 
     $toastFeedContents = file_get_contents($projectRoot.'/resources/js/components/AppToasts.vue');
     $toastContents = file_get_contents($projectRoot.'/resources/js/components/toasts/AppToastItem.vue');
-    $dialogContents = file_get_contents($projectRoot.'/resources/js/components/ui/dialog/styles.ts');
-    $sheetContents = file_get_contents($projectRoot.'/resources/js/components/ui/sheet/styles.ts');
-    $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/ui/sidebar/styles.ts');
+    $dialogContents = file_get_contents($projectRoot.'/resources/js/components/ui/dialog/variants.ts');
+    $sheetContents = file_get_contents($projectRoot.'/resources/js/components/ui/sheet/variants.ts');
+    $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/ui/sidebar/variants.ts');
 
     expect($toastFeedContents)->not->toContain('transition: all');
     expect($toastContents)->toContain('transition-transform');
@@ -767,11 +851,11 @@ it('keeps key touch targets at mobile-friendly sizes across shared shell control
     $headerCellContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AdminIndexHeaderCell.vue');
     $headerUtilityContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderUtilityActions.vue');
     $mobileNavContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/app-header/AppHeaderMobileNavigation.vue');
-    $navigationMenuContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/navigation-menu/styles.ts');
-    $inputOtpContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input-otp/styles.ts');
+    $navigationMenuContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/navigation-menu/variants.ts');
+    $inputOtpContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/input-otp/variants.ts');
     $sidebarMenuActionContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/SidebarMenuAction.vue');
     $sidebarGroupActionContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/SidebarGroupAction.vue');
-    $sidebarContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/styles.ts');
+    $sidebarContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/sidebar/variants.ts');
 
     expect($headerCellContents)->toContain('size="iconSm"');
     expect($headerUtilityContents)->toContain('h-11 w-11');
@@ -782,7 +866,7 @@ it('keeps key touch targets at mobile-friendly sizes across shared shell control
     expect($inputOtpContents)->toContain('h-11 w-11');
     expect($sidebarMenuActionContents)->toContain('size-8');
     expect($sidebarGroupActionContents)->toContain('size-8');
-    expect($sidebarContents)->toContain("sidebarTriggerVariants = cva('h-11 w-11')");
+    expect($sidebarContents)->toContain('sidebarTriggerVariants = tv({ base: \'h-11 w-11\'');
 });
 
 it('renders breadcrumbs honestly when intermediate items do not have destinations', function () {
@@ -805,27 +889,27 @@ it('keeps admin index surfaces readable on narrow screens with dedicated mobile 
     $usersContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
     $rolesContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
     $permissionsContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionIndexTable.vue');
+    $tableCardContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminIndexTableCard.vue');
 
     expect($usersContents)->toContain('id="admin-users-index-mobile-controls"');
     expect($usersContents)->toContain('id="admin-users-index-mobile-list"');
     expect($usersContents)->toContain('as="toolbar"');
-    expect($usersContents)->toContain('overflow-hidden py-0 md:block');
 
     expect($rolesContents)->toContain('id="admin-roles-index-mobile-controls"');
     expect($rolesContents)->toContain('id="admin-roles-index-mobile-list"');
     expect($rolesContents)->toContain('as="toolbar"');
-    expect($rolesContents)->toContain('overflow-hidden py-0 md:block');
 
     expect($permissionsContents)->toContain('Refine permissions');
     expect($permissionsContents)->toContain('as="toolbar"');
-    expect($permissionsContents)->toContain('overflow-hidden py-0 md:block');
+    expect($permissionsContents)->toContain("from '@/components/admin/AdminIndexTableCard.vue'");
+    expect($tableCardContents)->toContain('overflow-hidden py-0 md:block');
 });
 
 it('keeps shared tokens and primitives free of legacy glass variants', function () {
     $projectRoot = dirname(__DIR__, 2);
     $cssContents = file_get_contents($projectRoot.'/resources/css/app.css');
-    $cardContents = file_get_contents($projectRoot.'/resources/js/components/ui/card/styles.ts');
-    $buttonContents = file_get_contents($projectRoot.'/resources/js/components/ui/button/styles.ts');
+    $cardContents = file_get_contents($projectRoot.'/resources/js/components/ui/card/variants.ts');
+    $buttonContents = file_get_contents($projectRoot.'/resources/js/components/ui/button/variants.ts');
     $toastContents = file_get_contents($projectRoot.'/resources/js/composables/useToast.ts');
 
     expect($cssContents)->not->toContain('liquid-glass');

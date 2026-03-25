@@ -47,14 +47,14 @@ defineProps<{
         </Alert>
 
         <Form id="auth-login-form" v-bind="store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="space-y-4">
-          <Input id="email" type="email" state="primary" name="email" label="Email address" variant="outlined" required autofocus :state="errors.email ? 'error' : 'default'" :message="errors.email" />
+          <Input id="email" type="email" name="email" label="Email address" variant="outlined" required autofocus :state="errors.email ? 'error' : 'default'" :message="errors.email" />
 
           <div id="auth-login-password-block" class="space-y-2">
             <div class="flex justify-end">
               <TextLink v-if="canResetPassword" id="auth-login-forgot-password-link" :href="request()" class="text-sm"> Forgot password? </TextLink>
             </div>
 
-            <Input id="password" state="primary" type="password" name="password" label="Password" variant="outlined" required autocomplete="current-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
+            <Input id="password" type="password" name="password" label="Password" variant="outlined" required autocomplete="current-password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
           </div>
 
           <label id="auth-login-remember-row" for="remember" class="flex items-center gap-3 text-sm text-muted-foreground">

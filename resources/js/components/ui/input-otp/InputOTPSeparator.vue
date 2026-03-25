@@ -4,7 +4,7 @@ import { reactiveOmit } from '@vueuse/core';
 import { MinusIcon } from 'lucide-vue-next';
 import { useForwardProps } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { inputOtpSeparatorVariants } from './styles';
+import { inputOtpSeparatorVariants } from './variants';
 
 const props = defineProps<{ class?: HTMLAttributes['class'] }>();
 

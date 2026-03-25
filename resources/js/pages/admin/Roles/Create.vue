@@ -70,8 +70,8 @@ const closeToIndex = () => {
         title="Create a reusable access role"
       />
 
-      <form id="admin-roles-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]" @submit.prevent="submit">
-        <div id="admin-roles-create-sections" class="space-y-6">
+      <form id="admin-roles-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start" @submit.prevent="submit">
+        <div id="admin-roles-create-sections" class="contents">
           <RoleDetailsForm
             id="admin-roles-create-details-card"
             class="motion-step"
@@ -85,7 +85,7 @@ const closeToIndex = () => {
 
           <AssignmentTableCard
             id="admin-roles-create-users-card"
-            class="motion-step"
+            class="motion-step xl:col-span-2"
             description="Start with the people who should immediately receive this role, or leave it empty and assign later."
             :error="form.errors.user_ids"
             :results-label="selectedUsersLabel"
@@ -120,7 +120,7 @@ const closeToIndex = () => {
           </AssignmentTableCard>
         </div>
 
-        <aside class="space-y-4">
+        <aside class="space-y-4 xl:col-start-2 xl:row-start-1 xl:self-start">
           <AdminEditorAsideCard class="motion-step" style="--motion-order: 3">
             <p class="section-kicker">Naming guidance</p>
             <h2 class="text-lg font-semibold tracking-tight">Make the role obvious in one glance.</h2>
@@ -129,7 +129,7 @@ const closeToIndex = () => {
 
           <EditPageActionRow
             id="admin-roles-create-actions"
-            class="motion-step"
+            class="motion-step xl:w-full"
             close-label="Back to roles"
             description="Create the role when the name and initial assignments look right, or return to the roles index without saving."
             heading="Create this role"

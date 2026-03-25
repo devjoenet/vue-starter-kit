@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { AvatarFallback } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { avatarFallbackVariants } from './styles';
+import { avatarFallbackVariants } from './variants';
 
 const props = defineProps<AvatarFallbackProps & { class?: HTMLAttributes['class'] }>();
 

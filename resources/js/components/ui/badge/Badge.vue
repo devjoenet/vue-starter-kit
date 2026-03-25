@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { PrimitiveProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import type { BadgeVariants } from './styles';
+import type { BadgeVariants } from './variants';
 import { reactiveOmit } from '@vueuse/core';
 import { Primitive } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { badgeVariants } from './styles';
+import { badgeVariants } from './variants';
 
 const props = defineProps<
   PrimitiveProps & {

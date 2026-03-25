@@ -121,11 +121,11 @@ final class UsersController extends Controller
     {
         return Inertia::render('admin/Users/Edit', [
             'user' => fn (): array => EditableUserData::fromModel($user)->all(),
-            'roles' => fn (): array => Role::query()
+            'roles' => Inertia::defer(fn (): array => Role::query()
                 ->orderBy('name')
                 ->get(['id', 'name'])
                 ->map(fn (Role $role): array => RoleOptionData::fromModel($role)->all())
-                ->all(),
+                ->all()),
             'userRoles' => fn (): array => $user->getRoleNames()->values()->all(),
         ]);
     }

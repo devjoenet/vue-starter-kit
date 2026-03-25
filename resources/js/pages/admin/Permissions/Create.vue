@@ -119,7 +119,7 @@ const closeToIndex = () => {
         title="Create a new permission"
       />
 
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
+      <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
         <PermissionEditorForm
           id="admin-permissions-create-form-card"
           class="motion-step"
@@ -146,7 +146,7 @@ const closeToIndex = () => {
           @submit="submit"
         />
 
-        <AdminEditorAsideCard class="motion-step" style="--motion-order: 2">
+        <AdminEditorAsideCard class="motion-step xl:self-start" style="--motion-order: 2">
           <p class="section-kicker">Catalog guidance</p>
           <h2 class="text-lg font-semibold tracking-tight">Stable keys, human labels, shared groups.</h2>
           <p class="text-sm leading-6 text-muted-foreground">

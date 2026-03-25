@@ -8,8 +8,8 @@ import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
 import FieldClearControl from '../form-field/FieldClearControl.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';
 import { useFieldState } from '../form-field/useFieldState';
-import type { InputVariants } from './styles';
-import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from './styles';
+import type { InputVariants } from './variants';
+import { inputAssistiveTextVariants, inputLabelVariants, inputVariants } from './variants';
 
 defineOptions({
   inheritAttrs: false,

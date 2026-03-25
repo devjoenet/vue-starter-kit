@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { dialogFooterVariants } from './styles';
+import { dialogFooterVariants } from './variants';
 
 const props = defineProps<{ class?: HTMLAttributes['class'] }>();
 </script>

@@ -5,7 +5,7 @@ import { useForwardProps } from 'reka-ui';
 import { computed } from 'vue';
 import { useVueOTPContext } from 'vue-input-otp';
 import { cn } from 'tailwind-variants';
-import { inputOtpSlotVariants } from './styles';
+import { inputOtpSlotVariants } from './variants';
 
 const props = defineProps<{ index: number; class?: HTMLAttributes['class'] }>();
 

@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 import { Loader2Icon } from 'lucide-vue-next';
 import { cn } from 'tailwind-variants';
-import { spinnerVariants } from './styles';
+import { spinnerVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

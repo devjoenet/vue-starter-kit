@@ -16,7 +16,7 @@ import FieldHiddenInput from '../form-field/FieldHiddenInput.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';
 import { useDisclosureTrigger } from '../form-field/useDisclosureTrigger';
 import { useFieldState } from '../form-field/useFieldState';
-import { datePickerDayVariants } from './styles';
+import { datePickerDayVariants } from './variants';
 
 const props = withDefaults(
   defineProps<{

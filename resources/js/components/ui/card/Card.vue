@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
-import type { CardVariants } from './styles';
+import type { CardVariants } from './variants';
 import { cn } from 'tailwind-variants';
-import { cardVariants } from './styles';
+import { cardVariants } from './variants';
 
 const props = withDefaults(
   defineProps<{

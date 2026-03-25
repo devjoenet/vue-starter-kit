@@ -54,7 +54,7 @@ const closeToIndex = () => {
         title="Create a workspace account"
       />
 
-      <form id="admin-users-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]" @submit.prevent="submit">
+      <form id="admin-users-create-form" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start" @submit.prevent="submit">
         <UserDetailsForm
           id="admin-users-create-form-card"
           class="motion-step"
@@ -71,7 +71,7 @@ const closeToIndex = () => {
           title="Account details"
         />
 
-        <aside class="space-y-4">
+        <aside class="space-y-4 xl:self-start">
           <AdminEditorAsideCard class="motion-step" style="--motion-order: 2">
             <p class="section-kicker">Before you create</p>
             <h2 class="text-lg font-semibold tracking-tight">Start with the details that will stay stable.</h2>
