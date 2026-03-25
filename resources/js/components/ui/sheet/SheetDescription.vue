@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { DialogDescription } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { sheetDescriptionVariants } from './styles';
+import { sheetDescriptionVariants } from './variants';
 
 const props = defineProps<DialogDescriptionProps & { class?: HTMLAttributes['class'] }>();
 

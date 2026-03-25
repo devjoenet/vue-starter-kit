@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { NavigationMenuLink, useForwardPropsEmits } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { navigationMenuLinkVariants } from './styles';
+import { navigationMenuLinkVariants } from './variants';
 
 const props = defineProps<NavigationMenuLinkProps & { class?: HTMLAttributes['class'] }>();
 const emits = defineEmits<NavigationMenuLinkEmits>();

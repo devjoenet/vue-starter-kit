@@ -5,7 +5,7 @@ import { NavigationMenuTrigger, useForwardProps } from 'reka-ui';
 import type { NavigationMenuTriggerProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { navigationMenuTriggerStyle } from './styles';
+import { navigationMenuTriggerStyle } from './variants';
 
 const props = defineProps<NavigationMenuTriggerProps & { class?: HTMLAttributes['class'] }>();
 

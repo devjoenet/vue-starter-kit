@@ -36,8 +36,8 @@ const trustPoints = ['Secure sign-in for demos, client portals, and internal too
 
       <main class="relative flex flex-1 items-center pb-10 sm:pb-12 lg:pb-16">
         <section class="surface-auth-stage motion-stage relative w-full overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6">
-          <div class="surface-auth-grid relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,29rem)] xl:gap-x-14">
-            <section class="surface-auth-copy max-w-[38rem] px-3 py-3 sm:px-4 lg:px-6 lg:py-5">
+          <div class="relative z-10 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,29rem)] xl:gap-x-14">
+            <section class="relative z-[2] max-w-[38rem] px-3 py-3 sm:px-4 lg:px-6 lg:py-5">
               <div class="motion-step" style="--motion-order: 2">
                 <p class="font-handwritten text-xl font-semibold text-primary sm:text-2xl">Secure access</p>
               </div>
@@ -52,7 +52,7 @@ const trustPoints = ['Secure sign-in for demos, client portals, and internal too
               </div>
             </section>
 
-            <section class="surface-auth-form-slot motion-step flex items-start lg:col-start-2 lg:row-span-2" style="--motion-order: 4">
+            <section class="motion-step relative z-[2] flex items-start lg:col-start-2 lg:row-span-2" style="--motion-order: 4">
               <div class="w-full max-w-xl lg:max-w-none">
                 <slot />
               </div>
@@ -63,8 +63,8 @@ const trustPoints = ['Secure sign-in for demos, client portals, and internal too
               <p class="mt-3 max-w-md text-sm leading-6 text-muted-foreground sm:text-[0.96rem] sm:leading-7">Every auth step should feel like part of the same system clients and teams use after they sign in.</p>
 
               <ul class="mt-5 space-y-3.5">
-                <li v-for="point in trustPoints" :key="point" class="surface-auth-trust-point">
-                  <span class="surface-auth-trust-point-bullet" />
+                <li v-for="point in trustPoints" :key="point" class="flex items-start gap-3.5">
+                  <span class="mt-2 size-2 shrink-0 rounded-full bg-secondary shadow-[0_0_0_0.25rem_color-mix(in_oklab,var(--secondary)_18%,transparent)]" />
                   <span class="text-sm leading-6 text-muted-foreground sm:text-[0.96rem]">
                     {{ point }}
                   </span>

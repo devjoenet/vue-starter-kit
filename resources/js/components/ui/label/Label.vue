@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { Label } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { labelVariants } from './styles';
+import { labelVariants } from './variants';
 
 const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>();
 

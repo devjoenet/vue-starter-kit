@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { CheckboxRootEmits, CheckboxRootProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import type { CheckboxVariants } from './styles';
+import type { CheckboxVariants } from './variants';
 import { reactiveOmit } from '@vueuse/core';
 import { Check } from 'lucide-vue-next';
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { checkboxVariants } from './styles';
+import { checkboxVariants } from './variants';
 
 const props = withDefaults(
   defineProps<

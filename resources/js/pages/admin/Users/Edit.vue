@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
 import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
+import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
 import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
+import Skeleton from '@/components/ui/skeleton/Skeleton.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
@@ -162,25 +164,70 @@ const destroyUser = () => {
         :title="`Edit ${userLabel}`"
       />
 
-      <div id="admin-users-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
-        <div class="space-y-6">
-          <UserDetailsForm id="admin-users-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="userForm" />
+      <div id="admin-users-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
+        <UserDetailsForm id="admin-users-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="userForm" />
 
-          <UserRoleAssignmentTable
-            id="admin-users-edit-roles-card"
-            class="motion-step"
-            style="--motion-order: 2"
-            :can-assign="canAssignRoles"
-            :error="rolesForm.errors.roles"
-            :roles="roles"
-            :selected-role-names="selectedRoles"
-            @toggle-role="(name, value) => toggleSelectedValue(name, value)"
-          />
+        <div id="admin-users-edit-roles-card" class="motion-step xl:col-span-2" style="--motion-order: 2">
+          <Deferred data="roles">
+            <template #fallback>
+              <AssignmentTableCard
+                description="Loading the available roles so you can review and adjust account access without leaving this editor."
+                results-label="Loading roles"
+                title="Role assignments"
+              >
+                <div class="space-y-4 p-4 md:p-6">
+                  <div class="grid gap-3 md:hidden">
+                    <div v-for="row in 3" :key="`admin-users-edit-roles-loading-mobile-${row}`" class="rounded-[1.25rem] border border-border/60 bg-background/60 px-4 py-4">
+                      <div class="flex items-start gap-4">
+                        <Skeleton class="mt-0.5 size-5 rounded-sm" />
+
+                        <div class="min-w-0 flex-1 space-y-2">
+                          <Skeleton class="h-4 w-32" />
+                          <Skeleton class="h-3 w-24 bg-primary/8" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="hidden rounded-[1.25rem] border border-border/60 md:block">
+                    <div class="border-b border-border/60 px-6 py-4">
+                      <div class="grid gap-4 md:grid-cols-[3.5rem_minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                        <Skeleton class="h-4 w-12" />
+                        <Skeleton class="h-4 w-32" />
+                        <Skeleton class="h-4 w-20" />
+                      </div>
+                    </div>
+
+                    <div class="space-y-4 px-6 py-5">
+                      <div v-for="row in 4" :key="`admin-users-edit-roles-loading-desktop-${row}`" class="grid items-center gap-4 md:grid-cols-[3.5rem_minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                        <Skeleton class="h-5 w-5 rounded-sm" />
+                        <Skeleton class="h-4 w-40" />
+                        <Skeleton class="h-4 w-28" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <template #footer>
+                  <p class="text-xs leading-5 text-muted-foreground">Current role selections are ready. The full role catalog is loading now.</p>
+                </template>
+              </AssignmentTableCard>
+            </template>
+
+            <UserRoleAssignmentTable
+              :can-assign="canAssignRoles"
+              :error="rolesForm.errors.roles"
+              :roles="roles ?? []"
+              :selected-role-names="selectedRoles"
+              @toggle-role="(name, value) => toggleSelectedValue(name, value)"
+            />
+          </Deferred>
         </div>
 
-        <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
+        <aside class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
           <EditPageActionRow
             id="admin-users-edit-actions"
+            class="xl:ml-auto xl:w-full"
             :can-delete="canDelete"
             :can-save="isDirty"
             close-label="Close"

@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
 import Input from '@/components/ui/input/Input.vue';
-import { sidebarInputVariants } from './styles';
+import { sidebarInputVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

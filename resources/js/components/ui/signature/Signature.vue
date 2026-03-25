@@ -11,8 +11,8 @@ import FieldAssistiveText from '../form-field/FieldAssistiveText.vue';
 import FieldHiddenInput from '../form-field/FieldHiddenInput.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';
 import { useFieldState } from '../form-field/useFieldState';
-import type { SignatureDataUrlType } from './styles';
-import { signatureSurfaceVariants } from './styles';
+import type { SignatureDataUrlType } from './variants';
+import { signatureSurfaceVariants } from './variants';
 
 defineOptions({
   inheritAttrs: false,

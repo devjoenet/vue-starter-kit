@@ -77,8 +77,8 @@ const buildTargets = [
 
       <main class="relative flex flex-1 flex-col gap-12 pb-10 sm:gap-14 sm:pb-12 lg:gap-16 lg:pb-16">
         <section id="welcome-page-hero" class="welcome-hero-shell motion-stage relative flex flex-1 items-center overflow-hidden p-6 sm:px-5 sm:py-5 lg:min-h-152 lg:px-6 lg:py-6">
-          <div class="welcome-hero-grid relative z-10 grid w-full items-center gap-10 lg:grid-cols-[minmax(0,33rem)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] xl:gap-12">
-            <section id="welcome-page-content" class="welcome-copy-surface max-w-140 px-6 py-3 sm:py-5 lg:py-8">
+          <div class="relative z-10 grid w-full items-center gap-10 lg:grid-cols-[minmax(0,33rem)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] xl:gap-12">
+            <section id="welcome-page-content" class="relative z-[2] max-w-140 px-6 py-3 sm:py-5 lg:py-8">
               <p class="motion-step font-handwritten text-2xl font-semibold text-primary" style="--motion-order: 2">Build for marketing, CRM, or clients</p>
               <h1 class="motion-step mt-6 mb-8 max-w-[10ch] text-[clamp(3.15rem,6vw,6rem)] leading-[0.92] font-semibold tracking-[-0.07em] text-balance" style="--motion-order: 3">
                 Custom systems that help real teams operate <span class="font-handwritten font-semibold text-primary underline">better</span>
@@ -118,8 +118,8 @@ const buildTargets = [
         </section>
 
         <section id="welcome-page-build-targets" class="welcome-foundation-shell motion-stage relative overflow-hidden rounded-4xl px-6 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-          <div class="welcome-foundation-grid relative z-10 grid gap-8 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-12">
-            <aside id="welcome-page-proof-panel" class="welcome-proof-panel motion-step" style="--motion-order: 0">
+          <div class="relative z-10 grid items-start gap-8 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-12">
+            <aside id="welcome-page-proof-panel" class="motion-step relative z-[2] max-w-[23rem] border-t pt-4 [border-top-color:color-mix(in_oklab,var(--border)_60%,transparent)]" style="--motion-order: 0">
               <p class="font-handwritten text-2xl font-semibold text-primary">One starter. Many surfaces.</p>
               <p class="mt-4 max-w-md text-lg leading-8 text-foreground sm:text-[1.35rem]">Marketing pages, demos, client portals, and internal tools should feel like one system, not separate products.</p>
             </aside>
@@ -128,7 +128,11 @@ const buildTargets = [
               <p class="font-handwritten text-2xl font-semibold text-primary">From one starting point</p>
               <p class="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">The same starter should flex from first impression to daily operations without feeling stitched together.</p>
               <ul class="mt-6 grid gap-3 sm:grid-cols-2">
-                <li v-for="buildTarget in buildTargets" :key="buildTarget.title" class="welcome-target-row">
+                <li
+                  v-for="buildTarget in buildTargets"
+                  :key="buildTarget.title"
+                  class="flex min-h-14 w-full items-center gap-[0.65rem] rounded-[1rem] border bg-[color-mix(in_oklab,var(--surface-panel)_72%,transparent)] px-4 py-[0.9rem] text-[0.9rem] font-semibold tracking-[0.01em] [border-color:color-mix(in_oklab,var(--border)_64%,transparent)]"
+                >
                   <span :class="buildTarget.markerClass" class="size-2 rounded-full" />
                   <span>{{ buildTarget.title }}</span>
                 </li>

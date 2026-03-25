@@ -113,7 +113,7 @@ final class RolesController extends Controller
     {
         return Inertia::render('admin/Roles/Edit', [
             'role' => fn (): array => EditableRoleData::fromModel($role)->all(),
-            'permissionsByGroup' => $groupedPermissions->allData(...),
+            'permissionsByGroup' => Inertia::defer(fn (): array => $groupedPermissions->allData()),
             'rolePermissions' => fn (): array => $role->permissions()->pluck('name')->values()->all(),
         ]);
     }

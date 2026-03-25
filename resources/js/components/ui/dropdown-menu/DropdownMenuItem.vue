@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { DropdownMenuItemProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import type { DropdownMenuItemVariants } from './styles';
+import type { DropdownMenuItemVariants } from './variants';
 import { reactiveOmit } from '@vueuse/core';
 import { DropdownMenuItem, useForwardProps } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { dropdownMenuItemVariants } from './styles';
+import { dropdownMenuItemVariants } from './variants';
 
 const props = withDefaults(
   defineProps<

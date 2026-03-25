@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 import { AvatarRoot } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { avatarVariants } from './styles';
+import { avatarVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

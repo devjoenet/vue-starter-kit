@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
 import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
+import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
 import RolePermissionAssignmentTable from '@/components/admin/RolePermissionAssignmentTable.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
+import Skeleton from '@/components/ui/skeleton/Skeleton.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useDeleteConfirmation } from '@/composables/useDeleteConfirmation';
 import { useSelectionList } from '@/composables/useSelectionList';
@@ -74,7 +76,7 @@ watch(selectedPermissions, (permissions) => {
 const detailsDirty = computed(() => canUpdate.value && roleForm.isDirty);
 const permissionsDirty = computed(() => canAssign.value && permsForm.isDirty);
 const isDirty = computed(() => detailsDirty.value || permissionsDirty.value);
-const permissionGroupCount = computed(() => Object.keys(props.permissionsByGroup).length);
+const permissionGroupCount = computed<number | null>(() => (props.permissionsByGroup ? Object.keys(props.permissionsByGroup).length : null));
 const actionStatus = computed(() => (isDirty.value ? 'Unsaved changes are ready to save.' : 'No unsaved changes.'));
 const actionDescription = computed(() => (isDirty.value ? 'Save the role details and permission assignments together, then return to the roles index.' : 'You can close this editor now, or keep reviewing the current permission footprint.'));
 
@@ -155,29 +157,79 @@ const destroyRole = () => {
       >
         <template #aside>
           <Badge variant="secondary"> {{ selectedPermissions.length }} permission{{ selectedPermissions.length === 1 ? '' : 's' }} </Badge>
-          <Badge variant="info"> {{ permissionGroupCount }} group{{ permissionGroupCount === 1 ? '' : 's' }} </Badge>
+          <Badge variant="info">
+            {{ permissionGroupCount === null ? 'Loading groups' : `${permissionGroupCount} group${permissionGroupCount === 1 ? '' : 's'}` }}
+          </Badge>
         </template>
       </AdminPageIntro>
 
-      <div id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
-        <div class="space-y-6">
-          <RoleDetailsForm id="admin-roles-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="roleForm" />
+      <div id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
+        <RoleDetailsForm id="admin-roles-edit-details-card" class="motion-step" style="--motion-order: 1" :can-update="canUpdate" :form="roleForm" />
 
-          <RolePermissionAssignmentTable
-            id="admin-roles-edit-permissions-card"
-            class="motion-step"
-            style="--motion-order: 2"
-            :can-assign="canAssign"
-            :error="permsForm.errors.permissions"
-            :permissions-by-group="permissionsByGroup"
-            :selected-permission-names="selectedPermissions"
-            @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
-          />
+        <div id="admin-roles-edit-permissions-card" class="motion-step xl:col-span-2" style="--motion-order: 2">
+          <Deferred data="permissionsByGroup">
+            <template #fallback>
+              <AssignmentTableCard
+                description="Loading the permission catalog so you can review and adjust this role's access footprint without leaving the editor."
+                results-label="Loading permissions"
+                title="Permission assignments"
+              >
+                <div class="space-y-4 p-4 md:p-6">
+                  <div class="grid gap-3 md:hidden">
+                    <div v-for="row in 3" :key="`admin-roles-edit-permissions-loading-mobile-${row}`" class="rounded-[1.25rem] border border-border/60 bg-background/60 px-4 py-4">
+                      <div class="flex items-start gap-4">
+                        <Skeleton class="mt-0.5 size-5 rounded-sm" />
+
+                        <div class="min-w-0 flex-1 space-y-2">
+                          <Skeleton class="h-4 w-36" />
+                          <Skeleton class="h-3 w-48 bg-primary/8" />
+                          <Skeleton class="h-3 w-28" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="hidden rounded-[1.25rem] border border-border/60 md:block">
+                    <div class="border-b border-border/60 px-6 py-4">
+                      <div class="grid gap-4 md:grid-cols-[3.5rem_minmax(0,0.95fr)_minmax(0,1.1fr)_minmax(0,0.85fr)]">
+                        <Skeleton class="h-4 w-12" />
+                        <Skeleton class="h-4 w-20" />
+                        <Skeleton class="h-4 w-32" />
+                        <Skeleton class="h-4 w-28" />
+                      </div>
+                    </div>
+
+                    <div class="space-y-4 px-6 py-5">
+                      <div v-for="row in 5" :key="`admin-roles-edit-permissions-loading-desktop-${row}`" class="grid items-center gap-4 md:grid-cols-[3.5rem_minmax(0,0.95fr)_minmax(0,1.1fr)_minmax(0,0.85fr)]">
+                        <Skeleton class="h-5 w-5 rounded-sm" />
+                        <Skeleton class="h-4 w-28" />
+                        <Skeleton class="h-4 w-44" />
+                        <Skeleton class="h-4 w-32" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <template #footer>
+                  <p class="text-xs leading-5 text-muted-foreground">Current permission selections are ready. The full permission catalog is loading now.</p>
+                </template>
+              </AssignmentTableCard>
+            </template>
+
+            <RolePermissionAssignmentTable
+              :can-assign="canAssign"
+              :error="permsForm.errors.permissions"
+              :permissions-by-group="permissionsByGroup ?? {}"
+              :selected-permission-names="selectedPermissions"
+              @toggle-permission="(name, value) => toggleSelectedValue(name, value)"
+            />
+          </Deferred>
         </div>
 
-        <aside class="motion-step xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
+        <aside class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
           <EditPageActionRow
             id="admin-roles-edit-actions"
+            class="xl:ml-auto xl:w-full"
             :can-delete="canDelete"
             :can-save="isDirty"
             close-label="Close"

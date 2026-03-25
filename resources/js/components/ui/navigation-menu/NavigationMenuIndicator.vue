@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { NavigationMenuIndicator, useForwardProps } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { navigationMenuIndicatorCaretVariants, navigationMenuIndicatorVariants } from './styles';
+import { navigationMenuIndicatorCaretVariants, navigationMenuIndicatorVariants } from './variants';
 
 const props = defineProps<NavigationMenuIndicatorProps & { class?: HTMLAttributes['class'] }>();
 

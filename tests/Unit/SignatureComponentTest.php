@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 it('matches the enhanced signature structure', function () {
     $path = dirname(__DIR__, 2).'/resources/js/components/ui/signature/Signature.vue';
-    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/signature/styles.ts';
+    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/signature/variants.ts';
 
     expect(file_exists($path))->toBeTrue();
     expect(file_exists($stylesPath))->toBeTrue();

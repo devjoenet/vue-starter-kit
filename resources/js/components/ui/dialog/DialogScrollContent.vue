@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import type { DialogContentVariants } from './styles';
+import type { DialogContentVariants } from './variants';
 import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, useForwardPropsEmits } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { dialogScrollCloseVariants, dialogScrollContentVariants, dialogScrollOverlayVariants } from './styles';
+import { dialogScrollCloseVariants, dialogScrollContentVariants, dialogScrollOverlayVariants } from './variants';
 
 defineOptions({
   inheritAttrs: false,

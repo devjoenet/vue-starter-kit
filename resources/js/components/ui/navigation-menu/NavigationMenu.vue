@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { NavigationMenuRoot, useForwardPropsEmits } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { navigationMenuVariants } from './styles';
+import { navigationMenuVariants } from './variants';
 import NavigationMenuViewport from './NavigationMenuViewport.vue';
 
 const props = withDefaults(

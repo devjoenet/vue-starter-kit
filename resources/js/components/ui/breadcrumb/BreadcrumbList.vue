@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { breadcrumbListVariants } from './styles';
+import { breadcrumbListVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

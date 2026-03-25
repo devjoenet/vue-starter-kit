@@ -18,8 +18,8 @@ import FieldHiddenInput from '../form-field/FieldHiddenInput.vue';
 import FieldLabel from '../form-field/FieldLabel.vue';
 import { useDisclosureTrigger } from '../form-field/useDisclosureTrigger';
 import { useFieldState } from '../form-field/useFieldState';
-import type { SelectOption, SelectOptionVariant } from './styles';
-import { selectLabelVariants, selectOptionVariants } from './styles';
+import type { SelectOption, SelectOptionVariant } from './variants';
+import { selectLabelVariants, selectOptionVariants } from './variants';
 
 const props = withDefaults(
   defineProps<{

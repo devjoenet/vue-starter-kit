@@ -117,7 +117,7 @@ export type AdminUsersCreatePageProps = {};
 
 export type AdminUsersEditPageProps = {
   user: EditableUser;
-  roles: RoleOption[];
+  roles?: RoleOption[];
   userRoles: string[];
 };
 
@@ -133,7 +133,7 @@ export type AdminRolesCreatePageProps = {
 
 export type AdminRolesEditPageProps = {
   role: EditableRole;
-  permissionsByGroup: PermissionsByGroup;
+  permissionsByGroup?: PermissionsByGroup;
   rolePermissions: string[];
 };
 

@@ -5,14 +5,14 @@ declare(strict_types=1);
 it('supports feedback variants across shared ui components', function () {
     $projectRoot = dirname(__DIR__, 2);
     $variantFiles = [
-        'resources/js/components/ui/alert/styles.ts',
-        'resources/js/components/ui/badge/styles.ts',
-        'resources/js/components/ui/button/styles.ts',
-        'resources/js/components/ui/card/styles.ts',
-        'resources/js/components/ui/checkbox/styles.ts',
+        'resources/js/components/ui/alert/variants.ts',
+        'resources/js/components/ui/badge/variants.ts',
+        'resources/js/components/ui/button/variants.ts',
+        'resources/js/components/ui/card/variants.ts',
+        'resources/js/components/ui/checkbox/variants.ts',
         'resources/js/components/ui/input/variants.ts',
-        'resources/js/components/ui/dialog/styles.ts',
-        'resources/js/components/ui/tooltip/styles.ts',
+        'resources/js/components/ui/dialog/variants.ts',
+        'resources/js/components/ui/tooltip/variants.ts',
     ];
 
     foreach ($variantFiles as $variantFile) {
@@ -29,6 +29,9 @@ it('supports feedback variants across shared ui components', function () {
 it('forwards feedback variants through vue wrappers', function () {
     $projectRoot = dirname(__DIR__, 2);
     $wrapperExpectations = [
+        'resources/js/components/ui/alert/Alert.vue' => [
+            'alert({ variant })',
+        ],
         'resources/js/components/ui/checkbox/Checkbox.vue' => [
             'checkboxVariants({ variant: props.variant })',
         ],
@@ -63,7 +66,7 @@ it('forwards feedback variants through vue wrappers', function () {
 });
 
 it('separates button style from semantic color variants', function () {
-    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/styles.ts');
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/button/variants.ts');
 
     expect($contents)
         ->toContain('appearance: {')

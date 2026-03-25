@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { NavigationMenuItem } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { navigationMenuItemVariants } from './styles';
+import { navigationMenuItemVariants } from './variants';
 
 const props = defineProps<NavigationMenuItemProps & { class?: HTMLAttributes['class'] }>();
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 it('matches the shared table ui structure', function () {
-    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/table/styles.ts';
+    $stylesPath = dirname(__DIR__, 2).'/resources/js/components/ui/table/variants.ts';
     $tablePath = dirname(__DIR__, 2).'/resources/js/components/ui/table/Table.vue';
     $headPath = dirname(__DIR__, 2).'/resources/js/components/ui/table/TableHead.vue';
     $rowPath = dirname(__DIR__, 2).'/resources/js/components/ui/table/TableRow.vue';

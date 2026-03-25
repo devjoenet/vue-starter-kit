@@ -35,6 +35,10 @@ export function resolveFieldState(source: FieldStateSource): FieldState {
     return 'error';
   }
 
+  if (source.state === 'primary') {
+    return 'primary';
+  }
+
   if (source.state === 'info') {
     return 'info';
   }

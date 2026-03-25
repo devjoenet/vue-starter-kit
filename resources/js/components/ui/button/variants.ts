@@ -1,5 +1,4 @@
-import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 type ButtonAppearance = 'filled' | 'tonal' | 'outline' | 'elevated' | 'text' | 'ghost' | 'link';
 type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'info' | 'warning' | 'success' | 'destructive';
@@ -70,61 +69,59 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
   },
 };
 
-export const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[background-color,border-color,box-shadow,color,transform] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-current",
-  {
-    variants: {
-      appearance: {
-        filled: 'shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
-        tonal: 'border shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
-        outline: 'border bg-transparent motion-safe:hover:-translate-y-px motion-safe:active:translate-y-px motion-reduce:transform-none',
-        text: 'border border-transparent bg-transparent shadow-none',
-        elevated: 'border shadow-[var(--elevation-2)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-3)] motion-safe:active:translate-y-px motion-reduce:transform-none',
-        ghost: 'border border-transparent bg-transparent shadow-none',
-        link: 'border border-transparent bg-transparent underline-offset-4 shadow-none hover:underline',
-      },
-      variant: {
-        muted: '',
-        primary: '',
-        secondary: '',
-        info: '',
-        warning: '',
-        success: '',
-        destructive: '',
-      },
-      size: {
-        default: 'h-10 px-4',
-        sm: 'h-9 px-3 text-sm',
-        lg: 'h-12 px-6 text-base',
-        icon: 'size-10',
-        iconSm: 'size-9',
-        iconLg: 'size-12',
-      },
-      rounded: {
-        rounded: 'rounded',
-        xs: 'rounded-xs',
-        sm: 'rounded-sm',
-        md: 'rounded-md',
-        lg: 'rounded-lg',
-        xl: 'rounded-xl',
-        '2xl': 'rounded-2xl',
-        '3xl': 'rounded-3xl',
-        full: 'rounded-full',
-      },
+export const buttonVariants = tv({
+  base: "inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[background-color,border-color,box-shadow,color,transform] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-current",
+  variants: {
+    appearance: {
+      filled: 'shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+      tonal: 'border shadow-[var(--elevation-1)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-2)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+      outline: 'border bg-transparent motion-safe:hover:-translate-y-px motion-safe:active:translate-y-px motion-reduce:transform-none',
+      text: 'border border-transparent bg-transparent shadow-none',
+      elevated: 'border shadow-[var(--elevation-2)] motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[var(--elevation-3)] motion-safe:active:translate-y-px motion-reduce:transform-none',
+      ghost: 'border border-transparent bg-transparent shadow-none',
+      link: 'border border-transparent bg-transparent underline-offset-4 shadow-none hover:underline',
     },
-    compoundVariants: Object.entries(buttonAppearanceVariantClasses).flatMap(([appearance, variants]) =>
-      Object.entries(variants).map(([variant, className]) => ({
-        appearance: appearance as ButtonAppearance,
-        variant: variant as ButtonVariantName,
-        class: className,
-      })),
-    ),
-    defaultVariants: {
-      appearance: 'filled',
-      variant: 'primary',
-      size: 'default',
-      rounded: 'md',
+    variant: {
+      muted: '',
+      primary: '',
+      secondary: '',
+      info: '',
+      warning: '',
+      success: '',
+      destructive: '',
+    },
+    size: {
+      default: 'h-10 px-4',
+      sm: 'h-9 px-3 text-sm',
+      lg: 'h-12 px-6 text-base',
+      icon: 'size-10',
+      iconSm: 'size-9',
+      iconLg: 'size-12',
+    },
+    rounded: {
+      rounded: 'rounded',
+      xs: 'rounded-xs',
+      sm: 'rounded-sm',
+      md: 'rounded-md',
+      lg: 'rounded-lg',
+      xl: 'rounded-xl',
+      '2xl': 'rounded-2xl',
+      '3xl': 'rounded-3xl',
+      full: 'rounded-full',
     },
   },
-);
+  compoundVariants: Object.entries(buttonAppearanceVariantClasses).flatMap(([appearance, variants]) =>
+    Object.entries(variants).map(([variant, className]) => ({
+      appearance: appearance as ButtonAppearance,
+      variant: variant as ButtonVariantName,
+      class: className,
+    })),
+  ),
+  defaultVariants: {
+    appearance: 'filled',
+    variant: 'primary',
+    size: 'default',
+    rounded: 'md',
+  },
+});
 export type ButtonVariants = VariantProps<typeof buttonVariants>;

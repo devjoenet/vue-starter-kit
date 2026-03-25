@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { tableCaptionVariants } from './styles';
+import { tableCaptionVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

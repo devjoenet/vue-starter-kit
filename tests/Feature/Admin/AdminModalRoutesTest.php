@@ -52,8 +52,13 @@ test('users edit route renders edit page', function () {
             ->where('user.id', $target->id)
             ->where('user.name', $target->name)
             ->where('user.email', $target->email)
-            ->has('roles')
             ->has('userRoles')
+            ->missing('roles')
+            ->loadDeferredProps(fn (Assert $reload) => $reload
+                ->has('roles')
+                ->missing('user')
+                ->missing('userRoles')
+            )
         );
 });
 
@@ -123,8 +128,13 @@ test('roles edit route renders edit page', function () {
             ->component('admin/Roles/Edit')
             ->where('role.id', $role->id)
             ->where('role.name', $role->name)
-            ->has('permissionsByGroup')
             ->has('rolePermissions')
+            ->missing('permissionsByGroup')
+            ->loadDeferredProps(fn (Assert $reload) => $reload
+                ->has('permissionsByGroup')
+                ->missing('role')
+                ->missing('rolePermissions')
+            )
         );
 });
 

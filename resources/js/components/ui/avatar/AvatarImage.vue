@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { AvatarImage } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { avatarImageVariants } from './styles';
+import { avatarImageVariants } from './variants';
 
 const props = defineProps<AvatarImageProps & { class?: HTMLAttributes['class'] }>();
 

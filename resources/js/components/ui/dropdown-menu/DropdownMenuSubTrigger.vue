@@ -5,7 +5,7 @@ import { reactiveOmit } from '@vueuse/core';
 import { ChevronRight } from 'lucide-vue-next';
 import { DropdownMenuSubTrigger, useForwardProps } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { dropdownMenuSubTriggerVariants } from './styles';
+import { dropdownMenuSubTriggerVariants } from './variants';
 
 const props = defineProps<
   DropdownMenuSubTriggerProps & {

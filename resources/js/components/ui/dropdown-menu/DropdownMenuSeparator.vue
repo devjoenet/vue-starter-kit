@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 import { reactiveOmit } from '@vueuse/core';
 import { DropdownMenuSeparator } from 'reka-ui';
 import { cn } from 'tailwind-variants';
-import { dropdownMenuSeparatorVariants } from './styles';
+import { dropdownMenuSeparatorVariants } from './variants';
 
 const props = defineProps<
   DropdownMenuSeparatorProps & {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
-import { cardDescriptionVariants } from './styles';
+import { cardDescriptionVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

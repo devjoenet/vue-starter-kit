@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 import { cn } from 'tailwind-variants';
 import Separator from '@/components/ui/separator/Separator.vue';
-import { sidebarSeparatorVariants } from './styles';
+import { sidebarSeparatorVariants } from './variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];

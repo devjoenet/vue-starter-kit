@@ -138,7 +138,7 @@ const destroyPermission = () => {
         </template>
       </AdminPageIntro>
 
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(18rem,0.82fr)]">
+      <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
         <PermissionEditorForm
           id="admin-permissions-edit-form-card"
           class="motion-step"
@@ -171,7 +171,7 @@ const destroyPermission = () => {
           @submit="updatePermission"
         />
 
-        <AdminEditorAsideCard class="motion-step" style="--motion-order: 2">
+        <AdminEditorAsideCard class="motion-step xl:self-start" style="--motion-order: 2">
           <p class="section-kicker">What stays stable</p>
           <h2 class="text-lg font-semibold tracking-tight">The key is fixed. The catalog language is not.</h2>
           <p class="text-sm leading-6 text-muted-foreground">
