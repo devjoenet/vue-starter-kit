@@ -117,7 +117,13 @@ const hasLinks = computed(() => links.value.length > 0);
 
     <div v-if="hasLinks" class="overflow-hidden rounded-[1.75rem] border border-border/70 shadow-(--elevation-1)">
       <div class="grid gap-px bg-border/60 md:grid-cols-3">
-        <Link v-for="item in links" :key="item.title" :href="item.href" :prefetch="['hover', 'click']" :class="['group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none', toneClasses[item.tone].card]">
+        <Link
+          v-for="item in links"
+          :key="item.title"
+          :href="item.href"
+          :prefetch="['hover', 'click']"
+          :class="['group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none', toneClasses[item.tone].card]"
+        >
           <span :class="['absolute inset-x-0 top-0 h-1 origin-left scale-x-80 transition-transform duration-500 ease-(--motion-ease-out-quint) group-hover:scale-x-100 motion-reduce:transform-none', toneClasses[item.tone].beam]" />
 
           <div class="flex h-full flex-col justify-between gap-6">

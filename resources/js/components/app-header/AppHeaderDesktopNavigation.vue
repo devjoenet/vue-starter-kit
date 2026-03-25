@@ -20,7 +20,11 @@ const activeItemStyles = 'bg-primary/10 text-primary';
     <NavigationMenu class="ml-10 flex h-full items-stretch">
       <NavigationMenuList class="flex h-full items-stretch space-x-2">
         <NavigationMenuItem v-for="item in items" :key="item.title" class="relative flex h-full items-center">
-          <Link :class="[navigationMenuTriggerStyle(), whenCurrentUrl(item.href, activeItemStyles), 'cursor-pointer rounded-full border border-transparent px-4 hover:border-primary/18 hover:bg-primary/6']" :href="item.href" :prefetch="['hover', 'click']">
+          <Link
+            :class="[navigationMenuTriggerStyle(), whenCurrentUrl(item.href, activeItemStyles), 'cursor-pointer rounded-full border border-transparent px-4 hover:border-primary/18 hover:bg-primary/6']"
+            :href="item.href"
+            :prefetch="['hover', 'click']"
+          >
             <component :is="item.icon" v-if="item.icon" class="mr-2 h-4 w-4" />
             {{ item.title }}
           </Link>
