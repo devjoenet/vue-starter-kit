@@ -170,11 +170,7 @@ const destroyUser = () => {
         <div id="admin-users-edit-roles-card" class="motion-step xl:col-span-2" style="--motion-order: 2">
           <Deferred data="roles">
             <template #fallback>
-              <AssignmentTableCard
-                description="Loading the available roles so you can review and adjust account access without leaving this editor."
-                results-label="Loading roles"
-                title="Role assignments"
-              >
+              <AssignmentTableCard description="Loading the available roles so you can review and adjust account access without leaving this editor." results-label="Loading roles" title="Role assignments">
                 <div class="space-y-4 p-4 md:p-6">
                   <div class="grid gap-3 md:hidden">
                     <div v-for="row in 3" :key="`admin-users-edit-roles-loading-mobile-${row}`" class="rounded-[1.25rem] border border-border/60 bg-background/60 px-4 py-4">
@@ -214,17 +210,11 @@ const destroyUser = () => {
               </AssignmentTableCard>
             </template>
 
-            <UserRoleAssignmentTable
-              :can-assign="canAssignRoles"
-              :error="rolesForm.errors.roles"
-              :roles="roles ?? []"
-              :selected-role-names="selectedRoles"
-              @toggle-role="(name, value) => toggleSelectedValue(name, value)"
-            />
+            <UserRoleAssignmentTable :can-assign="canAssignRoles" :error="rolesForm.errors.roles" :roles="roles ?? []" :selected-role-names="selectedRoles" @toggle-role="(name, value) => toggleSelectedValue(name, value)" />
           </Deferred>
         </div>
 
-        <aside class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
+        <aside class="motion-step xl:sticky xl:top-6 xl:col-start-2 xl:row-start-1 xl:self-start" style="--motion-order: 3">
           <EditPageActionRow
             id="admin-users-edit-actions"
             class="xl:ml-auto xl:w-full"

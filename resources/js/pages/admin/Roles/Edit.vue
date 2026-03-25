@@ -169,11 +169,7 @@ const destroyRole = () => {
         <div id="admin-roles-edit-permissions-card" class="motion-step xl:col-span-2" style="--motion-order: 2">
           <Deferred data="permissionsByGroup">
             <template #fallback>
-              <AssignmentTableCard
-                description="Loading the permission catalog so you can review and adjust this role's access footprint without leaving the editor."
-                results-label="Loading permissions"
-                title="Permission assignments"
-              >
+              <AssignmentTableCard description="Loading the permission catalog so you can review and adjust this role's access footprint without leaving the editor." results-label="Loading permissions" title="Permission assignments">
                 <div class="space-y-4 p-4 md:p-6">
                   <div class="grid gap-3 md:hidden">
                     <div v-for="row in 3" :key="`admin-roles-edit-permissions-loading-mobile-${row}`" class="rounded-[1.25rem] border border-border/60 bg-background/60 px-4 py-4">
@@ -226,7 +222,7 @@ const destroyRole = () => {
           </Deferred>
         </div>
 
-        <aside class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start" style="--motion-order: 3">
+        <aside class="motion-step xl:sticky xl:top-6 xl:col-start-2 xl:row-start-1 xl:self-start" style="--motion-order: 3">
           <EditPageActionRow
             id="admin-roles-edit-actions"
             class="xl:ml-auto xl:w-full"

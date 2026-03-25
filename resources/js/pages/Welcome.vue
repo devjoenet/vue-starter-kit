@@ -119,7 +119,7 @@ const buildTargets = [
 
         <section id="welcome-page-build-targets" class="welcome-foundation-shell motion-stage relative overflow-hidden rounded-4xl px-6 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
           <div class="relative z-10 grid items-start gap-8 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-12">
-            <aside id="welcome-page-proof-panel" class="motion-step relative z-[2] max-w-[23rem] border-t pt-4 [border-top-color:color-mix(in_oklab,var(--border)_60%,transparent)]" style="--motion-order: 0">
+            <aside id="welcome-page-proof-panel" class="motion-step relative z-[2] max-w-[23rem] border-t [border-top-color:color-mix(in_oklab,var(--border)_60%,transparent)] pt-4" style="--motion-order: 0">
               <p class="font-handwritten text-2xl font-semibold text-primary">One starter. Many surfaces.</p>
               <p class="mt-4 max-w-md text-lg leading-8 text-foreground sm:text-[1.35rem]">Marketing pages, demos, client portals, and internal tools should feel like one system, not separate products.</p>
             </aside>
@@ -131,7 +131,7 @@ const buildTargets = [
                 <li
                   v-for="buildTarget in buildTargets"
                   :key="buildTarget.title"
-                  class="flex min-h-14 w-full items-center gap-[0.65rem] rounded-[1rem] border bg-[color-mix(in_oklab,var(--surface-panel)_72%,transparent)] px-4 py-[0.9rem] text-[0.9rem] font-semibold tracking-[0.01em] [border-color:color-mix(in_oklab,var(--border)_64%,transparent)]"
+                  class="flex min-h-14 w-full items-center gap-[0.65rem] rounded-[1rem] border [border-color:color-mix(in_oklab,var(--border)_64%,transparent)] bg-[color-mix(in_oklab,var(--surface-panel)_72%,transparent)] px-4 py-[0.9rem] text-[0.9rem] font-semibold tracking-[0.01em]"
                 >
                   <span :class="buildTarget.markerClass" class="size-2 rounded-full" />
                   <span>{{ buildTarget.title }}</span>
