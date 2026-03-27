@@ -13,6 +13,8 @@ use App\Actions\Admin\Users\CreateUser;
 use App\Actions\Admin\Users\DeleteUser;
 use App\Actions\Admin\Users\SyncUserRoles;
 use App\Actions\Admin\Users\UpdateUser;
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Settings\DeleteProfile;
 use App\Actions\Settings\UpdatePassword;
 use App\Actions\Settings\UpdateProfile;
@@ -36,9 +38,11 @@ use App\Support\Data\Admin\Users\UserListItemData;
 use App\Support\Data\Auth\AuthenticatedUserData;
 use App\Support\Data\Auth\SharedAuthData;
 use App\Support\Data\Settings\UpdateProfileData;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use Spatie\LaravelData\Data;
 
-dataset('backend_action_classes', [
+dataset('project_write_action_classes', [
     CreateUser::class,
     UpdateUser::class,
     DeleteUser::class,
@@ -53,6 +57,11 @@ dataset('backend_action_classes', [
     UpdateProfile::class,
     DeleteProfile::class,
     UpdatePassword::class,
+]);
+
+dataset('fortify_action_adapters', [
+    [CreateNewUser::class, CreatesNewUsers::class, 'create'],
+    [ResetUserPassword::class, ResetsUserPasswords::class, 'reset'],
 ]);
 
 dataset('backend_data_classes', [
@@ -78,11 +87,14 @@ dataset('backend_data_classes', [
     UpdateProfileData::class,
 ]);
 
-it('keeps admin and settings write orchestration in final action classes with typed handle signatures', function (string $actionClass): void {
+it('keeps internal write orchestration on final action classes with a single typed handle method', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
+    $publicMethods = backendArchitectureDeclaredPublicMethodNames($reflection);
 
     expect($reflection->isFinal())->toBeTrue();
+    expect($reflection->hasMethod('__invoke'))->toBeFalse();
     expect($reflection->hasMethod('handle'))->toBeTrue();
+    expect(array_diff($publicMethods, ['__construct', 'handle']))->toBe([]);
 
     /** @var ReflectionMethod $handleMethod */
     $handleMethod = $reflection->getMethod('handle');
@@ -93,7 +105,31 @@ it('keeps admin and settings write orchestration in final action classes with ty
     foreach ($handleMethod->getParameters() as $parameter) {
         expect($parameter->hasType())->toBeTrue();
     }
-})->with('backend_action_classes');
+})->with('project_write_action_classes');
+
+it('keeps internal write actions small enough for single-purpose handle methods', function (string $actionClass): void {
+    $reflection = new ReflectionClass($actionClass);
+    $handleMethod = $reflection->getMethod('handle');
+
+    expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
+})->with('project_write_action_classes');
+
+it('keeps Fortify adapter actions on their vendor contract methods instead of the project handle api', function (
+    string $actionClass,
+    string $contract,
+    string $contractMethod,
+): void {
+    $reflection = new ReflectionClass($actionClass);
+
+    expect($reflection->isFinal())->toBeTrue();
+    expect($reflection->implementsInterface($contract))->toBeTrue();
+    expect($reflection->hasMethod($contractMethod))->toBeTrue();
+    expect($reflection->hasMethod('handle'))->toBeFalse();
+    expect(array_diff(
+        backendArchitectureDeclaredPublicMethodNames($reflection),
+        ['__construct', $contractMethod],
+    ))->toBe([]);
+})->with('fortify_action_adapters');
 
 it('uses spatie data objects for non-trivial admin and shared payload contracts', function (string $dataClass): void {
     $reflection = new ReflectionClass($dataClass);
@@ -101,3 +137,26 @@ it('uses spatie data objects for non-trivial admin and shared payload contracts'
     expect($reflection->isFinal())->toBeTrue();
     expect($reflection->isSubclassOf(Data::class))->toBeTrue();
 })->with('backend_data_classes');
+
+/**
+ * @return list<string>
+ */
+function backendArchitectureDeclaredPublicMethodNames(ReflectionClass $reflection): array
+{
+    $methods = array_values(array_map(
+        fn (ReflectionMethod $method): string => $method->getName(),
+        array_filter(
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC),
+            fn (ReflectionMethod $method): bool => $method->getDeclaringClass()->getName() === $reflection->getName(),
+        ),
+    ));
+
+    sort($methods);
+
+    return $methods;
+}
+
+function backendArchitectureMethodLineCount(ReflectionMethod $method): int
+{
+    return $method->getEndLine() - $method->getStartLine() + 1;
+}

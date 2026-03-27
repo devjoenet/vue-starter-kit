@@ -42,9 +42,7 @@ class Permission extends SpatiePermission
         return $this->belongsTo(PermissionGroup::class);
     }
 
-    /**
-     * Accessor for the permission group's canonical slug.
-     */
+    /** Accessor for the permission group's canonical slug. */
     protected function group(): Attribute
     {
         return Attribute::get(function (): string {
@@ -58,9 +56,7 @@ class Permission extends SpatiePermission
         });
     }
 
-    /**
-     * Accessor for the human-facing label of the permission group.
-     */
+    /** Accessor for the human-facing label of the permission group. */
     protected function groupLabel(): Attribute
     {
         return Attribute::get(function (): string {
@@ -74,9 +70,7 @@ class Permission extends SpatiePermission
         });
     }
 
-    /**
-     * Accessor for the permission group's descriptive copy.
-     */
+    /** Accessor for the permission group's descriptive copy. */
     protected function groupDescription(): Attribute
     {
         return Attribute::get(
@@ -84,9 +78,7 @@ class Permission extends SpatiePermission
         );
     }
 
-    /**
-     * Accessor for the terminal action segment of a permission key.
-     */
+    /** Accessor for the terminal action segment of a permission key. */
     protected function action(): Attribute
     {
         return Attribute::get(function (): string {
@@ -96,9 +88,7 @@ class Permission extends SpatiePermission
         });
     }
 
-    /**
-     * Accessor for the preferred display label shown in the admin catalog.
-     */
+    /** Accessor for the preferred display label shown in the admin catalog. */
     protected function displayLabel(): Attribute
     {
         return Attribute::get(function (): string {

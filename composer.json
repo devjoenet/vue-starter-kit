@@ -76,7 +76,7 @@
       "@php -r \"file_exists('.env') || copy('.env.codex', '.env');\"",
       "@php artisan key:generate",
       "@php artisan migrate --force",
-      "@php artian db:seed",
+      "@php artisan db:seed",
       "npm run build",
       "@ide",
       "@format"
@@ -87,7 +87,7 @@
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php artisan key:generate",
       "@php artisan migrate --force",
-      "@php artian db:seed",
+      "@php artisan db:seed",
       "npm run build",
       "@ide",
       "@format"

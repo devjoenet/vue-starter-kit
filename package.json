@@ -10,7 +10,7 @@
     "format:check": "prettier --check resources/",
     "lint": "eslint . --fix",
     "test:frontend": "npm run format:check && npm run typecheck",
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "php artisan wayfinder:generate --no-interaction && vue-tsc --noEmit",
     "types:generate": "composer types:generate"
   },
   "devDependencies": {

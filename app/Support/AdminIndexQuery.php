@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 final readonly class AdminIndexQuery
 {
-    /**
-     * @param  array<string, list<string>>  $filters
-     */
+    /** @param  array<string, list<string>>  $filters */
     public function __construct(
         public string $sort,
         public string $direction,
@@ -67,9 +65,7 @@ final readonly class AdminIndexQuery
         );
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     public function filterValues(string $key): array
     {
         return $this->filters[$key] ?? [];

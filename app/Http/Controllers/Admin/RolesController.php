@@ -26,6 +26,7 @@ use App\Support\Data\Admin\Roles\UpdateRoleData;
 use App\Support\GroupedPermissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -33,52 +34,12 @@ final class RolesController extends Controller
 {
     public function index(Request $request): Response
     {
-        $indexQuery = AdminIndexQuery::fromRequest(
-            request: $request,
-            allowedSorts: ['id', 'display_name', 'slug', 'users'],
-            allowedFilters: ['display_name', 'slug', 'users'],
-        );
-
-        $roles = Role::query()
-            ->select(['id', 'name'])
-            ->withCount('users')
-            ->get()
-            ->map(fn (Role $role): array => RoleListItemData::fromModel($role)->all());
-
-        $filteredRoles = $roles
-            ->when(
-                $indexQuery->filterValues('display_name') !== [],
-                fn ($collection) => $collection->whereIn('name', $indexQuery->filterValues('display_name')),
-            )
-            ->when(
-                $indexQuery->filterValues('slug') !== [],
-                fn ($collection) => $collection->whereIn('name', $indexQuery->filterValues('slug')),
-            )
-            ->when(
-                $indexQuery->filterValues('users') !== [],
-                fn ($collection) => $collection->filter(
-                    fn (array $role): bool => in_array((string) $role['users_count'], $indexQuery->filterValues('users'), true),
-                ),
-            );
-
-        $sortedRoles = match ($indexQuery->sort) {
-            'display_name', 'slug' => $filteredRoles->sortBy('name', SORT_NATURAL, $indexQuery->direction === 'desc'),
-            'users' => $filteredRoles->sortBy('users_count', SORT_NUMERIC, $indexQuery->direction === 'desc'),
-            default => $filteredRoles->sortBy('id', SORT_NUMERIC, $indexQuery->direction === 'desc'),
-        };
+        $indexQuery = $this->indexQuery($request);
+        $roles = $this->roleItems();
 
         return Inertia::render('admin/Roles/Index', [
-            'roles' => $sortedRoles->values()->all(),
-            'filterOptions' => RoleIndexFilterOptionsData::from([
-                'display_name' => $roles->pluck('name')->unique()->sort()->values()->all(),
-                'slug' => $roles->pluck('name')->unique()->sort()->values()->all(),
-                'users' => $roles->pluck('users_count')
-                    ->map(fn (int $count): string => (string) $count)
-                    ->unique()
-                    ->sort()
-                    ->values()
-                    ->all(),
-            ])->all(),
+            'roles' => $this->sortRoles($this->filterRoles($roles, $indexQuery), $indexQuery)->values()->all(),
+            'filterOptions' => $this->roleFilterOptions($roles),
             'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
@@ -86,13 +47,7 @@ final class RolesController extends Controller
     public function create(): Response
     {
         return Inertia::render('admin/Roles/Create', [
-            'users' => User::query()
-                ->select(['id', 'name', 'email'])
-                ->orderBy('name')
-                ->orderBy('email')
-                ->get()
-                ->map(fn (User $user): array => AssignableUserData::fromModel($user)->all())
-                ->all(),
+            'users' => $this->assignableUsers(),
         ]);
     }
 
@@ -158,5 +113,83 @@ final class RolesController extends Controller
         }
 
         return $this->backWithSuccess('Permissions updated.');
+    }
+
+    private function indexQuery(Request $request): AdminIndexQuery
+    {
+        return AdminIndexQuery::fromRequest(
+            request: $request,
+            allowedSorts: ['id', 'display_name', 'slug', 'users'],
+            allowedFilters: ['display_name', 'slug', 'users'],
+        );
+    }
+
+    private function roleItems(): Collection
+    {
+        return Role::query()
+            ->select(['id', 'name'])
+            ->withCount('users')
+            ->get()
+            ->map(fn (Role $role): array => RoleListItemData::fromModel($role)->all());
+    }
+
+    private function filterRoles(Collection $roles, AdminIndexQuery $indexQuery): Collection
+    {
+        $displayNameFilters = $indexQuery->filterValues('display_name');
+        $slugFilters = $indexQuery->filterValues('slug');
+        $userFilters = $indexQuery->filterValues('users');
+
+        if ($displayNameFilters !== []) {
+            $roles = $roles->whereIn('name', $displayNameFilters);
+        }
+
+        if ($slugFilters !== []) {
+            $roles = $roles->whereIn('name', $slugFilters);
+        }
+
+        if ($userFilters === []) {
+            return $roles;
+        }
+
+        return $roles->filter(
+            fn (array $role): bool => in_array((string) $role['users_count'], $userFilters, true),
+        );
+    }
+
+    private function sortRoles(Collection $roles, AdminIndexQuery $indexQuery): Collection
+    {
+        return match ($indexQuery->sort) {
+            'display_name', 'slug' => $roles->sortBy('name', SORT_NATURAL, $indexQuery->direction === 'desc'),
+            'users' => $roles->sortBy('users_count', SORT_NUMERIC, $indexQuery->direction === 'desc'),
+            default => $roles->sortBy('id', SORT_NUMERIC, $indexQuery->direction === 'desc'),
+        };
+    }
+
+    private function roleFilterOptions(Collection $roles): array
+    {
+        return RoleIndexFilterOptionsData::from([
+            'display_name' => $roles->pluck('name')->unique()->sort()->values()->all(),
+            'slug' => $roles->pluck('name')->unique()->sort()->values()->all(),
+            'users' => $roles->pluck('users_count')
+                ->map(fn (int $count): string => (string) $count)
+                ->unique()
+                ->sort()
+                ->values()
+                ->all(),
+        ])->all();
+    }
+
+    /**
+     * @return list<array{id: int, name: string, email: string}>
+     */
+    private function assignableUsers(): array
+    {
+        return User::query()
+            ->select(['id', 'name', 'email'])
+            ->orderBy('name')
+            ->orderBy('email')
+            ->get()
+            ->map(fn (User $user): array => AssignableUserData::fromModel($user)->all())
+            ->all();
     }
 }

@@ -23,8 +23,10 @@ use App\Support\Data\Admin\Users\SyncUserRolesData;
 use App\Support\Data\Admin\Users\UpdateUserData;
 use App\Support\Data\Admin\Users\UserIndexFilterOptionsData;
 use App\Support\Data\Admin\Users\UserListItemData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,71 +34,11 @@ final class UsersController extends Controller
 {
     public function index(Request $request): Response
     {
-        $indexQuery = AdminIndexQuery::fromRequest(
-            request: $request,
-            allowedSorts: ['id', 'name', 'email', 'roles'],
-            allowedFilters: ['name', 'email', 'roles'],
-        );
-
-        $users = User::query()
-            ->select(['id', 'name', 'email'])
-            ->with(['roles:id,name'])
-            ->when(
-                $indexQuery->filterValues('name') !== [],
-                fn ($query) => $query->whereIn('name', $indexQuery->filterValues('name')),
-            )
-            ->when(
-                $indexQuery->filterValues('email') !== [],
-                fn ($query) => $query->whereIn('email', $indexQuery->filterValues('email')),
-            )
-            ->when(
-                $indexQuery->filterValues('roles') !== [],
-                fn ($query) => $query->whereHas(
-                    'roles',
-                    fn ($rolesQuery) => $rolesQuery->whereIn('name', $indexQuery->filterValues('roles')),
-                ),
-            )
-            ->when(
-                $indexQuery->sort === 'roles',
-                fn ($query) => $query
-                    ->withMin('roles as sort_role_name', 'name')
-                    ->orderBy('sort_role_name', $indexQuery->direction)
-                    ->orderBy('id'),
-                function ($query) use ($indexQuery): void {
-                    $sortColumn = match ($indexQuery->sort) {
-                        'name' => 'name',
-                        'email' => 'email',
-                        default => 'id',
-                    };
-
-                    $query->orderBy($sortColumn, $indexQuery->direction)->orderBy('id');
-                },
-            )
-            ->paginate(15)
-            ->through(fn (User $user): array => UserListItemData::fromModel($user)->all())
-            ->withQueryString();
+        $indexQuery = $this->indexQuery($request);
 
         return Inertia::render('admin/Users/Index', [
-            'users' => $users,
-            'filterOptions' => UserIndexFilterOptionsData::from([
-                'name' => User::query()
-                    ->select('name')
-                    ->distinct()
-                    ->orderBy('name')
-                    ->pluck('name')
-                    ->all(),
-                'email' => User::query()
-                    ->select('email')
-                    ->distinct()
-                    ->orderBy('email')
-                    ->pluck('email')
-                    ->all(),
-                'roles' => Role::query()
-                    ->select('name')
-                    ->orderBy('name')
-                    ->pluck('name')
-                    ->all(),
-            ])->all(),
+            'users' => $this->users($indexQuery),
+            'filterOptions' => $this->userFilterOptions(),
             'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ]);
     }
@@ -121,11 +63,7 @@ final class UsersController extends Controller
     {
         return Inertia::render('admin/Users/Edit', [
             'user' => fn (): array => EditableUserData::fromModel($user)->all(),
-            'roles' => Inertia::defer(fn (): array => Role::query()
-                ->orderBy('name')
-                ->get(['id', 'name'])
-                ->map(fn (Role $role): array => RoleOptionData::fromModel($role)->all())
-                ->all()),
+            'roles' => Inertia::defer(fn (): array => $this->editableRoles()),
             'userRoles' => fn (): array => $user->getRoleNames()->values()->all(),
         ]);
     }
@@ -170,5 +108,110 @@ final class UsersController extends Controller
         }
 
         return $this->backWithSuccess('Roles updated.');
+    }
+
+    private function indexQuery(Request $request): AdminIndexQuery
+    {
+        return AdminIndexQuery::fromRequest(
+            request: $request,
+            allowedSorts: ['id', 'name', 'email', 'roles'],
+            allowedFilters: ['name', 'email', 'roles'],
+        );
+    }
+
+    private function users(AdminIndexQuery $indexQuery): LengthAwarePaginator
+    {
+        return $this->usersQuery($indexQuery)
+            ->paginate(15)
+            ->through(fn (User $user): array => UserListItemData::fromModel($user)->all())
+            ->withQueryString();
+    }
+
+    private function usersQuery(AdminIndexQuery $indexQuery): Builder
+    {
+        $nameFilters = $indexQuery->filterValues('name');
+        $emailFilters = $indexQuery->filterValues('email');
+        $roleFilters = $indexQuery->filterValues('roles');
+
+        $query = User::query()
+            ->select(['id', 'name', 'email'])
+            ->with(['roles:id,name']);
+
+        if ($nameFilters !== []) {
+            $query->whereIn('name', $nameFilters);
+        }
+
+        if ($emailFilters !== []) {
+            $query->whereIn('email', $emailFilters);
+        }
+
+        if ($roleFilters !== []) {
+            $query->whereHas('roles', fn (Builder $rolesQuery): Builder => $rolesQuery->whereIn('name', $roleFilters));
+        }
+
+        $this->applyUserSorting($query, $indexQuery);
+
+        return $query;
+    }
+
+    private function applyUserSorting(Builder $query, AdminIndexQuery $indexQuery): void
+    {
+        if ($indexQuery->sort === 'roles') {
+            $query->withMin('roles as sort_role_name', 'name')
+                ->orderBy('sort_role_name', $indexQuery->direction)
+                ->orderBy('id');
+
+            return;
+        }
+
+        $query->orderBy($this->userSortColumn($indexQuery->sort), $indexQuery->direction)
+            ->orderBy('id');
+    }
+
+    private function userSortColumn(string $sort): string
+    {
+        return match ($sort) {
+            'name' => 'name',
+            'email' => 'email',
+            default => 'id',
+        };
+    }
+
+    private function userFilterOptions(): array
+    {
+        return UserIndexFilterOptionsData::from([
+            'name' => $this->distinctUserValues('name'),
+            'email' => $this->distinctUserValues('email'),
+            'roles' => Role::query()
+                ->select('name')
+                ->orderBy('name')
+                ->pluck('name')
+                ->all(),
+        ])->all();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function distinctUserValues(string $column): array
+    {
+        return User::query()
+            ->select($column)
+            ->distinct()
+            ->orderBy($column)
+            ->pluck($column)
+            ->all();
+    }
+
+    /**
+     * @return list<array{id: int, name: string}>
+     */
+    private function editableRoles(): array
+    {
+        return Role::query()
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (Role $role): array => RoleOptionData::fromModel($role)->all())
+            ->all();
     }
 }

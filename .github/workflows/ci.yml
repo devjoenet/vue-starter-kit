@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PHP_TEST_TARGETS: >-
+        tests/Unit/AdminControllerArchitectureGuidelinesTest.php
+        tests/Unit/BackendArchitectureContractsTest.php
+        tests/Feature/Admin
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          extensions: mbstring, pdo_sqlite, sqlite3
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Run Pint
+        run: vendor/bin/pint --test
+
+      - name: Run targeted PHP tests
+        run: php artisan test --compact $PHP_TEST_TARGETS
+
+      - name: Run frontend typecheck
+        run: npm run typecheck
+
+      - name: Run frontend build
+        run: npm run build

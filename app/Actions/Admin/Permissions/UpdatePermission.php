@@ -10,13 +10,9 @@ use App\Support\PermissionGroupCatalog;
 
 final readonly class UpdatePermission
 {
-    public function __construct(
-        private PermissionGroupCatalog $permissionGroupCatalog,
-    ) {}
-
-    public function handle(Permission $permission, UpdatePermissionData $data): Permission
+    public static function handle(Permission $permission, UpdatePermissionData $data): Permission
     {
-        $group = $this->permissionGroupCatalog->upsert(
+        $group = new PermissionGroupCatalog()->upsert(
             slug: $data->group,
             label: $data->groupLabel,
             description: $data->groupDescription,
