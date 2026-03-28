@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-use App\Actions\Admin\Permissions\CreatePermission;
-use App\Actions\Admin\Permissions\DeletePermission;
-use App\Actions\Admin\Permissions\IndexPermissions;
-use App\Actions\Admin\Permissions\UpdatePermission;
-use App\Actions\Admin\Roles\CreateRole;
-use App\Actions\Admin\Roles\DeleteRole;
-use App\Actions\Admin\Roles\GetAssignableUsers;
-use App\Actions\Admin\Roles\IndexRoles;
-use App\Actions\Admin\Roles\SyncRolePermissions;
-use App\Actions\Admin\Roles\UpdateRole;
-use App\Actions\Admin\Users\CreateUser;
-use App\Actions\Admin\Users\DeleteUser;
-use App\Actions\Admin\Users\GetEditableRoles;
-use App\Actions\Admin\Users\IndexUsers;
-use App\Actions\Admin\Users\SyncUserRoles;
-use App\Actions\Admin\Users\UpdateUser;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\UsersController;
-use App\Support\GroupedPermissions;
+use App\Http\Admin\Permissions\Controllers\PermissionsController;
+use App\Http\Admin\Roles\Controllers\RolesController;
+use App\Http\Admin\Users\Controllers\UsersController;
+use App\Modules\Admin\Permissions\Actions\CreatePermission;
+use App\Modules\Admin\Permissions\Actions\DeletePermission;
+use App\Modules\Admin\Permissions\Actions\UpdatePermission;
+use App\Modules\Admin\Permissions\Queries\IndexPermissions;
+use App\Modules\Admin\Roles\Actions\CreateRole;
+use App\Modules\Admin\Roles\Actions\DeleteRole;
+use App\Modules\Admin\Roles\Actions\SyncRolePermissions;
+use App\Modules\Admin\Roles\Actions\UpdateRole;
+use App\Modules\Admin\Roles\Queries\GetAssignableUsers;
+use App\Modules\Admin\Roles\Queries\IndexRoles;
+use App\Modules\Admin\Roles\Support\GroupedPermissions;
+use App\Modules\Admin\Users\Actions\CreateUser;
+use App\Modules\Admin\Users\Actions\DeleteUser;
+use App\Modules\Admin\Users\Actions\SyncUserRoles;
+use App\Modules\Admin\Users\Actions\UpdateUser;
+use App\Modules\Admin\Users\Queries\GetEditableRoles;
+use App\Modules\Admin\Users\Queries\IndexUsers;
 use Illuminate\Http\RedirectResponse;
 
 dataset('admin_controller_classes', [

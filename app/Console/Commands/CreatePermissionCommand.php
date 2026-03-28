@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Actions\Admin\Permissions\CreatePermission;
 use App\Models\PermissionGroup;
-use App\Support\Data\Admin\Permissions\CreatePermissionData;
-use App\Support\PermissionGroupCatalog;
-use App\Support\PermissionNormalizer;
+use App\Modules\Admin\Permissions\Actions\CreatePermission;
+use App\Modules\Admin\Permissions\DTOs\CreatePermissionData;
+use App\Modules\Admin\Permissions\Support\PermissionGroupCatalog;
+use App\Modules\Admin\Permissions\Support\PermissionNormalizer;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;

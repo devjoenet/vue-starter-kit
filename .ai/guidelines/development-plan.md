@@ -38,6 +38,18 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Local Composer verification now includes `style:fix`, `phpstan`, `rector`, `test:type-coverage`, and `test:parallel`.
 - Phase 3 is now the active workstream.
 
+### 2026-03-28
+
+- Phase 3 is complete.
+- Admin application code now lives under `app/Modules/Admin/{Permissions,Roles,Users,Shared}` with slice-owned `Actions`, `Queries`, `DTOs`, `Support`, and `Exceptions`.
+- Admin HTTP transport now lives under `app/Http/Admin/{Permissions,Roles,Users}/Controllers|Requests`.
+- Settings application code now lives under `app/Modules/Settings`, and settings transport now lives under `app/Http/Settings/{Profile,Password,TwoFactor}/Controllers|Requests`.
+- Auth DTOs and Fortify adapter actions now live under `app/Modules/Auth`.
+- Legacy PHP class files were removed from `app/Actions`, `app/Support/Data`, `app/Support/Admin`, `app/Http/Controllers/Admin|Settings`, and `app/Http/Requests/Admin|Settings`.
+- Wayfinder and TypeScript contracts were regenerated after the controller and form request namespace move.
+- Backend architecture tests now enforce module-owned actions, queries, DTOs, support collaborators, and slice-oriented HTTP transport namespaces.
+- Phase 4 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -79,7 +91,7 @@ The main remaining problems are structural inconsistencies:
 - `AppServiceProvider` has almost no application bindings yet.
 - `resources/js/types/page-props.ts` is still a monolithic manual mirror of backend payloads.
 - The base test harness still reflects the default starter setup.
-- Admin read-side collaborators still live in legacy shared folders instead of domain-owned slice locations.
+- Selective contracts and provider bindings are still mostly absent from the new slice-owned collaborators.
 
 ## Target End State
 
@@ -192,9 +204,9 @@ Key targets:
 - `app/Http/Controllers/Admin/UsersController.php`
 - `app/Http/Controllers/Admin/RolesController.php`
 - `app/Http/Controllers/Admin/PermissionsController.php`
-- `app/Support/AdminIndexQuery.php`
-- `app/Support/GroupedPermissions.php`
-- `app/Support/PermissionGroupCatalog.php`
+- `app/Support/Admin/Shared/AdminIndexQuery.php`
+- `app/Support/Admin/Roles/GroupedPermissions.php`
+- `app/Support/Admin/Permissions/PermissionGroupCatalog.php`
 - `app/Actions/Admin/*`
 
 Definition of done:
@@ -207,6 +219,17 @@ Definition of done:
 
 This phase shifts the starter from shared technical folders toward domain ownership without forcing a big-bang move.
 
+Status: completed on `2026-03-28`.
+
+- Completed work:
+  - moved admin application, DTO, support, and exception classes into `app/Modules/Admin/{Permissions,Roles,Users,Shared}`
+  - moved settings application and DTO classes into `app/Modules/Settings`
+  - moved auth DTOs and Fortify adapter actions into `app/Modules/Auth`
+  - moved admin and settings transport into `app/Http/{Admin|Settings}/{Domain}/Controllers|Requests`
+  - deleted legacy PHP class files from the old technical roots once imports were rewired
+  - regenerated Wayfinder and TypeScript contracts after the namespace move
+  - added Pest architecture coverage for module-owned application code and slice-oriented transport namespaces
+
 - Start placing new and refactored classes into logical domain groupings one slice at a time.
 - Prefer co-locating actions, queries, data objects, contracts, and support collaborators by slice.
 - Use transitional bridges only when necessary, then delete them quickly.
@@ -215,10 +238,11 @@ This phase shifts the starter from shared technical folders toward domain owners
 
 Key targets:
 
-- `app/Actions/**`
-- `app/Support/**`
-- `app/Support/Data/**`
-- `app/Http/Controllers/**`
+- `app/Modules/Admin/**`
+- `app/Modules/Settings/**`
+- `app/Modules/Auth/**`
+- `app/Http/Admin/**`
+- `app/Http/Settings/**`
 - `app/Providers/**`
 
 Definition of done:

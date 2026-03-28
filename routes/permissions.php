@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\UsersController;
+use App\Http\Admin\Permissions\Controllers\PermissionsController;
+use App\Http\Admin\Roles\Controllers\RolesController;
+use App\Http\Admin\Users\Controllers\UsersController;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
