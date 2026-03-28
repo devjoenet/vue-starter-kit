@@ -8,6 +8,7 @@ use App\Actions\Admin\Roles\CreateRole;
 use App\Models\User;
 use App\Support\Data\Admin\Roles\CreateRoleData;
 use App\Support\RoleNameNormalizer;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
@@ -24,10 +25,8 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
 
     protected $description = 'Interactively create a role via the CreateRole action.';
 
-    public function handle(
-        CreateRole $createRole,
-        RoleNameNormalizer $roleNameNormalizer,
-    ): int {
+    public function handle(RoleNameNormalizer $roleNameNormalizer): int
+    {
         intro('Create a role');
 
         $roleNameInput = text(
@@ -43,7 +42,7 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
                         'string',
                         'max:255',
                         Rule::unique('roles', 'name')->where(
-                            fn ($query) => $query->whereNull('deleted_at'),
+                            fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                         ),
                     ]],
                     'name',
@@ -98,7 +97,7 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
             return SymfonyCommand::SUCCESS;
         }
 
-        $role = $createRole->handle(new CreateRoleData(
+        $role = CreateRole::handle(new CreateRoleData(
             name: $normalizedRoleName,
             user_ids: $selectedUserIds,
         ));

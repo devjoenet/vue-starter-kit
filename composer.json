@@ -105,8 +105,24 @@
     "lint": [
       "pint --parallel"
     ],
+    "style:fix": [
+      "pint --parallel"
+    ],
     "test:lint": [
       "pint --parallel --test"
+    ],
+    "phpstan": [
+      "@php -d memory_limit=2G vendor/bin/phpstan analyse --ansi"
+    ],
+    "rector": [
+      "@php vendor/bin/rector process --ansi"
+    ],
+    "test:type-coverage": [
+      "@php -d memory_limit=-1 vendor/bin/pest --type-coverage --min=100"
+    ],
+    "test:parallel": [
+      "@php artisan config:clear --ansi",
+      "@php artisan test --parallel --compact"
     ],
     "test": [
       "@php artisan config:clear --ansi",

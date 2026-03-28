@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Models\User;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -32,7 +33,7 @@ class UpdateUserRequest extends FormRequest
         /** @var User|null $user */
         $user = $this->route('user');
         $emailUniqueRule = Rule::unique('users', 'email')->where(
-            fn ($query) => $query->whereNull('deleted_at'),
+            fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
         );
 
         if ($user !== null) {

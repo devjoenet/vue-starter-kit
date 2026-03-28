@@ -20,9 +20,8 @@ class PasswordController extends Controller
 
     public function update(
         PasswordUpdateRequest $request,
-        UpdatePassword $updatePassword,
     ): RedirectResponse {
-        $updatePassword->handle($request->user(), $request->password);
+        UpdatePassword::handle($request->user(), $request->password);
 
         return back();
     }

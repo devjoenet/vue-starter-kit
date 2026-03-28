@@ -2,8 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Actions\Admin\GetAdminIndex;
 use App\Actions\Admin\Permissions\CreatePermission;
 use App\Actions\Admin\Permissions\DeletePermission;
+use App\Actions\Admin\Permissions\FilterPermissions;
+use App\Actions\Admin\Permissions\GetPermissionFilterOptions;
+use App\Actions\Admin\Permissions\GetPermissionIndexItems;
+use App\Actions\Admin\Permissions\IndexPermissions;
+use App\Actions\Admin\Permissions\SortPermissions;
 use App\Actions\Admin\Permissions\UpdatePermission;
 use App\Actions\Admin\Roles\CreateRole;
 use App\Actions\Admin\Roles\DeleteRole;
@@ -59,6 +65,15 @@ dataset('project_write_action_classes', [
     UpdatePassword::class,
 ]);
 
+dataset('project_query_classes', [
+    GetAdminIndex::class,
+    FilterPermissions::class,
+    GetPermissionFilterOptions::class,
+    GetPermissionIndexItems::class,
+    IndexPermissions::class,
+    SortPermissions::class,
+]);
+
 dataset('fortify_action_adapters', [
     [CreateNewUser::class, CreatesNewUsers::class, 'create'],
     [ResetUserPassword::class, ResetsUserPasswords::class, 'reset'],
@@ -89,17 +104,16 @@ dataset('backend_data_classes', [
 
 it('keeps internal write orchestration on final action classes with a single typed handle method', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
-    $publicMethods = backendArchitectureDeclaredPublicMethodNames($reflection);
 
     expect($reflection->isFinal())->toBeTrue();
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
-    expect($reflection->hasMethod('handle'))->toBeTrue();
-    expect(array_diff($publicMethods, ['__construct', 'handle']))->toBe([]);
+    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toBe(['handle']);
 
     /** @var ReflectionMethod $handleMethod */
     $handleMethod = $reflection->getMethod('handle');
 
     expect($handleMethod->isPublic())->toBeTrue();
+    expect($handleMethod->isStatic())->toBeTrue();
     expect($handleMethod->hasReturnType())->toBeTrue();
 
     foreach ($handleMethod->getParameters() as $parameter) {
@@ -113,6 +127,32 @@ it('keeps internal write actions small enough for single-purpose handle methods'
 
     expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
 })->with('project_write_action_classes');
+
+it('keeps read-side queries on final classes with a single public static handle method', function (string $queryClass): void {
+    $reflection = new ReflectionClass($queryClass);
+
+    expect($reflection->isFinal())->toBeTrue();
+    expect($reflection->hasMethod('__invoke'))->toBeFalse();
+    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toBe(['handle']);
+
+    /** @var ReflectionMethod $handleMethod */
+    $handleMethod = $reflection->getMethod('handle');
+
+    expect($handleMethod->isPublic())->toBeTrue();
+    expect($handleMethod->isStatic())->toBeTrue();
+    expect($handleMethod->hasReturnType())->toBeTrue();
+
+    foreach ($handleMethod->getParameters() as $parameter) {
+        expect($parameter->hasType())->toBeTrue();
+    }
+})->with('project_query_classes');
+
+it('keeps read-side query handlers small enough for focused orchestration', function (string $queryClass): void {
+    $reflection = new ReflectionClass($queryClass);
+    $handleMethod = $reflection->getMethod('handle');
+
+    expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
+})->with('project_query_classes');
 
 it('keeps Fortify adapter actions on their vendor contract methods instead of the project handle api', function (
     string $actionClass,

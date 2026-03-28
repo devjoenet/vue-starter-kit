@@ -9,7 +9,7 @@ use App\Support\Data\Settings\UpdateProfileData;
 
 final class UpdateProfile
 {
-    public function handle(User $user, UpdateProfileData $data): User
+    public static function handle(User $user, UpdateProfileData $data): User
     {
         $user->fill($data->all());
 

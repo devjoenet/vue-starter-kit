@@ -221,7 +221,12 @@ it('uses an extracted table-based permission assignment surface in the role mana
     expect($pageContents)->toContain('router.visit(index.url())');
     expect($pageContents)->toContain('id="admin-roles-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start"');
     expect($pageContents)->toContain('id="admin-roles-edit-permissions-card" class="motion-step xl:col-span-2"');
-    expect($pageContents)->toContain('class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start"');
+    expect($pageContents)->toContain('<aside class="motion-step');
+    expect($pageContents)->toContain('xl:col-start-2');
+    expect($pageContents)->toContain('xl:row-start-1');
+    expect($pageContents)->toContain('xl:sticky');
+    expect($pageContents)->toContain('xl:top-6');
+    expect($pageContents)->toContain('xl:self-start');
     expect($pageContents)->toContain('id="admin-roles-edit-actions"');
     expect($pageContents)->toContain('class="xl:ml-auto xl:w-full"');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
@@ -311,7 +316,12 @@ it('uses extracted details and table-based role assignment surfaces in the user 
     expect($pageContents)->toContain('router.visit(index.url())');
     expect($pageContents)->toContain('id="admin-users-edit-sections" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start"');
     expect($pageContents)->toContain('id="admin-users-edit-roles-card" class="motion-step xl:col-span-2"');
-    expect($pageContents)->toContain('class="motion-step xl:col-start-2 xl:row-start-1 xl:sticky xl:top-6 xl:self-start"');
+    expect($pageContents)->toContain('<aside class="motion-step');
+    expect($pageContents)->toContain('xl:col-start-2');
+    expect($pageContents)->toContain('xl:row-start-1');
+    expect($pageContents)->toContain('xl:sticky');
+    expect($pageContents)->toContain('xl:top-6');
+    expect($pageContents)->toContain('xl:self-start');
     expect($pageContents)->toContain('class="xl:ml-auto xl:w-full"');
     expect($pageContents)->not->toContain('lg:grid-cols-2');
     expect($pageContents)->not->toContain('rounded-xl border border-black/5');

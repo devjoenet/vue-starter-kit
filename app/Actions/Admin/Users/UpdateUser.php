@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 final class UpdateUser
 {
-    public function handle(User $user, UpdateUserData $data): User
+    public static function handle(User $user, UpdateUserData $data): User
     {
         $user->forceFill([
             'name' => $data->name,

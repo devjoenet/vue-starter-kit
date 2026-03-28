@@ -11,7 +11,7 @@ use App\Support\Exceptions\UnknownRolesSelected;
 
 final class SyncUserRoles
 {
-    public function handle(User $user, SyncUserRolesData $data): User
+    public static function handle(User $user, SyncUserRolesData $data): User
     {
         $requestedRoles = collect($data->roles)
             ->unique()

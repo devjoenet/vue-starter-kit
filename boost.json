@@ -19,8 +19,9 @@
         "tailwindcss-development",
         "fortify-development",
         "spatie-laravel-php-standards",
-        "complexity-guardrails",
-        "laravel-actions",
-        "laravel-interfaces-and-di"
+        "create-dto-action",
+        "format-phpunit-tests",
+        "scaffold-module",
+        "task-finalization"
     ]
 }

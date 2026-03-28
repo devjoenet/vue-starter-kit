@@ -48,9 +48,9 @@ final class UsersController extends Controller
         return Inertia::render('admin/Users/Create');
     }
 
-    public function store(StoreUserRequest $request, CreateUser $createUser): RedirectResponse
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $user = $createUser->handle(new CreateUserData(
+        $user = CreateUser::handle(new CreateUserData(
             name: (string) $request->validated('name'),
             email: (string) $request->validated('email'),
             password: (string) $request->validated('password'),
@@ -71,9 +71,8 @@ final class UsersController extends Controller
     public function update(
         UpdateUserRequest $request,
         User $user,
-        UpdateUser $updateUser,
     ): RedirectResponse {
-        $updateUser->handle($user, new UpdateUserData(
+        UpdateUser::handle($user, new UpdateUserData(
             name: (string) $request->validated('name'),
             email: (string) $request->validated('email'),
             password: $request->validated('password'),
@@ -86,9 +85,9 @@ final class UsersController extends Controller
         return $this->backWithSuccess('User updated.');
     }
 
-    public function destroy(User $user, DeleteUser $deleteUser): RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {
-        $deleteUser->handle($user);
+        DeleteUser::handle($user);
 
         return $this->redirectRouteWithSuccess('admin.users.index', [], 'User deleted.');
     }
@@ -96,12 +95,11 @@ final class UsersController extends Controller
     public function syncRoles(
         SyncUserRolesRequest $request,
         User $user,
-        SyncUserRoles $syncUserRoles,
     ): RedirectResponse {
         /** @var list<string> $roleNames */
         $roleNames = $request->validated('roles', []);
 
-        $syncUserRoles->handle($user, new SyncUserRolesData(roles: $roleNames));
+        SyncUserRoles::handle($user, new SyncUserRolesData(roles: $roleNames));
 
         if ($request->boolean('quiet_success')) {
             return back();
@@ -127,6 +125,9 @@ final class UsersController extends Controller
             ->withQueryString();
     }
 
+    /**
+     * @return Builder<User>
+     */
     private function usersQuery(AdminIndexQuery $indexQuery): Builder
     {
         $nameFilters = $indexQuery->filterValues('name');

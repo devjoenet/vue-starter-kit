@@ -8,7 +8,7 @@ use App\Models\User;
 
 final class DeleteUser
 {
-    public function handle(User $user): void
+    public static function handle(User $user): void
     {
         $user->delete();
     }

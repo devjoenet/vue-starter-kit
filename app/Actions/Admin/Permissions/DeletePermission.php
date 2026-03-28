@@ -8,8 +8,8 @@ use App\Models\Permission;
 
 final class DeletePermission
 {
-    public static function handle(Permission $permission): ?bool
+    public static function handle(Permission $permission): void
     {
-        return $permission->delete();
+        $permission->delete();
     }
 }

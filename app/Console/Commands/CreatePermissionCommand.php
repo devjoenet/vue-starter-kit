@@ -7,7 +7,9 @@ namespace App\Console\Commands;
 use App\Actions\Admin\Permissions\CreatePermission;
 use App\Models\PermissionGroup;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
+use App\Support\PermissionGroupCatalog;
 use App\Support\PermissionNormalizer;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
@@ -24,8 +26,8 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
     protected $description = 'Interactively create a permission via the CreatePermission action.';
 
     public function handle(
-        CreatePermission $createPermission,
         PermissionNormalizer $permissionNormalizer,
+        PermissionGroupCatalog $permissionGroupCatalog,
     ): int {
         intro('Create a permission');
 
@@ -102,7 +104,7 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
                             'max:255',
                             'regex:/^[a-z0-9_]+(?:\.[A-Za-z][A-Za-z0-9]*)+$/',
                             Rule::unique('permissions', 'name')->where(
-                                fn ($query) => $query->whereNull('deleted_at'),
+                                fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                             ),
                         ],
                     ],
@@ -168,14 +170,14 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
             return SymfonyCommand::SUCCESS;
         }
 
-        $permission = $createPermission->handle(new CreatePermissionData(
+        $permission = CreatePermission::handle(new CreatePermissionData(
             name: $normalizedPermission['name'],
             label: $normalizedPermission['label'],
             description: $normalizedPermission['description'],
             group: $normalizedPermission['group'],
             groupLabel: $normalizedPermission['group_label'],
             groupDescription: $normalizedPermission['group_description'],
-        ));
+        ), $permissionGroupCatalog);
 
         $this->table(['ID', 'Group', 'Permission'], [
             [$permission->id, $permission->group_label, $permission->display_label],

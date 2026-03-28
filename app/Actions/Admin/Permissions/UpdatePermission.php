@@ -8,11 +8,14 @@ use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\PermissionGroupCatalog;
 
-final readonly class UpdatePermission
+final class UpdatePermission
 {
-    public static function handle(Permission $permission, UpdatePermissionData $data): Permission
-    {
-        $group = new PermissionGroupCatalog()->upsert(
+    public static function handle(
+        Permission $permission,
+        UpdatePermissionData $data,
+        PermissionGroupCatalog $permissionGroupCatalog,
+    ): Permission {
+        $group = $permissionGroupCatalog->upsert(
             slug: $data->group,
             label: $data->groupLabel,
             description: $data->groupDescription,

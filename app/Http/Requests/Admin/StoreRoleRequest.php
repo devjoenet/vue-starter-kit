@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Support\RoleNameNormalizer;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -35,7 +36,7 @@ class StoreRoleRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('roles', 'name')->where(
-                    fn ($query) => $query->whereNull('deleted_at'),
+                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                 ),
             ],
             'user_ids' => ['array'],
@@ -43,7 +44,7 @@ class StoreRoleRequest extends FormRequest
                 'integer',
                 'distinct',
                 Rule::exists('users', 'id')->where(
-                    fn ($query) => $query->whereNull('deleted_at'),
+                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                 ),
             ],
         ];

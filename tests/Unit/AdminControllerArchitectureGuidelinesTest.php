@@ -87,7 +87,8 @@ it('keeps admin write endpoints delegated to action classes', function (
     $method = $reflection->getMethod($methodName);
 
     expect((string) $method->getReturnType())->toBe(RedirectResponse::class);
-    expect(adminControllerParameterTypes($method))->toContain($actionClass);
+    expect(adminControllerParameterTypes($method))->not->toContain($actionClass);
+    expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($actionClass));
 })->with('admin_controller_write_endpoints');
 
 /**
@@ -130,4 +131,30 @@ function adminControllerParameterTypes(ReflectionMethod $method): array
         },
         $method->getParameters(),
     )));
+}
+
+function adminControllerMethodBody(ReflectionMethod $method): string
+{
+    $fileName = $method->getFileName();
+
+    if ($fileName === false) {
+        return '';
+    }
+
+    $lines = file($fileName, FILE_IGNORE_NEW_LINES);
+
+    if ($lines === false) {
+        return '';
+    }
+
+    return implode("\n", array_slice(
+        $lines,
+        $method->getStartLine() - 1,
+        $method->getEndLine() - $method->getStartLine() + 1,
+    ));
+}
+
+function adminControllerStaticHandleCall(string $actionClass): string
+{
+    return sprintf('%s::handle(', basename(str_replace('\\', '/', $actionClass)));
 }
