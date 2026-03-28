@@ -13,15 +13,16 @@ final class IndexPermissions
 {
     public static function handle(Request $request, PermissionGroupCatalog $permissionGroupCatalog): array
     {
-        $indexQuery = GetAdminIndex::handle($request);
-        $permissions = GetPermissionIndexItems::handle();
-        $filteredPermissions = FilterPermissions::handle($permissions, $indexQuery);
-        $sortedPermissions = SortPermissions::handle($filteredPermissions, $indexQuery);
+        $indexQuery = GetAdminIndex::handle(
+            request: $request,
+            allowedSorts: ['id', 'group', 'permission', 'permission_check'],
+            allowedFilters: ['group', 'permission', 'permission_check'],
+        );
 
         return [
-            'permissions' => $sortedPermissions->values()->all(),
+            'permissions' => GetPermissionIndexItems::handle($indexQuery),
             'groups' => $permissionGroupCatalog->options(),
-            'filterOptions' => GetPermissionFilterOptions::handle($permissions)->all(),
+            'filterOptions' => GetPermissionFilterOptions::handle()->all(),
             'query' => AdminIndexQueryData::fromQuery($indexQuery)->all(),
         ];
     }

@@ -14,8 +14,6 @@
 /.phpunit.cache
 /.vscode
 /.zed
-/.ai/**/*.*
-/.agents/**/*.*
 /.claude/**/*.*
 /.gemini/**/*.*
 /.codex/**/*.*

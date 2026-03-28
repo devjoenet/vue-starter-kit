@@ -9,12 +9,21 @@ use Illuminate\Http\Request;
 
 final class GetAdminIndex
 {
-    public static function handle(Request $request): AdminIndexQuery
-    {
+    /**
+     * @param  list<string>  $allowedSorts
+     * @param  list<string>  $allowedFilters
+     */
+    public static function handle(
+        Request $request,
+        array $allowedSorts,
+        array $allowedFilters,
+        string $defaultSort = 'id',
+    ): AdminIndexQuery {
         return AdminIndexQuery::fromRequest(
             request: $request,
-            allowedSorts: ['id', 'group', 'permission', 'permission_check'],
-            allowedFilters: ['group', 'permission', 'permission_check'],
+            allowedSorts: $allowedSorts,
+            allowedFilters: $allowedFilters,
+            defaultSort: $defaultSort,
         );
     }
 }

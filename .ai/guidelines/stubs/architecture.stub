@@ -1,0 +1,60 @@
+## MODULAR ARCHITECTURE
+
+### CORE ARCHITECTURAL PRINCIPLE
+The application is incrementally moving toward **Modules** representing distinct business domains. New slice-oriented work should prefer that structure when it can be introduced cleanly, while existing legacy areas may stay in place until they are actively migrated.
+
+### MODULE BOUNDARIES
+- **Modules must be isolated**. No direct use of another module's Models/Actions.
+- **Communication via Contracts**: Use interfaces in `app/Modules/Domain/Contracts`.
+- **Prefer Events for Decoupling**.
+- **No Cross-Module Database Joins**.
+
+### DIRECTORY STRUCTURE
+*(Procedure: Refer to Skill: 'scaffold-module')*
+
+- **Preferred Logic Target**: `app/Modules/{Domain}/`
+    - `Actions/`: Single-method business logic classes.
+    - `Models/`: Domain-specific Eloquent models.
+    - `DTOs/`: Data transfer objects for grouped inputs and outputs.
+    - `Contracts/`: Interfaces for cross-module interaction.
+    - `Enums/`: Domain enumerations.
+    - `Services/`: Complex logic spanning multiple actions.
+    - `Exceptions/`: Domain-specific exceptions.
+- **Transport**: `app/Http/{Application}/{Domain}/`
+    - `Controllers/`: Bridges HTTP requests to Actions.
+    - `Requests/`: Form Requests for validation.
+    - `Resources/`: Eloquent API Resources for JSON transformation.
+    - `Shared/`: Shared components for all domains.
+- **Migration Reality**: When working in an area that has not been moved yet, follow the existing directory structure for that slice until the migration is intentional and cohesive.
+
+### SHARED COMPONENTS
+- **Definition**: Components that represent genuinely shared platform concerns. As the modular structure grows, prefer placing them in `app/Modules/Shared/`.
+- **Status**: Shared models are considered **Global Contracts**. They may be used directly across module boundaries without additional interfaces.
+- **Limit**: Only truly universal domain concepts should reside in the Shared module.
+### SERVICES
+- **Purpose**: Orchestrate logic spanning multiple Actions or interact with complex external SDKs.
+- **Constraint**: Must adhere to strict typing and constructor property promotion.
+- **Caution**: Avoid "fat services" that violate single-responsibility. Prefer granular Actions.
+
+### EXCEPTIONS
+- **Standard**: Actions must throw domain-specific exceptions (e.g., `UnableToLoginException`) for expected failure states.
+- **Handling**: Controllers are responsible for catching domain exceptions and converting them to HTTP responses (e.g., via `ValidationException`).
+
+### ACTIONS
+*(Procedure: Refer to Skill: 'create-dto-action')*
+
+- **Naming**: Use clear intent-based names such as `CreateUser`, `UpdateRole`, `IndexPermissions`, or `BuildDashboardMetrics`.
+- **Entry Point**: Every action must expose a public static method named `handle()`.
+- **Helpers**: Private helper methods are allowed when they simplify the `handle()` path.
+- **Other Callables**: Additional callable methods may be added when they materially improve clarity or reuse, but they must also be `public static`.
+- **Parameters**: Prefer a single DTO or value object when multiple related inputs travel together, but choose the clearest shape for the slice you are working in.
+- **Isolation**: Return Contracts (e.g. `AuthenticatableWithIdentity`) rather than concrete Models.
+
+### DTOS
+*(Procedure: Refer to Skill: 'create-dto-action')*
+
+- **Structure**: DTOs should be simple data carriers that make action inputs and outputs explicit.
+- **Promotion**: Use constructor property promotion when it keeps the DTO compact and readable.
+- **Mutability**: `final`, `readonly`, and mutable DTOs are all allowed. Choose the simplest option that matches the job and the surrounding slice.
+- **Provisioning**: DTOs are responsible for encapsulating ALL inputs required by the Action.
+- **Factories**: Use static factory methods (e.g., `fromRequest()`) to resolve and inject models/dependencies. The factory is the layer where "finding" data occurs, keeping the Action clean.
