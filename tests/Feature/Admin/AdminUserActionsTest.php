@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Actions\Admin\Users\CreateUser;
-use App\Actions\Admin\Users\DeleteUser;
-use App\Actions\Admin\Users\SyncUserRoles;
-use App\Actions\Admin\Users\UpdateUser;
 use App\Models\Role;
 use App\Models\User;
-use App\Support\Data\Admin\Users\CreateUserData;
-use App\Support\Data\Admin\Users\SyncUserRolesData;
-use App\Support\Data\Admin\Users\UpdateUserData;
-use App\Support\Exceptions\UnknownRolesSelected;
+use App\Modules\Admin\Users\Actions\CreateUser;
+use App\Modules\Admin\Users\Actions\DeleteUser;
+use App\Modules\Admin\Users\Actions\SyncUserRoles;
+use App\Modules\Admin\Users\Actions\UpdateUser;
+use App\Modules\Admin\Users\DTOs\CreateUserData;
+use App\Modules\Admin\Users\DTOs\SyncUserRolesData;
+use App\Modules\Admin\Users\DTOs\UpdateUserData;
+use App\Modules\Admin\Users\Exceptions\UnknownRolesSelected;
 use Illuminate\Support\Facades\Hash;
 
 test('create user action persists a user with a hashed password', function (): void {

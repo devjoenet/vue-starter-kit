@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Actions\Admin\Permissions\CreatePermission;
-use App\Actions\Admin\Permissions\DeletePermission;
-use App\Actions\Admin\Permissions\UpdatePermission;
-use App\Actions\Admin\Roles\CreateRole;
-use App\Actions\Admin\Roles\DeleteRole;
-use App\Actions\Admin\Roles\SyncRolePermissions;
-use App\Actions\Admin\Roles\UpdateRole;
 use App\Models\Permission;
 use App\Models\PermissionGroup;
 use App\Models\Role;
 use App\Models\User;
-use App\Support\Data\Admin\Permissions\CreatePermissionData;
-use App\Support\Data\Admin\Permissions\UpdatePermissionData;
-use App\Support\Data\Admin\Roles\CreateRoleData;
-use App\Support\Data\Admin\Roles\SyncRolePermissionsData;
-use App\Support\Data\Admin\Roles\UpdateRoleData;
-use App\Support\Exceptions\UnknownPermissionsSelected;
-use App\Support\PermissionGroupCatalog;
+use App\Modules\Admin\Permissions\Actions\CreatePermission;
+use App\Modules\Admin\Permissions\Actions\DeletePermission;
+use App\Modules\Admin\Permissions\Actions\UpdatePermission;
+use App\Modules\Admin\Permissions\DTOs\CreatePermissionData;
+use App\Modules\Admin\Permissions\DTOs\UpdatePermissionData;
+use App\Modules\Admin\Permissions\Support\PermissionGroupCatalog;
+use App\Modules\Admin\Roles\Actions\CreateRole;
+use App\Modules\Admin\Roles\Actions\DeleteRole;
+use App\Modules\Admin\Roles\Actions\SyncRolePermissions;
+use App\Modules\Admin\Roles\Actions\UpdateRole;
+use App\Modules\Admin\Roles\DTOs\CreateRoleData;
+use App\Modules\Admin\Roles\DTOs\SyncRolePermissionsData;
+use App\Modules\Admin\Roles\DTOs\UpdateRoleData;
+use App\Modules\Admin\Roles\Exceptions\UnknownPermissionsSelected;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();
