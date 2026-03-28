@@ -9,7 +9,7 @@ use App\Support\Data\Admin\Roles\CreateRoleData;
 
 final class CreateRole
 {
-    public function handle(CreateRoleData $data): Role
+    public static function handle(CreateRoleData $data): Role
     {
         $role = Role::withTrashed()->firstOrNew([
             'name' => $data->name,

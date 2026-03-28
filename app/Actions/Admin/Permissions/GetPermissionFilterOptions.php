@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Actions\Admin\Permissions;
 
 use App\Support\Data\Admin\Permissions\PermissionIndexFilterOptionsData;
 use Illuminate\Support\Collection;
 
-class GetPermissionFilterOptions
+final class GetPermissionFilterOptions
 {
     public static function handle(Collection $permissions): PermissionIndexFilterOptionsData
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Actions\Admin\Permissions;
 
@@ -6,7 +8,7 @@ use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\PermissionIndexItemData;
 use Illuminate\Support\Collection;
 
-class GetPermissionIndexItems
+final class GetPermissionIndexItems
 {
     /** @return Collection<PermissionIndexItemData> */
     public static function handle(): Collection
@@ -21,6 +23,6 @@ class GetPermissionIndexItems
                 'description',
             ])
             ->get()
-            ->map(fn (Permission $permission) => PermissionIndexItemData::fromModel($permission));
+            ->map(fn (Permission $permission): PermissionIndexItemData => PermissionIndexItemData::fromModel($permission));
     }
 }

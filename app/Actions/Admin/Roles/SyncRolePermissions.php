@@ -11,7 +11,7 @@ use App\Support\Exceptions\UnknownPermissionsSelected;
 
 final class SyncRolePermissions
 {
-    public function handle(Role $role, SyncRolePermissionsData $data): Role
+    public static function handle(Role $role, SyncRolePermissionsData $data): Role
     {
         $requestedPermissions = collect($data->permissions)
             ->unique()

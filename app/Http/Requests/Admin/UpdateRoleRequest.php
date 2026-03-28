@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\Role;
 use App\Support\RoleNameNormalizer;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -33,7 +34,7 @@ class UpdateRoleRequest extends FormRequest
         /** @var Role|null $role */
         $role = $this->route('role');
         $nameUniqueRule = Rule::unique('roles', 'name')->where(
-            fn ($query) => $query->whereNull('deleted_at'),
+            fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
         );
 
         if ($role !== null) {

@@ -9,7 +9,7 @@ use App\Support\Data\Admin\Roles\UpdateRoleData;
 
 final class UpdateRole
 {
-    public function handle(Role $role, UpdateRoleData $data): Role
+    public static function handle(Role $role, UpdateRoleData $data): Role
     {
         $role->forceFill([
             'name' => $data->name,

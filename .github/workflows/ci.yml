@@ -11,11 +11,6 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      PHP_TEST_TARGETS: >-
-        tests/Unit/AdminControllerArchitectureGuidelinesTest.php
-        tests/Unit/BackendArchitectureContractsTest.php
-        tests/Feature/Admin
 
     steps:
       - name: Checkout code
@@ -46,10 +41,16 @@ jobs:
           php artisan key:generate --ansi
 
       - name: Run Pint
-        run: vendor/bin/pint --test
+        run: composer test:lint
 
-      - name: Run targeted PHP tests
-        run: php artisan test --compact $PHP_TEST_TARGETS
+      - name: Run PHPStan
+        run: composer phpstan
+
+      - name: Run type coverage
+        run: composer test:type-coverage
+
+      - name: Run parallel test suite
+        run: composer test:parallel
 
       - name: Run frontend typecheck
         run: npm run typecheck

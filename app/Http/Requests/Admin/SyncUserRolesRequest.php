@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -26,7 +27,7 @@ class SyncUserRolesRequest extends FormRequest
                 'string',
                 'distinct',
                 Rule::exists('roles', 'name')->where(
-                    fn ($query) => $query->whereNull('deleted_at'),
+                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                 ),
             ],
         ];

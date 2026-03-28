@@ -4,25 +4,17 @@ declare(strict_types=1);
 
 namespace App\Actions\Admin\Permissions;
 
-use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Models\Permission;
 use App\Support\Data\Admin\Permissions\CreatePermissionData;
 use App\Support\PermissionGroupCatalog;
 
-final readonly class StorePermission
+final class CreatePermission
 {
-    public static function handle(StorePermissionRequest $request): Permission
-    {
-        $data = new CreatePermissionData(
-            name: (string) $request->validated('name'),
-            label: (string) $request->validated('label'),
-            description: $request->validated('description'),
-            group: (string) $request->validated('group'),
-            groupLabel: (string) $request->validated('group_label'),
-            groupDescription: $request->validated('group_description'),
-        );
-
-        $group = new PermissionGroupCatalog()->upsert(
+    public static function handle(
+        CreatePermissionData $data,
+        PermissionGroupCatalog $permissionGroupCatalog,
+    ): Permission {
+        $group = $permissionGroupCatalog->upsert(
             slug: $data->group,
             label: $data->groupLabel,
             description: $data->groupDescription,

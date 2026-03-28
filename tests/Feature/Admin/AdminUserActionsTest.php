@@ -15,7 +15,7 @@ use App\Support\Exceptions\UnknownRolesSelected;
 use Illuminate\Support\Facades\Hash;
 
 test('create user action persists a user with a hashed password', function (): void {
-    $user = app(CreateUser::class)->handle(new CreateUserData(
+    $user = CreateUser::handle(new CreateUserData(
         name: 'Taylor Otwell',
         email: 'taylor@example.com',
         password: 'secret-password',
@@ -35,7 +35,7 @@ test('create user action restores a soft deleted user with the same email', func
 
     $user->delete();
 
-    $restoredUser = app(CreateUser::class)->handle(new CreateUserData(
+    $restoredUser = CreateUser::handle(new CreateUserData(
         name: 'Restored User',
         email: 'archived@example.com',
         password: 'restored-password',
@@ -52,7 +52,7 @@ test('update user action updates profile fields and password when provided', fun
         'password' => Hash::make('old-password'),
     ]);
 
-    app(UpdateUser::class)->handle($user, new UpdateUserData(
+    UpdateUser::handle($user, new UpdateUserData(
         name: 'Updated Name',
         email: 'updated@example.com',
         password: 'new-password',
@@ -66,7 +66,7 @@ test('update user action updates profile fields and password when provided', fun
 test('delete user action soft deletes the user', function (): void {
     $user = User::factory()->create();
 
-    app(DeleteUser::class)->handle($user);
+    DeleteUser::handle($user);
 
     expect(User::query()->find($user->id))->toBeNull();
     expect(User::withTrashed()->find($user->id)?->trashed())->toBeTrue();
@@ -85,7 +85,7 @@ test('sync user roles action syncs the selected roles by name', function (): voi
         'guard_name' => 'web',
     ]);
 
-    app(SyncUserRoles::class)->handle($user, new SyncUserRolesData(
+    SyncUserRoles::handle($user, new SyncUserRolesData(
         roles: ['editor', 'reviewer'],
     ));
 
@@ -96,7 +96,7 @@ test('sync user roles action throws a domain exception when roles are missing', 
     $user = User::factory()->create();
 
     try {
-        app(SyncUserRoles::class)->handle($user, new SyncUserRolesData(
+        SyncUserRoles::handle($user, new SyncUserRolesData(
             roles: ['missing-role'],
         ));
 

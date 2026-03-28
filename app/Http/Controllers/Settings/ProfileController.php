@@ -29,9 +29,8 @@ class ProfileController extends Controller
 
     public function update(
         ProfileUpdateRequest $request,
-        UpdateProfile $updateProfile,
     ): RedirectResponse {
-        $updateProfile->handle($request->user(), new UpdateProfileData(
+        UpdateProfile::handle($request->user(), new UpdateProfileData(
             name: (string) $request->validated('name'),
             email: (string) $request->validated('email'),
         ));
@@ -39,15 +38,13 @@ class ProfileController extends Controller
         return to_route('profile.edit');
     }
 
-    public function destroy(
-        ProfileDeleteRequest $request,
-        DeleteProfile $deleteProfile,
-    ): RedirectResponse {
+    public function destroy(ProfileDeleteRequest $request): RedirectResponse
+    {
         $user = $request->user();
 
         Auth::logout();
 
-        $deleteProfile->handle($user);
+        DeleteProfile::handle($user);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

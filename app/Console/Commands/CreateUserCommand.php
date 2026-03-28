@@ -9,6 +9,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\Data\Admin\Users\CreateUserData;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
@@ -27,7 +28,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
 
     protected $description = 'Interactively create a user via the CreateUser action.';
 
-    public function handle(CreateUser $createUser): int
+    public function handle(): int
     {
         intro('Create an admin user');
 
@@ -51,7 +52,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
                     'email',
                     'max:255',
                     Rule::unique('users', 'email')->where(
-                        fn ($query) => $query->whereNull('deleted_at'),
+                        fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                     ),
                 ]],
                 'email',
@@ -101,7 +102,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             return SymfonyCommand::SUCCESS;
         }
 
-        $user = $createUser->handle(new CreateUserData(
+        $user = CreateUser::handle(new CreateUserData(
             name: $name,
             email: $email,
             password: $plainPassword,

@@ -51,12 +51,12 @@ final class RolesController extends Controller
         ]);
     }
 
-    public function store(StoreRoleRequest $request, CreateRole $createRole): RedirectResponse
+    public function store(StoreRoleRequest $request): RedirectResponse
     {
         /** @var list<int> $userIds */
         $userIds = $request->validated('user_ids', []);
 
-        $role = $createRole->handle(new CreateRoleData(
+        $role = CreateRole::handle(new CreateRoleData(
             name: (string) $request->validated('name'),
             user_ids: $userIds,
         ));
@@ -76,9 +76,8 @@ final class RolesController extends Controller
     public function update(
         UpdateRoleRequest $request,
         Role $role,
-        UpdateRole $updateRole,
     ): RedirectResponse {
-        $updateRole->handle($role, new UpdateRoleData(
+        UpdateRole::handle($role, new UpdateRoleData(
             name: (string) $request->validated('name'),
         ));
 
@@ -89,9 +88,9 @@ final class RolesController extends Controller
         return $this->backWithSuccess('Role updated.');
     }
 
-    public function destroy(Role $role, DeleteRole $deleteRole): RedirectResponse
+    public function destroy(Role $role): RedirectResponse
     {
-        $deleteRole->handle($role);
+        DeleteRole::handle($role);
 
         return $this->redirectRouteWithSuccess('admin.roles.index', [], 'Role deleted.');
     }
@@ -99,12 +98,11 @@ final class RolesController extends Controller
     public function syncPermissions(
         SyncRolePermissionsRequest $request,
         Role $role,
-        SyncRolePermissions $syncRolePermissions,
     ): RedirectResponse {
         /** @var list<string> $permissionNames */
         $permissionNames = $request->validated('permissions', []);
 
-        $syncRolePermissions->handle($role, new SyncRolePermissionsData(
+        SyncRolePermissions::handle($role, new SyncRolePermissionsData(
             permissions: $permissionNames,
         ));
 

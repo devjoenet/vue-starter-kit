@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -27,7 +28,7 @@ class StoreUserRequest extends FormRequest
                 'email',
                 'max:255',
                 Rule::unique('users', 'email')->where(
-                    fn ($query) => $query->whereNull('deleted_at'),
+                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                 ),
             ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],

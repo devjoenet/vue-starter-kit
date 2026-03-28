@@ -8,7 +8,7 @@ use App\Models\Role;
 
 final class DeleteRole
 {
-    public function handle(Role $role): void
+    public static function handle(Role $role): void
     {
         $role->delete();
     }

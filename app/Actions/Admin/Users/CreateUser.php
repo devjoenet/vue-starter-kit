@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 final class CreateUser
 {
-    public function handle(CreateUserData $data): User
+    public static function handle(CreateUserData $data): User
     {
         $user = User::withTrashed()->firstOrNew([
             'email' => $data->email,

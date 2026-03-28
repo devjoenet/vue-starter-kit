@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\Permissions\CreatePermission;
 use App\Actions\Admin\Permissions\DeletePermission;
 use App\Actions\Admin\Permissions\IndexPermissions;
-use App\Actions\Admin\Permissions\StorePermission;
 use App\Actions\Admin\Permissions\UpdatePermission;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Models\Permission;
+use App\Support\Data\Admin\Permissions\CreatePermissionData;
 use App\Support\Data\Admin\Permissions\PermissionItemData;
 use App\Support\Data\Admin\Permissions\UpdatePermissionData;
 use App\Support\PermissionGroupCatalog;
@@ -40,7 +41,14 @@ final class PermissionsController extends Controller
 
     public function store(StorePermissionRequest $request): RedirectResponse
     {
-        $permission = StorePermission::handle($request);
+        $permission = CreatePermission::handle(new CreatePermissionData(
+            name: (string) $request->validated('name'),
+            label: (string) $request->validated('label'),
+            description: $request->validated('description'),
+            group: (string) $request->validated('group'),
+            groupLabel: (string) $request->validated('group_label'),
+            groupDescription: $request->validated('group_description'),
+        ), $this->permissionGroupCatalog);
 
         return $this->redirectRouteWithSuccess(
             'admin.permissions.edit',
@@ -62,15 +70,14 @@ final class PermissionsController extends Controller
     public function update(
         UpdatePermissionRequest $request,
         Permission $permission,
-        UpdatePermission $updatePermission,
     ): RedirectResponse {
-        $updatePermission->handle($permission, new UpdatePermissionData(
+        UpdatePermission::handle($permission, new UpdatePermissionData(
             label: (string) $request->validated('label'),
             description: $request->validated('description'),
             group: (string) $request->validated('group'),
             groupLabel: (string) $request->validated('group_label'),
             groupDescription: $request->validated('group_description'),
-        ));
+        ), $this->permissionGroupCatalog);
 
         if ($request->boolean('quiet_success')) {
             return back();
@@ -79,11 +86,9 @@ final class PermissionsController extends Controller
         return $this->backWithSuccess('Permission updated.');
     }
 
-    public function destroy(
-        Permission $permission,
-        DeletePermission $deletePermission,
-    ): RedirectResponse {
-        $deletePermission->handle($permission);
+    public function destroy(Permission $permission): RedirectResponse
+    {
+        DeletePermission::handle($permission);
 
         return $this->redirectRouteWithSuccess('admin.permissions.index', [], 'Permission deleted.');
     }

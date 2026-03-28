@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\PermissionGroup;
 use App\Support\PermissionNormalizer;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Override;
@@ -53,7 +54,7 @@ class StorePermissionRequest extends FormRequest
                 'max:255',
                 'regex:/^[a-z0-9_]+(?:\.[A-Za-z][A-Za-z0-9]*)+$/',
                 Rule::unique('permissions', 'name')->where(
-                    fn ($query) => $query->whereNull('deleted_at'),
+                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
                 ),
             ],
             'label' => ['required', 'string', 'max:255'],

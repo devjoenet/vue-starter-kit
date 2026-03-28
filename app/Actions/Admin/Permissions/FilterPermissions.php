@@ -7,7 +7,7 @@ namespace App\Actions\Admin\Permissions;
 use App\Support\AdminIndexQuery;
 use Illuminate\Support\Collection;
 
-class FilterPermissions
+final class FilterPermissions
 {
     public static function handle(Collection $permissions, AdminIndexQuery $indexQuery): Collection
     {

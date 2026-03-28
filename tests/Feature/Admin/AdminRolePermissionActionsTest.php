@@ -19,11 +19,12 @@ use App\Support\Data\Admin\Roles\CreateRoleData;
 use App\Support\Data\Admin\Roles\SyncRolePermissionsData;
 use App\Support\Data\Admin\Roles\UpdateRoleData;
 use App\Support\Exceptions\UnknownPermissionsSelected;
+use App\Support\PermissionGroupCatalog;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();
 
-    $role = app(CreateRole::class)->handle(new CreateRoleData(
+    $role = CreateRole::handle(new CreateRoleData(
         name: 'auditor',
         user_ids: $users->pluck('id')->all(),
     ));
@@ -41,7 +42,7 @@ test('create role action restores a soft deleted role with the same name', funct
 
     $role->delete();
 
-    $restoredRole = app(CreateRole::class)->handle(new CreateRoleData(
+    $restoredRole = CreateRole::handle(new CreateRoleData(
         name: 'auditor',
         user_ids: [],
     ));
@@ -56,7 +57,7 @@ test('update role action updates the role name', function (): void {
         'guard_name' => 'web',
     ]);
 
-    app(UpdateRole::class)->handle($role, new UpdateRoleData(
+    UpdateRole::handle($role, new UpdateRoleData(
         name: 'new-role',
     ));
 
@@ -69,7 +70,7 @@ test('delete role action soft deletes the role', function (): void {
         'guard_name' => 'web',
     ]);
 
-    app(DeleteRole::class)->handle($role);
+    DeleteRole::handle($role);
 
     expect(Role::query()->find($role->id))->toBeNull();
     expect(Role::withTrashed()->find($role->id)?->trashed())->toBeTrue();
@@ -97,7 +98,7 @@ test('sync role permissions action syncs the selected permissions by name', func
         'guard_name' => 'web',
     ]);
 
-    app(SyncRolePermissions::class)->handle($role, new SyncRolePermissionsData(
+    SyncRolePermissions::handle($role, new SyncRolePermissionsData(
         permissions: [
             'users.viewReports',
             'users.manageMembers',
@@ -117,7 +118,7 @@ test('sync role permissions action throws a domain exception when permissions ar
     ]);
 
     try {
-        app(SyncRolePermissions::class)->handle($role, new SyncRolePermissionsData(
+        SyncRolePermissions::handle($role, new SyncRolePermissionsData(
             permissions: ['users.missingPermission'],
         ));
 
@@ -131,14 +132,14 @@ test('sync role permissions action throws a domain exception when permissions ar
 });
 
 test('create permission action persists a permission', function (): void {
-    $permission = app(CreatePermission::class)->handle(new CreatePermissionData(
+    $permission = CreatePermission::handle(new CreatePermissionData(
         name: 'users.manageMembers',
         label: 'Manage Members',
         description: 'Create, update, and remove member relationships.',
         group: 'users',
         groupLabel: 'User Administration',
         groupDescription: 'Identity, lifecycle, and role assignment controls.',
-    ));
+    ), app(PermissionGroupCatalog::class));
 
     expect($permission->exists)->toBeTrue();
     expect($permission->guard_name)->toBe('web');
@@ -161,14 +162,14 @@ test('create permission action restores a soft deleted permission with the same 
 
     $permission->delete();
 
-    $restoredPermission = app(CreatePermission::class)->handle(new CreatePermissionData(
+    $restoredPermission = CreatePermission::handle(new CreatePermissionData(
         name: 'users.manageMembers',
         label: 'Manage Team Members',
         description: 'Restore the permission with updated catalog copy.',
         group: 'users',
         groupLabel: 'User Administration',
         groupDescription: 'Identity, lifecycle, and role assignment controls.',
-    ));
+    ), app(PermissionGroupCatalog::class));
 
     expect($restoredPermission->id)->toBe($permission->id);
     expect($restoredPermission->trashed())->toBeFalse();
@@ -189,13 +190,13 @@ test('update permission action keeps the key stable while updating catalog metad
         'guard_name' => 'web',
     ]);
 
-    app(UpdatePermission::class)->handle($permission, new UpdatePermissionData(
+    UpdatePermission::handle($permission, new UpdatePermissionData(
         label: 'Manage Report Access',
         description: 'Review and maintain report visibility across teams.',
         group: 'roles',
         groupLabel: 'Role Management',
         groupDescription: 'Role creation, maintenance, and permission-footprint controls.',
-    ));
+    ), app(PermissionGroupCatalog::class));
 
     expect($permission->fresh()?->name)->toBe('users.viewReports');
     expect($permission->fresh()?->label)->toBe('Manage Report Access');
@@ -216,7 +217,7 @@ test('delete permission action soft deletes the permission', function (): void {
         'guard_name' => 'web',
     ]);
 
-    app(DeletePermission::class)->handle($permission);
+    DeletePermission::handle($permission);
 
     expect(Permission::query()->find($permission->id))->toBeNull();
     expect(Permission::withTrashed()->find($permission->id)?->trashed())->toBeTrue();

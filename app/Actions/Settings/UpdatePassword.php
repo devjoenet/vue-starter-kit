@@ -8,7 +8,7 @@ use App\Models\User;
 
 final class UpdatePassword
 {
-    public function handle(User $user, string $password): User
+    public static function handle(User $user, string $password): User
     {
         $user->update([
             'password' => $password,

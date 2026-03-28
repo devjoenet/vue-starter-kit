@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 test('update profile action updates user details and clears verification when email changes', function (): void {
     $user = User::factory()->create();
 
-    app(UpdateProfile::class)->handle($user, new UpdateProfileData(
+    UpdateProfile::handle($user, new UpdateProfileData(
         name: 'Updated User',
         email: 'updated@example.com',
     ));
@@ -25,7 +25,7 @@ test('update profile action updates user details and clears verification when em
 test('update password action hashes the new password', function (): void {
     $user = User::factory()->create();
 
-    app(UpdatePassword::class)->handle($user, 'new-password');
+    UpdatePassword::handle($user, 'new-password');
 
     expect(Hash::check('new-password', (string) $user->fresh()?->password))->toBeTrue();
 });
@@ -33,7 +33,7 @@ test('update password action hashes the new password', function (): void {
 test('delete profile action removes the user account', function (): void {
     $user = User::factory()->create();
 
-    app(DeleteProfile::class)->handle($user);
+    DeleteProfile::handle($user);
 
     expect(User::query()->find($user->id))->toBeNull();
 });
