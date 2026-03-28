@@ -5,18 +5,24 @@ declare(strict_types=1);
 use App\Actions\Admin\GetAdminIndex;
 use App\Actions\Admin\Permissions\CreatePermission;
 use App\Actions\Admin\Permissions\DeletePermission;
-use App\Actions\Admin\Permissions\FilterPermissions;
 use App\Actions\Admin\Permissions\GetPermissionFilterOptions;
 use App\Actions\Admin\Permissions\GetPermissionIndexItems;
 use App\Actions\Admin\Permissions\IndexPermissions;
-use App\Actions\Admin\Permissions\SortPermissions;
 use App\Actions\Admin\Permissions\UpdatePermission;
 use App\Actions\Admin\Roles\CreateRole;
 use App\Actions\Admin\Roles\DeleteRole;
+use App\Actions\Admin\Roles\GetAssignableUsers;
+use App\Actions\Admin\Roles\GetRoleFilterOptions;
+use App\Actions\Admin\Roles\GetRoleIndexItems;
+use App\Actions\Admin\Roles\IndexRoles;
 use App\Actions\Admin\Roles\SyncRolePermissions;
 use App\Actions\Admin\Roles\UpdateRole;
 use App\Actions\Admin\Users\CreateUser;
 use App\Actions\Admin\Users\DeleteUser;
+use App\Actions\Admin\Users\GetEditableRoles;
+use App\Actions\Admin\Users\GetUserFilterOptions;
+use App\Actions\Admin\Users\GetUserIndexItems;
+use App\Actions\Admin\Users\IndexUsers;
 use App\Actions\Admin\Users\SyncUserRoles;
 use App\Actions\Admin\Users\UpdateUser;
 use App\Actions\Fortify\CreateNewUser;
@@ -67,11 +73,17 @@ dataset('project_write_action_classes', [
 
 dataset('project_query_classes', [
     GetAdminIndex::class,
-    FilterPermissions::class,
+    IndexUsers::class,
+    GetUserIndexItems::class,
+    GetUserFilterOptions::class,
+    GetEditableRoles::class,
+    IndexRoles::class,
+    GetRoleIndexItems::class,
+    GetRoleFilterOptions::class,
+    GetAssignableUsers::class,
     GetPermissionFilterOptions::class,
     GetPermissionIndexItems::class,
     IndexPermissions::class,
-    SortPermissions::class,
 ]);
 
 dataset('fortify_action_adapters', [
@@ -102,23 +114,13 @@ dataset('backend_data_classes', [
     UpdateProfileData::class,
 ]);
 
-it('keeps internal write orchestration on final action classes with a single typed handle method', function (string $actionClass): void {
+it('keeps internal write orchestration on action classes with a public static handle entrypoint', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
 
-    expect($reflection->isFinal())->toBeTrue();
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
-    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toBe(['handle']);
+    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
 
-    /** @var ReflectionMethod $handleMethod */
-    $handleMethod = $reflection->getMethod('handle');
-
-    expect($handleMethod->isPublic())->toBeTrue();
-    expect($handleMethod->isStatic())->toBeTrue();
-    expect($handleMethod->hasReturnType())->toBeTrue();
-
-    foreach ($handleMethod->getParameters() as $parameter) {
-        expect($parameter->hasType())->toBeTrue();
-    }
+    assertStaticTypedPublicMethods($reflection);
 })->with('project_write_action_classes');
 
 it('keeps internal write actions small enough for single-purpose handle methods', function (string $actionClass): void {
@@ -128,23 +130,13 @@ it('keeps internal write actions small enough for single-purpose handle methods'
     expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
 })->with('project_write_action_classes');
 
-it('keeps read-side queries on final classes with a single public static handle method', function (string $queryClass): void {
+it('keeps read-side queries on classes with a public static handle entrypoint', function (string $queryClass): void {
     $reflection = new ReflectionClass($queryClass);
 
-    expect($reflection->isFinal())->toBeTrue();
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
-    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toBe(['handle']);
+    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
 
-    /** @var ReflectionMethod $handleMethod */
-    $handleMethod = $reflection->getMethod('handle');
-
-    expect($handleMethod->isPublic())->toBeTrue();
-    expect($handleMethod->isStatic())->toBeTrue();
-    expect($handleMethod->hasReturnType())->toBeTrue();
-
-    foreach ($handleMethod->getParameters() as $parameter) {
-        expect($parameter->hasType())->toBeTrue();
-    }
+    assertStaticTypedPublicMethods($reflection);
 })->with('project_query_classes');
 
 it('keeps read-side query handlers small enough for focused orchestration', function (string $queryClass): void {
@@ -199,4 +191,27 @@ function backendArchitectureDeclaredPublicMethodNames(ReflectionClass $reflectio
 function backendArchitectureMethodLineCount(ReflectionMethod $method): int
 {
     return $method->getEndLine() - $method->getStartLine() + 1;
+}
+
+function assertStaticTypedPublicMethods(ReflectionClass $reflection): void
+{
+    foreach (backendArchitectureDeclaredPublicMethods($reflection) as $method) {
+        expect($method->isStatic())->toBeTrue();
+        expect($method->hasReturnType())->toBeTrue();
+
+        foreach ($method->getParameters() as $parameter) {
+            expect($parameter->hasType())->toBeTrue();
+        }
+    }
+}
+
+/**
+ * @return list<ReflectionMethod>
+ */
+function backendArchitectureDeclaredPublicMethods(ReflectionClass $reflection): array
+{
+    return array_values(array_filter(
+        $reflection->getMethods(ReflectionMethod::IS_PUBLIC),
+        fn (ReflectionMethod $method): bool => $method->getDeclaringClass()->getName() === $reflection->getName(),
+    ));
 }

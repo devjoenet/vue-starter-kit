@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 use App\Actions\Admin\Permissions\CreatePermission;
 use App\Actions\Admin\Permissions\DeletePermission;
+use App\Actions\Admin\Permissions\IndexPermissions;
 use App\Actions\Admin\Permissions\UpdatePermission;
 use App\Actions\Admin\Roles\CreateRole;
 use App\Actions\Admin\Roles\DeleteRole;
+use App\Actions\Admin\Roles\GetAssignableUsers;
+use App\Actions\Admin\Roles\IndexRoles;
 use App\Actions\Admin\Roles\SyncRolePermissions;
 use App\Actions\Admin\Roles\UpdateRole;
 use App\Actions\Admin\Users\CreateUser;
 use App\Actions\Admin\Users\DeleteUser;
+use App\Actions\Admin\Users\GetEditableRoles;
+use App\Actions\Admin\Users\IndexUsers;
 use App\Actions\Admin\Users\SyncUserRoles;
 use App\Actions\Admin\Users\UpdateUser;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Support\GroupedPermissions;
 use Illuminate\Http\RedirectResponse;
 
 dataset('admin_controller_classes', [
@@ -61,6 +67,18 @@ dataset('admin_controller_write_endpoints', [
     [PermissionsController::class, 'destroy', DeletePermission::class],
 ]);
 
+dataset('admin_controller_read_endpoints', [
+    [UsersController::class, 'index', IndexUsers::class],
+    [UsersController::class, 'edit', GetEditableRoles::class],
+    [RolesController::class, 'index', IndexRoles::class],
+    [RolesController::class, 'create', GetAssignableUsers::class],
+    [PermissionsController::class, 'index', IndexPermissions::class],
+]);
+
+dataset('admin_controller_injected_read_endpoints', [
+    [RolesController::class, 'edit', GroupedPermissions::class, 'allData'],
+]);
+
 it('keeps admin controllers final and limited to route endpoint methods', function (
     string $controllerClass,
     array $allowedMethods,
@@ -90,6 +108,31 @@ it('keeps admin write endpoints delegated to action classes', function (
     expect(adminControllerParameterTypes($method))->not->toContain($actionClass);
     expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($actionClass));
 })->with('admin_controller_write_endpoints');
+
+it('keeps admin read endpoints delegated to explicit read-side collaborators', function (
+    string $controllerClass,
+    string $methodName,
+    string $queryClass,
+): void {
+    $reflection = new ReflectionClass($controllerClass);
+    $method = $reflection->getMethod($methodName);
+
+    expect(adminControllerParameterTypes($method))->not->toContain($queryClass);
+    expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($queryClass));
+})->with('admin_controller_read_endpoints');
+
+it('keeps admin deferred edit payloads delegated to injected read-side collaborators', function (
+    string $controllerClass,
+    string $methodName,
+    string $collaboratorClass,
+    string $methodCall,
+): void {
+    $reflection = new ReflectionClass($controllerClass);
+    $method = $reflection->getMethod($methodName);
+
+    expect(adminControllerParameterTypes($method))->toContain($collaboratorClass);
+    expect(adminControllerMethodBody($method))->toContain(adminControllerCollaboratorCall($methodCall));
+})->with('admin_controller_injected_read_endpoints');
 
 /**
  * @return list<string>
@@ -157,4 +200,9 @@ function adminControllerMethodBody(ReflectionMethod $method): string
 function adminControllerStaticHandleCall(string $actionClass): string
 {
     return sprintf('%s::handle(', basename(str_replace('\\', '/', $actionClass)));
+}
+
+function adminControllerCollaboratorCall(string $methodCall): string
+{
+    return sprintf('->%s(', $methodCall);
 }
