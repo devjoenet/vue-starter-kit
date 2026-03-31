@@ -8,10 +8,21 @@ use App\Modules\Roles\Models\Role;
 use App\Modules\Users\DTOs\SyncUserRolesData;
 use App\Modules\Users\Exceptions\UnknownRolesSelected;
 use App\Modules\Users\Models\User;
+use Illuminate\Support\Facades\DB;
 
 final class SyncUserRoles
 {
     public static function handle(User $user, SyncUserRolesData $data): User
+    {
+        $roleNames = self::resolveRoleNames($data);
+
+        DB::transaction(fn (): User => tap($user, fn (User $user): User => $user->syncRoles($roleNames)));
+
+        return $user;
+    }
+
+    /** @return list<string> */
+    private static function resolveRoleNames(SyncUserRolesData $data): array
     {
         $requestedRoles = collect($data->roles)
             ->unique()
@@ -31,8 +42,9 @@ final class SyncUserRoles
             throw UnknownRolesSelected::fromNames($missingRoles);
         }
 
-        $user->syncRoles($existingRoles->all());
+        /** @var list<string> $roleNames */
+        $roleNames = $existingRoles->all();
 
-        return $user;
+        return $roleNames;
     }
 }

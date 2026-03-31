@@ -20,6 +20,7 @@ use App\Modules\Roles\DTOs\UpdateRoleData;
 use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
 use App\Modules\Roles\Models\Role;
 use App\Modules\Users\Models\User;
+use Illuminate\Support\Facades\DB;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();
@@ -49,6 +50,25 @@ test('create role action restores a soft deleted role with the same name', funct
 
     expect($restoredRole->id)->toBe($role->id);
     expect($restoredRole->trashed())->toBeFalse();
+});
+
+test('create role action syncs only active unique users', function (): void {
+    $activeUser = User::factory()->create();
+    $archivedUser = User::factory()->create();
+    $archivedUser->delete();
+
+    $role = CreateRole::handle(new CreateRoleData(
+        name: 'auditor',
+        user_ids: [$activeUser->id, $activeUser->id, $archivedUser->id, 999999],
+    ));
+
+    expect(DB::table('model_has_roles')
+        ->where('role_id', $role->id)
+        ->where('model_type', User::class)
+        ->pluck('model_id')
+        ->all())->toBe([$activeUser->id]);
+    expect($activeUser->fresh()?->hasRole('auditor'))->toBeTrue();
+    expect(User::withTrashed()->find($archivedUser->id)?->hasRole('auditor'))->toBeFalse();
 });
 
 test('update role action updates the role name', function (): void {
