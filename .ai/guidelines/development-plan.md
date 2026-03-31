@@ -54,6 +54,16 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Container-backed contract coverage now verifies the new admin bindings, while architecture tests enforce narrow module-owned contract namespaces.
 - Phase 5 is now the active workstream.
 
+### 2026-03-30
+
+- Phase 5 is complete.
+- Admin role creation, permission create/update, and role/permission sync writes now run inside explicit transaction boundaries with separate guard and mutate phases.
+- Admin user restoration and Fortify registration now restore soft-deleted user records predictably, clear stale verification and two-factor state, and avoid duplicate-email collisions.
+- Role creation now normalizes assignable user IDs before syncing so archived or duplicate selections do not create stale pivot rows.
+- Settings profile deletion now performs logout and session invalidation after the delete succeeds instead of before the write.
+- Targeted Pest coverage now verifies restored registration behavior, cleaned user restore state, and guarded role-user syncing.
+- Phase 6 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -297,7 +307,17 @@ Definition of done:
 
 Once the boundaries are stable, the write side needs to become predictably safe and uniform.
 
-- Add transactions to every multi-step write workflow.
+Status: completed on `2026-03-30`.
+
+Completed work:
+
+- wrapped multi-step admin writes in transactions for role creation, permission creation and updates, and role/permission sync workflows
+- split sync and create actions into explicit guard and mutate phases so requested roles, permissions, and assignable users are resolved before persistence
+- normalized soft-delete restore behavior for admin user creation and Fortify registration, including clearing stale verification and two-factor state on restore
+- moved profile-destroy auth/session side effects to occur after the delete succeeds
+- added targeted Pest coverage for restored registration, restored user state cleanup, and guarded role assignment behavior
+
+- Add transactions to every multistep write workflow.
 - Standardize normalization and guard phases before persistence.
 - Normalize restore and idempotent behavior for soft-deleted permissions and similar flows.
 - Push side effects after commit where appropriate.
@@ -305,9 +325,11 @@ Once the boundaries are stable, the write side needs to become predictably safe 
 
 Key targets:
 
-- `app/Actions/Admin/**`
-- `app/Actions/Settings/**`
-- `app/Actions/Fortify/**`
+- `app/Modules/Permissions/**/*`
+- `app/Modules/Roles/**/*`
+- `app/Modules/Settings/**/*`
+- `app/Modules/Shared/**/*`
+- `app/Modules/Users/**/*`
 - relevant form requests and data classes
 
 Definition of done:

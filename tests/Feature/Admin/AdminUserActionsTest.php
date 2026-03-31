@@ -31,6 +31,9 @@ test('create user action restores a soft deleted user with the same email', func
     $user = User::factory()->create([
         'name' => 'Archived User',
         'email' => 'archived@example.com',
+        'two_factor_secret' => encrypt('secret'),
+        'two_factor_recovery_codes' => encrypt('["code-1"]'),
+        'two_factor_confirmed_at' => now(),
     ]);
 
     $user->delete();
@@ -44,6 +47,10 @@ test('create user action restores a soft deleted user with the same email', func
     expect($restoredUser->id)->toBe($user->id);
     expect($restoredUser->trashed())->toBeFalse();
     expect($restoredUser->name)->toBe('Restored User');
+    expect($restoredUser->email_verified_at)->toBeNull();
+    expect($restoredUser->two_factor_secret)->toBeNull();
+    expect($restoredUser->two_factor_recovery_codes)->toBeNull();
+    expect($restoredUser->two_factor_confirmed_at)->toBeNull();
     expect(Hash::check('restored-password', $restoredUser->password))->toBeTrue();
 });
 

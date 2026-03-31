@@ -7,6 +7,8 @@ namespace App\Modules\Permissions\Actions;
 use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\Permissions\DTOs\CreatePermissionData;
 use App\Modules\Permissions\Models\Permission;
+use App\Modules\Permissions\Models\PermissionGroup;
+use Illuminate\Support\Facades\DB;
 
 final class CreatePermission
 {
@@ -14,12 +16,30 @@ final class CreatePermission
         CreatePermissionData $data,
         PermissionGroupCatalogContract $permissionGroupCatalog,
     ): Permission {
-        $group = $permissionGroupCatalog->upsert(
+        $permission = DB::transaction(function () use ($data, $permissionGroupCatalog): Permission {
+            $group = self::upsertGroup($data, $permissionGroupCatalog);
+
+            return self::restoreOrCreatePermission($data, $group);
+        });
+
+        return $permission->load('permissionGroup');
+    }
+
+    private static function upsertGroup(
+        CreatePermissionData $data,
+        PermissionGroupCatalogContract $permissionGroupCatalog,
+    ): PermissionGroup {
+        return $permissionGroupCatalog->upsert(
             slug: $data->group,
             label: $data->groupLabel,
             description: $data->groupDescription,
         );
+    }
 
+    private static function restoreOrCreatePermission(
+        CreatePermissionData $data,
+        PermissionGroup $group,
+    ): Permission {
         $permission = Permission::withTrashed()->firstOrNew([
             'name' => $data->name,
             'guard_name' => 'web',
@@ -34,6 +54,6 @@ final class CreatePermission
             'deleted_at' => null,
         ])->save();
 
-        return $permission->load('permissionGroup');
+        return $permission;
     }
 }

@@ -8,10 +8,21 @@ use App\Modules\Permissions\Models\Permission;
 use App\Modules\Roles\DTOs\SyncRolePermissionsData;
 use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
 use App\Modules\Roles\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 final class SyncRolePermissions
 {
     public static function handle(Role $role, SyncRolePermissionsData $data): Role
+    {
+        $permissionNames = self::resolvePermissionNames($data);
+
+        DB::transaction(fn (): Role => tap($role, fn (Role $role): Role => $role->syncPermissions($permissionNames)));
+
+        return $role;
+    }
+
+    /** @return list<string> */
+    private static function resolvePermissionNames(SyncRolePermissionsData $data): array
     {
         $requestedPermissions = collect($data->permissions)
             ->unique()
@@ -31,8 +42,9 @@ final class SyncRolePermissions
             throw UnknownPermissionsSelected::fromNames($missingPermissions);
         }
 
-        $role->syncPermissions($existingPermissions->all());
+        /** @var list<string> $permissionNames */
+        $permissionNames = $existingPermissions->all();
 
-        return $role;
+        return $permissionNames;
     }
 }
