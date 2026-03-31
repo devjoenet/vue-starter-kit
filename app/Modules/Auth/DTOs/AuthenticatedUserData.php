@@ -7,7 +7,9 @@ namespace App\Modules\Auth\DTOs;
 use App\Modules\Users\Models\User;
 use Carbon\CarbonInterface;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class AuthenticatedUserData extends Data
 {
     public function __construct(

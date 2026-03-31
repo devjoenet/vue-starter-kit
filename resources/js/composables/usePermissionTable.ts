@@ -1,13 +1,13 @@
 import { computed, ref } from 'vue';
-import type { PermissionsByGroup } from '@/types/page-props';
+import type { PermissionsByGroup } from '@/types/admin/roles';
 
 type PermissionSortDirection = 'none' | 'asc' | 'desc';
 export type PermissionSortColumn = 'group' | 'permission' | 'permission_check';
 
 export type PermissionTableRow = {
-  description: string | null;
+  description?: string | null;
   group: string;
-  groupDescription: string | null;
+  groupDescription?: string | null;
   groupLabel: string;
   id: number;
   label: string;

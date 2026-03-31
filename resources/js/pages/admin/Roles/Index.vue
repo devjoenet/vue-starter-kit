@@ -18,7 +18,7 @@ import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { toTitleCase } from '@/lib/utils';
 import { create, edit, index } from '@/routes/admin/roles';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminRolesIndexColumn, AdminRolesIndexPageProps } from '@/types/page-props';
+import type { AdminRolesIndexColumn, AdminRolesIndexPageProps } from '@/types/admin/roles';
 defineOptions({
   layout: adminPageLayout,
 });

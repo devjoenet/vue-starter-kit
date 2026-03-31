@@ -6,7 +6,9 @@ namespace App\Modules\Users\DTOs;
 
 use App\Modules\Users\Models\User;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class EditableUserData extends Data
 {
     public function __construct(

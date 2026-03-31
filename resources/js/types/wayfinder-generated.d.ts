@@ -1,6 +1,61 @@
+export type AdminIndexQueryData = {
+  sort: string;
+  direction: string;
+  filters: Array<any>;
+};
+export type AssignableUserData = {
+  id: number;
+  name: string;
+  email: string;
+};
+export type AuthenticatedUserData = {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at?: string;
+};
+export type EditableRoleData = {
+  id: number;
+  name: string;
+};
+export type EditableUserData = {
+  id: number;
+  name: string;
+  email: string;
+};
 export type PasswordUpdateRequest = {
   current_password: string;
   password: string;
+};
+export type PermissionGroupOptionData = {
+  slug: string;
+  label: string;
+  description?: string;
+  permissions_count: number;
+};
+export type PermissionIndexFilterOptionsData = {
+  group: Array<any>;
+  permission: Array<any>;
+  permission_check: Array<any>;
+};
+export type PermissionIndexItemData = {
+  id: number;
+  group: string;
+  group_label: string;
+  group_description?: string;
+  name: string;
+  label: string;
+  description?: string;
+  suffix: string;
+};
+export type PermissionItemData = {
+  id: number;
+  name: string;
+  label: string;
+  description?: string;
+  group: string;
+  group_label: string;
+  group_description?: string;
 };
 export type ProfileDeleteRequest = {
   password: string;
@@ -8,6 +63,25 @@ export type ProfileDeleteRequest = {
 export type ProfileUpdateRequest = {
   name: string;
   email: string;
+};
+export type RoleIndexFilterOptionsData = {
+  display_name: Array<any>;
+  slug: Array<any>;
+  users: Array<any>;
+};
+export type RoleListItemData = {
+  id: number;
+  name: string;
+  users_count: number;
+};
+export type RoleOptionData = {
+  id: number;
+  name: string;
+};
+export type SharedAuthData = {
+  user?: AuthenticatedUserData;
+  roles: Array<any>;
+  permissions: Array<any>;
 };
 export type StorePermissionRequest = {
   name: string;
@@ -50,4 +124,15 @@ export type UpdateUserRequest = {
   email: string;
   password?: string;
   password_confirmation?: string;
+};
+export type UserIndexFilterOptionsData = {
+  name: Array<any>;
+  email: Array<any>;
+  roles: Array<any>;
+};
+export type UserListItemData = {
+  id: number;
+  name: string;
+  email: string;
+  roles: Array<any>;
 };

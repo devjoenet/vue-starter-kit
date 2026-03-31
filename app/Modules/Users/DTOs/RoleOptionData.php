@@ -6,7 +6,9 @@ namespace App\Modules\Users\DTOs;
 
 use App\Modules\Roles\Models\Role;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class RoleOptionData extends Data
 {
     public function __construct(

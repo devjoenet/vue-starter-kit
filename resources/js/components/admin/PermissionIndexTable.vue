@@ -14,7 +14,8 @@ import TableRow from '@/components/ui/table/TableRow.vue';
 import { useAdminIndexTableQuery } from '@/composables/useAdminIndexTableQuery';
 import { toTitleCase } from '@/lib/utils';
 import { edit, index } from '@/routes/admin/permissions';
-import type { AdminPermissionsIndexColumn, AdminPermissionsIndexFilterOptions, AdminIndexQuery, PermissionGroupOption, PermissionIndexItem } from '@/types/page-props';
+import type { AdminPermissionsIndexColumn, AdminPermissionsIndexFilterOptions, PermissionGroupOption, PermissionIndexItem } from '@/types/admin/permissions';
+import type { AdminIndexQuery } from '@/types/admin/shared';
 
 const props = defineProps<{
   canUpdate: boolean;

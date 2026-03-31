@@ -8,7 +8,7 @@ import { useAbility } from '@/composables/useAbility';
 import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { create, index } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminPermissionsIndexPageProps } from '@/types/page-props';
+import type { AdminPermissionsIndexPageProps } from '@/types/admin/permissions';
 defineOptions({
   layout: adminPageLayout,
 });

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import AdminQuickLinks from '@/components/admin/AdminQuickLinks.vue';
 import { adminPageLayout, setBreadcrumbs } from '@/lib/page-layouts';
 import { dashboard } from '@/routes/admin';
-import type { AdminDashboardPageProps } from '@/types/page-props';
+import type { AdminDashboardPageProps } from '@/types/admin/dashboard';
 
 defineOptions({
   layout: adminPageLayout,

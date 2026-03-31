@@ -40,6 +40,7 @@ use App\Modules\Permissions\Contracts\PermissionFilterOptionsProvider;
 use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\Permissions\DTOs\CreatePermissionData;
 use App\Modules\Permissions\DTOs\PermissionGroupOptionData;
+use App\Modules\Permissions\DTOs\PermissionIndexFilterOptionsData;
 use App\Modules\Permissions\DTOs\PermissionIndexItemData;
 use App\Modules\Permissions\DTOs\PermissionItemData;
 use App\Modules\Permissions\DTOs\UpdatePermissionData;
@@ -59,6 +60,7 @@ use App\Modules\Roles\Contracts\RoleFilterOptionsProvider;
 use App\Modules\Roles\DTOs\AssignableUserData;
 use App\Modules\Roles\DTOs\CreateRoleData;
 use App\Modules\Roles\DTOs\EditableRoleData;
+use App\Modules\Roles\DTOs\RoleIndexFilterOptionsData;
 use App\Modules\Roles\DTOs\RoleListItemData;
 use App\Modules\Roles\DTOs\SyncRolePermissionsData;
 use App\Modules\Roles\DTOs\UpdateRoleData;
@@ -85,11 +87,13 @@ use App\Modules\Users\DTOs\EditableUserData;
 use App\Modules\Users\DTOs\RoleOptionData;
 use App\Modules\Users\DTOs\SyncUserRolesData;
 use App\Modules\Users\DTOs\UpdateUserData;
+use App\Modules\Users\DTOs\UserIndexFilterOptionsData;
 use App\Modules\Users\DTOs\UserListItemData;
 use App\Modules\Users\Exceptions\UnknownRolesSelected;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 dataset('project_write_action_classes', [
     CreateUser::class,
@@ -136,21 +140,54 @@ dataset('backend_data_classes', [
     EditableUserData::class,
     RoleOptionData::class,
     SyncUserRolesData::class,
+    UserIndexFilterOptionsData::class,
     UserListItemData::class,
     CreateRoleData::class,
     UpdateRoleData::class,
     EditableRoleData::class,
     AssignableUserData::class,
+    RoleIndexFilterOptionsData::class,
     RoleListItemData::class,
     SyncRolePermissionsData::class,
     CreatePermissionData::class,
     UpdatePermissionData::class,
     PermissionItemData::class,
+    PermissionIndexFilterOptionsData::class,
     PermissionIndexItemData::class,
     PermissionGroupOptionData::class,
     AuthenticatedUserData::class,
     SharedAuthData::class,
     UpdateProfileData::class,
+]);
+
+dataset('typescript_contract_classes', [
+    StoreUserRequest::class,
+    UpdateUserRequest::class,
+    SyncUserRolesRequest::class,
+    StoreRoleRequest::class,
+    UpdateRoleRequest::class,
+    SyncRolePermissionsRequest::class,
+    StorePermissionRequest::class,
+    UpdatePermissionRequest::class,
+    ProfileUpdateRequest::class,
+    ProfileDeleteRequest::class,
+    PasswordUpdateRequest::class,
+    TwoFactorAuthenticationRequest::class,
+    AuthenticatedUserData::class,
+    SharedAuthData::class,
+    AdminIndexQueryData::class,
+    EditableUserData::class,
+    RoleOptionData::class,
+    UserIndexFilterOptionsData::class,
+    UserListItemData::class,
+    AssignableUserData::class,
+    EditableRoleData::class,
+    RoleIndexFilterOptionsData::class,
+    RoleListItemData::class,
+    PermissionGroupOptionData::class,
+    PermissionIndexFilterOptionsData::class,
+    PermissionIndexItemData::class,
+    PermissionItemData::class,
 ]);
 
 dataset('module_collaborator_classes', [
@@ -302,6 +339,30 @@ it('keeps admin and settings transport classes in slice-oriented http namespaces
 
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
 })->with('slice_transport_classes');
+
+it('marks frontend-bound form requests and dto payloads for TypeScript generation', function (string $className): void {
+    $reflection = new ReflectionClass($className);
+
+    expect($reflection->getAttributes(TypeScript::class))->toHaveCount(1);
+})->with('typescript_contract_classes');
+
+it('keeps frontend page prop contracts split by domain instead of a monolithic page props file', function (): void {
+    $projectRoot = dirname(__DIR__, 2);
+    $splitTypeFiles = [
+        $projectRoot.'/resources/js/types/admin/dashboard.ts',
+        $projectRoot.'/resources/js/types/admin/permissions.ts',
+        $projectRoot.'/resources/js/types/admin/roles.ts',
+        $projectRoot.'/resources/js/types/admin/shared.ts',
+        $projectRoot.'/resources/js/types/admin/users.ts',
+        $projectRoot.'/resources/js/types/settings.ts',
+    ];
+
+    expect($projectRoot.'/resources/js/types/page-props.ts')->not->toBeFile();
+
+    foreach ($splitTypeFiles as $splitTypeFile) {
+        expect($splitTypeFile)->toBeFile();
+    }
+});
 
 /** @return list<string> */
 function backendArchitectureDeclaredPublicMethodNames(ReflectionClass $reflection): array

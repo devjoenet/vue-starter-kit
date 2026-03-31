@@ -6,7 +6,9 @@ namespace App\Modules\Shared\DTOs;
 
 use App\Modules\Shared\Actions\AdminIndexQuery;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class AdminIndexQueryData extends Data
 {
     /** @param  array<string, list<string>>  $filters */

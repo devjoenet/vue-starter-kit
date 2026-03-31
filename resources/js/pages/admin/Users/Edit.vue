@@ -18,7 +18,7 @@ import { toTitleCase } from '@/lib/utils';
 import { destroy, index, update } from '@/routes/admin/users';
 import { sync } from '@/routes/admin/users/roles';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminUsersEditPageProps } from '@/types/page-props';
+import type { AdminUsersEditPageProps } from '@/types/admin/users';
 import type { SyncUserRolesRequest, UpdateUserRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,

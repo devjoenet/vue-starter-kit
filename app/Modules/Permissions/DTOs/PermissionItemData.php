@@ -6,7 +6,9 @@ namespace App\Modules\Permissions\DTOs;
 
 use App\Modules\Permissions\Models\Permission;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class PermissionItemData extends Data
 {
     public function __construct(

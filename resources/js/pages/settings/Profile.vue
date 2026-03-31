@@ -14,7 +14,7 @@ import UserIdentityFields from '@/components/UserIdentityFields.vue';
 import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { edit, update } from '@/routes/profile';
 import { send } from '@/routes/verification';
-import type { SettingsProfilePageProps } from '@/types/page-props';
+import type { SettingsProfilePageProps } from '@/types/settings';
 defineOptions({
   layout: settingsPageLayout,
 });

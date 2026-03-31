@@ -10,7 +10,7 @@ import { useAbility } from '@/composables/useAbility';
 import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { create, index, store } from '@/routes/admin/users';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminUsersCreatePageProps } from '@/types/page-props';
+import type { AdminUsersCreatePageProps } from '@/types/admin/users';
 import type { StoreUserRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,
