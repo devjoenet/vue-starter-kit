@@ -6,7 +6,9 @@ namespace App\Modules\Auth\DTOs;
 
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class SharedAuthData extends Data
 {
     /**

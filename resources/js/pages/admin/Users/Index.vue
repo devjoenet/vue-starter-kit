@@ -19,7 +19,7 @@ import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { toTitleCase } from '@/lib/utils';
 import { create, edit, index } from '@/routes/admin/users';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminUsersIndexColumn, AdminUsersIndexPageProps } from '@/types/page-props';
+import type { AdminUsersIndexColumn, AdminUsersIndexPageProps } from '@/types/admin/users';
 
 defineOptions({
   layout: adminPageLayout,

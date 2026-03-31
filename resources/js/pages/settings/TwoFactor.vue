@@ -11,7 +11,7 @@ import Button from '@/components/ui/button/Button.vue';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { setBreadcrumbs, settingsPageLayout } from '@/lib/page-layouts';
 import { disable, enable, show } from '@/routes/two-factor';
-import type { SettingsTwoFactorPageProps } from '@/types/page-props';
+import type { SettingsTwoFactorPageProps } from '@/types/settings';
 defineOptions({
   layout: settingsPageLayout,
 });

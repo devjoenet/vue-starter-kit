@@ -64,6 +64,16 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Targeted Pest coverage now verifies restored registration behavior, cleaned user restore state, and guarded role-user syncing.
 - Phase 6 is now the active workstream.
 
+### 2026-03-31
+
+- Phase 6 is complete.
+- Frontend page prop contracts now live in domain-specific modules under `resources/js/types/admin/**` and `resources/js/types/settings.ts` instead of a monolithic `resources/js/types/page-props.ts` file.
+- Admin, settings, shared auth, and filter/query payload DTOs that back Inertia pages now carry `#[TypeScript]` so generated frontend contracts follow the backend DTO source of truth more closely.
+- Frontend pages, shared admin components, and composables now consume slice-specific type modules instead of one shared page-prop file.
+- Wayfinder and TypeScript contracts were regenerated after the DTO export changes.
+- Pest architecture coverage now enforces the TypeScript export markers on frontend-bound DTOs and form requests, and it verifies that the monolithic page prop file does not return.
+- Phase 7 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -95,15 +105,15 @@ Prefer the project tooling that actually exists in the current environment:
 The codebase already has useful structure, but it still mixes multiple architectural directions:
 
 - Admin and settings writes now use static `handle()` actions outside controllers.
-- Shared payloads already use Spatie Data objects under `app/Support/Data`.
+- Shared payloads now use Spatie Data objects inside slice-owned `app/Modules/**/DTOs` namespaces.
 - Inertia v3 patterns are already in use.
 - The visual system is already stronger than a stock starter.
 - Local verification already covers the core backend and frontend release path.
 
 The main remaining problems are structural inconsistencies:
 
-- `AppServiceProvider` has almost no application bindings yet.
-- `resources/js/types/page-props.ts` is still a monolithic manual mirror of backend payloads.
+- `AppServiceProvider` still only covers the first wave of reusable collaborators instead of a broader domain binding story.
+- Generated TypeScript output still needs selective frontend alias tightening for collection-like DTO properties the transformer emits too loosely.
 - The base test harness still reflects the default starter setup.
 - Selective contracts and provider bindings are still mostly absent from the new slice-owned collaborators.
 
@@ -163,7 +173,7 @@ This does not require an immediate filesystem rewrite. The migration should move
 ### Frontend And UX
 
 - Keep Wayfinder as the canonical route contract on the frontend.
-- Avoid growing `resources/js/types/page-props.ts` further.
+- Keep page prop contracts split by domain under `resources/js/types/**` instead of reintroducing a shared monolith.
 - Every async or deferred state needs an intentional loading and empty state.
 - Auth, admin, settings, and marketing surfaces must continue to feel like one authored system.
 
@@ -342,6 +352,17 @@ Definition of done:
 
 The current prop type mirror is already a maintenance liability and will get worse during the refactor if it is not split early.
 
+Status: completed on `2026-03-31`.
+
+Completed work:
+
+- removed `resources/js/types/page-props.ts` and replaced it with slice-specific frontend type modules under `resources/js/types/admin/**` and `resources/js/types/settings.ts`
+- annotated the auth, shared admin index, users, roles, and permissions DTOs that back page payloads with `#[TypeScript]`
+- regenerated TypeScript and Wayfinder contracts after the DTO export changes
+- rewired admin pages, settings pages, and shared admin composables/components onto the new domain-local type modules
+- tightened frontend aliases around generated array and nullable DTO fields where the transformer output is intentionally broader than the runtime payload
+- added Pest architecture checks to keep the generated TypeScript markers and split page-prop structure in place
+
 - Break `resources/js/types/page-props.ts` into domain-specific modules.
 - Derive or co-locate more page prop contracts from existing Spatie Data objects and transformers where practical.
 - Keep Wayfinder-generated route usage as the canonical route contract.
@@ -350,9 +371,10 @@ The current prop type mirror is already a maintenance liability and will get wor
 
 Key targets:
 
-- `resources/js/types/page-props.ts`
+- `resources/js/types/admin/**`
+- `resources/js/types/settings.ts`
 - `resources/js/types/**`
-- `app/Support/Data/**`
+- `app/Modules/**/DTOs/**`
 - `app/Support/TypeScript/FormRequestRulesTransformer.php`
 - `resources/js/pages/**`
 
@@ -427,7 +449,7 @@ Definition of done:
 - Do not create interfaces for simple leaf actions with no variability.
 - Do not instantiate reusable collaborators directly once provider bindings exist.
 - Do not keep PHP collection filtering and sorting when SQL can do the work cheaper and more clearly.
-- Do not keep growing `resources/js/types/page-props.ts`.
+- Do not reintroduce a monolithic frontend page prop types file.
 - Do not add dependencies before architecture and harness stability are re-established.
 - Do not do a big-bang filesystem move.
 

@@ -12,7 +12,7 @@ import TableRow from '@/components/ui/table/TableRow.vue';
 import { usePermissionTable } from '@/composables/usePermissionTable';
 import type { PermissionSortColumn } from '@/composables/usePermissionTable';
 import { toTitleCase } from '@/lib/utils';
-import type { PermissionsByGroup } from '@/types/page-props';
+import type { PermissionsByGroup } from '@/types/admin/roles';
 
 const props = defineProps<{
   canAssign: boolean;

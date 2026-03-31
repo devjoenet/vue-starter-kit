@@ -6,7 +6,9 @@ namespace App\Modules\Roles\DTOs;
 
 use App\Modules\Users\Models\User;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class AssignableUserData extends Data
 {
     public function __construct(

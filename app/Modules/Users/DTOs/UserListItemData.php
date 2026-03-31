@@ -6,7 +6,9 @@ namespace App\Modules\Users\DTOs;
 
 use App\Modules\Users\Models\User;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class UserListItemData extends Data
 {
     /** @param  list<string>  $roles */

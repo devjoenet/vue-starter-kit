@@ -36,3 +36,4 @@
   - Classes in `Support` and `Queries` should be refactored to be in `Actions`.
   - With the exception of the `App`/`Transport` classes, classes that are directly related to module should be moved there.
   - Modules should only be one directory deep under `app/Modules` and not grouped beyond this. 
+3. When finished with coding tasks, please provide a Markdown summary, formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).

@@ -1,13 +1,11 @@
-export type User = {
-  id: number;
-  name: string;
-  email: string;
+import type { AuthenticatedUserData, SharedAuthData } from './wayfinder-generated';
+
+export type User = AuthenticatedUserData & {
   avatar?: string | null;
-  email_verified_at: string | null;
   [key: string]: unknown;
 };
 
-export type Auth = {
+export type Auth = Omit<SharedAuthData, 'user'> & {
   user: User | null;
   roles: string[];
   permissions: string[];

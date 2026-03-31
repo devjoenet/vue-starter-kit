@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Roles\DTOs;
 
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class RoleIndexFilterOptionsData extends Data
 {
     /**

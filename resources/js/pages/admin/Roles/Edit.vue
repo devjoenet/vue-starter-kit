@@ -19,7 +19,7 @@ import { toKebabCase, toTitleCase } from '@/lib/utils';
 import { destroy, index, update } from '@/routes/admin/roles';
 import { sync } from '@/routes/admin/roles/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminRolesEditPageProps } from '@/types/page-props';
+import type { AdminRolesEditPageProps } from '@/types/admin/roles';
 import type { SyncRolePermissionsRequest, UpdateRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Permissions\DTOs;
 
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class PermissionIndexFilterOptionsData extends Data
 {
     /**

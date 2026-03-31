@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import Input from '@/components/ui/input/Input.vue';
 import type { InputVariants } from '@/components/ui/input/variants';
 import { toSnakeCase, toTitleCase } from '@/lib/utils';
-import type { PermissionGroupOption } from '@/types/page-props';
+import type { PermissionGroupOption } from '@/types/admin/permissions';
 
 const defaultGroups = [
   {

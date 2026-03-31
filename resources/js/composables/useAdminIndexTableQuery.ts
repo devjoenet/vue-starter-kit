@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import type { AdminIndexQuery } from '@/types/page-props';
+import type { AdminIndexQuery } from '@/types/admin/shared';
 
 type UseAdminIndexTableQueryOptions<TColumn extends string> = {
   getQuery: () => AdminIndexQuery<TColumn>;

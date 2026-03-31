@@ -6,7 +6,9 @@ namespace App\Modules\Permissions\DTOs;
 
 use App\Modules\Permissions\Models\PermissionGroup;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 final class PermissionGroupOptionData extends Data
 {
     public function __construct(

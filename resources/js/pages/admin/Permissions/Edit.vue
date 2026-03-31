@@ -14,7 +14,7 @@ import { normalizePermissionName } from '@/lib/permissions';
 import { toSnakeCase, toTitleCase } from '@/lib/utils';
 import { destroy, index, update } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminPermissionsEditPageProps, PermissionGroupOption } from '@/types/page-props';
+import type { AdminPermissionsEditPageProps, PermissionGroupOption } from '@/types/admin/permissions';
 import type { UpdatePermissionRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,

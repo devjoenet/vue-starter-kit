@@ -4,7 +4,7 @@ import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import PermissionGroupSelect from '@/components/admin/PermissionGroupSelect.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
-import type { PermissionGroupOption } from '@/types/page-props';
+import type { PermissionGroupOption } from '@/types/admin/permissions';
 
 type PermissionEditorFormData = {
   group: string;

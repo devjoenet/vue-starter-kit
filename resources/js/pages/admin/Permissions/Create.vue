@@ -11,7 +11,7 @@ import { extractPermissionActionSegment, inferPermissionLabel, normalizePermissi
 import { toSnakeCase, toTitleCase } from '@/lib/utils';
 import { create, index, store } from '@/routes/admin/permissions';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminPermissionsCreatePageProps, PermissionGroupOption } from '@/types/page-props';
+import type { AdminPermissionsCreatePageProps, PermissionGroupOption } from '@/types/admin/permissions';
 import type { StorePermissionRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,

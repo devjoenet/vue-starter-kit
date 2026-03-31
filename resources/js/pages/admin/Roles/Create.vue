@@ -14,7 +14,7 @@ import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { toKebabCase } from '@/lib/utils';
 import { create, index, store } from '@/routes/admin/roles';
 import { adminPermissions } from '@/types/admin-permissions';
-import type { AdminRolesCreatePageProps } from '@/types/page-props';
+import type { AdminRolesCreatePageProps } from '@/types/admin/roles';
 import type { StoreRoleRequest } from '@/types/wayfinder-generated';
 defineOptions({
   layout: adminPageLayout,
