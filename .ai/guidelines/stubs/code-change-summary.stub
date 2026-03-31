@@ -1,20 +1,23 @@
-## Completed Phase 6 of the Project [Development Plan](./.ai/guidelines/development-plan.md).
+# Completed Phase 6 of the Project [Development Plan](./.ai/guidelines/development-plan.md).
 
-### Code Updates
-1) The monolithic `./resources/js/types/page-props.ts` removed and page prop contracts now live in:
-        - [shared.ts](./resources/js/types/admin/shared.ts)
-        - [dashboard.ts](./resources/js/types/admin/dashboard.ts)
-        - [users.ts](./resources/js/types/admin/users.ts)
-        - [roles.ts](./resources/js/types/admin/roles.ts)
-        - [permissions.ts](./resources/js/types/admin/permissions.ts)
-        - [settings.ts](./resources/js/types/settings.ts).
-2) Admin pages, settings pages, and the affected admin composables/components now import those slice-local types instead of the old shared dump. The auth shared prop typing was also refined in [auth.ts](./resources/js/types/auth.ts).
-3) The backend DTOs that drive those page payloads now implement the `#[TypeScript]` attribute across the auth, shared, users, roles and permissions slices.
-4) Pest enforces both halves of the contract drift fix in [BackendArchitectureContractsTest.php](./tests/Unit/BackendArchitectureContractsTest.php). The frontend-bound DTO/request classes must stay marked for TS generation, and the old monolithic page-prop file must stay dead.
-5) Frontend build failure due to `Record<string, never>` in Vue SFC props was fixed by replacing with a plain empty props type.
+## Notable Code Changes
 
+1. The monolithic `./resources/js/types/page-props.ts` removed. Page prop contracts move to:
 
-### Tests and Validations Run and Passed
+  - [shared.ts](./resources/js/types/admin/shared.ts)
+  - [dashboard.ts](./resources/js/types/admin/dashboard.ts)
+  - [users.ts](./resources/js/types/admin/users.ts)
+  - [roles.ts](./resources/js/types/admin/roles.ts)
+  - [permissions.ts](./resources/js/types/admin/permissions.ts)
+  - [settings.ts](./resources/js/types/settings.ts).
+
+2. Admin pages, settings pages, and the affected admin composables/components now import those slice-local types instead of the old shared dump. The auth shared prop typing was also refined in [auth.ts](./resources/js/types/auth.ts).
+3. The backend DTOs that drive those page payloads now implement the `#[TypeScript]` attribute across the auth, shared, users, roles and permissions slices.
+4. Pest enforces both halves of the contract drift fix in [BackendArchitectureContractsTest.php](./tests/Unit/BackendArchitectureContractsTest.php). The frontend-bound DTO/request classes must stay marked for TS generation, and the old monolithic page-prop file must stay dead.
+5. Frontend build failure due to `Record<string, never>` in Vue SFC props was fixed by replacing with a plain empty props type.
+
+## Validation and Tests Passed
+
 - `php artisan boost:update --ansi`
 - `composer run style:fix`
 - `composer run phpstan`
