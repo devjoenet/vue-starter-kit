@@ -55,15 +55,15 @@
   },
   "scripts": {
     "format": [
-      "./vendor/bin/rector",
-      "./vendor/bin/pint",
-      "npm run build",
+      "./vendor/bin/pint --parallel",
       "npm run format"
     ],
     "ide": [
       "@php artisan ide-helper:generate --write_mixins --helpers",
       "@php artisan ide-helper:models --nowrite --reset --phpstorm-noinspections",
       "@php artisan ide-helper:meta",
+      "@php artisan wayfinder:generate",
+      "@types:generate",
       "rm -f AGENTS.md GEMINI.md CLAUDE.md",
       "@php artisan boost:update --ansi"
     ],
@@ -72,18 +72,15 @@
     ],
     "setup": [
       "composer install",
-      "npm install",
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php artisan key:generate",
       "@php artisan migrate --force",
       "@php artisan db:seed",
       "npm run build",
-      "@ide",
       "@format"
     ],
     "dev": [
       "npm run build",
-      "@ide",
       "@format",
       "Composer\\Config::disableProcessTimeout",
       "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
@@ -125,8 +122,6 @@
     "post-update-cmd": [
       "npm update",
       "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-      "@php artisan boost:update --ansi",
-      "@ide",
       "@format"
     ],
     "post-root-package-install": [
