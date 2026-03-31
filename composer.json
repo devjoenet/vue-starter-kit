@@ -1,5 +1,5 @@
 {
-  "$schema": "https://getcomposer.org/schema.json",
+  "schema": "https://getcomposer.org/schema.json",
   "name": "devjoenet/vue-starter-kit",
   "type": "project",
   "description": "My skeleton application for new Laravel projects.",
@@ -70,20 +70,9 @@
     "types:generate": [
       "php artisan typescript:transform"
     ],
-    "codex": [
-      "composer install --no-interaction --optimize-autoloader",
-      "npm install --save-dev",
-      "@php -r \"file_exists('.env') || copy('.env.codex', '.env');\"",
-      "@php artisan key:generate",
-      "@php artisan migrate --force",
-      "@php artisan db:seed",
-      "npm run build",
-      "@ide",
-      "@format"
-    ],
     "setup": [
       "composer install",
-      "npm install --save-dev",
+      "npm install",
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php artisan key:generate",
       "@php artisan migrate --force",
@@ -134,7 +123,7 @@
       "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
-      "npm update --save-dev",
+      "npm update",
       "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
       "@php artisan boost:update --ansi",
       "@ide",

@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-use App\Http\Admin\Permissions\Controllers\PermissionsController;
-use App\Http\Admin\Roles\Controllers\RolesController;
-use App\Http\Admin\Users\Controllers\UsersController;
-use App\Modules\Admin\Permissions\Actions\CreatePermission;
-use App\Modules\Admin\Permissions\Actions\DeletePermission;
-use App\Modules\Admin\Permissions\Actions\UpdatePermission;
-use App\Modules\Admin\Permissions\Queries\IndexPermissions;
-use App\Modules\Admin\Roles\Actions\CreateRole;
-use App\Modules\Admin\Roles\Actions\DeleteRole;
-use App\Modules\Admin\Roles\Actions\SyncRolePermissions;
-use App\Modules\Admin\Roles\Actions\UpdateRole;
-use App\Modules\Admin\Roles\Queries\GetAssignableUsers;
-use App\Modules\Admin\Roles\Queries\IndexRoles;
-use App\Modules\Admin\Roles\Support\GroupedPermissions;
-use App\Modules\Admin\Users\Actions\CreateUser;
-use App\Modules\Admin\Users\Actions\DeleteUser;
-use App\Modules\Admin\Users\Actions\SyncUserRoles;
-use App\Modules\Admin\Users\Actions\UpdateUser;
-use App\Modules\Admin\Users\Queries\GetEditableRoles;
-use App\Modules\Admin\Users\Queries\IndexUsers;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Modules\Permissions\Actions\CreatePermission;
+use App\Modules\Permissions\Actions\DeletePermission;
+use App\Modules\Permissions\Actions\IndexPermissions;
+use App\Modules\Permissions\Actions\UpdatePermission;
+use App\Modules\Roles\Actions\CreateRole;
+use App\Modules\Roles\Actions\DeleteRole;
+use App\Modules\Roles\Actions\GetAssignableUsers;
+use App\Modules\Roles\Actions\IndexRoles;
+use App\Modules\Roles\Actions\SyncRolePermissions;
+use App\Modules\Roles\Actions\UpdateRole;
+use App\Modules\Roles\Contracts\GroupedPermissionsProvider;
+use App\Modules\Users\Actions\CreateUser;
+use App\Modules\Users\Actions\DeleteUser;
+use App\Modules\Users\Actions\GetEditableRoles;
+use App\Modules\Users\Actions\IndexUsers;
+use App\Modules\Users\Actions\SyncUserRoles;
+use App\Modules\Users\Actions\UpdateUser;
 use Illuminate\Http\RedirectResponse;
 
 dataset('admin_controller_classes', [
@@ -67,7 +67,7 @@ dataset('admin_controller_write_endpoints', [
     [PermissionsController::class, 'destroy', DeletePermission::class],
 ]);
 
-dataset('admin_controller_read_endpoints', [
+dataset('admin_controller_read_action_endpoints', [
     [UsersController::class, 'index', IndexUsers::class],
     [UsersController::class, 'edit', GetEditableRoles::class],
     [RolesController::class, 'index', IndexRoles::class],
@@ -76,7 +76,7 @@ dataset('admin_controller_read_endpoints', [
 ]);
 
 dataset('admin_controller_injected_read_endpoints', [
-    [RolesController::class, 'edit', GroupedPermissions::class, 'allData'],
+    [RolesController::class, 'edit', GroupedPermissionsProvider::class, 'allData'],
 ]);
 
 it('keeps admin controllers final and limited to route endpoint methods', function (
@@ -109,17 +109,17 @@ it('keeps admin write endpoints delegated to action classes', function (
     expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($actionClass));
 })->with('admin_controller_write_endpoints');
 
-it('keeps admin read endpoints delegated to explicit read-side collaborators', function (
+it('keeps admin read endpoints delegated to explicit read-side actions', function (
     string $controllerClass,
     string $methodName,
-    string $queryClass,
+    string $actionClass,
 ): void {
     $reflection = new ReflectionClass($controllerClass);
     $method = $reflection->getMethod($methodName);
 
-    expect(adminControllerParameterTypes($method))->not->toContain($queryClass);
-    expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($queryClass));
-})->with('admin_controller_read_endpoints');
+    expect(adminControllerParameterTypes($method))->not->toContain($actionClass);
+    expect(adminControllerMethodBody($method))->toContain(adminControllerStaticHandleCall($actionClass));
+})->with('admin_controller_read_action_endpoints');
 
 it('keeps admin deferred edit payloads delegated to injected read-side collaborators', function (
     string $controllerClass,
@@ -134,9 +134,7 @@ it('keeps admin deferred edit payloads delegated to injected read-side collabora
     expect(adminControllerMethodBody($method))->toContain(adminControllerCollaboratorCall($methodCall));
 })->with('admin_controller_injected_read_endpoints');
 
-/**
- * @return list<string>
- */
+/** @return list<string> */
 function adminControllerDeclaredPublicMethodNames(ReflectionClass $reflection): array
 {
     $methods = array_values(array_map(
@@ -157,9 +155,7 @@ function adminControllerMethodLineCount(ReflectionMethod $method): int
     return $method->getEndLine() - $method->getStartLine() + 1;
 }
 
-/**
- * @return list<string>
- */
+/** @return list<string> */
 function adminControllerParameterTypes(ReflectionMethod $method): array
 {
     return array_values(array_filter(array_map(

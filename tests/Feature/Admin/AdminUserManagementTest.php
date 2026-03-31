@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Models\Role;
-use App\Models\User;
+use App\Modules\Roles\Models\Role;
+use App\Modules\Users\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Illuminate\Support\Facades\Hash;
 

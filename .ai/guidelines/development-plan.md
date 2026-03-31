@@ -41,6 +41,7 @@ This plan is aligned with the current application baseline and the updated AGENT
 ### 2026-03-28
 
 - Phase 3 is complete.
+- Phase 4 is complete.
 - Admin application code now lives under `app/Modules/Admin/{Permissions,Roles,Users,Shared}` with slice-owned `Actions`, `Queries`, `DTOs`, `Support`, and `Exceptions`.
 - Admin HTTP transport now lives under `app/Http/Admin/{Permissions,Roles,Users}/Controllers|Requests`.
 - Settings application code now lives under `app/Modules/Settings`, and settings transport now lives under `app/Http/Settings/{Profile,Password,TwoFactor}/Controllers|Requests`.
@@ -48,7 +49,10 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Legacy PHP class files were removed from `app/Actions`, `app/Support/Data`, `app/Support/Admin`, `app/Http/Controllers/Admin|Settings`, and `app/Http/Requests/Admin|Settings`.
 - Wayfinder and TypeScript contracts were regenerated after the controller and form request namespace move.
 - Backend architecture tests now enforce module-owned actions, queries, DTOs, support collaborators, and slice-oriented HTTP transport namespaces.
-- Phase 4 is now the active workstream.
+- Selective admin contracts now live under slice-owned `Contracts` namespaces, and `AppServiceProvider` binds the reusable dashboard metrics, permission group, grouped permissions, and admin filter-option collaborators.
+- Admin dashboard counts now delegate through a dedicated read-side metrics provider instead of an inline route closure query block.
+- Container-backed contract coverage now verifies the new admin bindings, while architecture tests enforce narrow module-owned contract namespaces.
+- Phase 5 is now the active workstream.
 
 ## Required Skills And Tooling
 
@@ -252,6 +256,17 @@ Definition of done:
 - The codebase can keep migrating slice by slice without creating a third architecture style.
 
 ## Phase 4: Add Selective Contracts And Provider Bindings
+
+Status: completed on `2026-03-28`.
+
+Completed work:
+
+- added slice-owned contracts for reusable admin collaborators under `app/Modules/Admin/{Dashboard,Permissions,Roles,Users}/Contracts`
+- bound those contracts in `AppServiceProvider` using explicit singleton registrations
+- introduced slice-specific filter-option catalog implementations for users, roles, and permissions
+- updated permissions write paths and admin read-side queries/controllers to depend on contracts rather than concrete collaborators
+- extracted admin dashboard counts into a dedicated read-side metrics provider and query
+- added Pest coverage for module-owned contracts and container bindings so the new boundary is enforced
 
 Static action entrypoints do not remove the need for good boundaries. Variability belongs behind collaborators with narrow contracts.
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Auth\DTOs;
 
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Carbon\CarbonInterface;
 use Spatie\LaravelData\Data;
 

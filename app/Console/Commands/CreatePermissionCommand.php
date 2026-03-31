@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\PermissionGroup;
-use App\Modules\Admin\Permissions\Actions\CreatePermission;
-use App\Modules\Admin\Permissions\DTOs\CreatePermissionData;
-use App\Modules\Admin\Permissions\Support\PermissionGroupCatalog;
-use App\Modules\Admin\Permissions\Support\PermissionNormalizer;
+use App\Modules\Permissions\Actions\CreatePermission;
+use App\Modules\Permissions\Actions\PermissionNormalizer;
+use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
+use App\Modules\Permissions\DTOs\CreatePermissionData;
+use App\Modules\Permissions\Models\PermissionGroup;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
@@ -27,7 +27,7 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
 
     public function handle(
         PermissionNormalizer $permissionNormalizer,
-        PermissionGroupCatalog $permissionGroupCatalog,
+        PermissionGroupCatalogContract $permissionGroupCatalog,
     ): int {
         intro('Create a permission');
 

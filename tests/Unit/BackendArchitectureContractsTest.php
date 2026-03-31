@@ -2,80 +2,91 @@
 
 declare(strict_types=1);
 
-use App\Http\Admin\Permissions\Controllers\PermissionsController;
-use App\Http\Admin\Permissions\Requests\StorePermissionRequest;
-use App\Http\Admin\Permissions\Requests\UpdatePermissionRequest;
-use App\Http\Admin\Roles\Controllers\RolesController;
-use App\Http\Admin\Roles\Requests\StoreRoleRequest;
-use App\Http\Admin\Roles\Requests\SyncRolePermissionsRequest;
-use App\Http\Admin\Roles\Requests\UpdateRoleRequest;
-use App\Http\Admin\Users\Controllers\UsersController;
-use App\Http\Admin\Users\Requests\StoreUserRequest;
-use App\Http\Admin\Users\Requests\SyncUserRolesRequest;
-use App\Http\Admin\Users\Requests\UpdateUserRequest;
-use App\Http\Settings\Password\Controllers\PasswordController;
-use App\Http\Settings\Password\Requests\PasswordUpdateRequest;
-use App\Http\Settings\Profile\Controllers\ProfileController;
-use App\Http\Settings\Profile\Requests\ProfileDeleteRequest;
-use App\Http\Settings\Profile\Requests\ProfileUpdateRequest;
-use App\Http\Settings\TwoFactor\Controllers\TwoFactorAuthenticationController;
-use App\Http\Settings\TwoFactor\Requests\TwoFactorAuthenticationRequest;
-use App\Modules\Admin\Permissions\Actions\CreatePermission;
-use App\Modules\Admin\Permissions\Actions\DeletePermission;
-use App\Modules\Admin\Permissions\Actions\UpdatePermission;
-use App\Modules\Admin\Permissions\DTOs\CreatePermissionData;
-use App\Modules\Admin\Permissions\DTOs\PermissionGroupOptionData;
-use App\Modules\Admin\Permissions\DTOs\PermissionIndexItemData;
-use App\Modules\Admin\Permissions\DTOs\PermissionItemData;
-use App\Modules\Admin\Permissions\DTOs\UpdatePermissionData;
-use App\Modules\Admin\Permissions\Queries\GetPermissionFilterOptions;
-use App\Modules\Admin\Permissions\Queries\GetPermissionIndexItems;
-use App\Modules\Admin\Permissions\Queries\IndexPermissions;
-use App\Modules\Admin\Permissions\Support\PermissionGroupCatalog;
-use App\Modules\Admin\Permissions\Support\PermissionNormalizer;
-use App\Modules\Admin\Roles\Actions\CreateRole;
-use App\Modules\Admin\Roles\Actions\DeleteRole;
-use App\Modules\Admin\Roles\Actions\SyncRolePermissions;
-use App\Modules\Admin\Roles\Actions\UpdateRole;
-use App\Modules\Admin\Roles\DTOs\AssignableUserData;
-use App\Modules\Admin\Roles\DTOs\CreateRoleData;
-use App\Modules\Admin\Roles\DTOs\EditableRoleData;
-use App\Modules\Admin\Roles\DTOs\RoleListItemData;
-use App\Modules\Admin\Roles\DTOs\SyncRolePermissionsData;
-use App\Modules\Admin\Roles\DTOs\UpdateRoleData;
-use App\Modules\Admin\Roles\Exceptions\UnknownPermissionsSelected;
-use App\Modules\Admin\Roles\Queries\GetAssignableUsers;
-use App\Modules\Admin\Roles\Queries\GetRoleFilterOptions;
-use App\Modules\Admin\Roles\Queries\GetRoleIndexItems;
-use App\Modules\Admin\Roles\Queries\IndexRoles;
-use App\Modules\Admin\Roles\Support\GroupedPermissions;
-use App\Modules\Admin\Roles\Support\RoleNameNormalizer;
-use App\Modules\Admin\Shared\DTOs\AdminIndexQueryData;
-use App\Modules\Admin\Shared\Queries\GetAdminIndex;
-use App\Modules\Admin\Shared\Support\AdminIndexQuery;
-use App\Modules\Admin\Users\Actions\CreateUser;
-use App\Modules\Admin\Users\Actions\DeleteUser;
-use App\Modules\Admin\Users\Actions\SyncUserRoles;
-use App\Modules\Admin\Users\Actions\UpdateUser;
-use App\Modules\Admin\Users\DTOs\CreateUserData;
-use App\Modules\Admin\Users\DTOs\EditableUserData;
-use App\Modules\Admin\Users\DTOs\RoleOptionData;
-use App\Modules\Admin\Users\DTOs\SyncUserRolesData;
-use App\Modules\Admin\Users\DTOs\UpdateUserData;
-use App\Modules\Admin\Users\DTOs\UserListItemData;
-use App\Modules\Admin\Users\Exceptions\UnknownRolesSelected;
-use App\Modules\Admin\Users\Queries\GetEditableRoles;
-use App\Modules\Admin\Users\Queries\GetUserFilterOptions;
-use App\Modules\Admin\Users\Queries\GetUserIndexItems;
-use App\Modules\Admin\Users\Queries\IndexUsers;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Http\Requests\Admin\StorePermissionRequest;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\SyncRolePermissionsRequest;
+use App\Http\Requests\Admin\SyncUserRolesRequest;
+use App\Http\Requests\Admin\UpdatePermissionRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Settings\PasswordUpdateRequest;
+use App\Http\Requests\Settings\ProfileDeleteRequest;
+use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
 use App\Modules\Auth\Actions\CreateNewUser;
 use App\Modules\Auth\Actions\ResetUserPassword;
 use App\Modules\Auth\DTOs\AuthenticatedUserData;
 use App\Modules\Auth\DTOs\SharedAuthData;
+use App\Modules\Dashboard\Actions\DashboardMetrics;
+use App\Modules\Dashboard\Actions\GetDashboardMetrics;
+use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
+use App\Modules\Permissions\Actions\CreatePermission;
+use App\Modules\Permissions\Actions\DeletePermission;
+use App\Modules\Permissions\Actions\GetPermissionFilterOptions;
+use App\Modules\Permissions\Actions\GetPermissionIndexItems;
+use App\Modules\Permissions\Actions\IndexPermissions;
+use App\Modules\Permissions\Actions\PermissionFilterOptionsCatalog;
+use App\Modules\Permissions\Actions\PermissionGroupCatalog;
+use App\Modules\Permissions\Actions\PermissionNormalizer;
+use App\Modules\Permissions\Actions\UpdatePermission;
+use App\Modules\Permissions\Contracts\PermissionFilterOptionsProvider;
+use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
+use App\Modules\Permissions\DTOs\CreatePermissionData;
+use App\Modules\Permissions\DTOs\PermissionGroupOptionData;
+use App\Modules\Permissions\DTOs\PermissionIndexItemData;
+use App\Modules\Permissions\DTOs\PermissionItemData;
+use App\Modules\Permissions\DTOs\UpdatePermissionData;
+use App\Modules\Roles\Actions\CreateRole;
+use App\Modules\Roles\Actions\DeleteRole;
+use App\Modules\Roles\Actions\GetAssignableUsers;
+use App\Modules\Roles\Actions\GetRoleFilterOptions;
+use App\Modules\Roles\Actions\GetRoleIndexItems;
+use App\Modules\Roles\Actions\GroupedPermissions;
+use App\Modules\Roles\Actions\IndexRoles;
+use App\Modules\Roles\Actions\RoleFilterOptionsCatalog;
+use App\Modules\Roles\Actions\RoleNameNormalizer;
+use App\Modules\Roles\Actions\SyncRolePermissions;
+use App\Modules\Roles\Actions\UpdateRole;
+use App\Modules\Roles\Contracts\GroupedPermissionsProvider;
+use App\Modules\Roles\Contracts\RoleFilterOptionsProvider;
+use App\Modules\Roles\DTOs\AssignableUserData;
+use App\Modules\Roles\DTOs\CreateRoleData;
+use App\Modules\Roles\DTOs\EditableRoleData;
+use App\Modules\Roles\DTOs\RoleListItemData;
+use App\Modules\Roles\DTOs\SyncRolePermissionsData;
+use App\Modules\Roles\DTOs\UpdateRoleData;
+use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
 use App\Modules\Settings\Actions\DeleteProfile;
 use App\Modules\Settings\Actions\UpdatePassword;
 use App\Modules\Settings\Actions\UpdateProfile;
 use App\Modules\Settings\DTOs\UpdateProfileData;
+use App\Modules\Shared\Actions\AdminIndexQuery;
+use App\Modules\Shared\Actions\GetAdminIndex;
+use App\Modules\Shared\DTOs\AdminIndexQueryData;
+use App\Modules\Users\Actions\CreateUser;
+use App\Modules\Users\Actions\DeleteUser;
+use App\Modules\Users\Actions\GetEditableRoles;
+use App\Modules\Users\Actions\GetUserFilterOptions;
+use App\Modules\Users\Actions\GetUserIndexItems;
+use App\Modules\Users\Actions\IndexUsers;
+use App\Modules\Users\Actions\SyncUserRoles;
+use App\Modules\Users\Actions\UpdateUser;
+use App\Modules\Users\Actions\UserFilterOptionsCatalog;
+use App\Modules\Users\Contracts\UserFilterOptionsProvider;
+use App\Modules\Users\DTOs\CreateUserData;
+use App\Modules\Users\DTOs\EditableUserData;
+use App\Modules\Users\DTOs\RoleOptionData;
+use App\Modules\Users\DTOs\SyncUserRolesData;
+use App\Modules\Users\DTOs\UpdateUserData;
+use App\Modules\Users\DTOs\UserListItemData;
+use App\Modules\Users\Exceptions\UnknownRolesSelected;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use Spatie\LaravelData\Data;
@@ -97,7 +108,8 @@ dataset('project_write_action_classes', [
     UpdatePassword::class,
 ]);
 
-dataset('project_query_classes', [
+dataset('project_read_action_classes', [
+    GetDashboardMetrics::class,
     GetAdminIndex::class,
     IndexUsers::class,
     GetUserIndexItems::class,
@@ -141,35 +153,48 @@ dataset('backend_data_classes', [
     UpdateProfileData::class,
 ]);
 
-dataset('module_support_classes', [
-    [AdminIndexQuery::class, 'App\\Modules\\Admin\\Shared\\Support'],
-    [PermissionGroupCatalog::class, 'App\\Modules\\Admin\\Permissions\\Support'],
-    [PermissionNormalizer::class, 'App\\Modules\\Admin\\Permissions\\Support'],
-    [GroupedPermissions::class, 'App\\Modules\\Admin\\Roles\\Support'],
-    [RoleNameNormalizer::class, 'App\\Modules\\Admin\\Roles\\Support'],
-    [UnknownPermissionsSelected::class, 'App\\Modules\\Admin\\Roles\\Exceptions'],
-    [UnknownRolesSelected::class, 'App\\Modules\\Admin\\Users\\Exceptions'],
+dataset('module_collaborator_classes', [
+    [DashboardMetrics::class, 'App\\Modules\\Dashboard\\Actions'],
+    [AdminIndexQuery::class, 'App\\Modules\\Shared\\Actions'],
+    [PermissionFilterOptionsCatalog::class, 'App\\Modules\\Permissions\\Actions'],
+    [PermissionGroupCatalog::class, 'App\\Modules\\Permissions\\Actions'],
+    [PermissionNormalizer::class, 'App\\Modules\\Permissions\\Actions'],
+    [GroupedPermissions::class, 'App\\Modules\\Roles\\Actions'],
+    [RoleFilterOptionsCatalog::class, 'App\\Modules\\Roles\\Actions'],
+    [RoleNameNormalizer::class, 'App\\Modules\\Roles\\Actions'],
+    [UserFilterOptionsCatalog::class, 'App\\Modules\\Users\\Actions'],
+    [UnknownPermissionsSelected::class, 'App\\Modules\\Roles\\Exceptions'],
+    [UnknownRolesSelected::class, 'App\\Modules\\Users\\Exceptions'],
+]);
+
+dataset('module_contract_classes', [
+    [DashboardMetricsProvider::class, 'App\\Modules\\Dashboard\\Contracts'],
+    [PermissionGroupCatalogContract::class, 'App\\Modules\\Permissions\\Contracts'],
+    [PermissionFilterOptionsProvider::class, 'App\\Modules\\Permissions\\Contracts'],
+    [GroupedPermissionsProvider::class, 'App\\Modules\\Roles\\Contracts'],
+    [RoleFilterOptionsProvider::class, 'App\\Modules\\Roles\\Contracts'],
+    [UserFilterOptionsProvider::class, 'App\\Modules\\Users\\Contracts'],
 ]);
 
 dataset('slice_transport_classes', [
-    [UsersController::class, 'App\\Http\\Admin\\Users\\Controllers'],
-    [StoreUserRequest::class, 'App\\Http\\Admin\\Users\\Requests'],
-    [UpdateUserRequest::class, 'App\\Http\\Admin\\Users\\Requests'],
-    [SyncUserRolesRequest::class, 'App\\Http\\Admin\\Users\\Requests'],
-    [RolesController::class, 'App\\Http\\Admin\\Roles\\Controllers'],
-    [StoreRoleRequest::class, 'App\\Http\\Admin\\Roles\\Requests'],
-    [UpdateRoleRequest::class, 'App\\Http\\Admin\\Roles\\Requests'],
-    [SyncRolePermissionsRequest::class, 'App\\Http\\Admin\\Roles\\Requests'],
-    [PermissionsController::class, 'App\\Http\\Admin\\Permissions\\Controllers'],
-    [StorePermissionRequest::class, 'App\\Http\\Admin\\Permissions\\Requests'],
-    [UpdatePermissionRequest::class, 'App\\Http\\Admin\\Permissions\\Requests'],
-    [ProfileController::class, 'App\\Http\\Settings\\Profile\\Controllers'],
-    [ProfileUpdateRequest::class, 'App\\Http\\Settings\\Profile\\Requests'],
-    [ProfileDeleteRequest::class, 'App\\Http\\Settings\\Profile\\Requests'],
-    [PasswordController::class, 'App\\Http\\Settings\\Password\\Controllers'],
-    [PasswordUpdateRequest::class, 'App\\Http\\Settings\\Password\\Requests'],
-    [TwoFactorAuthenticationController::class, 'App\\Http\\Settings\\TwoFactor\\Controllers'],
-    [TwoFactorAuthenticationRequest::class, 'App\\Http\\Settings\\TwoFactor\\Requests'],
+    [UsersController::class, 'App\\Http\\Controllers\\Admin'],
+    [StoreUserRequest::class, 'App\\Http\\Requests\\Admin'],
+    [UpdateUserRequest::class, 'App\\Http\\Requests\\Admin'],
+    [SyncUserRolesRequest::class, 'App\\Http\\Requests\\Admin'],
+    [RolesController::class, 'App\\Http\\Controllers\\Admin'],
+    [StoreRoleRequest::class, 'App\\Http\\Requests\\Admin'],
+    [UpdateRoleRequest::class, 'App\\Http\\Requests\\Admin'],
+    [SyncRolePermissionsRequest::class, 'App\\Http\\Requests\\Admin'],
+    [PermissionsController::class, 'App\\Http\\Controllers\\Admin'],
+    [StorePermissionRequest::class, 'App\\Http\\Requests\\Admin'],
+    [UpdatePermissionRequest::class, 'App\\Http\\Requests\\Admin'],
+    [ProfileController::class, 'App\\Http\\Controllers\\Settings'],
+    [ProfileUpdateRequest::class, 'App\\Http\\Requests\\Settings'],
+    [ProfileDeleteRequest::class, 'App\\Http\\Requests\\Settings'],
+    [PasswordController::class, 'App\\Http\\Controllers\\Settings'],
+    [PasswordUpdateRequest::class, 'App\\Http\\Requests\\Settings'],
+    [TwoFactorAuthenticationController::class, 'App\\Http\\Controllers\\Settings'],
+    [TwoFactorAuthenticationRequest::class, 'App\\Http\\Requests\\Settings'],
 ]);
 
 it('keeps internal write orchestration on action classes with a public static handle entrypoint', function (string $actionClass): void {
@@ -190,23 +215,23 @@ it('keeps internal write actions small enough for single-purpose handle methods'
     expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
 })->with('project_write_action_classes');
 
-it('keeps read-side queries on classes with a public static handle entrypoint', function (string $queryClass): void {
-    $reflection = new ReflectionClass($queryClass);
+it('keeps read-side collaborators on action classes with a public static handle entrypoint', function (string $actionClass): void {
+    $reflection = new ReflectionClass($actionClass);
 
     expect($reflection->getNamespaceName())->toStartWith('App\\Modules\\');
-    expect($reflection->getNamespaceName())->toContain('\\Queries');
+    expect($reflection->getNamespaceName())->toContain('\\Actions');
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
     expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
 
     assertStaticTypedPublicMethods($reflection);
-})->with('project_query_classes');
+})->with('project_read_action_classes');
 
-it('keeps read-side query handlers small enough for focused orchestration', function (string $queryClass): void {
-    $reflection = new ReflectionClass($queryClass);
+it('keeps read-side action handlers small enough for focused orchestration', function (string $actionClass): void {
+    $reflection = new ReflectionClass($actionClass);
     $handleMethod = $reflection->getMethod('handle');
 
     expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
-})->with('project_query_classes');
+})->with('project_read_action_classes');
 
 it('keeps Fortify adapter actions on their vendor contract methods instead of the project handle api', function (
     string $actionClass,
@@ -235,14 +260,39 @@ it('uses spatie data objects for non-trivial admin and shared payload contracts'
     expect($reflection->isSubclassOf(Data::class))->toBeTrue();
 })->with('backend_data_classes');
 
-it('keeps shared and slice-specific support collaborators in module-owned namespaces', function (
+it('keeps module collaborators in approved module namespaces', function (
     string $className,
     string $expectedNamespace,
 ): void {
     $reflection = new ReflectionClass($className);
 
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
-})->with('module_support_classes');
+})->with('module_collaborator_classes');
+
+it('keeps module directories flat and limited to approved directory names', function (): void {
+    $allowedDirectories = ['Actions', 'Commands', 'Contracts', 'DTOs', 'Exceptions', 'Models'];
+    $moduleDirectories = glob(dirname(__DIR__, 2).'/app/Modules/*', GLOB_ONLYDIR) ?: [];
+
+    expect($moduleDirectories)->not->toBeEmpty();
+
+    foreach ($moduleDirectories as $moduleDirectory) {
+        $childDirectories = glob($moduleDirectory.'/*', GLOB_ONLYDIR) ?: [];
+
+        foreach ($childDirectories as $childDirectory) {
+            expect(basename($childDirectory))->toBeIn($allowedDirectories);
+        }
+    }
+});
+
+it('keeps reusable admin collaborators behind narrow module-owned contracts', function (
+    string $className,
+    string $expectedNamespace,
+): void {
+    $reflection = new ReflectionClass($className);
+
+    expect($reflection->isInterface())->toBeTrue();
+    expect($reflection->getNamespaceName())->toBe($expectedNamespace);
+})->with('module_contract_classes');
 
 it('keeps admin and settings transport classes in slice-oriented http namespaces', function (
     string $className,
@@ -253,9 +303,7 @@ it('keeps admin and settings transport classes in slice-oriented http namespaces
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
 })->with('slice_transport_classes');
 
-/**
- * @return list<string>
- */
+/** @return list<string> */
 function backendArchitectureDeclaredPublicMethodNames(ReflectionClass $reflection): array
 {
     $methods = array_values(array_map(
@@ -288,9 +336,7 @@ function assertStaticTypedPublicMethods(ReflectionClass $reflection): void
     }
 }
 
-/**
- * @return list<ReflectionMethod>
- */
+/** @return list<ReflectionMethod> */
 function backendArchitectureDeclaredPublicMethods(ReflectionClass $reflection): array
 {
     return array_values(array_filter(

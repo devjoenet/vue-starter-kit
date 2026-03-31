@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Concerns;
 
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 use Stringable;
 
 trait ProfileValidationRules
 {
-    /** @return array<string, array<int, Stringable|ValidationRule|array<mixed>|string>> */
+    /** @return array<string, array<int, Stringable|ValidationRule|array|string>> */
     protected function profileRules(?int $userId = null): array
     {
         return [
@@ -20,13 +20,13 @@ trait ProfileValidationRules
         ];
     }
 
-    /** @return array<int, Stringable|ValidationRule|array<mixed>|string> */
+    /** @return array<int, Stringable|ValidationRule|array|string> */
     protected function nameRules(): array
     {
         return ['required', 'string', 'max:255'];
     }
 
-    /** @return array<int, Stringable|ValidationRule|array<mixed>|string> */
+    /** @return array<int, Stringable|ValidationRule|array|string> */
     protected function emailRules(?int $userId = null): array
     {
         return [

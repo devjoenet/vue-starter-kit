@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Auth\Actions;
 
 use App\Concerns\PasswordValidationRules;
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 

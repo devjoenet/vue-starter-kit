@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Database\Seeders\DatabaseSeeder;
 
 it('creates the test user with the super-admin role outside production', function () {

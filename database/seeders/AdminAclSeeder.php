@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
-use App\Models\Role;
+use App\Modules\Permissions\Models\Permission;
+use App\Modules\Roles\Models\Role;
 use Illuminate\Database\Seeder;
 
 final class AdminAclSeeder extends Seeder

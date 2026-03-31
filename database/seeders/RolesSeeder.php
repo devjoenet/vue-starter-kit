@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Modules\Roles\Models\Role;
 use Illuminate\Database\Seeder;
 
 final class RolesSeeder extends Seeder
