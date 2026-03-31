@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Http\Admin\Permissions\Controllers\PermissionsController;
-use App\Http\Admin\Roles\Controllers\RolesController;
-use App\Http\Admin\Users\Controllers\UsersController;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Modules\Dashboard\Actions\GetDashboardMetrics;
+use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,12 +14,8 @@ Route::middleware(['auth', 'verified'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
-        Route::get('/', fn () => Inertia::render('admin/Dashboard', [
-            'counts' => [
-                'users' => User::query()->count(),
-                'roles' => Role::query()->count(),
-                'permissions' => Permission::query()->count(),
-            ],
+        Route::get('/', fn (DashboardMetricsProvider $dashboardMetricsProvider) => Inertia::render('admin/Dashboard', [
+            'counts' => GetDashboardMetrics::handle($dashboardMetricsProvider),
         ]))->name('dashboard');
 
         Route::prefix('users')

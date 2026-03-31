@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('profile page is displayed', function () {

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Models\Permission;
-use App\Models\PermissionGroup;
-use App\Models\Role;
-use App\Models\User;
-use App\Modules\Admin\Permissions\Actions\CreatePermission;
-use App\Modules\Admin\Permissions\Actions\DeletePermission;
-use App\Modules\Admin\Permissions\Actions\UpdatePermission;
-use App\Modules\Admin\Permissions\DTOs\CreatePermissionData;
-use App\Modules\Admin\Permissions\DTOs\UpdatePermissionData;
-use App\Modules\Admin\Permissions\Support\PermissionGroupCatalog;
-use App\Modules\Admin\Roles\Actions\CreateRole;
-use App\Modules\Admin\Roles\Actions\DeleteRole;
-use App\Modules\Admin\Roles\Actions\SyncRolePermissions;
-use App\Modules\Admin\Roles\Actions\UpdateRole;
-use App\Modules\Admin\Roles\DTOs\CreateRoleData;
-use App\Modules\Admin\Roles\DTOs\SyncRolePermissionsData;
-use App\Modules\Admin\Roles\DTOs\UpdateRoleData;
-use App\Modules\Admin\Roles\Exceptions\UnknownPermissionsSelected;
+use App\Modules\Permissions\Actions\CreatePermission;
+use App\Modules\Permissions\Actions\DeletePermission;
+use App\Modules\Permissions\Actions\UpdatePermission;
+use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
+use App\Modules\Permissions\DTOs\CreatePermissionData;
+use App\Modules\Permissions\DTOs\UpdatePermissionData;
+use App\Modules\Permissions\Models\Permission;
+use App\Modules\Permissions\Models\PermissionGroup;
+use App\Modules\Roles\Actions\CreateRole;
+use App\Modules\Roles\Actions\DeleteRole;
+use App\Modules\Roles\Actions\SyncRolePermissions;
+use App\Modules\Roles\Actions\UpdateRole;
+use App\Modules\Roles\DTOs\CreateRoleData;
+use App\Modules\Roles\DTOs\SyncRolePermissionsData;
+use App\Modules\Roles\DTOs\UpdateRoleData;
+use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
+use App\Modules\Roles\Models\Role;
+use App\Modules\Users\Models\User;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();
@@ -139,7 +139,7 @@ test('create permission action persists a permission', function (): void {
         group: 'users',
         groupLabel: 'User Administration',
         groupDescription: 'Identity, lifecycle, and role assignment controls.',
-    ), app(PermissionGroupCatalog::class));
+    ), app(PermissionGroupCatalogContract::class));
 
     expect($permission->exists)->toBeTrue();
     expect($permission->guard_name)->toBe('web');
@@ -169,7 +169,7 @@ test('create permission action restores a soft deleted permission with the same 
         group: 'users',
         groupLabel: 'User Administration',
         groupDescription: 'Identity, lifecycle, and role assignment controls.',
-    ), app(PermissionGroupCatalog::class));
+    ), app(PermissionGroupCatalogContract::class));
 
     expect($restoredPermission->id)->toBe($permission->id);
     expect($restoredPermission->trashed())->toBeFalse();
@@ -196,7 +196,7 @@ test('update permission action keeps the key stable while updating catalog metad
         group: 'roles',
         groupLabel: 'Role Management',
         groupDescription: 'Role creation, maintenance, and permission-footprint controls.',
-    ), app(PermissionGroupCatalog::class));
+    ), app(PermissionGroupCatalogContract::class));
 
     expect($permission->fresh()?->name)->toBe('users.viewReports');
     expect($permission->fresh()?->label)->toBe('Manage Report Access');

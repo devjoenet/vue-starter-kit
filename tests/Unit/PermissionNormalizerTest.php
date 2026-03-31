@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Admin\Permissions\Support\PermissionNormalizer;
+use App\Modules\Permissions\Actions\PermissionNormalizer;
 
 it('normalizes permission groups and names into group.camelCase format', function (): void {
     $normalizer = app(PermissionNormalizer::class);

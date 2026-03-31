@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use App\Modules\Admin\Roles\Actions\CreateRole;
-use App\Modules\Admin\Roles\DTOs\CreateRoleData;
-use App\Modules\Admin\Roles\Support\RoleNameNormalizer;
+use App\Modules\Roles\Actions\CreateRole;
+use App\Modules\Roles\Actions\RoleNameNormalizer;
+use App\Modules\Roles\DTOs\CreateRoleData;
+use App\Modules\Users\Models\User;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;

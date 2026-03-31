@@ -6,11 +6,15 @@ namespace App\Support\TypeScript;
 
 use Illuminate\Foundation\Http\FormRequest;
 use ReflectionClass;
+use ReflectionException;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
 
 class FormRequestRulesTransformer implements Transformer
 {
+    /**
+     * @throws ReflectionException
+     */
     public function transform(ReflectionClass $class, string $name): ?TransformedType
     {
         if (! is_subclass_of($class->getName(), FormRequest::class)) {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
-use App\Modules\Admin\Users\Actions\CreateUser;
-use App\Modules\Admin\Users\DTOs\CreateUserData;
+use App\Modules\Permissions\Models\Permission;
+use App\Modules\Roles\Models\Role;
+use App\Modules\Users\Actions\CreateUser;
+use App\Modules\Users\DTOs\CreateUserData;
+use App\Modules\Users\Models\User;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
