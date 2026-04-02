@@ -432,30 +432,152 @@ Definition of done:
 - Deferred and partial reload contracts are covered.
 - No major page introduces a second design language or missing async states.
 
-## Phase 8: Finish The Test Harness And Local Delivery Workflow
+## Phase 8: Baseline Quality Audit And Gap Register
 
-The final phase reduces daily friction and makes the long refactor sustainable.
+This phase replaces the prior "final" phase and becomes the new gate before any additional feature work. The codebase has strong foundations, but a full-system audit is still missing.
 
-- Move the test harness toward `withoutVite()` by default where safe.
-- Evaluate `LazilyRefreshDatabase` or other targeted harness improvements for heavy suites.
-- Expand the local minimum release path verification:
-  - `vendor/bin/pint --dirty --format agent`
-  - targeted `php artisan test --compact`
-  - browser smoke where appropriate
-  - `npm run typecheck`
-  - `npm run build`
-- Keep local debugging and verification aligned with Boost and Herd tooling.
+Scope of the audit:
+
+- Backend architecture conformance (thin controllers, static action/query orchestration, DTO boundaries, container contracts).
+- Security and compliance posture (authorization coverage, policy/gate consistency, audit logging and sensitive-action traceability).
+- Data and query efficiency (N+1 risk scan, indexing review for filter/sort columns, pagination/query-shape consistency).
+- Frontend UI quality (visual hierarchy, accessibility, responsive behavior, empty/loading/error states, keyboard support).
+- UX coherence and branding fidelity (cross-surface consistency between marketing, auth, settings, and admin).
+- Tooling and delivery integrity (test harness behavior, CI parity, static analysis/type safety, build diagnostics).
+
+Required outputs:
+
+- A single audit ledger in `.ai/guidelines/reports/system-audit.md` with severity-tagged findings (`Critical`, `High`, `Medium`, `Low`).
+- A cross-reference matrix mapping each finding to a target phase and owner area (`backend`, `frontend`, `platform`).
+- A "known-good baseline" report for current tests and checks so regressions can be measured explicitly.
+
+Key targets:
+
+- `app/**`
+- `resources/js/**`
+- `resources/css/**`
+- `routes/**`
+- `tests/**`
+- `composer.json`
+- `package.json`
+
+Definition of done:
+
+- Every major subsystem has a written, severity-ranked audit.
+- No unresolved Critical issue remains unassigned to a phase.
+- The team has one canonical quality ledger instead of scattered TODOs.
+
+## Phase 9: Backend Domain Completion, Security, And Data Integrity
+
+After the audit ledger exists, complete backend hardening and domain consistency.
+
+- Normalize all remaining cross-slice inconsistencies in action/query naming, static entrypoints, and DTO hydration paths.
+- Add or tighten authorization for every admin/settings write path using policies or gates where missing.
+- Introduce explicit audit trails for sensitive mutations (role changes, permission changes, destructive user actions).
+- Validate index/filter query paths against real database indexes; add follow-up migrations for missing indexes.
+- Finish selective contract extraction only where variability or testability is real; avoid speculative interfaces.
+- Add architectural guardrails for transaction boundaries and post-commit side effects.
+
+Key targets:
+
+- `app/Modules/**`
+- `app/Http/**`
+- `app/Providers/**`
+- `database/migrations/**`
+- `tests/Feature/Admin/**`
+- `tests/Feature/Settings/**`
+- `tests/Unit/BackendArchitectureContractsTest.php`
+
+Definition of done:
+
+- Sensitive writes are authorized, transactional, and auditable.
+- Query-heavy views have index-backed filter/sort paths.
+- Backend architecture rules are enforced by tests instead of conventions.
+
+## Phase 10: Frontend UX, Accessibility, And Branding System Perfection
+
+This starter already has a strong visual direction; this phase turns it into a documented, measurable design system that scales.
+
+- Run a full accessibility pass (focus order, keyboard-only flows, semantic landmarks, ARIA quality, contrast validation).
+- Standardize shared page-state patterns for loading, empty, success, and failure experiences.
+- Unify motion behavior and interaction affordances across marketing, auth, admin, and settings surfaces.
+- Replace any ad hoc UI implementation differences with reusable Reka-UI/Tailwind component primitives.
+- Tighten copy and information architecture so each page has one clear primary action and reduced cognitive load.
+- Capture brand system guidance (tone, type rhythm, spacing cadence, component usage) in reusable docs.
+
+Key targets:
+
+- `resources/js/pages/**`
+- `resources/js/components/**`
+- `resources/js/layouts/**`
+- `resources/css/app.css`
+- `tests/Browser/**`
+- `tests/Unit/*Ui*Test.php`
+
+Definition of done:
+
+- Core journeys pass keyboard-first and screen-reader sanity checks.
+- Cross-surface UI feels authored as one system, not separate implementations.
+- Shared components own the majority of recurring interaction and visual patterns.
+
+## Phase 11: Performance, Resilience, And Operational Excellence
+
+Move from "works well" to "scales predictably" on both backend and frontend.
+
+- Establish performance budgets for first-load payload, JS bundle segments, and key admin index queries.
+- Add server-side observability hooks (slow query thresholds, actionable structured logs, failure correlation IDs).
+- Validate deferred props, partial reloads, and pagination behavior under realistic data volumes.
+- Optimize expensive frontend surfaces (table rendering, filter interactions, expensive reactive recomputations).
+- Ensure graceful degraded behavior for network errors, stale sessions, and partial backend failures.
+
+Key targets:
+
+- `app/Modules/Shared/**`
+- `app/Exceptions/**`
+- `resources/js/pages/admin/**`
+- `resources/js/composables/**`
+- `vite.config.ts`
+- `tests/Feature/**`
+- `tests/Browser/**`
+
+Definition of done:
+
+- Measured performance budgets exist and are enforceable.
+- Error conditions are observable and user-safe.
+- High-volume scenarios remain responsive and stable.
+
+## Phase 12: Delivery Pipeline, Developer Experience, And Release Governance
+
+Reframe the old harness-focused phase as a broader release-governance phase.
+
+- Finalize deterministic local and CI verification pipelines (backend + frontend + browser smoke tiers).
+- Introduce tiered test strategy (`quick`, `full`, `release`) with explicit commands and expected runtime budgets.
+- Move test harness optimizations forward (`withoutVite()` defaults where safe, targeted `LazilyRefreshDatabase` adoption, parallel-safe fixtures).
+- Add pre-release checklists for architecture drift, generated contract drift (Wayfinder/TypeScript), and UX regression checks.
+- Document incident rollback playbooks and release cut criteria for this starter kit.
+
+Expanded local minimum release path:
+
+- `vendor/bin/pint --dirty --format agent`
+- `php artisan test --compact`
+- `php artisan test --parallel --compact`
+- `npm run typecheck`
+- `npm run build`
+- browser smoke tests for auth/admin/settings critical flows
 
 Key targets:
 
 - `tests/TestCase.php`
 - `tests/Pest.php`
+- `.ai/guidelines/**`
+- `composer.json`
+- `package.json`
 
 Definition of done:
 
-- Local verification is consistent and repeatable.
-- JavaScript regressions are caught earlier.
-- The refactor remains shippable throughout the migration.
+- Local and CI release checks are aligned and repeatable.
+- Contract drift and UI regressions are caught before merge.
+- The starter has explicit release governance, not just ad hoc verification.
 
 ## Explicit Do-Not-Do List
 
@@ -468,27 +590,27 @@ Definition of done:
 - Do not add dependencies before architecture and harness stability are re-established.
 - Do not do a big-bang filesystem move.
 
-## First Four PRs To Open
+## Next Four PRs To Open
 
-1. `static-action-standard-and-permissions-normalization`
-   - replace stale architecture tests
-   - normalize permissions naming and orchestration
-   - align local verification with the new baseline
+1. `phase-8-system-audit-ledger`
+   - produce the complete severity-ranked audit ledger
+   - map all findings to backend/frontend/platform ownership
+   - establish the known-good verification baseline snapshot
 
-2. `admin-read-write-separation`
-   - extract admin read-side collaborators
-   - shrink users, roles, and permissions controllers
-   - move filtering and sorting into database-backed queries
+2. `phase-9-backend-security-and-data-integrity`
+   - close backend architecture and authorization gaps
+   - harden sensitive writes with transaction + audit trace coverage
+   - add missing index migrations for high-frequency filter/sort paths
 
-3. `domain-slices-and-selective-contracts`
-   - start moving slices toward domain ownership
-   - add narrow contracts for reusable catalogs and providers
-   - bind collaborators in service providers
+3. `phase-10-frontend-a11y-and-brand-system`
+   - standardize page-state patterns across auth/admin/settings/marketing
+   - complete keyboard, semantic, and contrast hardening
+   - document and enforce reusable visual/interaction system rules
 
-4. `type-auth-and-harness-hardening`
-   - split or derive frontend page prop contracts
-   - add auth and settings browser smoke coverage
-   - improve the test harness and local verification flow
+4. `phase-11-12-performance-and-release-governance`
+   - add measurable performance/observability budgets
+   - finalize deterministic quick/full/release verification tiers
+   - codify release checklist and rollback playbooks
 
 ## Success Criteria
 
