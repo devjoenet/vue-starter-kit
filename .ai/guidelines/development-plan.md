@@ -443,6 +443,7 @@ Scope of the audit:
 - Data and query efficiency (N+1 risk scan, indexing review for filter/sort columns, pagination/query-shape consistency).
 - Frontend UI quality (visual hierarchy, accessibility, responsive behavior, empty/loading/error states, keyboard support).
 - UX coherence and branding fidelity (cross-surface consistency between marketing, auth, settings, and admin).
+- Admin dashboard composition fidelity against the `Welcome.vue` baseline (dominant shell, integrated action/media stage, restrained supporting bands, and avoidance of generic metric-card admin layouts).
 - Tooling and delivery integrity (test harness behavior, CI parity, static analysis/type safety, build diagnostics).
 
 Required outputs:
@@ -450,6 +451,7 @@ Required outputs:
 - A single audit ledger in `.ai/guidelines/reports/system-audit.md` with severity-tagged findings (`Critical`, `High`, `Medium`, `Low`).
 - A cross-reference matrix mapping each finding to a target phase and owner area (`backend`, `frontend`, `platform`).
 - A "known-good baseline" report for current tests and checks so regressions can be measured explicitly.
+- A focused dashboard-vs-welcome comparison note that identifies structural drift, reusable primitives, and any missing guardrails needed to keep admin from becoming a second design language.
 
 Key targets:
 
@@ -501,9 +503,11 @@ This starter already has a strong visual direction; this phase turns it into a d
 - Run a full accessibility pass (focus order, keyboard-only flows, semantic landmarks, ARIA quality, contrast validation).
 - Standardize shared page-state patterns for loading, empty, success, and failure experiences.
 - Unify motion behavior and interaction affordances across marketing, auth, admin, and settings surfaces.
+- Redesign the admin dashboard landing experience so it follows the `Welcome.vue` composition model: one dominant shell, one clear primary operational message, one integrated action/media or action/evidence stage, and one lower supporting band instead of stacked equal-weight panels.
 - Replace any ad hoc UI implementation differences with reusable Reka-UI/Tailwind component primitives.
 - Tighten copy and information architecture so each page has one clear primary action and reduced cognitive load.
 - Capture brand system guidance (tone, type rhythm, spacing cadence, component usage) in reusable docs.
+- Add frontend guardrails that explicitly reject generic admin dashboard tropes when they conflict with the Southeast Code baseline, especially repetitive metric-card grids and filler status panels on the dashboard landing page.
 
 Key targets:
 
@@ -513,12 +517,14 @@ Key targets:
 - `resources/css/app.css`
 - `tests/Browser/**`
 - `tests/Unit/*Ui*Test.php`
+- `tests/Unit/FrontendMaintenanceGuardrailsTest.php`
 
 Definition of done:
 
 - Core journeys pass keyboard-first and screen-reader sanity checks.
 - Cross-surface UI feels authored as one system, not separate implementations.
 - Shared components own the majority of recurring interaction and visual patterns.
+- The admin dashboard visibly inherits the `Welcome.vue` narrative structure and no longer reads like a generic SaaS metrics shell.
 
 ## Phase 11: Performance, Resilience, And Operational Excellence
 
@@ -554,6 +560,7 @@ Reframe the old harness-focused phase as a broader release-governance phase.
 - Introduce tiered test strategy (`quick`, `full`, `release`) with explicit commands and expected runtime budgets.
 - Move test harness optimizations forward (`withoutVite()` defaults where safe, targeted `LazilyRefreshDatabase` adoption, parallel-safe fixtures).
 - Add pre-release checklists for architecture drift, generated contract drift (Wayfinder/TypeScript), and UX regression checks.
+- Add release-time UI regression checks for high-identity surfaces, including explicit guardrails or visual assertions that keep the admin dashboard aligned with the `Welcome.vue` shell and hierarchy.
 - Document incident rollback playbooks and release cut criteria for this starter kit.
 
 Expanded local minimum release path:
@@ -572,12 +579,15 @@ Key targets:
 - `.ai/guidelines/**`
 - `composer.json`
 - `package.json`
+- `tests/Unit/FrontendMaintenanceGuardrailsTest.php`
+- `tests/Browser/**`
 
 Definition of done:
 
 - Local and CI release checks are aligned and repeatable.
 - Contract drift and UI regressions are caught before merge.
 - The starter has explicit release governance, not just ad hoc verification.
+- High-identity pages such as `Welcome.vue` and the admin dashboard have enforceable regression coverage, not just informal design intent.
 
 ## Explicit Do-Not-Do List
 
