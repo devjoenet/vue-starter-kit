@@ -72,7 +72,13 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Frontend pages, shared admin components, and composables now consume slice-specific type modules instead of one shared page-prop file.
 - Wayfinder and TypeScript contracts were regenerated after the DTO export changes.
 - Pest architecture coverage now enforces the TypeScript export markers on frontend-bound DTOs and form requests, and it verifies that the monolithic page prop file does not return.
-- Phase 7 is now the active workstream.
+- Phase 7 is complete.
+- Pest browser coverage now exercises login, registration, password reset, email verification notice, password confirmation, and the full two-factor enable -> confirm -> recovery -> challenge -> disable flow.
+- Browser smoke coverage now checks for JavaScript errors across public auth pages plus key authenticated admin and settings surfaces.
+- Auth page prop contracts now have targeted Inertia partial reload coverage for login, forgot password, and email verification notice states.
+- Existing settings partial reload coverage and admin deferred/partial reload coverage remain in place as the operational contract baseline.
+- Fortify redirect and response behavior was reviewed against the browser flows and kept on the default responses because the current redirects land correctly without extra bindings.
+- Phase 8 is now the active workstream.
 
 ## Required Skills And Tooling
 
@@ -387,6 +393,15 @@ Definition of done:
 ## Phase 7: Harden Auth, Settings, And Operational UX
 
 Auth and settings should remain trustworthy through the architecture shift, not just visually polished.
+
+Status: completed on `2026-03-31`.
+
+- Completed work:
+  - added Pest browser coverage for login, registration, password reset, email verification notice, password confirmation, and the full two-factor lifecycle
+  - added JavaScript error smoke coverage for public auth pages and key authenticated admin/settings pages
+  - added targeted Inertia partial reload coverage for login, forgot password, and email verification notice props
+  - verified the existing settings partial reload and admin deferred prop contracts still cover the intended async page behavior
+  - reviewed Fortify response bindings and kept the framework defaults because the current redirect behavior is already correct for the browser flows
 
 - Add browser smoke coverage for:
   - login

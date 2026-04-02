@@ -6,6 +6,7 @@ namespace App\Modules\Users\Models;
 
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,7 @@ use Override;
 use Spatie\Permission\Traits\HasRoles;
 
 /** @property CarbonInterface|null $email_verified_at */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use HasRoles;
