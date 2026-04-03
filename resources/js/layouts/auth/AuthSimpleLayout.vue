@@ -35,7 +35,7 @@ const trustPoints = ['Secure sign-in for demos, client portals, and internal too
       </header>
 
       <main class="relative flex flex-1 items-center pb-10 sm:pb-12 lg:pb-16">
-        <section class="surface-auth-stage motion-stage relative w-full overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6">
+        <section class="surface-auth-stage motion-stage relative w-full overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6" aria-labelledby="auth-page-title">
           <div class="relative z-10 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,29rem)] xl:gap-x-14">
             <section class="relative z-[2] max-w-[38rem] px-3 py-3 sm:px-4 lg:px-6 lg:py-5">
               <div class="motion-step" style="--motion-order: 2">
@@ -43,7 +43,7 @@ const trustPoints = ['Secure sign-in for demos, client portals, and internal too
               </div>
 
               <div class="motion-step mt-5 space-y-5" style="--motion-order: 3">
-                <h1 class="max-w-[11ch] text-[clamp(2.9rem,5.2vw,5.2rem)] leading-[0.93] font-semibold tracking-[-0.055em] text-balance">
+                <h1 id="auth-page-title" class="max-w-[11ch] text-[clamp(2.9rem,5.2vw,5.2rem)] leading-[0.93] font-semibold tracking-[-0.055em] text-balance">
                   {{ title }}
                 </h1>
                 <p class="max-w-xl border-t border-border/45 pt-5 text-base leading-7 text-muted-foreground sm:text-lg">

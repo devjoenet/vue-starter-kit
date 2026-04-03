@@ -80,6 +80,23 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Fortify redirect and response behavior was reviewed against the browser flows and kept on the default responses because the current redirects land correctly without extra bindings.
 - Phase 8 is now the active workstream.
 
+### 2026-04-02
+
+- Phase 8 is complete.
+- Added the canonical Phase 8 audit ledger at `.ai/guidelines/reports/system-audit.md`.
+- The audit recorded no unassigned `Critical` findings in the current baseline.
+- The audit surfaced three immediate high-priority follow-up tracks:
+  - roadmap-to-code structural drift between the documented target architecture and the live namespace layout
+  - missing durable audit logging for sensitive admin mutations
+  - missing CI parity for the existing local verification gates
+- The audit also captured the current known-good verification baseline and a focused admin-dashboard versus `Welcome.vue` composition note.
+- Folded the lightweight release-governance and guardrail work from later phases into Phase 8:
+  - added GitHub Actions CI parity for backend, frontend, and browser smoke checks
+  - cleaned the Pest baseline and switched shared feature/browser tests to `LazilyRefreshDatabase`
+  - removed starter example tests from the suite
+  - added semantic landmark and dashboard-composition guardrails for high-identity frontend surfaces
+- Phase 9 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -436,6 +453,21 @@ Definition of done:
 
 This phase replaces the prior "final" phase and becomes the new gate before any additional feature work. The codebase has strong foundations, but a full-system audit is still missing.
 
+Status: completed on `2026-04-02`.
+
+Completed work:
+
+- created the canonical audit ledger at `.ai/guidelines/reports/system-audit.md`
+- recorded severity-ranked findings across backend, security, data, frontend, UX, dashboard composition, and tooling integrity
+- mapped each finding to an owner area and follow-up phase
+- captured a dated known-good verification baseline for backend and frontend quality gates
+- documented dashboard drift against the `Welcome.vue` baseline and identified the missing guardrails needed for Phase 10
+- folded in the lightweight later-phase work that did not require major code changes:
+  - GitHub Actions CI parity for backend, frontend, and browser smoke verification
+  - Pest harness cleanup and `LazilyRefreshDatabase` adoption
+  - removal of starter example tests
+  - semantic-landmark and dashboard-hierarchy frontend guardrails
+
 Scope of the audit:
 
 - Backend architecture conformance (thin controllers, static action/query orchestration, DTO boundaries, container contracts).
@@ -500,6 +532,11 @@ Definition of done:
 
 This starter already has a strong visual direction; this phase turns it into a documented, measurable design system that scales.
 
+Lightweight tasks already completed in Phase 8:
+
+- added semantic landmark guardrails for high-identity surfaces
+- added dashboard hierarchy guardrails that keep the admin landing page anchored to the `Welcome.vue` shell structure baseline
+
 - Run a full accessibility pass (focus order, keyboard-only flows, semantic landmarks, ARIA quality, contrast validation).
 - Standardize shared page-state patterns for loading, empty, success, and failure experiences.
 - Unify motion behavior and interaction affordances across marketing, auth, admin, and settings surfaces.
@@ -555,6 +592,11 @@ Definition of done:
 ## Phase 12: Delivery Pipeline, Developer Experience, And Release Governance
 
 Reframe the old harness-focused phase as a broader release-governance phase.
+
+Lightweight tasks already completed in Phase 8:
+
+- added GitHub Actions CI parity for backend, frontend, and browser smoke checks
+- cleaned the shared Pest baseline and removed leftover starter example tests
 
 - Finalize deterministic local and CI verification pipelines (backend + frontend + browser smoke tiers).
 - Introduce tiered test strategy (`quick`, `full`, `release`) with explicit commands and expected runtime budgets.
