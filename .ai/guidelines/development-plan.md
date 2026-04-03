@@ -42,13 +42,13 @@ This plan is aligned with the current application baseline and the updated AGENT
 
 - Phase 3 is complete.
 - Phase 4 is complete.
-- Admin application code now lives under `app/Modules/Admin/{Permissions,Roles,Users,Shared}` with slice-owned `Actions`, `Queries`, `DTOs`, `Support`, and `Exceptions`.
-- Admin HTTP transport now lives under `app/Http/Admin/{Permissions,Roles,Users}/Controllers|Requests`.
-- Settings application code now lives under `app/Modules/Settings`, and settings transport now lives under `app/Http/Settings/{Profile,Password,TwoFactor}/Controllers|Requests`.
+- Admin application code now lives under flat module roots such as `app/Modules/{Permissions,Roles,Users,Dashboard,Shared}` with slice-owned `Actions`, `DTOs`, `Contracts`, and `Exceptions`.
+- Admin HTTP transport now lives under `app/Http/Controllers/Admin` and `app/Http/Requests/Admin`.
+- Settings application code now lives under `app/Modules/Settings`, and settings transport now lives under `app/Http/Controllers/Settings` and `app/Http/Requests/Settings`.
 - Auth DTOs and Fortify adapter actions now live under `app/Modules/Auth`.
 - Legacy PHP class files were removed from `app/Actions`, `app/Support/Data`, `app/Support/Admin`, `app/Http/Controllers/Admin|Settings`, and `app/Http/Requests/Admin|Settings`.
 - Wayfinder and TypeScript contracts were regenerated after the controller and form request namespace move.
-- Backend architecture tests now enforce module-owned actions, queries, DTOs, support collaborators, and slice-oriented HTTP transport namespaces.
+- Backend architecture tests now enforce module-owned actions, DTOs, contracts, and slice-oriented HTTP transport namespaces.
 - Selective admin contracts now live under slice-owned `Contracts` namespaces, and `AppServiceProvider` binds the reusable dashboard metrics, permission group, grouped permissions, and admin filter-option collaborators.
 - Admin dashboard counts now delegate through a dedicated read-side metrics provider instead of an inline route closure query block.
 - Container-backed contract coverage now verifies the new admin bindings, while architecture tests enforce narrow module-owned contract namespaces.
@@ -97,6 +97,17 @@ This plan is aligned with the current application baseline and the updated AGENT
   - added semantic landmark and dashboard-composition guardrails for high-identity frontend surfaces
 - Phase 9 is now the active workstream.
 
+### 2026-04-03
+
+- Phase 9 is complete.
+- Reconciled the roadmap with the actual flat module and transport layout so the plan no longer claims an `app/Modules/Admin/**` or `app/Http/Admin/**` future that the project rules explicitly reject.
+- Added a flat `app/Modules/Audit` slice with durable audit-log persistence for sensitive admin and settings write paths.
+- Admin and settings write form requests now co-locate their authorization intent instead of delegating that traceability entirely to route middleware.
+- Sensitive role, permission, user, and settings writes now record post-commit audit entries with subject, actor, request context, and before/after payloads.
+- Added follow-up database indexes for the current admin filter and sort paths on `users`, `roles`, `permissions`, and `permission_groups`.
+- Pest architecture coverage now enforces transactional audited write actions plus explicit guard clauses on privileged form requests, and targeted feature coverage now proves the audit trail on representative admin and settings mutations.
+- Phase 10 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -133,12 +144,10 @@ The codebase already has useful structure, but it still mixes multiple architect
 - The visual system is already stronger than a stock starter.
 - Local verification already covers the core backend and frontend release path.
 
-The main remaining problems are structural inconsistencies:
+The main remaining problems are now frontend-system follow-through items:
 
-- `AppServiceProvider` still only covers the first wave of reusable collaborators instead of a broader domain binding story.
-- Generated TypeScript output still needs selective frontend alias tightening for collection-like DTO properties the transformer emits too loosely.
-- The base test harness still reflects the default starter setup.
-- Selective contracts and provider bindings are still mostly absent from the new slice-owned collaborators.
+- The admin dashboard composition still drifts away from the `Welcome.vue` shell baseline.
+- The accessibility guardrails are stronger, but keyboard and focus regression coverage is still thinner than the desired end state.
 
 ## Target End State
 
@@ -154,11 +163,12 @@ Logical slice shape:
 
 Preferred slice targets:
 
-- `Admin/Users`
-- `Admin/Roles`
-- `Admin/Permissions`
+- `Users`
+- `Roles`
+- `Permissions`
 - `Auth`
 - `Settings`
+- `Dashboard`
 - shared platform services only when the code is truly cross-slice
 
 This does not require an immediate filesystem rewrite. The migration should move slice by slice until the domain-first shape becomes the dominant organization model.
@@ -269,10 +279,10 @@ This phase shifts the starter from shared technical folders toward domain owners
 Status: completed on `2026-03-28`.
 
 - Completed work:
-  - moved admin application, DTO, support, and exception classes into `app/Modules/Admin/{Permissions,Roles,Users,Shared}`
+  - moved admin application, DTO, collaborator, and exception classes into flat module roots under `app/Modules/{Permissions,Roles,Users,Dashboard,Shared}`
   - moved settings application and DTO classes into `app/Modules/Settings`
   - moved auth DTOs and Fortify adapter actions into `app/Modules/Auth`
-  - moved admin and settings transport into `app/Http/{Admin|Settings}/{Domain}/Controllers|Requests`
+  - consolidated admin and settings transport into `app/Http/Controllers/{Admin,Settings}` and `app/Http/Requests/{Admin,Settings}`
   - deleted legacy PHP class files from the old technical roots once imports were rewired
   - regenerated Wayfinder and TypeScript contracts after the namespace move
   - added Pest architecture coverage for module-owned application code and slice-oriented transport namespaces
@@ -285,11 +295,11 @@ Status: completed on `2026-03-28`.
 
 Key targets:
 
-- `app/Modules/Admin/**`
+- `app/Modules/{Permissions,Roles,Users,Dashboard,Shared}/**`
 - `app/Modules/Settings/**`
 - `app/Modules/Auth/**`
-- `app/Http/Admin/**`
-- `app/Http/Settings/**`
+- `app/Http/Controllers/{Admin,Settings}/**`
+- `app/Http/Requests/{Admin,Settings}/**`
 - `app/Providers/**`
 
 Definition of done:
@@ -304,7 +314,7 @@ Status: completed on `2026-03-28`.
 
 Completed work:
 
-- added slice-owned contracts for reusable admin collaborators under `app/Modules/Admin/{Dashboard,Permissions,Roles,Users}/Contracts`
+- added slice-owned contracts for reusable admin collaborators under `app/Modules/{Dashboard,Permissions,Roles,Users}/Contracts`
 - bound those contracts in `AppServiceProvider` using explicit singleton registrations
 - introduced slice-specific filter-option catalog implementations for users, roles, and permissions
 - updated permissions write paths and admin read-side queries/controllers to depend on contracts rather than concrete collaborators
@@ -504,6 +514,8 @@ Definition of done:
 ## Phase 9: Backend Domain Completion, Security, And Data Integrity
 
 After the audit ledger exists, complete backend hardening and domain consistency.
+
+Status: completed on `2026-04-03`.
 
 - Normalize all remaining cross-slice inconsistencies in action/query naming, static entrypoints, and DTO hydration paths.
 - Add or tighten authorization for every admin/settings write path using policies or gates where missing.

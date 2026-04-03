@@ -20,6 +20,7 @@ use App\Http\Requests\Settings\PasswordUpdateRequest;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
+use App\Modules\Audit\Actions\RecordAuditLog;
 use App\Modules\Auth\Actions\CreateNewUser;
 use App\Modules\Auth\Actions\ResetUserPassword;
 use App\Modules\Auth\DTOs\AuthenticatedUserData;
@@ -126,6 +127,24 @@ dataset('project_read_action_classes', [
     GetPermissionFilterOptions::class,
     GetPermissionIndexItems::class,
     IndexPermissions::class,
+]);
+
+dataset('admin_guarded_form_requests', [
+    [StoreUserRequest::class, "can('users.create')"],
+    [UpdateUserRequest::class, "can('users.update')"],
+    [SyncUserRolesRequest::class, "can('users.assignRoles')"],
+    [StoreRoleRequest::class, "can('roles.create')"],
+    [UpdateRoleRequest::class, "can('roles.update')"],
+    [SyncRolePermissionsRequest::class, "can('roles.assignPermissions')"],
+    [StorePermissionRequest::class, "can('permissions.create')"],
+    [UpdatePermissionRequest::class, "can('permissions.update')"],
+]);
+
+dataset('settings_guarded_form_requests', [
+    [PasswordUpdateRequest::class, 'return $this->user() !== null;'],
+    [ProfileDeleteRequest::class, 'return $this->user() !== null;'],
+    [ProfileUpdateRequest::class, 'return $this->user() !== null;'],
+    [TwoFactorAuthenticationRequest::class, 'Features::enabled(Features::twoFactorAuthentication()) && $this->user() !== null'],
 ]);
 
 dataset('fortify_action_adapters', [
@@ -252,6 +271,15 @@ it('keeps internal write actions small enough for single-purpose handle methods'
     expect(backendArchitectureMethodLineCount($handleMethod))->toBeLessThanOrEqual(30);
 })->with('project_write_action_classes');
 
+it('keeps write actions transactional and records durable audit entries after commit', function (string $actionClass): void {
+    $reflection = new ReflectionClass($actionClass);
+    $contents = file_get_contents($reflection->getFileName());
+
+    expect($contents)->toContain('DB::transaction');
+    expect($contents)->toContain('DB::afterCommit');
+    expect($contents)->toContain('RecordAuditLog::handle');
+})->with('project_write_action_classes');
+
 it('keeps read-side collaborators on action classes with a public static handle entrypoint', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
 
@@ -339,6 +367,37 @@ it('keeps admin and settings transport classes in slice-oriented http namespaces
 
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
 })->with('slice_transport_classes');
+
+it('keeps the audit logger on a flat module action with a static handle entrypoint', function (): void {
+    $reflection = new ReflectionClass(RecordAuditLog::class);
+
+    expect($reflection->getNamespaceName())->toBe('App\\Modules\\Audit\\Actions');
+    expect($reflection->isFinal())->toBeTrue();
+    expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
+
+    assertStaticTypedPublicMethods($reflection);
+});
+
+it('keeps privileged admin form requests behind explicit permission checks', function (
+    string $className,
+    string $expectedAbilitySnippet,
+): void {
+    $reflection = new ReflectionClass($className);
+    $contents = file_get_contents($reflection->getFileName());
+
+    expect($contents)->toContain($expectedAbilitySnippet);
+    expect($contents)->not->toContain('return true;');
+})->with('admin_guarded_form_requests');
+
+it('keeps settings form requests behind explicit authenticated-user or feature guards', function (
+    string $className,
+    string $expectedGuardSnippet,
+): void {
+    $reflection = new ReflectionClass($className);
+    $contents = file_get_contents($reflection->getFileName());
+
+    expect($contents)->toContain($expectedGuardSnippet);
+})->with('settings_guarded_form_requests');
 
 it('marks frontend-bound form requests and dto payloads for TypeScript generation', function (string $className): void {
     $reflection = new ReflectionClass($className);

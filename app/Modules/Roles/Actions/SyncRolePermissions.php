@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Roles\Actions;
 
+use App\Modules\Audit\Actions\RecordAuditLog;
+use App\Modules\Audit\DTOs\AuditLogData;
+use App\Modules\Audit\Models\AuditLog;
 use App\Modules\Permissions\Models\Permission;
 use App\Modules\Roles\DTOs\SyncRolePermissionsData;
 use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
@@ -15,8 +18,20 @@ final class SyncRolePermissions
     public static function handle(Role $role, SyncRolePermissionsData $data): Role
     {
         $permissionNames = self::resolvePermissionNames($data);
+        $before = $role->permissions()->pluck('name')->sort()->values()->all();
 
-        DB::transaction(fn (): Role => tap($role, fn (Role $role): Role => $role->syncPermissions($permissionNames)));
+        DB::transaction(function () use ($role, $permissionNames, $before): void {
+            $role->syncPermissions($permissionNames);
+
+            DB::afterCommit(fn (): AuditLog => RecordAuditLog::handle(new AuditLogData(
+                event: 'roles.permissions_synced',
+                summary: sprintf('Updated permissions for role %s.', $role->name),
+                subjectType: Role::class,
+                subjectId: (int) $role->getKey(),
+                subjectLabel: $role->name,
+                changes: ['before' => ['permissions' => $before], 'after' => ['permissions' => $permissionNames]],
+            )));
+        });
 
         return $role;
     }
