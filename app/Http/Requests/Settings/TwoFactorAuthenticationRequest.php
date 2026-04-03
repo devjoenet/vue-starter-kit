@@ -16,7 +16,7 @@ class TwoFactorAuthenticationRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return Features::enabled(Features::twoFactorAuthentication());
+        return Features::enabled(Features::twoFactorAuthentication()) && $this->user() !== null;
     }
 
     /** @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string> */

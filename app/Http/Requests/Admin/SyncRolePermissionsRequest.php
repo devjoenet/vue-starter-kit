@@ -13,7 +13,7 @@ class SyncRolePermissionsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('roles.assignPermissions') ?? false;
     }
 
     /** @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string> */

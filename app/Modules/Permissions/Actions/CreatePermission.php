@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Permissions\Actions;
 
+use App\Modules\Audit\Actions\RecordAuditLog;
+use App\Modules\Audit\DTOs\AuditLogData;
+use App\Modules\Audit\Models\AuditLog;
 use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\Permissions\DTOs\CreatePermissionData;
 use App\Modules\Permissions\Models\Permission;
@@ -16,10 +19,28 @@ final class CreatePermission
         CreatePermissionData $data,
         PermissionGroupCatalogContract $permissionGroupCatalog,
     ): Permission {
-        $permission = DB::transaction(function () use ($data, $permissionGroupCatalog): Permission {
-            $group = self::upsertGroup($data, $permissionGroupCatalog);
+        $existingPermission = Permission::withTrashed()
+            ->where('name', $data->name)
+            ->where('guard_name', 'web')
+            ->first();
 
-            return self::restoreOrCreatePermission($data, $group);
+        $permission = DB::transaction(function () use ($data, $permissionGroupCatalog, $existingPermission): Permission {
+            $group = self::upsertGroup($data, $permissionGroupCatalog);
+            $permission = self::restoreOrCreatePermission($data, $group);
+
+            DB::afterCommit(fn (): AuditLog => RecordAuditLog::handle(new AuditLogData(
+                event: $existingPermission?->trashed() ? 'permissions.restored' : 'permissions.created',
+                summary: ($existingPermission?->trashed() ? 'Restored' : 'Created').sprintf(' permission %s.', $permission->name),
+                subjectType: Permission::class,
+                subjectId: (int) $permission->getKey(),
+                subjectLabel: $permission->name,
+                changes: [
+                    'before' => $existingPermission instanceof Permission ? self::auditState($existingPermission) : null,
+                    'after' => self::auditState($permission->loadMissing('permissionGroup')),
+                ],
+            )));
+
+            return $permission;
         });
 
         return $permission->load('permissionGroup');
@@ -55,5 +76,16 @@ final class CreatePermission
         ])->save();
 
         return $permission;
+    }
+
+    private static function auditState(Permission $permission): array
+    {
+        return [
+            'name' => $permission->name,
+            'label' => $permission->label,
+            'description' => $permission->description,
+            'group' => $permission->group,
+            'group_label' => $permission->group_label,
+        ];
     }
 }
