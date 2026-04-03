@@ -579,12 +579,9 @@ Definition of done:
 
 Move from "works well" to "scales predictably" on both backend and frontend.
 
-- Backend code has no other refactors possible that can move non-http layer code into a module.
-- There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model to remove the DB call.
-- Establish performance budgets for first-load payload, JS bundle segments, and key admin index queries.
-- Add server-side observability hooks (slow query thresholds, actionable structured logs, failure correlation IDs).
-- Validate deferred props, partial reloads, and pagination behavior under realistic data volumes.
-- Optimize expensive frontend surfaces (table rendering, filter interactions, expensive reactive recomputations).
+- Backend code has no further opportunity for refactors/changes that move code that isn't a route, controller or middleware into a module. Requests, DTO's, actions, responses, models and module specific traits/concerns/contracts should all be located in an appropriate directory within a module.
+- There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model allowing any DB calls to be removed.
+- As many exceptions as possible are not generic, but rather are named logically and allow a developer to find a module->class->method->line and context to track down the cause of the exception.
 - Ensure graceful degraded behavior for network errors, stale sessions, and partial backend failures.
 
 Key targets:
@@ -602,6 +599,8 @@ Definition of done:
 - Measured performance budgets exist and are enforceable.
 - Error conditions are observable and user-safe.
 - High-volume scenarios remain responsive and stable.
+- Minimal code lives outside modules
+- Backend code is DRY, SOLID and is leveraging Laravel 13's attribute system
 
 ## Phase 12: Delivery Pipeline, Developer Experience, And Release Governance
 
@@ -611,7 +610,10 @@ Lightweight tasks already completed in Phase 8:
 
 - (removed, this was not yet accomplished) added GitHub Actions CI parity for backend, frontend, and browser smoke checks
 - cleaned the shared Pest baseline and removed leftover starter example tests
-
+- Establish performance budgets for first-load payload, JS bundle segments, and key admin index queries.
+- Add server-side observability hooks (slow query thresholds, actionable structured logs, failure correlation IDs).
+- Validate deferred props, partial reloads, and pagination behavior under realistic data volumes.
+- Optimize expensive frontend surfaces (table rendering, filter interactions, expensive reactive recomputations).
 - Finalize deterministic local and CI verification pipelines (backend + frontend + browser smoke tiers).
 - Introduce tiered test strategy (`quick`, `full`, `release`) with explicit commands and expected runtime budgets.
 - Move test harness optimizations forward (`withoutVite()` defaults where safe, targeted `LazilyRefreshDatabase` adoption, parallel-safe fixtures).
