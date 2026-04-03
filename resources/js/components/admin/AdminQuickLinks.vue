@@ -32,72 +32,80 @@ type QuickLinkTone = 'primary' | 'secondary' | 'accent';
 const toneClasses: Record<
   QuickLinkTone,
   {
-    card: string;
+    row: string;
     beam: string;
     eyebrow: string;
-    count: string;
+    badge: string;
     action: string;
   }
 > = {
   primary: {
-    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-primary)_72%,var(--primary)_28%)_0%,color-mix(in_oklab,var(--surface-panel)_88%,var(--background)_12%)_100%)]',
-    beam: 'bg-primary/70',
+    row: 'bg-[linear-gradient(140deg,color-mix(in_oklab,var(--surface-panel-primary)_72%,var(--primary)_28%)_0%,color-mix(in_oklab,var(--surface-panel)_90%,var(--background)_10%)_100%)]',
+    beam: 'bg-primary/72 ring-primary/15',
     eyebrow: 'text-primary/82',
-    count: 'text-primary',
+    badge: 'bg-primary/14 text-primary',
     action: 'text-primary group-hover:text-primary/80',
   },
   secondary: {
-    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-secondary)_74%,var(--secondary)_26%)_0%,color-mix(in_oklab,var(--surface-panel)_88%,var(--background)_12%)_100%)]',
-    beam: 'bg-secondary/70',
+    row: 'bg-[linear-gradient(140deg,color-mix(in_oklab,var(--surface-panel-secondary)_76%,var(--secondary)_24%)_0%,color-mix(in_oklab,var(--surface-panel)_90%,var(--background)_10%)_100%)]',
+    beam: 'bg-secondary/72 ring-secondary/15',
     eyebrow: 'text-secondary/86',
-    count: 'text-secondary',
+    badge: 'bg-secondary/14 text-secondary',
     action: 'text-secondary group-hover:text-secondary/80',
   },
   accent: {
-    card: 'bg-[linear-gradient(150deg,color-mix(in_oklab,var(--surface-panel-primary)_64%,var(--accent)_36%)_0%,color-mix(in_oklab,var(--surface-panel)_76%,var(--accent)_24%)_100%)]',
-    beam: 'bg-accent',
+    row: 'bg-[linear-gradient(140deg,color-mix(in_oklab,var(--surface-panel-primary)_64%,var(--accent)_36%)_0%,color-mix(in_oklab,var(--surface-panel)_82%,var(--accent)_18%)_100%)]',
+    beam: 'bg-accent ring-accent/15',
     eyebrow: 'text-accent/88',
-    count: 'text-accent',
+    badge: 'bg-accent/14 text-accent',
     action: 'text-accent group-hover:text-accent/80',
   },
 };
 
 const links = computed(() => {
   const items: Array<{
+    id: 'users' | 'roles' | 'permissions';
     title: string;
     description: string;
     href: string;
     count: number;
     tone: QuickLinkTone;
+    command: string;
   }> = [];
 
   if (can(adminPermissions.usersView)) {
     items.push({
+      id: 'users',
       title: 'Users',
-      description: 'Review who can access the workspace.',
+      description: 'Review who can access the workspace right now.',
       href: adminUsersIndex.url(),
       count: props.counts.users,
       tone: 'primary',
+      command: 'Open users',
     });
   }
 
   if (can(adminPermissions.rolesView)) {
     items.push({
+      id: 'roles',
       title: 'Roles',
       description: 'Keep access grouped into reusable policies.',
       href: adminRolesIndex.url(),
       count: props.counts.roles,
       tone: 'accent',
+      command: 'Open roles',
     });
   }
 
   if (can(adminPermissions.permissionsView)) {
     items.push({
+      id: 'permissions',
       title: 'Permissions',
       description: 'Define the checks that secure each workflow.',
       href: adminPermissionsIndex.url(),
       count: props.counts.permissions,
       tone: 'secondary',
+      command: 'Open permissions',
     });
   }
 
@@ -109,48 +117,53 @@ const hasLinks = computed(() => links.value.length > 0);
 
 <template>
   <section class="space-y-4" aria-labelledby="admin-dashboard-quick-links-heading">
-    <div class="max-w-2xl space-y-2">
-      <p class="section-kicker">Administration</p>
-      <h2 id="admin-dashboard-quick-links-heading" class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">Open the live admin surfaces from a single command strip.</h2>
-      <p class="text-sm leading-6 text-muted-foreground">These are the active admin surfaces available in the starter right now.</p>
+    <div class="max-w-sm space-y-2">
+      <p class="section-kicker">Command strip</p>
+      <h2 id="admin-dashboard-quick-links-heading" class="text-[clamp(1.65rem,2.4vw,2.35rem)] font-semibold tracking-[-0.03em] text-balance">Open the admin surfaces already live in this workspace.</h2>
+      <p class="text-sm leading-6 text-muted-foreground">Counts stay attached to the work instead of floating out into separate metric panels.</p>
     </div>
 
-    <div v-if="hasLinks" class="overflow-hidden rounded-[1.75rem] border border-border/70 shadow-(--elevation-1)">
-      <div class="grid gap-px bg-border/60 md:grid-cols-3">
-        <Link
-          v-for="item in links"
-          :key="item.title"
-          :href="item.href"
-          :prefetch="['hover', 'click']"
-          :class="['group motion-interactive-raise motion-sheen relative block px-5 py-5 motion-reduce:transform-none motion-reduce:transition-none', toneClasses[item.tone].card]"
-        >
-          <span :class="['absolute inset-x-0 top-0 h-1 origin-left scale-x-80 transition-transform duration-500 ease-(--motion-ease-out-quint) group-hover:scale-x-100 motion-reduce:transform-none', toneClasses[item.tone].beam]" />
+    <nav v-if="hasLinks" id="admin-dashboard-quick-links-nav" aria-labelledby="admin-dashboard-quick-links-heading">
+      <ul class="grid gap-3">
+        <li v-for="item in links" :key="item.id">
+          <Link
+            :id="`admin-dashboard-link-${item.id}`"
+            :href="item.href"
+            :prefetch="['hover', 'click']"
+            :class="[
+              'group motion-interactive-raise motion-sheen relative flex items-start gap-4 overflow-hidden rounded-[1.4rem] border border-border/70 px-4 py-4 shadow-(--elevation-1) transition-[transform,border-color,background-color] duration-300 ease-(--motion-ease-out-quart) hover:border-border/90 motion-reduce:transform-none motion-reduce:transition-none',
+              toneClasses[item.tone].row,
+            ]"
+          >
+            <span :class="['mt-1 size-2.5 shrink-0 rounded-full ring-4', toneClasses[item.tone].beam]" />
 
-          <div class="flex h-full flex-col justify-between gap-6">
-            <div class="flex items-start justify-between gap-6">
-              <div class="min-w-0">
-                <p :class="['text-[0.68rem] font-semibold tracking-[0.18em] uppercase', toneClasses[item.tone].eyebrow]">Available now</p>
-                <h3 class="mt-2 text-lg font-semibold tracking-tight">
-                  {{ item.title }}
-                </h3>
-                <p class="mt-2 text-sm leading-6 text-muted-foreground">
-                  {{ item.description }}
-                </p>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <p :class="['text-[0.68rem] font-semibold tracking-[0.18em] uppercase', toneClasses[item.tone].eyebrow]">Active surface</p>
+                  <h3 class="mt-2 text-lg font-semibold tracking-tight">
+                    {{ item.title }}
+                  </h3>
+                </div>
+
+                <span :class="['inline-flex min-w-12 justify-center rounded-full px-3 py-1 text-sm font-semibold tabular-nums', toneClasses[item.tone].badge]">
+                  {{ item.count }}
+                </span>
               </div>
 
-              <div :class="['text-3xl font-semibold tracking-tight tabular-nums transition-transform duration-300 ease-(--motion-ease-out-quart) group-hover:-translate-y-0.5 motion-reduce:transform-none', toneClasses[item.tone].count]">
-                {{ item.count }}
-              </div>
-            </div>
+              <p class="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                {{ item.description }}
+              </p>
 
-            <div class="flex items-center justify-between gap-3 border-t border-border/60 pt-4">
-              <span class="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase"> Open surface </span>
-              <span :class="['text-sm font-semibold transition-[color,transform] duration-300 ease-(--motion-ease-out-quart) group-hover:translate-x-0.5 motion-reduce:transform-none', toneClasses[item.tone].action]"> Open {{ item.title }} </span>
+              <span :class="['mt-4 inline-flex items-center gap-2 text-sm font-semibold', toneClasses[item.tone].action]">
+                {{ item.command }}
+                <span aria-hidden="true">→</span>
+              </span>
             </div>
-          </div>
-        </Link>
-      </div>
-    </div>
+          </Link>
+        </li>
+      </ul>
+    </nav>
 
     <Card v-else id="admin-dashboard-quick-links-empty-state" class="border-dashed px-6 py-6">
       <div class="max-w-2xl space-y-2">

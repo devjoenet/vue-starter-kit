@@ -47,7 +47,7 @@ const statusClassNames: Record<NonNullable<typeof props.statusTone>, string> = {
 </script>
 
 <template>
-  <div :class="['surface-editor-action-zone flex flex-col gap-5 rounded-[1.5rem] px-5 py-5', props.class]">
+  <div :class="['surface-editor-action-zone flex flex-col gap-5 rounded-3xl px-5 py-5', props.class]">
     <div class="space-y-2">
       <p class="section-kicker">Review and finish</p>
       <div class="space-y-2">
@@ -57,7 +57,7 @@ const statusClassNames: Record<NonNullable<typeof props.statusTone>, string> = {
         </p>
       </div>
 
-      <p v-if="status" :class="['text-sm font-medium', statusClassNames[statusTone]]">
+      <p v-if="status" :class="['text-sm font-medium', statusClassNames[props.statusTone]]">
         {{ status }}
       </p>
     </div>

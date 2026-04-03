@@ -44,7 +44,7 @@ const statusClassNames: Record<'destructive' | 'info' | 'muted' | 'success' | 'w
 <template>
   <div data-slot="settings-action-row" :class="cn('flex flex-col gap-3 sm:flex-row sm:items-center', alignmentClass, props.class)">
     <div v-if="hasMetaContent" class="space-y-1">
-      <p v-if="status" :class="cn('text-sm', statusClassNames[statusTone])">
+      <p v-if="status" :class="cn('text-sm', statusClassNames[props.statusTone])">
         {{ status }}
       </p>
 

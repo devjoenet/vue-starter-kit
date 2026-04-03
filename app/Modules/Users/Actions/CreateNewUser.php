@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Auth\Actions;
+namespace App\Modules\Users\Actions;
 
 use App\Concerns\PasswordValidationRules;
+use App\Modules\Users\DTOs\CreateUserData;
 use App\Modules\Users\Models\User;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -26,7 +26,11 @@ final class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return DB::transaction(fn (): User => $this->restoreOrCreateUser($validated));
+        return CreateUser::handle(new CreateUserData(
+            name: $validated['name'],
+            email: $validated['email'],
+            password: $validated['password'],
+        ));
     }
 
     /** @return array<int, mixed> */
@@ -47,27 +51,5 @@ final class CreateNewUser implements CreatesNewUsers
                 fn (QueryBuilder $query): QueryBuilder => $query->whereNull('deleted_at'),
             ),
         ];
-    }
-
-    /** @param  array{name: string, email: string, password: string}  $validated */
-    private function restoreOrCreateUser(array $validated): User
-    {
-        $user = User::withTrashed()->firstOrNew([
-            'email' => $validated['email'],
-        ]);
-
-        $user->forceFill([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-            'email_verified_at' => null,
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-            'remember_token' => null,
-            'deleted_at' => null,
-        ])->save();
-
-        return $user;
     }
 }

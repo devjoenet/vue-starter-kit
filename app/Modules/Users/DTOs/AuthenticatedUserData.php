@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Auth\DTOs;
+namespace App\Modules\Users\DTOs;
 
 use App\Modules\Users\Models\User;
 use Carbon\CarbonInterface;
