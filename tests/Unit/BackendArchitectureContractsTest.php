@@ -67,7 +67,9 @@ use App\Modules\Settings\Actions\UpdatePassword;
 use App\Modules\Settings\Actions\UpdateProfile;
 use App\Modules\Settings\DTOs\UpdateProfileData;
 use App\Modules\Shared\Actions\AdminIndexQuery;
+use App\Modules\Shared\Actions\FormRequestRulesTransformer;
 use App\Modules\Shared\Actions\GetAdminIndex;
+use App\Modules\Shared\Actions\PasswordValidationRules;
 use App\Modules\Shared\DTOs\AdminIndexQueryData;
 use App\Modules\Users\Actions\CreateNewUser;
 use App\Modules\Users\Actions\CreateUser;
@@ -76,6 +78,7 @@ use App\Modules\Users\Actions\GetEditableRoles;
 use App\Modules\Users\Actions\GetUserFilterOptions;
 use App\Modules\Users\Actions\GetUserIndexItems;
 use App\Modules\Users\Actions\IndexUsers;
+use App\Modules\Users\Actions\ProfileValidationRules;
 use App\Modules\Users\Actions\ResetUserPassword;
 use App\Modules\Users\Actions\SyncUserRoles;
 use App\Modules\Users\Actions\UpdateUser;
@@ -212,6 +215,8 @@ dataset('typescript_contract_classes', [
 dataset('module_collaborator_classes', [
     [DashboardMetrics::class, 'App\\Modules\\Dashboard\\Actions'],
     [AdminIndexQuery::class, 'App\\Modules\\Shared\\Actions'],
+    [FormRequestRulesTransformer::class, 'App\\Modules\\Shared\\Actions'],
+    [PasswordValidationRules::class, 'App\\Modules\\Shared\\Actions'],
     [PermissionFilterOptionsCatalog::class, 'App\\Modules\\Permissions\\Actions'],
     [PermissionGroupCatalog::class, 'App\\Modules\\Permissions\\Actions'],
     [PermissionNormalizer::class, 'App\\Modules\\Permissions\\Actions'],
@@ -219,6 +224,7 @@ dataset('module_collaborator_classes', [
     [RoleFilterOptionsCatalog::class, 'App\\Modules\\Roles\\Actions'],
     [RoleNameNormalizer::class, 'App\\Modules\\Roles\\Actions'],
     [UserFilterOptionsCatalog::class, 'App\\Modules\\Users\\Actions'],
+    [ProfileValidationRules::class, 'App\\Modules\\Users\\Actions'],
     [UnknownPermissionsSelected::class, 'App\\Modules\\Roles\\Exceptions'],
     [UnknownRolesSelected::class, 'App\\Modules\\Users\\Exceptions'],
 ]);
@@ -345,6 +351,30 @@ it('keeps module directories flat and limited to approved directory names', func
 
         foreach ($childDirectories as $childDirectory) {
             expect(basename($childDirectory))->toBeIn($allowedDirectories);
+        }
+    }
+});
+
+it('keeps legacy php classes out of app support and concerns roots', function (): void {
+    $projectRoot = dirname(__DIR__, 2);
+    $legacyRoots = [
+        $projectRoot.'/app/Support',
+        $projectRoot.'/app/Concerns',
+    ];
+
+    foreach ($legacyRoots as $legacyRoot) {
+        if (! is_dir($legacyRoot)) {
+            continue;
+        }
+
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($legacyRoot));
+
+        foreach ($iterator as $fileInfo) {
+            if (! $fileInfo->isFile()) {
+                continue;
+            }
+
+            expect($fileInfo->getExtension())->not->toBe('php');
         }
     }
 });

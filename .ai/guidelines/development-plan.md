@@ -91,7 +91,6 @@ This plan is aligned with the current application baseline and the updated AGENT
   - missing CI parity for the existing local verification gates
 - The audit also captured the current known-good verification baseline and a focused admin-dashboard versus `Welcome.vue` composition note.
 - Folded the lightweight release-governance and guardrail work from later phases into Phase 8:
-  - added GitHub Actions CI parity for backend, frontend, and browser smoke checks
   - cleaned the Pest baseline and switched shared feature/browser tests to `LazilyRefreshDatabase`
   - removed starter example tests from the suite
   - added semantic landmark and dashboard-composition guardrails for high-identity frontend surfaces
@@ -107,6 +106,12 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Added follow-up database indexes for the current admin filter and sort paths on `users`, `roles`, `permissions`, and `permission_groups`.
 - Pest architecture coverage now enforces transactional audited write actions plus explicit guard clauses on privileged form requests, and targeted feature coverage now proves the audit trail on representative admin and settings mutations.
 - Phase 10 is now the active workstream.
+- Phase 11 groundwork is now in place:
+  - request IDs now flow through response headers and shared Inertia props
+  - slow-query thresholds now log actionable structured warnings with request context
+  - stale-session and partial-failure handling now degrade through shared frontend request-failure helpers
+  - enforceable backend query-count and response-size budgets now live in feature coverage
+  - frontend asset budgets now run as part of the production build path
 
 ## Required Skills And Tooling
 
@@ -473,7 +478,6 @@ Completed work:
 - captured a dated known-good verification baseline for backend and frontend quality gates
 - documented dashboard drift against the `Welcome.vue` baseline and identified the missing guardrails needed for Phase 10
 - folded in the lightweight later-phase work that did not require major code changes:
-  - GitHub Actions CI parity for backend, frontend, and browser smoke verification
   - Pest harness cleanup and `LazilyRefreshDatabase` adoption
   - removal of starter example tests
   - semantic-landmark and dashboard-hierarchy frontend guardrails

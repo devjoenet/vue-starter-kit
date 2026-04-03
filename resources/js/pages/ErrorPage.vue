@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import { dashboard } from '@/routes';
@@ -7,6 +7,9 @@ import { dashboard } from '@/routes';
 const props = defineProps<{
   status: number;
 }>();
+
+const page = usePage();
+const requestId = computed(() => page.props.requestContext?.id ?? null);
 
 const content = computed(() => {
   switch (props.status) {
@@ -19,6 +22,11 @@ const content = computed(() => {
       return {
         title: 'Page not found',
         message: 'The page you requested could not be found.',
+      };
+    case 419:
+      return {
+        title: 'Session expired',
+        message: 'Your session went stale before the request finished. Refresh the page and try again.',
       };
     case 503:
       return {
@@ -49,6 +57,7 @@ const content = computed(() => {
             <p class="max-w-xl text-base text-muted-foreground sm:text-lg">
               {{ content.message }}
             </p>
+            <p v-if="requestId" class="text-xs font-semibold tracking-[0.18em] text-muted-foreground/80 uppercase">Request reference {{ requestId }}</p>
           </div>
         </div>
 

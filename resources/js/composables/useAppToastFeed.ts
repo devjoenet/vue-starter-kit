@@ -1,5 +1,6 @@
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { resolveNetworkFailureMessage, resolveRequestFailureMessage } from '@/lib/request-failures';
 import { useToast } from '@/composables/useToast';
 
 export const useAppToastFeed = () => {
@@ -12,15 +13,29 @@ export const useAppToastFeed = () => {
 
   onMounted(() => {
     removeHttpExceptionListener = router.on('httpException', (event) => {
-      pushError(event.detail.response.status >= 500 ? 'The server was unable to complete the request.' : 'Unable to complete the request.', {
-        duration: 5200,
+      const failure = resolveRequestFailureMessage(event.detail.response.status, event.detail.response.headers['x-request-id'] ?? null);
+
+      if (failure.tone === 'warning') {
+        pushWarning(failure.message, {
+          duration: 6200,
+        });
+
+        return false;
+      }
+
+      pushError(failure.message, {
+        duration: 6200,
       });
+
+      return false;
     });
 
     removeNetworkErrorListener = router.on('networkError', () => {
-      pushError('Unable to reach the server.', {
-        duration: 5200,
+      pushError(resolveNetworkFailureMessage(), {
+        duration: 6200,
       });
+
+      return false;
     });
   });
 

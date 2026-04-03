@@ -7,13 +7,13 @@ Audit owner: `platform`
 ## Executive Summary
 
 - Open critical findings: `0`
-- Open high findings: `0`
+- Open high findings: `1`
 - Open medium findings: `1`
 - Open low findings: `0`
-- Resolved during Phase 8 follow-through: `3`
+- Resolved during Phase 8 follow-through: `2`
 - Resolved during Phase 9 follow-through: `4`
 - Reduced during Phase 8 follow-through: `1`
-- Verdict: the starter is demo-safe and broadly well-covered. Backend roadmap parity, mutation traceability, request-level authorization intent, and admin query indexing are now in place, so the remaining real work has narrowed to the frontend/dashboard and deeper accessibility follow-through in Phase 10.
+- Verdict: the starter is demo-safe and broadly well-covered. Backend roadmap parity, mutation traceability, request-level authorization intent, admin query indexing, and new Phase 11 observability and budget guardrails are now in place, so the remaining real work has narrowed to the frontend/dashboard follow-through, deeper accessibility, and the still-missing CI/release-governance layer.
 
 ## Positive Baseline Signals
 
@@ -28,7 +28,7 @@ Audit owner: `platform`
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | A-001 | High | backend | Phase 9 | Backend architecture conformance | The codebase does not currently match several “completed” structural claims in the development plan, which makes the roadmap unreliable as an architectural control. | Closed by reconciling `development-plan.md` with the live flat module roots under `app/Modules/{Users,Roles,Permissions,Settings,Dashboard,Shared,Audit}` and the existing `app/Http/Controllers/{Admin,Settings}` plus `app/Http/Requests/{Admin,Settings}` transport layout. | Closed |
 | A-002 | High | backend | Phase 9 | Security and compliance posture | Sensitive admin mutations do not have an explicit audit trail or traceability layer for role, permission, or destructive user changes. | Closed by `app/Modules/Audit/**`, the new `audit_logs` migration, post-commit audit writes inside the sensitive admin and settings actions, and representative feature coverage in `tests/Feature/Admin/AdminAuditLogTest.php` and `tests/Feature/Settings/SettingsAuditLogTest.php`. | Closed |
-| A-003 | High | platform | Phase 8 | Tooling and delivery integrity | Verification was defined locally but not enforced in CI, so release parity depended on whoever remembered to run the commands that day. A flawless system. | Resolved by `.github/workflows/ci.yml`, which now runs backend quality, frontend quality, and browser smoke tiers. | Closed |
+| A-003 | High | platform | Phase 12 | Tooling and delivery integrity | Verification is defined locally, but CI parity is still missing, so release discipline still depends on whoever remembers to run the commands that day. A flawless system. | The workspace does not currently include a `.github/` workflow directory, while the local release path already expects backend, frontend, and browser checks. | Open |
 | A-004 | Medium | backend | Phase 9 | Data and query efficiency | Admin filter and sort paths rely on columns that are not backed by obvious follow-up indexes for the current read patterns. | Closed by `database/migrations/2026_04_03_014922_add_admin_index_support_indexes_to_acl_tables.php`, which adds dedicated non-unique indexes for the current soft-delete-aware sort and filter paths on `users`, `roles`, `permissions`, and `permission_groups`. | Closed |
 | A-005 | Medium | frontend | Phase 10 | UX coherence and branding fidelity | The admin dashboard has drifted away from the `Welcome.vue` composition baseline and is still one stacked-panel refactor away from generic admin furniture. | Compare `resources/js/pages/Welcome.vue` with `resources/js/pages/admin/Dashboard.vue` and `resources/js/components/admin/AdminQuickLinks.vue`. The welcome page uses one dominant shell plus one lower supporting band; the dashboard still distributes emphasis across multiple near-peer panels and metric-like surfaces. | Open |
 | A-006 | Medium | platform | Phase 8 | Tooling and delivery integrity | The Pest harness carried starter defaults and global `RefreshDatabase`, which worked but was noisier and heavier than the documented target baseline. | Resolved in `tests/Pest.php` by removing starter scaffolding noise and switching the shared feature/browser baseline to `LazilyRefreshDatabase`. | Closed |
@@ -42,7 +42,7 @@ Audit owner: `platform`
 | --- | --- | --- | --- |
 | A-001 | backend | Phase 9 | Closed by updating the development plan to the live flat module and transport layout. |
 | A-002 | backend | Phase 9 | Closed by the new audit slice, migration, write-path instrumentation, and feature coverage. |
-| A-003 | platform | Phase 8 | Closed via `.github/workflows/ci.yml`. |
+| A-003 | platform | Phase 12 | Still open until the workspace actually has CI parity for the documented local release path. |
 | A-004 | backend | Phase 9 | Closed by the dedicated admin index-support migration for the current hot sort and filter paths. |
 | A-005 | frontend | Phase 10 | Redesign the dashboard landing composition to follow the welcome-page shell model and add guardrails that keep it there. |
 | A-006 | platform | Phase 8 | Closed via `tests/Pest.php` baseline cleanup and `LazilyRefreshDatabase` adoption. |
@@ -69,11 +69,18 @@ This is the dated regression baseline after the Phase 9 hardening pass. Future f
 
 The following lightweight items from later phases were pulled into Phase 8 because they were mostly guardrail or pipeline work rather than large implementation:
 
-- added GitHub Actions CI parity in `.github/workflows/ci.yml`
 - cleaned the shared Pest baseline in `tests/Pest.php`
 - removed starter example tests that diluted the suite signal
 - added semantic-landmark and dashboard-hierarchy guardrails in `tests/Unit/FrontendMaintenanceGuardrailsTest.php`
 - added targeted `aria-labelledby` improvements to the welcome, auth, and admin dashboard surfaces
+
+## Phase 11 Follow-Through
+
+- moved the remaining PHP validation and transformer helpers out of `app/Concerns` and `app/Support` into flat module-owned `Actions` namespaces
+- added global request IDs via `X-Request-Id` plus shared Inertia request context for user-visible error references
+- added slow-query threshold logging and structured performance budgets for backend query counts and high-identity first-load responses
+- added a build-time frontend asset budget check that now runs from the standard `npm run build` path
+- centralized stale-session, network, and partial-backend failure copy in the shared frontend request-failure helper
 
 ## Phase 9 Follow-Through
 

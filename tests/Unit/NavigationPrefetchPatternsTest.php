@@ -7,7 +7,7 @@ it('enables vite asset prefetching for the inertia app shell', function () {
 
     expect($contents)
         ->toContain('use Illuminate\Support\Facades\Vite;')
-        ->toContain('Vite::prefetch(concurrency: 3);');
+        ->toContain("Vite::prefetch(concurrency: (int) config('performance.observability.vite_prefetch_concurrency', 3));");
 });
 
 it('prefetches key workspace navigation links for faster inertia visits', function () {

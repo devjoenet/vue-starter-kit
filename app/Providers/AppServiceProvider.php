@@ -17,6 +17,8 @@ use App\Modules\Roles\Contracts\RoleFilterOptionsProvider;
 use App\Modules\Users\Actions\UserFilterOptionsCatalog;
 use App\Modules\Users\Contracts\UserFilterOptionsProvider;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Vite;
@@ -41,7 +43,20 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        Vite::prefetch(concurrency: 3);
+        Vite::prefetch(concurrency: (int) config('performance.observability.vite_prefetch_concurrency', 3));
+
+        DB::whenQueryingForLongerThan(
+            config('performance.observability.slow_query_threshold_ms', 120),
+            static function (Connection $connection, QueryExecuted $event): void {
+                logger()->warning('Slow query budget exceeded.', [
+                    'connection' => $connection->getName(),
+                    'duration_ms' => $event->time,
+                    'total_duration_ms' => $connection->totalQueryDuration(),
+                    'sql' => $event->sql,
+                    'bindings_count' => count($event->bindings),
+                ]);
+            },
+        );
     }
 
     protected function configureDefaults(): void

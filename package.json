@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "build:ssr": "vite build && vite build --ssr",
+    "budget:frontend": "node scripts/check-frontend-budgets.mjs",
+    "build": "vite build && npm run budget:frontend",
+    "build:ssr": "vite build && vite build --ssr && npm run budget:frontend",
     "dev": "vite",
     "format": "prettier --write resources/",
     "format:check": "prettier --check resources/",
