@@ -59,6 +59,35 @@ test('users can sign in and browse key workspace pages without javascript errors
     expect(auth()->id())->toBe($user->id);
 });
 
+test('login page keeps its primary controls keyboard reachable', function () {
+    // Arrange
+
+    $page = visit(route('login', absolute: false));
+
+    $activeElementId = static fn ($browserPage): string => (string) $browserPage->script(
+        "document.activeElement?.id ?? ''",
+    );
+
+    // Act
+
+    $page->click('#email');
+
+    expect($activeElementId($page))->toBe('email');
+
+    $page->click('#password');
+    $page->keys('#password', 'Tab');
+
+    // Assert
+
+    expect($activeElementId($page))->toBe('remember');
+
+    $page->keys('#remember', 'Tab');
+
+    expect($activeElementId($page))->toBe('auth-login-submit-button');
+
+    $page->assertNoJavaScriptErrors();
+});
+
 test('users can register through the browser when registration is enabled', function () {
     if (! Features::enabled(Features::registration())) {
         $this->markTestSkipped('Registration is not enabled.');

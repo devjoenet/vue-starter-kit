@@ -576,6 +576,44 @@ it('uses shared breadcrumb helpers for admin and settings pages', function () {
     }
 });
 
+it('keeps dashboard, admin, and settings pages on the shared sidebar-based layouts', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
+    $adminPageFiles = [
+        'resources/js/pages/admin/Users/Index.vue',
+        'resources/js/pages/admin/Users/Create.vue',
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Index.vue',
+        'resources/js/pages/admin/Roles/Create.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Index.vue',
+        'resources/js/pages/admin/Permissions/Create.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+    $settingsPageFiles = [
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/pages/settings/TwoFactor.vue',
+        'resources/js/pages/settings/Appearance.vue',
+    ];
+
+    expect($dashboardContents)->toContain('layout: adminPageLayout');
+    expect($dashboardContents)->not->toContain('layout: AuthLayout');
+
+    foreach ($adminPageFiles as $pageFile) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        expect($contents)->toContain('layout: adminPageLayout');
+    }
+
+    foreach ($settingsPageFiles as $pageFile) {
+        $contents = file_get_contents($projectRoot.'/'.$pageFile);
+
+        expect($contents)->toContain('layout: settingsPageLayout');
+        expect($contents)->not->toContain('layout: adminPageLayout');
+    }
+});
+
 it('assigns meaningful dom ids to every page surface', function () {
     $projectRoot = dirname(__DIR__, 2);
     $pageIdExpectations = [
@@ -731,19 +769,27 @@ it('cycles shared admin index sorting through asc, desc, and none', function () 
 
 it('keeps the admin dashboard free of decorative placeholder surfaces', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
+    $quickLinksContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AdminQuickLinks.vue');
 
     expect(mb_substr_count($contents, '<h1'))->toBe(1);
     expect($contents)->toContain('id="admin-dashboard-hero"');
     expect($contents)->toContain('id="admin-dashboard-heading"');
+    expect($contents)->toContain('id="admin-dashboard-command-stage"');
     expect($contents)->toContain('id="admin-dashboard-quick-links"');
     expect($contents)->toContain('id="admin-dashboard-support-band"');
     expect($contents)->toContain('id="admin-dashboard-main-panel"');
     expect($contents)->toContain('id="admin-dashboard-focus-panel"');
     expect($contents)->toContain('id="admin-dashboard-readiness-panel"');
-    expect($contents)->toContain('Access, roles, and permissions at a glance.');
-    expect($contents)->toContain('Current signal');
+    expect($contents)->toContain('Keep access visible, tidy, and ready for handoff.');
     expect($contents)->not->toContain('PlaceholderPattern');
     expect($contents)->not->toContain('id="admin-dashboard-highlight-grid"');
+    expect($quickLinksContents)->toContain('id="admin-dashboard-quick-links-nav"');
+    expect($quickLinksContents)->toContain('admin-dashboard-link-${item.id}');
+    expect($quickLinksContents)->toContain("id: 'users'");
+    expect($quickLinksContents)->toContain("id: 'roles'");
+    expect($quickLinksContents)->toContain("id: 'permissions'");
+    expect($quickLinksContents)->not->toContain('md:grid-cols-3');
+    expect($quickLinksContents)->not->toContain('Available now');
 });
 
 it('keeps high-identity surfaces on semantic landmark primitives', function () {
@@ -777,14 +823,17 @@ it('keeps the admin dashboard aligned to the welcome shell hierarchy', function 
 
     expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
     expect($dashboardContents)->toContain('id="admin-dashboard-heading"');
+    expect($dashboardContents)->toContain('id="admin-dashboard-command-stage"');
     expect($dashboardContents)->toContain('id="admin-dashboard-support-band"');
     expect($dashboardContents)->toContain('aria-labelledby="admin-dashboard-support-heading"');
     expect($dashboardContents)->not->toContain('id="admin-dashboard-highlight-grid"');
     expect($dashboardContents)->not->toContain('Analytics');
     expect($quickLinksContents)->toContain('aria-labelledby="admin-dashboard-quick-links-heading"');
+    expect($quickLinksContents)->toContain('Command strip');
     expect($quickLinksContents)->not->toContain('metrics');
 
-    expect(mb_strpos($dashboardContents, 'id="admin-dashboard-quick-links"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-heading"'));
+    expect(mb_strpos($dashboardContents, 'id="admin-dashboard-command-stage"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-main-panel"'));
+    expect(mb_strpos($dashboardContents, 'id="admin-dashboard-quick-links"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-command-stage"'));
     expect(mb_strpos($dashboardContents, 'id="admin-dashboard-support-band"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-quick-links"'));
 });
 
@@ -937,7 +986,7 @@ it('keeps dashboard quick links from collapsing into a blank area when no admin 
 
     expect($contents)->toContain('id="admin-dashboard-quick-links-empty-state"');
     expect($contents)->toContain('No admin surfaces are assigned to this account yet.');
-    expect($contents)->toContain('Open {{ item.title }}');
+    expect($contents)->toContain('{{ item.command }}');
 });
 
 it('keeps admin index surfaces readable on narrow screens with dedicated mobile controls', function () {
