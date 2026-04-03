@@ -169,7 +169,7 @@ const clearFilters = () => {
                 <CheckIcon v-if="draftFilters.includes(option)" class="size-3" />
                 <SquareIcon v-else class="size-3 text-transparent" />
               </span>
-              {{ formatOptionLabel(option) }}
+              {{ props.formatOptionLabel(option) }}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <div class="flex justify-end p-1">

@@ -58,7 +58,7 @@ const utilityNavItems: NavItem[] = [];
       <div class="mx-auto flex min-h-12 w-full items-center justify-start px-4 text-muted-foreground md:max-w-7xl">
         <div class="flex min-w-0 items-center gap-3">
           <span class="hidden text-[0.68rem] font-semibold tracking-[0.18em] text-muted-foreground/80 uppercase sm:block"> Current surface </span>
-          <Breadcrumbs :breadcrumbs="breadcrumbs" />
+          <Breadcrumbs :breadcrumbs="props.breadcrumbs" />
         </div>
       </div>
     </div>
