@@ -1,6 +1,7 @@
 ## PROJECT CODING RULES
 
 ### **IMPORTANT**: The rules under this `PROJECT CODING RULES` heading overrides **ANY** other rules within `AGENTS.md` or other guideline and skill files used to build it.
+### Any rules in this listing (between this line and `### END OF PROJECT GUIDELINE OVERRIDES -`) SUPERSEDE ANY AND ALL OTHER GUIDELINES, SKILLS OR RULES. 
 
 1. Docblock format: When a docblock is encountered or written, it should be formatted/replaced with one that to follows these rules.
   - If it is a text only comment/note, it should be a single line.\
@@ -36,4 +37,7 @@
   - Classes in `Support` and `Queries` should be refactored to be in `Actions`.
   - With the exception of the `App`/`Transport` classes, classes that are directly related to module should be moved there.
   - Modules should only be one directory deep under `app/Modules` and not grouped beyond this. 
-3. When finished with coding tasks, please provide a Markdown summary, formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).
+3. When completing any task provide a Markdown summary to the user formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).
+4. Do not yet generate any GitHub workflows or CI.yml file in this project. We have not yet set it up, and it will consistantly fail as of the moment.
+
+### END OF PROJECT GUIDELINE OVERRIDES - CONTINUE EVALUATING BEYOND THIS POINT AS NORMAL
