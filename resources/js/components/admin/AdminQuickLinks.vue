@@ -108,10 +108,10 @@ const hasLinks = computed(() => links.value.length > 0);
 </script>
 
 <template>
-  <section class="space-y-4">
+  <section class="space-y-4" aria-labelledby="admin-dashboard-quick-links-heading">
     <div class="max-w-2xl space-y-2">
       <p class="section-kicker">Administration</p>
-      <h2 class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">Open the live admin surfaces from a single command strip.</h2>
+      <h2 id="admin-dashboard-quick-links-heading" class="text-[clamp(1.8rem,3vw,2.7rem)] font-semibold tracking-[-0.03em] text-balance">Open the live admin surfaces from a single command strip.</h2>
       <p class="text-sm leading-6 text-muted-foreground">These are the active admin surfaces available in the starter right now.</p>
     </div>
 

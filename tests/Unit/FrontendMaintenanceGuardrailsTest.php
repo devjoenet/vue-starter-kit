@@ -732,7 +732,11 @@ it('cycles shared admin index sorting through asc, desc, and none', function () 
 it('keeps the admin dashboard free of decorative placeholder surfaces', function () {
     $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
 
+    expect(mb_substr_count($contents, '<h1'))->toBe(1);
+    expect($contents)->toContain('id="admin-dashboard-hero"');
+    expect($contents)->toContain('id="admin-dashboard-heading"');
     expect($contents)->toContain('id="admin-dashboard-quick-links"');
+    expect($contents)->toContain('id="admin-dashboard-support-band"');
     expect($contents)->toContain('id="admin-dashboard-main-panel"');
     expect($contents)->toContain('id="admin-dashboard-focus-panel"');
     expect($contents)->toContain('id="admin-dashboard-readiness-panel"');
@@ -740,6 +744,48 @@ it('keeps the admin dashboard free of decorative placeholder surfaces', function
     expect($contents)->toContain('Current signal');
     expect($contents)->not->toContain('PlaceholderPattern');
     expect($contents)->not->toContain('id="admin-dashboard-highlight-grid"');
+});
+
+it('keeps high-identity surfaces on semantic landmark primitives', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $authLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/auth/AuthSimpleLayout.vue');
+    $settingsLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/settings/Layout.vue');
+    $appContentContents = file_get_contents($projectRoot.'/resources/js/components/AppContent.vue');
+
+    expect($welcomeContents)->toContain('<header id="welcome-page-header"');
+    expect($welcomeContents)->toContain('<main');
+    expect($welcomeContents)->toContain('aria-labelledby="welcome-page-heading"');
+    expect($welcomeContents)->toContain('id="welcome-page-heading"');
+
+    expect($authLayoutContents)->toContain('<header id="auth-page-header"');
+    expect($authLayoutContents)->toContain('<main');
+    expect($authLayoutContents)->toContain('aria-labelledby="auth-page-title"');
+    expect($authLayoutContents)->toContain('id="auth-page-title"');
+
+    expect($settingsLayoutContents)->toContain('<header id="settings-layout-header"');
+    expect($settingsLayoutContents)->toContain('aria-label="Settings"');
+
+    expect($appContentContents)->toContain('<main');
+});
+
+it('keeps the admin dashboard aligned to the welcome shell hierarchy', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
+    $quickLinksContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminQuickLinks.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+
+    expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
+    expect($dashboardContents)->toContain('id="admin-dashboard-heading"');
+    expect($dashboardContents)->toContain('id="admin-dashboard-support-band"');
+    expect($dashboardContents)->toContain('aria-labelledby="admin-dashboard-support-heading"');
+    expect($dashboardContents)->not->toContain('id="admin-dashboard-highlight-grid"');
+    expect($dashboardContents)->not->toContain('Analytics');
+    expect($quickLinksContents)->toContain('aria-labelledby="admin-dashboard-quick-links-heading"');
+    expect($quickLinksContents)->not->toContain('metrics');
+
+    expect(mb_strpos($dashboardContents, 'id="admin-dashboard-quick-links"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-heading"'));
+    expect(mb_strpos($dashboardContents, 'id="admin-dashboard-support-band"'))->toBeGreaterThan(mb_strpos($dashboardContents, 'id="admin-dashboard-quick-links"'));
 });
 
 it('keeps permission edit delete actions in the shared form footer', function () {

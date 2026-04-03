@@ -80,6 +80,23 @@ This plan is aligned with the current application baseline and the updated AGENT
 - Fortify redirect and response behavior was reviewed against the browser flows and kept on the default responses because the current redirects land correctly without extra bindings.
 - Phase 8 is now the active workstream.
 
+### 2026-04-02
+
+- Phase 8 is complete.
+- Added the canonical Phase 8 audit ledger at `.ai/guidelines/reports/system-audit.md`.
+- The audit recorded no unassigned `Critical` findings in the current baseline.
+- The audit surfaced three immediate high-priority follow-up tracks:
+  - roadmap-to-code structural drift between the documented target architecture and the live namespace layout
+  - missing durable audit logging for sensitive admin mutations
+  - missing CI parity for the existing local verification gates
+- The audit also captured the current known-good verification baseline and a focused admin-dashboard versus `Welcome.vue` composition note.
+- Folded the lightweight release-governance and guardrail work from later phases into Phase 8:
+  - added GitHub Actions CI parity for backend, frontend, and browser smoke checks
+  - cleaned the Pest baseline and switched shared feature/browser tests to `LazilyRefreshDatabase`
+  - removed starter example tests from the suite
+  - added semantic landmark and dashboard-composition guardrails for high-identity frontend surfaces
+- Phase 9 is now the active workstream.
+
 ## Required Skills And Tooling
 
 ### Skills
@@ -436,6 +453,21 @@ Definition of done:
 
 This phase replaces the prior "final" phase and becomes the new gate before any additional feature work. The codebase has strong foundations, but a full-system audit is still missing.
 
+Status: completed on `2026-04-02`.
+
+Completed work:
+
+- created the canonical audit ledger at `.ai/guidelines/reports/system-audit.md`
+- recorded severity-ranked findings across backend, security, data, frontend, UX, dashboard composition, and tooling integrity
+- mapped each finding to an owner area and follow-up phase
+- captured a dated known-good verification baseline for backend and frontend quality gates
+- documented dashboard drift against the `Welcome.vue` baseline and identified the missing guardrails needed for Phase 10
+- folded in the lightweight later-phase work that did not require major code changes:
+  - GitHub Actions CI parity for backend, frontend, and browser smoke verification
+  - Pest harness cleanup and `LazilyRefreshDatabase` adoption
+  - removal of starter example tests
+  - semantic-landmark and dashboard-hierarchy frontend guardrails
+
 Scope of the audit:
 
 - Backend architecture conformance (thin controllers, static action/query orchestration, DTO boundaries, container contracts).
@@ -443,6 +475,7 @@ Scope of the audit:
 - Data and query efficiency (N+1 risk scan, indexing review for filter/sort columns, pagination/query-shape consistency).
 - Frontend UI quality (visual hierarchy, accessibility, responsive behavior, empty/loading/error states, keyboard support).
 - UX coherence and branding fidelity (cross-surface consistency between marketing, auth, settings, and admin).
+- Admin dashboard composition fidelity against the `Welcome.vue` baseline (dominant shell, integrated action/media stage, restrained supporting bands, and avoidance of generic metric-card admin layouts).
 - Tooling and delivery integrity (test harness behavior, CI parity, static analysis/type safety, build diagnostics).
 
 Required outputs:
@@ -450,6 +483,7 @@ Required outputs:
 - A single audit ledger in `.ai/guidelines/reports/system-audit.md` with severity-tagged findings (`Critical`, `High`, `Medium`, `Low`).
 - A cross-reference matrix mapping each finding to a target phase and owner area (`backend`, `frontend`, `platform`).
 - A "known-good baseline" report for current tests and checks so regressions can be measured explicitly.
+- A focused dashboard-vs-welcome comparison note that identifies structural drift, reusable primitives, and any missing guardrails needed to keep admin from becoming a second design language.
 
 Key targets:
 
@@ -498,12 +532,19 @@ Definition of done:
 
 This starter already has a strong visual direction; this phase turns it into a documented, measurable design system that scales.
 
+Lightweight tasks already completed in Phase 8:
+
+- added semantic landmark guardrails for high-identity surfaces
+- added dashboard hierarchy guardrails that keep the admin landing page anchored to the `Welcome.vue` shell structure baseline
+
 - Run a full accessibility pass (focus order, keyboard-only flows, semantic landmarks, ARIA quality, contrast validation).
 - Standardize shared page-state patterns for loading, empty, success, and failure experiences.
 - Unify motion behavior and interaction affordances across marketing, auth, admin, and settings surfaces.
+- Redesign the admin dashboard landing experience so it follows the `Welcome.vue` composition model: one dominant shell, one clear primary operational message, one integrated action/media or action/evidence stage, and one lower supporting band instead of stacked equal-weight panels.
 - Replace any ad hoc UI implementation differences with reusable Reka-UI/Tailwind component primitives.
 - Tighten copy and information architecture so each page has one clear primary action and reduced cognitive load.
 - Capture brand system guidance (tone, type rhythm, spacing cadence, component usage) in reusable docs.
+- Add frontend guardrails that explicitly reject generic admin dashboard tropes when they conflict with the Southeast Code baseline, especially repetitive metric-card grids and filler status panels on the dashboard landing page.
 
 Key targets:
 
@@ -513,12 +554,14 @@ Key targets:
 - `resources/css/app.css`
 - `tests/Browser/**`
 - `tests/Unit/*Ui*Test.php`
+- `tests/Unit/FrontendMaintenanceGuardrailsTest.php`
 
 Definition of done:
 
 - Core journeys pass keyboard-first and screen-reader sanity checks.
 - Cross-surface UI feels authored as one system, not separate implementations.
 - Shared components own the majority of recurring interaction and visual patterns.
+- The admin dashboard visibly inherits the `Welcome.vue` narrative structure and no longer reads like a generic SaaS metrics shell.
 
 ## Phase 11: Performance, Resilience, And Operational Excellence
 
@@ -550,10 +593,16 @@ Definition of done:
 
 Reframe the old harness-focused phase as a broader release-governance phase.
 
+Lightweight tasks already completed in Phase 8:
+
+- added GitHub Actions CI parity for backend, frontend, and browser smoke checks
+- cleaned the shared Pest baseline and removed leftover starter example tests
+
 - Finalize deterministic local and CI verification pipelines (backend + frontend + browser smoke tiers).
 - Introduce tiered test strategy (`quick`, `full`, `release`) with explicit commands and expected runtime budgets.
 - Move test harness optimizations forward (`withoutVite()` defaults where safe, targeted `LazilyRefreshDatabase` adoption, parallel-safe fixtures).
 - Add pre-release checklists for architecture drift, generated contract drift (Wayfinder/TypeScript), and UX regression checks.
+- Add release-time UI regression checks for high-identity surfaces, including explicit guardrails or visual assertions that keep the admin dashboard aligned with the `Welcome.vue` shell and hierarchy.
 - Document incident rollback playbooks and release cut criteria for this starter kit.
 
 Expanded local minimum release path:
@@ -572,12 +621,15 @@ Key targets:
 - `.ai/guidelines/**`
 - `composer.json`
 - `package.json`
+- `tests/Unit/FrontendMaintenanceGuardrailsTest.php`
+- `tests/Browser/**`
 
 Definition of done:
 
 - Local and CI release checks are aligned and repeatable.
 - Contract drift and UI regressions are caught before merge.
 - The starter has explicit release governance, not just ad hoc verification.
+- High-identity pages such as `Welcome.vue` and the admin dashboard have enforceable regression coverage, not just informal design intent.
 
 ## Explicit Do-Not-Do List
 

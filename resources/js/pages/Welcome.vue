@@ -76,11 +76,11 @@ const buildTargets = [
       </header>
 
       <main class="relative flex flex-1 flex-col gap-12 pb-10 sm:gap-14 sm:pb-12 lg:gap-16 lg:pb-16">
-        <section id="welcome-page-hero" class="welcome-hero-shell motion-stage relative flex flex-1 items-center overflow-hidden p-6 sm:px-5 sm:py-5 lg:min-h-152 lg:px-6 lg:py-6">
+        <section id="welcome-page-hero" class="welcome-hero-shell motion-stage relative flex flex-1 items-center overflow-hidden p-6 sm:px-5 sm:py-5 lg:min-h-152 lg:px-6 lg:py-6" aria-labelledby="welcome-page-heading">
           <div class="relative z-10 grid w-full items-center gap-10 lg:grid-cols-[minmax(0,33rem)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] xl:gap-12">
             <section id="welcome-page-content" class="relative z-[2] max-w-140 px-6 py-3 sm:py-5 lg:py-8">
               <p class="motion-step font-handwritten text-2xl font-semibold text-primary" style="--motion-order: 2">Build for marketing, CRM, or clients</p>
-              <h1 class="motion-step mt-6 mb-8 max-w-[10ch] text-[clamp(3.15rem,6vw,6rem)] leading-[0.92] font-semibold tracking-[-0.07em] text-balance" style="--motion-order: 3">
+              <h1 id="welcome-page-heading" class="motion-step mt-6 mb-8 max-w-[10ch] text-[clamp(3.15rem,6vw,6rem)] leading-[0.92] font-semibold tracking-[-0.07em] text-balance" style="--motion-order: 3">
                 Custom systems that help real teams operate <span class="font-handwritten font-semibold text-primary underline">better</span>
               </h1>
               <p class="motion-step mt-5 max-w-xl border-t py-6 text-base leading-7 font-semibold text-muted-foreground sm:text-lg" style="--motion-order: 4">
