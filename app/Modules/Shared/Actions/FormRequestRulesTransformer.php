@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Support\TypeScript;
+namespace App\Modules\Shared\Actions;
 
 use Illuminate\Foundation\Http\FormRequest;
 use ReflectionClass;
@@ -10,11 +10,9 @@ use ReflectionException;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
 
-class FormRequestRulesTransformer implements Transformer
+final class FormRequestRulesTransformer implements Transformer
 {
-    /**
-     * @throws ReflectionException
-     */
+    /** @throws ReflectionException */
     public function transform(ReflectionClass $class, string $name): ?TransformedType
     {
         if (! is_subclass_of($class->getName(), FormRequest::class)) {
@@ -31,7 +29,6 @@ class FormRequestRulesTransformer implements Transformer
         $request->setUserResolver(static fn (): object => (object) ['id' => 0]);
 
         $rulesMethod = $class->getMethod('rules');
-
         $rules = $rulesMethod->invoke($request);
 
         if (! is_array($rules)) {
@@ -95,7 +92,7 @@ class FormRequestRulesTransformer implements Transformer
         return TransformedType::create(
             $class,
             $name,
-            $transformed
+            $transformed,
         );
     }
 
@@ -105,7 +102,7 @@ class FormRequestRulesTransformer implements Transformer
         if (is_string($ruleDefinition)) {
             return array_filter(array_map(
                 fn (string $rule): string => mb_trim(mb_strtolower($rule)),
-                explode('|', $ruleDefinition)
+                explode('|', $ruleDefinition),
             ));
         }
 
@@ -215,7 +212,7 @@ class FormRequestRulesTransformer implements Transformer
 
                 return "'".str_replace("'", "\\'", $value)."'";
             },
-            $values
+            $values,
         );
 
         return implode(' | ', $mapped);

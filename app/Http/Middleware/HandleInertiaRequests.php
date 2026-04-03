@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'flash' => $this->sharedFlash($request),
             'auth' => $this->sharedAuth($request),
+            'requestContext' => $this->sharedRequestContext($request),
             'sidebarOpen' => $this->resolveSidebarOpen($request),
         ];
     }
@@ -80,6 +81,14 @@ class HandleInertiaRequests extends Middleware
     private function sharedAuth(Request $request): array
     {
         return SharedAuthData::fromRequest($request)->toArray();
+    }
+
+    /** @return array{id: string|null} */
+    private function sharedRequestContext(Request $request): array
+    {
+        return [
+            'id' => $request->attributes->get('request_id'),
+        ];
     }
 
     private function resolveSidebarOpen(Request $request): bool

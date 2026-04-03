@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Users\Actions;
 
-use App\Concerns\PasswordValidationRules;
+use App\Modules\Shared\Actions\PasswordValidationRules;
 use App\Modules\Users\DTOs\CreateUserData;
 use App\Modules\Users\Models\User;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -14,25 +14,17 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 final class CreateNewUser implements CreatesNewUsers
 {
-    use PasswordValidationRules;
-
     /** @param  array<string, string>  $input */
     public function create(array $input): User
     {
         /** @var array{name: string, email: string, password: string} $validated */
         $validated = Validator::make($input, [
-            'name' => $this->nameRules(),
+            'name' => ProfileValidationRules::name(),
             'email' => $this->registrationEmailRules(),
-            'password' => $this->passwordRules(),
+            'password' => PasswordValidationRules::password(),
         ])->validate();
 
         return CreateUser::handle(CreateUserData::fromInput($validated));
-    }
-
-    /** @return array<int, mixed> */
-    private function nameRules(): array
-    {
-        return ['required', 'string', 'max:255'];
     }
 
     /** @return array<int, mixed> */

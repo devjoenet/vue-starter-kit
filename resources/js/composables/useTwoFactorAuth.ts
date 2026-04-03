@@ -1,5 +1,6 @@
 import type { ComputedRef, Ref } from 'vue';
 import { computed, ref } from 'vue';
+import { resolveNetworkFailureMessage, resolveRequestFailureMessage, resolveUnknownFailureMessage } from '@/lib/request-failures';
 import { qrCode, recoveryCodes, secretKey } from '@/routes/two-factor';
 
 export type UseTwoFactorAuthReturn = {
@@ -17,13 +18,29 @@ export type UseTwoFactorAuthReturn = {
   fetchRecoveryCodes: () => Promise<void>;
 };
 
+class RequestFailureError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RequestFailureError';
+  }
+}
+
 const fetchJson = async <T>(url: string): Promise<T> => {
-  const response = await fetch(url, {
-    headers: { Accept: 'application/json' },
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    });
+  } catch {
+    throw new RequestFailureError(resolveNetworkFailureMessage());
+  }
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.status}`);
+    throw new RequestFailureError(resolveRequestFailureMessage(response.status, response.headers.get('x-request-id')).message);
   }
 
   return response.json();
@@ -42,8 +59,8 @@ export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
       const { svg } = await fetchJson<{ svg: string; url: string }>(qrCode.url());
 
       qrCodeSvg.value = svg;
-    } catch {
-      errors.value.push('Failed to fetch QR code');
+    } catch (error) {
+      errors.value.push(resolveUnknownFailureMessage(error, 'Failed to fetch QR code.'));
       qrCodeSvg.value = null;
     }
   };
@@ -53,8 +70,8 @@ export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
       const { secretKey: key } = await fetchJson<{ secretKey: string }>(secretKey.url());
 
       manualSetupKey.value = key;
-    } catch {
-      errors.value.push('Failed to fetch a setup key');
+    } catch (error) {
+      errors.value.push(resolveUnknownFailureMessage(error, 'Failed to fetch a setup key.'));
       manualSetupKey.value = null;
     }
   };
@@ -79,8 +96,8 @@ export const useTwoFactorAuth = (): UseTwoFactorAuthReturn => {
     try {
       clearErrors();
       recoveryCodesList.value = await fetchJson<string[]>(recoveryCodes.url());
-    } catch {
-      errors.value.push('Failed to fetch recovery codes');
+    } catch (error) {
+      errors.value.push(resolveUnknownFailureMessage(error, 'Failed to fetch recovery codes.'));
       recoveryCodesList.value = [];
     }
   };

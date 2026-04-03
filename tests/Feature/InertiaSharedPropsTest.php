@@ -11,8 +11,11 @@ use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\PermissionRegistrar;
 
 test('login page includes shared flash props', function () {
-    $this->get(route('login'))
+    $response = $this->get(route('login'));
+
+    $response
         ->assertOk()
+        ->assertHeader('X-Request-Id')
         ->assertInertia(fn (Assert $page) => $page
             ->component('auth/Login')
             ->where('name', config('app.name'))
@@ -27,6 +30,7 @@ test('login page includes shared flash props', function () {
             ->where('flash.error', null)
             ->where('flash.warning', null)
             ->where('flash.info', null)
+            ->where('requestContext.id', $response->headers->get('X-Request-Id'))
         );
 });
 
@@ -85,10 +89,12 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
         ->withUnencryptedCookie('sidebar_state', 'false')
         ->get(route('admin.dashboard'))
         ->assertOk()
+        ->assertHeader('X-Request-Id')
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/Dashboard')
             ->where('name', config('app.name'))
             ->where('sidebarOpen', false)
+            ->where('requestContext.id', fn (?string $requestId): bool => is_string($requestId) && $requestId !== '')
             ->where('auth', [
                 'user' => [
                     'id' => $user->id,

@@ -10,5 +10,8 @@ declare module '@inertiajs/core' {
       warning?: string;
       info?: string;
     };
+    requestContext: {
+      id: string | null;
+    };
   }
 }

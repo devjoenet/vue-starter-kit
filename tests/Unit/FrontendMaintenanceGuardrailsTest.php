@@ -109,6 +109,36 @@ it('breaks shell support components into extracted header, toast, and two-factor
     expect($twoFactorModalContents)->not->toContain("from '@inertiajs/vue3'");
 });
 
+it('keeps request-failure handling centralized for stale sessions and partial backend failures', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $failureUtilityContents = file_get_contents($projectRoot.'/resources/js/lib/request-failures.ts');
+    $toastFeedContents = file_get_contents($projectRoot.'/resources/js/composables/useAppToastFeed.ts');
+    $twoFactorContents = file_get_contents($projectRoot.'/resources/js/composables/useTwoFactorAuth.ts');
+
+    expect($failureUtilityContents)->toContain('status === 419');
+    expect($failureUtilityContents)->toContain('Ref:');
+    expect($toastFeedContents)->toContain("router.on('httpException'");
+    expect($toastFeedContents)->toContain("router.on('networkError'");
+    expect($toastFeedContents)->toContain("from '@/lib/request-failures'");
+    expect($toastFeedContents)->toContain('return false;');
+    expect($twoFactorContents)->toContain("from '@/lib/request-failures'");
+    expect($twoFactorContents)->toContain("'X-Requested-With': 'XMLHttpRequest'");
+});
+
+it('keeps frontend asset budgets enforced in the build pipeline', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $packageJson = file_get_contents($projectRoot.'/package.json');
+    $viteConfigContents = file_get_contents($projectRoot.'/vite.config.ts');
+    $budgetScriptContents = file_get_contents($projectRoot.'/scripts/check-frontend-budgets.mjs');
+
+    expect($packageJson)->toContain('"budget:frontend"');
+    expect($packageJson)->toContain('npm run budget:frontend');
+    expect($viteConfigContents)->toContain('chunkSizeWarningLimit: 340');
+    expect($budgetScriptContents)->toContain('resources/js/app.ts');
+    expect($budgetScriptContents)->toContain('resources/js/pages/admin/Dashboard.vue');
+    expect($budgetScriptContents)->toContain('Frontend asset budgets passed.');
+});
+
 it('reuses the shared permission editor component across admin permission pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [

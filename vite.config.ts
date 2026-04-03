@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
+    build: {
+      chunkSizeWarningLimit: 340,
+    },
     define: {
       __VUE_PROD_DEVTOOLS__: JSON.stringify(env.APP_ENV !== 'production'),
     },
