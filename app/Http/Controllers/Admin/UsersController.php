@@ -41,11 +41,9 @@ final class UsersController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $user = CreateUser::handle(new CreateUserData(
-            name: (string) $request->validated('name'),
-            email: (string) $request->validated('email'),
-            password: (string) $request->validated('password'),
-        ));
+        $user = CreateUser::handle(
+            CreateUserData::fromInput($request->safe()->only(['name', 'email', 'password'])),
+        );
 
         return $this->redirectRouteWithSuccess('admin.users.edit', $user, 'User created.');
     }
@@ -63,11 +61,10 @@ final class UsersController extends Controller
         UpdateUserRequest $request,
         User $user,
     ): RedirectResponse {
-        UpdateUser::handle($user, new UpdateUserData(
-            name: (string) $request->validated('name'),
-            email: (string) $request->validated('email'),
-            password: $request->validated('password'),
-        ));
+        UpdateUser::handle(
+            $user,
+            UpdateUserData::fromInput($request->safe()->only(['name', 'email', 'password'])),
+        );
 
         if ($request->boolean('quiet_success')) {
             return back();
@@ -87,10 +84,12 @@ final class UsersController extends Controller
         SyncUserRolesRequest $request,
         User $user,
     ): RedirectResponse {
-        /** @var list<string> $roleNames */
-        $roleNames = $request->validated('roles', []);
-
-        SyncUserRoles::handle($user, new SyncUserRolesData(roles: $roleNames));
+        SyncUserRoles::handle(
+            $user,
+            SyncUserRolesData::fromInput([
+                'roles' => $request->validated('roles', []),
+            ]),
+        );
 
         if ($request->boolean('quiet_success')) {
             return back();

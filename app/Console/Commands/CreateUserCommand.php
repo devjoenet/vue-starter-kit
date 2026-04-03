@@ -102,11 +102,11 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             return SymfonyCommand::SUCCESS;
         }
 
-        $user = CreateUser::handle(new CreateUserData(
-            name: $name,
-            email: $email,
-            password: $plainPassword,
-        ));
+        $user = CreateUser::handle(CreateUserData::fromInput([
+            'name' => $name,
+            'email' => $email,
+            'password' => $plainPassword,
+        ]));
 
         if ($shouldDesignateSuperAdmin) {
             $user->assignRole($this->ensureSuperAdminRole());

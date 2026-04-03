@@ -93,7 +93,7 @@ test('sync user roles action syncs the selected roles by name', function (): voi
     ]);
 
     SyncUserRoles::handle($user, new SyncUserRolesData(
-        roles: ['editor', 'reviewer'],
+        roles: ['editor', 'editor', 'reviewer'],
     ));
 
     expect($user->fresh()?->getRoleNames()->all())->toBe(['editor', 'reviewer']);

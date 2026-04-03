@@ -18,7 +18,7 @@ final class UpdateUser
     {
         return DB::transaction(function () use ($user, $data): User {
             $before = self::auditState($user);
-            $passwordUpdated = $data->password !== null;
+            $passwordUpdated = $data->passwordWasProvided();
 
             $user->forceFill(['name' => $data->name, 'email' => $data->email]);
 

@@ -13,4 +13,14 @@ final class CreateUserData extends Data
         public string $email,
         public string $password,
     ) {}
+
+    /** @param  array{name: string, email: string, password: string}  $input */
+    public static function fromInput(array $input): self
+    {
+        return new self(
+            name: $input['name'],
+            email: $input['email'],
+            password: $input['password'],
+        );
+    }
 }

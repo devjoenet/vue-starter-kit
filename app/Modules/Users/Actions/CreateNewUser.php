@@ -26,11 +26,7 @@ final class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return CreateUser::handle(new CreateUserData(
-            name: $validated['name'],
-            email: $validated['email'],
-            password: $validated['password'],
-        ));
+        return CreateUser::handle(CreateUserData::fromInput($validated));
     }
 
     /** @return array<int, mixed> */

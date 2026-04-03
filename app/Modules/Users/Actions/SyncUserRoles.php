@@ -39,9 +39,7 @@ final class SyncUserRoles
     /** @return list<string> */
     private static function resolveRoleNames(SyncUserRolesData $data): array
     {
-        $requestedRoles = collect($data->roles)
-            ->unique()
-            ->values();
+        $requestedRoles = collect($data->roleNames());
 
         $existingRoles = Role::query()
             ->whereIn('name', $requestedRoles->all())

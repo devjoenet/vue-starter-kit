@@ -579,6 +579,8 @@ Definition of done:
 
 Move from "works well" to "scales predictably" on both backend and frontend.
 
+- Backend code has no other refactors possible that can move non-http layer code into a module.
+- There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model to remove the DB call.
 - Establish performance budgets for first-load payload, JS bundle segments, and key admin index queries.
 - Add server-side observability hooks (slow query thresholds, actionable structured logs, failure correlation IDs).
 - Validate deferred props, partial reloads, and pagination behavior under realistic data volumes.
@@ -607,7 +609,7 @@ Reframe the old harness-focused phase as a broader release-governance phase.
 
 Lightweight tasks already completed in Phase 8:
 
-- added GitHub Actions CI parity for backend, frontend, and browser smoke checks
+- (removed, this was not yet accomplished) added GitHub Actions CI parity for backend, frontend, and browser smoke checks
 - cleaned the shared Pest baseline and removed leftover starter example tests
 
 - Finalize deterministic local and CI verification pipelines (backend + frontend + browser smoke tiers).
