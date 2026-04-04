@@ -14,6 +14,20 @@ export type AuthenticatedUserData = {
   email: string;
   email_verified_at?: string;
 };
+export type DashboardMetricSourceData = {
+  count: number;
+};
+export type DashboardOverviewSourceData = {
+  users: number;
+  roles: number;
+  permissions: number;
+};
+export type DashboardSourcesData = {
+  overview: DashboardOverviewSourceData;
+  users: DashboardMetricSourceData;
+  roles: DashboardMetricSourceData;
+  permissions: DashboardMetricSourceData;
+};
 export type EditableRoleData = {
   id: number;
   name: string;

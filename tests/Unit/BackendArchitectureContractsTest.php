@@ -23,7 +23,11 @@ use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
 use App\Modules\Audit\Actions\RecordAuditLog;
 use App\Modules\Dashboard\Actions\DashboardMetrics;
 use App\Modules\Dashboard\Actions\GetDashboardMetrics;
+use App\Modules\Dashboard\Actions\GetDashboardSources;
 use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
+use App\Modules\Dashboard\DTOs\DashboardMetricSourceData;
+use App\Modules\Dashboard\DTOs\DashboardOverviewSourceData;
+use App\Modules\Dashboard\DTOs\DashboardSourcesData;
 use App\Modules\Permissions\Actions\CreatePermission;
 use App\Modules\Permissions\Actions\DeletePermission;
 use App\Modules\Permissions\Actions\GetPermissionFilterOptions;
@@ -118,6 +122,7 @@ dataset('project_write_action_classes', [
 
 dataset('project_read_action_classes', [
     GetDashboardMetrics::class,
+    GetDashboardSources::class,
     GetAdminIndex::class,
     IndexUsers::class,
     GetUserIndexItems::class,
@@ -157,6 +162,9 @@ dataset('fortify_action_adapters', [
 
 dataset('backend_data_classes', [
     AdminIndexQueryData::class,
+    DashboardMetricSourceData::class,
+    DashboardOverviewSourceData::class,
+    DashboardSourcesData::class,
     CreateUserData::class,
     UpdateUserData::class,
     EditableUserData::class,
@@ -198,6 +206,9 @@ dataset('typescript_contract_classes', [
     AuthenticatedUserData::class,
     SharedAuthData::class,
     AdminIndexQueryData::class,
+    DashboardMetricSourceData::class,
+    DashboardOverviewSourceData::class,
+    DashboardSourcesData::class,
     EditableUserData::class,
     RoleOptionData::class,
     UserIndexFilterOptionsData::class,

@@ -539,9 +539,9 @@
   .shell-header-band {
     background: linear-gradient(
       115deg,
-      color-mix(in oklab, var(--surface-shell-strong) 76%, var(--primary) 24%) 0%,
-      color-mix(in oklab, var(--surface-shell) 92%, var(--background) 8%) 52%,
-      color-mix(in oklab, var(--surface-shell) 84%, var(--accent) 16%) 100%
+      color-mix(in oklab, var(--surface-shell-strong) 84%, var(--primary) 16%) 0%,
+      color-mix(in oklab, var(--surface-shell) 94%, var(--background) 6%) 52%,
+      color-mix(in oklab, var(--surface-shell) 90%, var(--secondary) 10%) 100%
     );
   }
 
@@ -607,26 +607,31 @@
 
   .surface-dashboard-shell {
     background:
-      radial-gradient(circle at 86% 12%, color-mix(in oklab, var(--secondary) 26%, transparent) 0%, transparent 22%), radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 24%),
-      linear-gradient(138deg, color-mix(in oklab, var(--surface-shell-strong) 72%, var(--primary) 28%) 0%, var(--surface-panel) 40%, color-mix(in oklab, var(--surface-panel-secondary) 68%, var(--accent) 32%) 100%);
+      radial-gradient(circle at 84% 12%, color-mix(in oklab, var(--secondary) 18%, transparent) 0%, transparent 22%), radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--primary) 12%, transparent) 0%, transparent 24%),
+      linear-gradient(
+        142deg,
+        color-mix(in oklab, var(--surface-shell-strong) 82%, var(--primary) 18%) 0%,
+        color-mix(in oklab, var(--surface-panel) 92%, var(--background) 8%) 44%,
+        color-mix(in oklab, var(--surface-panel-secondary) 82%, var(--secondary) 18%) 100%
+      );
   }
 
   .surface-dashboard-primary {
-    background: linear-gradient(145deg, color-mix(in oklab, var(--surface-panel-primary) 72%, var(--primary) 28%) 0%, color-mix(in oklab, var(--surface-panel) 82%, var(--surface-shell) 18%) 100%);
-    border-color: color-mix(in oklab, var(--primary) 18%, var(--border));
+    background: linear-gradient(145deg, color-mix(in oklab, var(--surface-panel-primary) 82%, var(--primary) 18%) 0%, color-mix(in oklab, var(--surface-panel) 90%, var(--surface-shell) 10%) 100%);
+    border-color: color-mix(in oklab, var(--primary) 14%, var(--border));
   }
 
   .surface-dashboard-secondary {
-    background: linear-gradient(155deg, color-mix(in oklab, var(--surface-panel-secondary) 78%, var(--secondary) 22%) 0%, color-mix(in oklab, var(--surface-panel) 90%, var(--background) 10%) 100%);
-    border-color: color-mix(in oklab, var(--secondary) 18%, var(--border));
+    background: linear-gradient(155deg, color-mix(in oklab, var(--surface-panel-secondary) 84%, var(--secondary) 16%) 0%, color-mix(in oklab, var(--surface-panel) 92%, var(--background) 8%) 100%);
+    border-color: color-mix(in oklab, var(--secondary) 14%, var(--border));
   }
 
   .surface-dashboard-shell::before {
-    background: linear-gradient(135deg, color-mix(in oklab, var(--secondary) 48%, transparent) 0%, transparent 74%);
+    background: linear-gradient(135deg, color-mix(in oklab, var(--secondary) 28%, transparent) 0%, transparent 74%);
     clip-path: polygon(20% 0, 100% 0, 76% 100%, 0 100%);
     content: '';
     inset: -10% -6% 58% 42%;
-    opacity: 0.22;
+    opacity: 0.16;
     pointer-events: none;
     position: absolute;
     z-index: 0;

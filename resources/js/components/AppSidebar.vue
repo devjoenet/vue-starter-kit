@@ -80,9 +80,9 @@ const footerNavItems: NavItem[] = [];
       </SidebarMenu>
 
       <div class="group-data-[collapsible=icon]:hidden">
-        <div class="relative overflow-hidden rounded-[1.5rem] border border-sidebar-border/70 bg-sidebar-accent/55 px-4 py-4 shadow-[var(--elevation-1)]">
-          <div class="pointer-events-none absolute inset-y-4 right-4 w-[0.1875rem] rounded-full bg-linear-to-b from-secondary via-primary to-accent opacity-70" />
-          <p class="text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/70 uppercase">Workspace</p>
+        <div class="relative overflow-hidden rounded-[1.45rem] border border-sidebar-border/60 bg-sidebar-accent/34 px-4 py-4 shadow-[var(--elevation-1)]">
+          <div class="pointer-events-none absolute inset-y-4 right-4 w-[0.1875rem] rounded-full bg-linear-to-b from-secondary/80 via-primary/80 to-accent/70 opacity-55" />
+          <p class="text-[0.68rem] font-semibold tracking-[0.18em] text-sidebar-foreground/66 uppercase">Workspace</p>
           <p class="mt-1 pr-6 text-sm font-semibold">Southeast Code</p>
           <p class="mt-1 pr-6 text-xs leading-5 text-sidebar-foreground/75">Access control, settings, and starter surfaces shaped for client-ready demos.</p>
         </div>
