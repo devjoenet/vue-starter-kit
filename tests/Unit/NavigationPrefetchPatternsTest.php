@@ -15,7 +15,8 @@ it('prefetches key workspace navigation links for faster inertia visits', functi
     $files = [
         'resources/js/components/NavMain.vue',
         'resources/js/components/app-header/AppHeaderDesktopNavigation.vue',
-        'resources/js/components/admin/AdminQuickLinks.vue',
+        'resources/js/components/admin/dashboard/DashboardAnchorWidget.vue',
+        'resources/js/components/admin/dashboard/DashboardActionWidget.vue',
         'resources/js/components/UserMenuContent.vue',
     ];
 
