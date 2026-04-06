@@ -93,7 +93,7 @@ const getHeaderCellProps = (headerCell: UserIndexHeaderCell) => ({
     </AdminIndexMobileControlsCard>
 
     <div v-if="props.users.data.length" id="admin-users-index-mobile-list" class="motion-step grid gap-3 md:hidden" style="--motion-order: 2">
-      <Card v-for="user in props.users.data" :key="user.id" variant="default" class="gap-4 px-5 py-5">
+      <Card v-for="user in props.users.data" :key="user.id" appearance="filled" variant="neutral" class="gap-4 px-5 py-5">
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0 space-y-1">
             <p class="section-kicker">User</p>
@@ -123,7 +123,7 @@ const getHeaderCellProps = (headerCell: UserIndexHeaderCell) => ({
       </Card>
     </div>
 
-    <Card v-else id="admin-users-index-mobile-empty-state" variant="default" class="motion-step px-5 py-5 text-sm text-muted-foreground md:hidden" style="--motion-order: 2"> No users match the current filters. </Card>
+    <Card v-else id="admin-users-index-mobile-empty-state" appearance="filled" variant="neutral" class="motion-step px-5 py-5 text-sm text-muted-foreground md:hidden" style="--motion-order: 2"> No users match the current filters. </Card>
 
     <AdminIndexTableCard id="admin-users-index-table-card" style="--motion-order: 2">
       <Table id="admin-users-index-table">

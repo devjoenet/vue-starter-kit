@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core';
 import { ScanLine } from 'lucide-vue-next';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, useAttrs, watch } from 'vue';
 import TwoFactorConfirmationForm from '@/components/two-factor/TwoFactorConfirmationForm.vue';
 import TwoFactorSetupStep from '@/components/two-factor/TwoFactorSetupStep.vue';
 import Dialog from '@/components/ui/dialog/Dialog.vue';
@@ -13,6 +13,11 @@ import { useAppearance } from '@/composables/useAppearance';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { normalizeErrorMessages } from '@/lib/errors';
 import type { TwoFactorConfigContent } from '@/types/auth';
+
+defineOptions({
+  inheritAttrs: false,
+});
+
 type Props = {
   requiresConfirmation: boolean;
   twoFactorEnabled: boolean;
@@ -22,6 +27,7 @@ const { resolvedAppearance } = useAppearance();
 
 const props = defineProps<Props>();
 const isOpen = defineModel<boolean>('isOpen');
+const attrs = useAttrs();
 
 const { copy, copied } = useClipboard();
 const { qrCodeSvg, manualSetupKey, clearSetupData, fetchSetupData, errors } = useTwoFactorAuth();
@@ -88,7 +94,7 @@ watch(
 
 <template>
   <Dialog :open="isOpen" @update:open="isOpen = $event">
-    <DialogContent class="sm:max-w-md">
+    <DialogContent v-bind="attrs" class="sm:max-w-md">
       <DialogHeader class="flex items-center justify-center">
         <div class="mb-3 w-auto rounded-full border border-border bg-card p-0.5 shadow-sm">
           <div class="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">

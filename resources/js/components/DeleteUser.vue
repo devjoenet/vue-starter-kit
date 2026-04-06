@@ -18,7 +18,7 @@ const passwordInput = useTemplateRef('passwordInput');
 </script>
 
 <template>
-  <SettingsSectionCard variant="destructive" title="Delete account" description="Permanently remove this account and the data tied to it." content-class="space-y-3">
+  <SettingsSectionCard appearance="tinted" variant="error" title="Delete account" description="Permanently remove this account and the data tied to it." content-class="space-y-3">
     <p class="text-sm text-muted-foreground">Use this only when the account should no longer exist in this starter or any related environments.</p>
 
     <template #footer>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
+import { cn } from 'tailwind-variants';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import PermissionGroupSelect from '@/components/admin/PermissionGroupSelect.vue';
 import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
+import { getCardInsetPanelClassNames } from '@/components/ui/card/variants';
 import type { PermissionGroupOption } from '@/types/admin/permissions';
 
 type PermissionEditorFormData = {
@@ -50,7 +52,7 @@ defineEmits<{
 </script>
 
 <template>
-  <Card variant="default" class="surface-editor-panel px-6">
+  <Card appearance="filled" variant="primary" class="px-6">
     <form class="space-y-6" @submit.prevent="$emit('submit')">
       <div class="space-y-2">
         <p class="section-kicker">Permission details</p>
@@ -92,7 +94,7 @@ defineEmits<{
         />
       </div>
 
-      <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
+      <div :class="cn(getCardInsetPanelClassNames({ appearance: 'tinted', variant: 'accent' }), 'px-4 py-4')">
         <p class="text-sm font-semibold tracking-tight">Group metadata is shared.</p>
         <p class="mt-1 text-sm leading-6 text-muted-foreground">Updating the group label or description changes how every permission in this group is described across the catalog and assignment flows.</p>
       </div>

@@ -12,9 +12,11 @@ it('uses supported inertia layout props in the app layout', function () {
     expect($contents)
         ->toContain('type Props = {')
         ->toContain('breadcrumbs?: BreadcrumbItem[];')
+        ->toContain('surfaceVariant?: AppSurfaceVariant;')
         ->toContain('withDefaults(defineProps<Props>(), {')
         ->toContain('breadcrumbs: () => [],')
-        ->toContain('<AppSidebarLayout :breadcrumbs="breadcrumbs">')
+        ->toContain("surfaceVariant: 'default',")
+        ->toContain('<AppSidebarLayout :breadcrumbs="breadcrumbs" :surface-variant="surfaceVariant">')
         ->not->toContain('useLayoutProps')
         ->not->toContain("from '@inertiajs/vue3'");
 });

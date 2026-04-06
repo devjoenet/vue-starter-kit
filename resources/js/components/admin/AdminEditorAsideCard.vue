@@ -9,7 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <Card data-slot="admin-editor-aside-card" :class="cn('surface-editor-rail gap-4 px-5 py-5', props.class)">
+  <Card data-slot="admin-editor-aside-card" appearance="filled" variant="secondary" :class="cn('gap-4 px-5 py-5', props.class)">
     <slot />
   </Card>
 </template>

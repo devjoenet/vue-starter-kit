@@ -1,2 +1,6 @@
 resources/views/mail/*
 **/*.md
+resources/js/actions/*
+resources/js/routes/*
+resources/js/wayfinder/*
+resources/js/types/*

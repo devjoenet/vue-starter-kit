@@ -3,7 +3,7 @@ import Card from '@/components/ui/card/Card.vue';
 </script>
 
 <template>
-  <Card variant="default" class="motion-step hidden overflow-hidden py-0 md:block">
+  <Card appearance="filled" variant="neutral" class="motion-step hidden overflow-hidden py-0 md:block">
     <slot />
   </Card>
 </template>

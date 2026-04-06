@@ -19,7 +19,7 @@ withDefaults(
 </script>
 
 <template>
-  <Card variant="default" class="surface-editor-panel overflow-hidden py-0">
+  <Card appearance="filled" variant="primary" class="overflow-hidden py-0">
     <div class="border-b border-border/60 px-6 py-5">
       <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div class="space-y-2">

@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DashboardSurfaceCard from '@/components/admin/dashboard/DashboardSurfaceCard.vue';
-import type { DashboardWidgetTone } from '@/types/admin/dashboard';
+import { cn } from 'tailwind-variants';
+import { getCardInsetPanelClassNames, getCardMetricClassNames, type CardAppearance, type CardVariantName } from '@/components/ui/card/variants';
 
 const props = withDefaults(
   defineProps<{
+    appearance?: CardAppearance;
     description: string;
     emptyDescription: string;
     emptyTitle: string;
     points: number[];
     title: string;
-    tone?: DashboardWidgetTone;
+    variant?: CardVariantName;
   }>(),
   {
-    tone: 'neutral',
+    appearance: 'glow',
+    variant: 'neutral',
   },
 );
 
@@ -38,7 +41,7 @@ const chartPoints = computed(() => {
 </script>
 
 <template>
-  <DashboardSurfaceCard :tone="props.tone" emphasis="standard" class="px-5 py-5 md:px-6 md:py-6">
+  <DashboardSurfaceCard :appearance="props.appearance" :variant="props.variant" emphasis="standard" class="px-5 py-5 md:px-6 md:py-6">
     <div class="flex h-full flex-col gap-5">
       <div class="space-y-3">
         <p class="text-[0.68rem] font-semibold tracking-[0.18em] text-muted-foreground/80 uppercase">Trend</p>
@@ -48,12 +51,12 @@ const chartPoints = computed(() => {
         </p>
       </div>
 
-      <div v-if="props.points.length > 1" class="mt-auto overflow-hidden rounded-[1.2rem] border border-border/60 bg-background/24 p-4">
+      <div v-if="props.points.length > 1" :class="cn('mt-auto overflow-hidden p-4', getCardInsetPanelClassNames({ appearance: 'outline', variant: props.variant }))">
         <svg viewBox="0 0 100 100" class="h-36 w-full" preserveAspectRatio="none" aria-hidden="true">
-          <polyline fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" :points="chartPoints" class="text-primary" />
+          <polyline fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" :points="chartPoints" :class="getCardMetricClassNames({ appearance: props.appearance, variant: props.variant })" />
         </svg>
       </div>
-      <div v-else class="mt-auto rounded-[1.2rem] border border-dashed border-border/70 bg-background/18 px-4 py-5">
+      <div v-else :class="cn('mt-auto border-dashed px-4 py-5', getCardInsetPanelClassNames({ appearance: 'outline', variant: props.variant }))">
         <p class="text-sm font-semibold tracking-tight">{{ props.emptyTitle }}</p>
       </div>
     </div>

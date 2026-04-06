@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { cn } from 'tailwind-variants';
 import AdminEditorAsideCard from '@/components/admin/AdminEditorAsideCard.vue';
 import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import RoleDetailsForm from '@/components/admin/RoleDetailsForm.vue';
+import { getCardInsetPanelClassNames } from '@/components/ui/card/variants';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import { useAbility } from '@/composables/useAbility';
 import { useSelectionList } from '@/composables/useSelectionList';
@@ -93,7 +95,7 @@ const closeToIndex = () => {
             title="Initial assignees"
           >
             <div v-if="props.users.length" class="grid gap-3 p-4 sm:p-5">
-              <label v-for="user in props.users" :key="user.id" class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4" :class="!canCreate ? 'opacity-70' : ''">
+              <label v-for="user in props.users" :key="user.id" :class="cn(getCardInsetPanelClassNames({ appearance: 'outline', variant: 'neutral' }), 'flex min-h-11 items-start gap-4 px-4 py-4', !canCreate ? 'opacity-70' : '')">
                 <Checkbox class="mt-0.5 size-5" :disabled="!canCreate" :model-value="hasSelectedValue(user.id)" @update:model-value="(value) => toggleSelectedValue(user.id, value)" />
 
                 <span class="min-w-0 space-y-1">
@@ -108,7 +110,7 @@ const closeToIndex = () => {
             </div>
 
             <div v-else class="p-4 sm:p-5">
-              <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
+              <div :class="cn(getCardInsetPanelClassNames({ appearance: 'tinted', variant: 'accent' }), 'px-4 py-4')">
                 <p class="text-sm font-semibold">No users are available to assign yet.</p>
                 <p class="mt-1 text-sm leading-6 text-muted-foreground">Create the role now and connect people from the users surface later.</p>
               </div>

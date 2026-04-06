@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Modules\Roles\Actions\CreateRole;
+use App\Modules\Roles\Actions\GetAssignableUsers;
 use App\Modules\Roles\Actions\RoleNameNormalizer;
 use App\Modules\Roles\DTOs\CreateRoleData;
-use App\Modules\Users\Models\User;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -41,9 +39,7 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
                         'required',
                         'string',
                         'max:255',
-                        Rule::unique('roles', 'name')->where(
-                            fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
-                        ),
+                        $this->activeUniqueRule('roles', 'name'),
                     ]],
                     'name',
                     ['name.unique' => 'A role with this name already exists.'],
@@ -52,16 +48,18 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
         );
 
         $normalizedRoleName = $roleNameNormalizer->normalize($roleNameInput);
-        $assignableUsers = User::query()
-            ->select(['id', 'name', 'email'])
-            ->orderBy('name')
-            ->orderBy('email')
-            ->get();
+        $assignableUserOptions = collect(GetAssignableUsers::handle())
+            ->mapWithKeys(
+                static fn (array $user): array => [
+                    $user['id'] => sprintf('%s <%s>', $user['name'], $user['email']),
+                ],
+            )
+            ->all();
 
         /** @var list<int> $selectedUserIds */
         $selectedUserIds = [];
 
-        if ($assignableUsers->isEmpty()) {
+        if ($assignableUserOptions === []) {
             warning('No users found. This role will be created without assignments.');
         } elseif (confirm(
             label: 'Assign existing users to this role?',
@@ -71,29 +69,23 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
                 static fn (string|int $id): int => (int) $id,
                 multiselect(
                     label: 'Users to assign to this role',
-                    options: $assignableUsers
-                        ->mapWithKeys(static fn (User $user): array => [
-                            $user->id => sprintf('%s <%s>', $user->name, $user->email),
-                        ])
-                        ->all(),
+                    options: $assignableUserOptions,
                     scroll: 10,
                 ),
             );
         }
 
-        $assignedUsersPreview = $assignableUsers
-            ->whereIn('id', $selectedUserIds)
-            ->map(static fn (User $user): string => sprintf('%s <%s>', $user->name, $user->email))
+        $assignedUsersPreview = collect($selectedUserIds)
+            ->map(static fn (int $userId): ?string => $assignableUserOptions[$userId] ?? null)
+            ->filter()
             ->implode(', ');
 
         $this->table(['Field', 'Value'], [
             ['Name', $normalizedRoleName],
-            ['Assigned users', $assignedUsersPreview !== '' ? $assignedUsersPreview : 'None'],
+            ['Assigned users', $this->presentValue($assignedUsersPreview)],
         ]);
 
-        if (! confirm(label: 'Create this role?', default: true)) {
-            warning('Role creation cancelled.');
-
+        if (! $this->confirmsOrCancels('Create this role?', 'Role creation cancelled.')) {
             return SymfonyCommand::SUCCESS;
         }
 

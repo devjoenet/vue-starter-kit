@@ -7,7 +7,9 @@ namespace App\Modules\Users\Models;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +19,18 @@ use Override;
 use Spatie\Permission\Traits\HasRoles;
 
 /** @property CarbonInterface|null $email_verified_at */
+#[UseFactory(UserFactory::class)]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+])]
+#[Hidden([
+    'password',
+    'two_factor_secret',
+    'two_factor_recovery_codes',
+    'remember_token',
+])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
@@ -24,21 +38,6 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use SoftDeletes;
     use TwoFactorAuthenticatable;
-
-    /** @var list<string> */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
-
-    /** @var list<string> */
-    protected $hidden = [
-        'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
-        'remember_token',
-    ];
 
     /** @return array<string, string> */
     #[Override]
@@ -49,10 +48,5 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
-    }
-
-    protected static function newFactory(): Factory
-    {
-        return UserFactory::new();
     }
 }

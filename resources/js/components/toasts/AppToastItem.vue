@@ -82,6 +82,12 @@ const surfaceProgressClasses: Record<ToastAppearance, string> = {
   solid: 'bg-background/25',
 };
 
+const progressDurationClasses: Record<number, string> = {
+  4200: 'duration-[4200ms]',
+  5200: 'duration-[5200ms]',
+  6200: 'duration-[6200ms]',
+};
+
 const resolvedIcon = computed<LucideIcon | null>(() => {
   if (props.item.icon === null) {
     return null;
@@ -96,6 +102,15 @@ const toastClasses = computed(() => {
   }
 
   return cn('pointer-events-auto relative w-72 overflow-hidden rounded-[1.375rem] border pt-4 pr-4 pb-4 pl-4', toneClasses[props.item.tone], appearanceClasses[props.item.appearance]);
+});
+
+const progressBarClasses = computed(() => {
+  return cn(
+    'h-full origin-left transition-transform ease-linear motion-reduce:transition-none',
+    progressClasses[props.item.tone],
+    props.item.animate ? 'scale-x-0' : 'scale-x-100',
+    progressDurationClasses[props.item.duration] ?? progressDurationClasses[4200],
+  );
 });
 </script>
 
@@ -124,14 +139,7 @@ const toastClasses = computed(() => {
     </div>
 
     <div class="absolute inset-x-0 bottom-0 h-1" :class="surfaceProgressClasses[item.appearance]">
-      <div
-        class="h-full origin-left transition-transform ease-linear motion-reduce:transition-none"
-        :class="progressClasses[item.tone]"
-        :style="{
-          transform: item.animate ? 'scaleX(0)' : 'scaleX(1)',
-          transitionDuration: `${item.duration}ms`,
-        }"
-      />
+      <div :class="progressBarClasses" />
     </div>
   </div>
 </template>

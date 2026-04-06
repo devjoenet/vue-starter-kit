@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "budget:frontend": "node scripts/check-frontend-budgets.mjs",
-    "build": "vite build && npm run budget:frontend",
+    "build": "composer types:generate && vite build && npm run budget:frontend",
     "build:ssr": "vite build && vite build --ssr && npm run budget:frontend",
     "dev": "vite",
     "format": "prettier --write resources/",

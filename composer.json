@@ -69,6 +69,7 @@
       "@php artisan boost:update --ansi"
     ],
     "types:generate": [
+      "php artisan wayfinder:generate",
       "php artisan typescript:transform"
     ],
     "setup": [

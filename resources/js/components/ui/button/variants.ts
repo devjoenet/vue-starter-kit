@@ -1,13 +1,14 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 
 type ButtonAppearance = 'filled' | 'tonal' | 'outline' | 'elevated' | 'text' | 'ghost' | 'link';
-type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'info' | 'warning' | 'success' | 'destructive';
+type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'accent' | 'info' | 'warning' | 'success' | 'destructive';
 
 const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVariantName, string>> = {
   filled: {
     muted: 'bg-muted text-foreground hover:bg-muted/80',
     primary: 'bg-primary text-primary-foreground hover:bg-primary/80',
     secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+    accent: 'bg-accent text-accent-foreground hover:bg-accent/80',
     info: 'bg-info text-info-foreground hover:bg-info/80',
     warning: 'bg-warning text-warning-foreground hover:bg-warning/80',
     success: 'bg-success text-success-foreground hover:bg-success/80',
@@ -17,6 +18,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'border-border/40 bg-muted/75 text-foreground hover:bg-muted',
     primary: 'border-primary/30 bg-primary/15 text-primary hover:bg-primary/22',
     secondary: 'border-secondary/30 bg-secondary/15 text-secondary hover:bg-secondary/22',
+    accent: 'border-accent/30 bg-accent/15 text-accent hover:bg-accent/22',
     info: 'border-info/30 bg-info/15 text-info hover:bg-info/22',
     warning: 'border-warning/30 bg-warning/15 text-warning hover:bg-warning/22',
     success: 'border-success/30 bg-success/15 text-success hover:bg-success/22',
@@ -26,6 +28,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'border-border text-foreground hover:bg-muted hover:text-muted-foreground',
     primary: 'border-primary text-primary hover:bg-primary hover:text-primary-foreground',
     secondary: 'border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground',
+    accent: 'border-accent text-accent hover:bg-accent hover:text-accent-foreground',
     info: 'border-info text-info hover:bg-info ',
     warning: 'border-warning text-warning hover:bg-warning hover:text-warning-foreground',
     success: 'border-success text-success hover:bg-success hover:text-success-foreground',
@@ -35,6 +38,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'border-border/60 bg-card text-foreground hover:bg-muted/50',
     primary: 'border-primary/35 bg-primary text-primary-foreground hover:bg-primary/65',
     secondary: 'border-secondary/35 bg-secondary text-secondary-foreground hover:bg-secondary/65',
+    accent: 'border-accent/35 bg-accent text-accent-foreground hover:bg-accent/65',
     info: 'border-info/35 bg-info text-info-foreground hover:bg-info/65',
     warning: 'border-warning/35 bg-warning text-warning-foreground hover:bg-warning/65',
     success: 'border-success/35 bg-success text-success-foreground hover:bg-success/65',
@@ -44,6 +48,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'text-foreground hover:bg-muted/50',
     primary: 'text-primary hover:bg-primary/10',
     secondary: 'text-secondary hover:bg-secondary/10',
+    accent: 'text-accent hover:bg-accent/10',
     info: 'text-info hover:bg-info/10',
     warning: 'text-warning hover:bg-warning/10',
     success: 'text-success hover:bg-success/10',
@@ -53,6 +58,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'text-foreground hover:bg-muted/60',
     primary: 'text-primary hover:bg-primary/14',
     secondary: 'text-secondary hover:bg-secondary/14',
+    accent: 'text-accent hover:bg-accent/14',
     info: 'text-info hover:bg-info/14',
     warning: 'text-warning hover:bg-warning/14',
     success: 'text-success hover:bg-success/14',
@@ -62,6 +68,7 @@ const buttonAppearanceVariantClasses: Record<ButtonAppearance, Record<ButtonVari
     muted: 'text-foreground hover:text-foreground/85',
     primary: 'text-primary hover:text-primary/80',
     secondary: 'text-secondary hover:text-secondary/80',
+    accent: 'text-accent hover:text-accent/80',
     info: 'text-info hover:text-info/80',
     warning: 'text-warning hover:text-warning/80',
     success: 'text-success hover:text-success/80',
@@ -85,6 +92,7 @@ export const buttonVariants = tv({
       muted: '',
       primary: '',
       secondary: '',
+      accent: '',
       info: '',
       warning: '',
       success: '',

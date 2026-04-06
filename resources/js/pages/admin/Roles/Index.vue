@@ -89,7 +89,7 @@ const getHeaderCellProps = (headerCell: RoleIndexHeaderCell) => ({
     </AdminIndexMobileControlsCard>
 
     <div v-if="props.roles.length" id="admin-roles-index-mobile-list" class="motion-step grid gap-3 md:hidden" style="--motion-order: 2">
-      <Card v-for="role in props.roles" :key="role.id" variant="default" class="gap-4 px-5 py-5">
+      <Card v-for="role in props.roles" :key="role.id" appearance="filled" variant="neutral" class="gap-4 px-5 py-5">
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0 space-y-1">
             <p class="section-kicker">Role</p>
@@ -109,7 +109,7 @@ const getHeaderCellProps = (headerCell: RoleIndexHeaderCell) => ({
       </Card>
     </div>
 
-    <Card v-else id="admin-roles-index-mobile-empty-state" variant="default" class="motion-step px-5 py-5 text-sm text-muted-foreground md:hidden" style="--motion-order: 2"> No roles match the current filters. </Card>
+    <Card v-else id="admin-roles-index-mobile-empty-state" appearance="filled" variant="neutral" class="motion-step px-5 py-5 text-sm text-muted-foreground md:hidden" style="--motion-order: 2"> No roles match the current filters. </Card>
 
     <AdminIndexTableCard id="admin-roles-index-table-card" style="--motion-order: 2">
       <Table id="admin-roles-index-table">
