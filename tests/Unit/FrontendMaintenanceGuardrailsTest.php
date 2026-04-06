@@ -498,8 +498,11 @@ it('keeps app css focused on shared theme and reusable surface primitives', func
     $cssContents = file_get_contents(dirname(__DIR__, 2).'/resources/css/app.css');
 
     expect($cssContents)->toContain('--primary-100');
-    expect($cssContents)->toContain('--success: var(--success-500);');
-    expect($cssContents)->toContain('--success-foreground: var(--success-900);');
+    expect($cssContents)->toContain('--background: oklch(96.7% 0.01 238.1);');
+    expect($cssContents)->toContain('--primary: oklch(51.8% 0.098 194.5);');
+    expect($cssContents)->toContain('--secondary: oklch(71.9% 0.124 230.3);');
+    expect($cssContents)->toContain('--success: oklch(71.2% 0.126 166.8);');
+    expect($cssContents)->toContain('--success-foreground: oklch(25.2% 0.018 178.4);');
     expect($cssContents)->toContain('--color-success-500: var(--success-500);');
     expect($cssContents)->toContain('--color-primary-600: var(--primary-600);');
     expect($cssContents)->not->toContain('.surface-public-hero');
@@ -509,19 +512,34 @@ it('keeps app css focused on shared theme and reusable surface primitives', func
     expect($cssContents)->not->toContain('.surface-auth-copy');
     expect($cssContents)->not->toContain('.surface-auth-form-slot');
     expect($cssContents)->not->toContain('.surface-auth-trust-point');
+    expect($cssContents)->not->toContain('.surface-dashboard-shell');
+    expect($cssContents)->not->toContain('.surface-settings-shell');
+    expect($cssContents)->not->toContain('.surface-settings-nav');
+    expect($cssContents)->not->toContain('.surface-shell-panel');
+    expect($cssContents)->not->toContain('.surface-editor-shell');
+    expect($cssContents)->not->toContain('.surface-editor-panel');
+    expect($cssContents)->not->toContain('.surface-editor-rail');
+    expect($cssContents)->not->toContain('.surface-editor-action-zone');
     expect($cssContents)->not->toContain('.welcome-proof-kicker');
     expect($cssContents)->not->toContain('.welcome-hero-grid');
     expect($cssContents)->not->toContain('.welcome-target-row');
 });
 
 it('uses the shared settings workspace shell for settings navigation and headings', function () {
+    $cardContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/ui/card/variants.ts');
     $settingsLayoutContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/settings/Layout.vue');
 
-    expect($settingsLayoutContents)->toContain('surface-settings-shell');
-    expect($settingsLayoutContents)->toContain('surface-settings-nav');
+    expect($settingsLayoutContents)->toContain("from '@/components/ui/card/variants'");
+    expect($settingsLayoutContents)->toContain("from '@/components/ui/surface/variants'");
+    expect($settingsLayoutContents)->toContain('surfaceSectionClassNames.settingsShell');
+    expect($settingsLayoutContents)->toContain('getCardSurfaceClassNames');
+    expect($settingsLayoutContents)->not->toContain('surface-settings-shell');
+    expect($settingsLayoutContents)->not->toContain('surface-settings-nav');
     expect($settingsLayoutContents)->toContain('activeNavItem.heading');
     expect($settingsLayoutContents)->toContain('motion-sheen');
     expect($settingsLayoutContents)->toContain('motion-step');
+    expect($cardContents)->toContain("export type CardAppearance = 'filled' | 'glow' | 'outline' | 'tinted';");
+    expect($cardContents)->toContain('getCardSurfaceClassNames');
 });
 
 it('keeps the shared motion primitives and reduced-motion safeguards in the frontend system', function () {
@@ -560,6 +578,7 @@ it('uses shared motion choreography across public, auth, dashboard, and admin wo
 it('uses shared breadcrumb helpers for admin and settings pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $dashboardPageFile = 'resources/js/pages/admin/Dashboard.vue';
+    $pageLayoutsFile = 'resources/js/lib/page-layouts.ts';
     $adminPageFiles = [
         'resources/js/pages/admin/Users/Index.vue',
         'resources/js/pages/admin/Users/Create.vue',
@@ -579,14 +598,19 @@ it('uses shared breadcrumb helpers for admin and settings pages', function () {
     ];
 
     $layoutContents = file_get_contents($projectRoot.'/resources/js/layouts/AppLayout.vue');
+    $pageLayoutsContents = file_get_contents($projectRoot.'/'.$pageLayoutsFile);
 
     expect($layoutContents)->not->toContain('useLayoutProps');
     expect($layoutContents)->toContain('breadcrumbs: () => []');
+    expect($pageLayoutsContents)->toContain("surfaceVariant: 'dashboard'");
+    expect($pageLayoutsContents)->toContain('setBreadcrumbs({ title: \'Dashboard\', href: dashboard.url() }, ...breadcrumbs);');
 
     $dashboardContents = file_get_contents($projectRoot.'/'.$dashboardPageFile);
 
-    expect($dashboardContents)->toContain('setBreadcrumbs(');
-    expect($dashboardContents)->not->toContain('setLayoutProps({');
+    expect($dashboardContents)->toContain('setLayoutProps({');
+    expect($dashboardContents)->toContain("breadcrumbs: [{ title: 'Dashboard', href: dashboard().url }]");
+    expect($dashboardContents)->toContain("surfaceVariant: 'dashboard'");
+    expect($dashboardContents)->not->toContain('setBreadcrumbs(');
     expect($dashboardContents)->not->toContain('layout: (_: unknown, page: unknown) =>');
 
     foreach ($adminPageFiles as $pageFile) {
@@ -800,7 +824,7 @@ it('cycles shared admin index sorting through asc, desc, and none', function () 
 it('keeps the admin dashboard free of decorative placeholder surfaces', function () {
     $dashboardContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
     $boardContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/DashboardBoard.vue');
-    $schemaContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/lib/admin-dashboard.ts');
+    $schemaContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
 
     expect(mb_substr_count($dashboardContents, '<h1'))->toBe(1);
     expect($dashboardContents)->toContain('id="admin-dashboard-header"');
@@ -846,7 +870,7 @@ it('keeps the admin dashboard aligned to the welcome shell hierarchy', function 
     $projectRoot = dirname(__DIR__, 2);
     $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
     $boardContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/DashboardBoard.vue');
-    $schemaContents = file_get_contents($projectRoot.'/resources/js/lib/admin-dashboard.ts');
+    $schemaContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
     $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
 
     expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
@@ -1007,13 +1031,15 @@ it('renders breadcrumbs honestly when intermediate items do not have destination
     expect($contents)->not->toContain("item.href ?? '#'");
 });
 
-it('keeps dashboard board messaging useful when no admin links are available', function () {
+it('keeps dashboard anchor focused on summary content instead of trailing explainer tiles', function () {
     $anchorContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/DashboardAnchorWidget.vue');
-    $schemaContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/lib/admin-dashboard.ts');
+    $schemaContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
 
-    expect($anchorContents)->toContain('props.primaryAction');
-    expect($schemaContents)->toContain('This account does not have any admin surfaces assigned yet.');
-    expect($schemaContents)->toContain('availableActions[0] ?? null');
+    expect($anchorContents)->toContain('props.summaryItems');
+    expect($anchorContents)->not->toContain('props.primaryAction');
+    expect($anchorContents)->not->toContain('props.points');
+    expect($schemaContents)->not->toContain('First move');
+    expect($schemaContents)->not->toContain('Use users when you need to confirm who can reach the workspace right now.');
 });
 
 it('keeps admin index surfaces readable on narrow screens with dedicated mobile controls', function () {
@@ -1033,6 +1059,10 @@ it('keeps admin index surfaces readable on narrow screens with dedicated mobile 
 
     expect($permissionsContents)->toContain('Refine permissions');
     expect($permissionsContents)->toContain('as="toolbar"');
+    expect($permissionsContents)->toContain('inheritAttrs: false');
+    expect($permissionsContents)->toContain('const attrs = useAttrs();');
+    expect($permissionsContents)->toContain('<section v-bind="attrs"');
+    expect($permissionsContents)->toContain('id="admin-permissions-index-mobile-list"');
     expect($permissionsContents)->toContain("from '@/components/admin/AdminIndexTableCard.vue'");
     expect($tableCardContents)->toContain('overflow-hidden py-0 md:block');
 });
@@ -1048,6 +1078,59 @@ it('keeps shared tokens and primitives free of legacy glass variants', function 
     expect($cardContents)->not->toContain("glass: '");
     expect($buttonContents)->not->toContain("| 'glass'");
     expect($toastContents)->not->toContain("'glass'");
+});
+
+it('keeps dashboard widget appearances and variants aligned to the shared card primitives', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $dashboardTypesContents = file_get_contents($projectRoot.'/resources/js/types/admin/dashboard.ts');
+    $cardContents = file_get_contents($projectRoot.'/resources/js/components/ui/card/variants.ts');
+    $cardComponentContents = file_get_contents($projectRoot.'/resources/js/components/ui/card/Card.vue');
+    $dashboardConfigContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
+    $anchorContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/DashboardAnchorWidget.vue');
+    $actionContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/DashboardActionWidget.vue');
+    $surfaceCardContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/DashboardSurfaceCard.vue');
+    $buttonContents = file_get_contents($projectRoot.'/resources/js/components/ui/button/variants.ts');
+
+    expect(file_exists($projectRoot.'/resources/js/components/admin/dashboard/dashboard-tones.ts'))->toBeFalse();
+    expect($dashboardTypesContents)->toContain('export type DashboardWidgetAppearance = CardAppearance;');
+    expect($dashboardTypesContents)->toContain('export type DashboardWidgetVariant = CardVariantName;');
+    expect($dashboardTypesContents)->not->toContain("'permissions'");
+    expect($dashboardTypesContents)->not->toContain("'roles'");
+    expect($dashboardTypesContents)->not->toContain("'users'");
+    expect($dashboardTypesContents)->not->toContain('DashboardWidgetTone');
+
+    expect($cardContents)->toContain("export type CardAppearance = 'filled' | 'glow' | 'outline' | 'tinted';");
+    expect($cardContents)->toContain("export type CardBorderEffect = 'none' | 'trace';");
+    expect($cardContents)->toContain("export type CardVariantName = 'neutral' | 'muted' | 'primary' | 'secondary' | 'accent' | 'info' | 'success' | 'warning' | 'error';");
+    expect($cardContents)->toContain("error: 'destructive'");
+    expect($cardContents)->toContain('getCardBadgeClassNames');
+    expect($cardContents)->toContain('getCardButtonAppearance');
+    expect($cardContents)->toContain('getCardBorderTraceClassNames');
+    expect($cardContents)->toContain('getCardBorderTraceOverlayClassNames');
+    expect($dashboardConfigContents)->toContain("appearance: 'glow'");
+    expect($dashboardConfigContents)->toContain("appearance: 'outline'");
+    expect($dashboardConfigContents)->toContain("appearance: 'tinted'");
+    expect($dashboardConfigContents)->toContain("variant: 'primary'");
+    expect($dashboardConfigContents)->toContain("variant: 'accent'");
+    expect($dashboardConfigContents)->toContain("variant: 'secondary'");
+    expect($dashboardConfigContents)->not->toContain("tone: 'users'");
+    expect($dashboardConfigContents)->not->toContain("tone: 'roles'");
+    expect($dashboardConfigContents)->not->toContain("tone: 'permissions'");
+    expect($dashboardConfigContents)->not->toContain("tone: 'primary'");
+    expect($anchorContents)->toContain('getCardBadgeClassNames');
+    expect($actionContents)->toContain('getCardButtonAppearance');
+    expect($actionContents)->toContain('getCardButtonVariant');
+    expect($cardComponentContents)->toContain('data-card-border-effect');
+    expect($cardComponentContents)->toContain("props.borderEffect === 'trace' && 'group/card'");
+    expect($cardComponentContents)->toContain('rounded-[inherit] border opacity-0');
+    expect($cardComponentContents)->toContain('group-hover/card:opacity-100');
+    expect($cardComponentContents)->toContain('group-hover/card:scale-x-100');
+    expect($cardComponentContents)->toContain('group-focus-within/card:scale-x-100');
+    expect($surfaceCardContents)->toContain("borderEffect: 'trace'");
+    expect($surfaceCardContents)->toContain(':border-effect="props.borderEffect"');
+    expect($surfaceCardContents)->toContain('absolute inset-px');
+    expect($surfaceCardContents)->toContain('rounded-[calc(1.65rem-1px)]');
+    expect($buttonContents)->toContain("type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'accent' | 'info' | 'warning' | 'success' | 'destructive';");
 });
 
 it('keeps starter-kit copy and fallback branding out of the shared shell', function () {
@@ -1099,6 +1182,9 @@ it('uses VueUse primitives for the touched appearance and two-factor helper flow
     expect($appearanceContents)->toContain('useStorage');
     expect($appearanceContents)->toContain('usePreferredDark');
     expect($twoFactorModalContents)->toContain('useClipboard');
+    expect($twoFactorModalContents)->toContain('inheritAttrs: false');
+    expect($twoFactorModalContents)->toContain('const attrs = useAttrs();');
+    expect($twoFactorModalContents)->toContain('<DialogContent v-bind="attrs"');
     expect($recoveryCodesContents)->toContain('usePreferredReducedMotion');
 });
 

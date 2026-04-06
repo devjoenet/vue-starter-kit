@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { cn } from 'tailwind-variants';
 import { computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
+import { getCardSurfaceClassNames } from '@/components/ui/card/variants';
+import { surfaceSectionClassNames } from '@/components/ui/surface/variants';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -48,7 +51,7 @@ const activeNavItem = computed(() => settingsNavItems.find((item) => isCurrentUr
 </script>
 
 <template>
-  <div id="settings-layout" class="surface-settings-shell motion-stage relative space-y-6 overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6">
+  <div id="settings-layout" :class="cn(surfaceSectionClassNames.settingsShell, 'motion-stage space-y-6 rounded-[1.75rem] px-4 py-6 sm:px-6')">
     <div class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-linear-to-b from-secondary/18 via-secondary/6 to-transparent" />
     <div class="pointer-events-none absolute top-8 -right-14 size-64 rounded-full bg-accent/14 blur-3xl" />
     <div class="pointer-events-none absolute -bottom-24 left-8 size-72 rounded-full bg-primary/12 blur-3xl" />
@@ -65,7 +68,7 @@ const activeNavItem = computed(() => settingsNavItems.find((item) => isCurrentUr
       </header>
 
       <div class="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
-        <nav id="settings-layout-nav" class="surface-settings-nav motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 lg:sticky lg:top-6" style="--motion-order: 1" aria-label="Settings">
+        <nav id="settings-layout-nav" :class="cn(getCardSurfaceClassNames({ appearance: 'filled', variant: 'secondary' }), 'motion-step flex flex-col gap-2 rounded-[1.5rem] p-3 lg:sticky lg:top-6')" style="--motion-order: 1" aria-label="Settings">
           <Button
             v-for="item in settingsNavItems"
             :key="toUrl(item.href)"

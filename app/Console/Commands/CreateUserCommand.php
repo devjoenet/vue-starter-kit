@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Modules\Permissions\Models\Permission;
-use App\Modules\Roles\Models\Role;
+use App\Modules\Roles\Actions\EnsureSuperAdminRole;
+use App\Modules\Roles\Actions\HasActiveSuperAdminUser;
+use App\Modules\Shared\Actions\PasswordValidationRules;
 use App\Modules\Users\Actions\CreateUser;
+use App\Modules\Users\Actions\ProfileValidationRules;
 use App\Modules\Users\DTOs\CreateUserData;
-use App\Modules\Users\Models\User;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -18,12 +17,9 @@ use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
-use function Laravel\Prompts\warning;
 
 final class CreateUserCommand extends BaseInteractiveCreateCommand
 {
-    private const string SUPER_ADMIN_ROLE = 'super-admin';
-
     protected $signature = 'create:user';
 
     protected $description = 'Interactively create a user via the CreateUser action.';
@@ -37,7 +33,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             placeholder: 'Jane Doe',
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['name' => $value],
-                ['name' => ['required', 'string', 'max:255']],
+                ['name' => ProfileValidationRules::name()],
                 'name',
             ),
         );
@@ -47,14 +43,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             placeholder: 'jane@example.com',
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['email' => $value],
-                ['email' => [
-                    'required',
-                    'email',
-                    'max:255',
-                    Rule::unique('users', 'email')->where(
-                        fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
-                    ),
-                ]],
+                ['email' => ProfileValidationRules::email()],
                 'email',
                 ['email.unique' => 'A user with this email address already exists.'],
             ),
@@ -64,7 +53,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             label: 'Password',
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['password' => $value],
-                ['password' => ['required', 'string', 'min:8']],
+                ['password' => $this->interactivePasswordRules()],
                 'password',
             ),
         );
@@ -78,10 +67,9 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
 
         $shouldDesignateSuperAdmin = false;
 
-        if (! $this->hasActiveSuperAdminUser()) {
+        if (! HasActiveSuperAdminUser::handle()) {
             $shouldDesignateSuperAdmin = confirm(
                 label: 'No active super-admin users exist. Should this user be the designated super-admin?',
-                default: true,
             );
         }
 
@@ -91,14 +79,12 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
         ];
 
         if ($shouldDesignateSuperAdmin) {
-            $summaryRows[] = ['Role', self::SUPER_ADMIN_ROLE];
+            $summaryRows[] = ['Role', EnsureSuperAdminRole::name()];
         }
 
         $this->table(['Field', 'Value'], $summaryRows);
 
-        if (! confirm(label: 'Create this user?', default: true)) {
-            warning('User creation cancelled.');
-
+        if (! $this->confirmsOrCancels('Create this user?', 'User creation cancelled.')) {
             return SymfonyCommand::SUCCESS;
         }
 
@@ -109,7 +95,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
         ]));
 
         if ($shouldDesignateSuperAdmin) {
-            $user->assignRole($this->ensureSuperAdminRole());
+            $user->assignRole(EnsureSuperAdminRole::handle());
         }
 
         $createdRows = [
@@ -119,7 +105,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
         ];
 
         if ($shouldDesignateSuperAdmin) {
-            $createdRows[] = ['Role', self::SUPER_ADMIN_ROLE];
+            $createdRows[] = ['Role', EnsureSuperAdminRole::name()];
         }
 
         $this->table(['Field', 'Value'], $createdRows);
@@ -129,26 +115,14 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
         return SymfonyCommand::SUCCESS;
     }
 
-    private function hasActiveSuperAdminUser(): bool
+    /** @return array<int, mixed> */
+    private function interactivePasswordRules(): array
     {
-        return User::query()->role(self::SUPER_ADMIN_ROLE)->exists();
-    }
-
-    private function ensureSuperAdminRole(): Role
-    {
-        $role = Role::withTrashed()->firstOrNew([
-            'name' => self::SUPER_ADMIN_ROLE,
-            'guard_name' => 'web',
-        ]);
-
-        $role->forceFill([
-            'name' => self::SUPER_ADMIN_ROLE,
-            'guard_name' => 'web',
-            'deleted_at' => null,
-        ])->save();
-
-        $role->syncPermissions(Permission::query()->get());
-
-        return $role;
+        return array_values(
+            array_filter(
+                PasswordValidationRules::password(),
+                static fn (mixed $rule): bool => $rule !== 'confirmed',
+            ),
+        );
     }
 }

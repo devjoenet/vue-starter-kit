@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Permissions\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,18 +25,16 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @property-read string $display_label
  * @property-read PermissionGroup|null $permissionGroup
  */
+#[Fillable([
+    'permission_group_id',
+    'name',
+    'label',
+    'description',
+    'guard_name',
+])]
 class Permission extends SpatiePermission
 {
     use SoftDeletes;
-
-    /** @var list<string> */
-    protected $fillable = [
-        'permission_group_id',
-        'name',
-        'label',
-        'description',
-        'guard_name',
-    ];
 
     public function permissionGroup(): BelongsTo
     {

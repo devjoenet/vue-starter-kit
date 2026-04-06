@@ -26,7 +26,6 @@ This indexes the actual `.ai/` and `.agents/` directories in this repository. Wh
 | `.ai/guidelines/0-project-rules.md` | Hard override | Pushes work toward strict docblock formatting, module-local PHP classes under `app/Modules/*`, Eloquent over avoidable `DB::` calls, named exceptions, no GitHub workflows yet, and a required markdown close-out format. |
 | `.ai/guidelines/00-standards.blade.php` | Assembler | Builds the authoritative runtime standards from the local stub files. It does not scaffold code directly; it turns the stubs into the rules that govern edits and finalization. |
 | `.ai/guidelines/design-context.md` | Design baseline | Pushes UI decisions toward the Southeast Code visual system: `Welcome.vue` as the shell baseline, tinted neutrals, restrained glow, brand teal plus action cyan, and explicit avoidance of generic admin/dashboard furniture. |
-| `.ai/guidelines/development-plan.md` | Roadmap | Steers architecture toward flat domain slices under `app/Modules/*`, static `handle()` actions, read/write separation, narrow contracts, typed frontend DTO exports, and phase-based follow-through. |
 | `.ai/guidelines/laravel/core.blade.php` | Laravel override | Forces Form Requests for validation, forbids database queries inside API Resources, and reinforces event-driven, DTO/action-based architecture. |
 | `.ai/guidelines/phpunit/core.blade.php` | Testing override | Pushes tests toward mirrored directory structure, `UnitTestCase` and `FunctionalTestCase`, strict AAA+A formatting, `CoversClass`, `resolve()`-based DI, and HTTP-level controller coverage. |
 | `.ai/guidelines/pint/core.blade.php` | Formatter override | Steers finalization toward `composer style:fix` rather than ad hoc Pint commands. |
@@ -134,5 +133,5 @@ This indexes the actual `.ai/` and `.agents/` directories in this repository. Wh
 
 | Task Type | Highest-Pressure Files |
 | --- | --- |
-| PHP architecture or Laravel workflow | `.ai/guidelines/0-project-rules.md`, `.ai/guidelines/development-plan.md`, `.ai/skills/create-dto-action/SKILL.md`, `.agents/skills/laravel-best-practices/SKILL.md`, `.agents/skills/spatie-laravel-php-standards/SKILL.md`, `.agents/skills/pest-testing/SKILL.md` |
+| PHP architecture or Laravel workflow | `.ai/guidelines/0-project-rules.md`, `.ai/skills/create-dto-action/SKILL.md`, `.agents/skills/laravel-best-practices/SKILL.md`, `.agents/skills/spatie-laravel-php-standards/SKILL.md`, `.agents/skills/pest-testing/SKILL.md` |
 | Frontend UI | `.ai/guidelines/design-context.md`, `.agents/skills/frontend-design/SKILL.md`, `.agents/skills/ui-craft/SKILL.md`, `.agents/skills/tailwindcss-development/SKILL.md`, plus whichever of `normalize`, `distill`, `colorize`, `clarify`, `polish`, `animate`, or `harden` best matches the problem |

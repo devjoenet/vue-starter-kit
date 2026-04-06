@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { cn } from 'tailwind-variants';
 import AdminIndexHeaderCell from '@/components/admin/AdminIndexHeaderCell.vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
+import { getCardInsetPanelClassNames } from '@/components/ui/card/variants';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
@@ -83,7 +85,7 @@ const formatGroupFilterLabel = (value: string) => groupLabelMap.value.get(value)
     </div>
 
     <div v-if="sortedRows.length" class="grid gap-3 p-4 md:hidden">
-      <label v-for="permission in sortedRows" :key="permission.id" class="flex min-h-11 items-start gap-4 rounded-[1.25rem] border border-border/70 bg-background/72 px-4 py-4" :class="!canAssign ? 'opacity-70' : ''">
+      <label v-for="permission in sortedRows" :key="permission.id" :class="cn(getCardInsetPanelClassNames({ appearance: 'outline', variant: 'neutral' }), 'flex min-h-11 items-start gap-4 px-4 py-4', !canAssign ? 'opacity-70' : '')">
         <Checkbox class="mt-0.5 size-5" :disabled="!canAssign" :model-value="selectedPermissionNames.includes(permission.name)" @update:model-value="(value) => $emit('toggle-permission', permission.name, value)" />
 
         <span class="min-w-0 space-y-1">
@@ -107,7 +109,7 @@ const formatGroupFilterLabel = (value: string) => groupLabelMap.value.get(value)
     </div>
 
     <div v-else class="p-4 md:hidden">
-      <div class="surface-editor-action-zone rounded-[1.25rem] px-4 py-4">
+      <div :class="cn(getCardInsetPanelClassNames({ appearance: 'tinted', variant: 'accent' }), 'px-4 py-4')">
         <p class="text-sm font-semibold">No permissions match the current filters.</p>
         <p class="mt-1 text-sm leading-6 text-muted-foreground">Clear the filters or keep this role's current access footprint.</p>
       </div>

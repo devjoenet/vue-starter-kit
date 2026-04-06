@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue';
+import { cn } from 'tailwind-variants';
 import Button from '@/components/ui/button/Button.vue';
+import Card from '@/components/ui/card/Card.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -47,7 +49,7 @@ const statusClassNames: Record<NonNullable<typeof props.statusTone>, string> = {
 </script>
 
 <template>
-  <div :class="['surface-editor-action-zone flex flex-col gap-5 rounded-3xl px-5 py-5', props.class]">
+  <Card appearance="tinted" variant="accent" :class="cn('gap-5 rounded-3xl px-5 py-5', props.class)">
     <div class="space-y-2">
       <p class="section-kicker">Review and finish</p>
       <div class="space-y-2">
@@ -77,5 +79,5 @@ const statusClassNames: Record<NonNullable<typeof props.statusTone>, string> = {
         {{ deleteLabel }}
       </Button>
     </div>
-  </div>
+  </Card>
 </template>

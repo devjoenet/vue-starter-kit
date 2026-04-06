@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
+import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { toTitleCase } from '@/lib/utils';
 
@@ -24,7 +25,7 @@ const normalizeRoleNameForDisplay = () => {
 </script>
 
 <template>
-  <div class="surface-editor-panel rounded-[1.5rem] px-6 py-6">
+  <Card appearance="filled" variant="primary" class="rounded-[1.5rem] px-6 py-6">
     <div class="space-y-2">
       <p class="section-kicker">Role details</p>
       <h2 class="text-lg font-semibold tracking-tight">
@@ -49,5 +50,5 @@ const normalizeRoleNameForDisplay = () => {
         @blur="normalizeRoleNameForDisplay"
       />
     </div>
-  </div>
+  </Card>
 </template>

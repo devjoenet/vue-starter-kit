@@ -21,6 +21,7 @@ use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
 use App\Modules\Audit\Actions\RecordAuditLog;
+use App\Modules\Audit\Models\AuditLog;
 use App\Modules\Dashboard\Actions\DashboardMetrics;
 use App\Modules\Dashboard\Actions\GetDashboardMetrics;
 use App\Modules\Dashboard\Actions\GetDashboardSources;
@@ -45,6 +46,8 @@ use App\Modules\Permissions\DTOs\PermissionIndexFilterOptionsData;
 use App\Modules\Permissions\DTOs\PermissionIndexItemData;
 use App\Modules\Permissions\DTOs\PermissionItemData;
 use App\Modules\Permissions\DTOs\UpdatePermissionData;
+use App\Modules\Permissions\Models\Permission;
+use App\Modules\Permissions\Models\PermissionGroup;
 use App\Modules\Roles\Actions\CreateRole;
 use App\Modules\Roles\Actions\DeleteRole;
 use App\Modules\Roles\Actions\GetAssignableUsers;
@@ -75,7 +78,6 @@ use App\Modules\Shared\Actions\FormRequestRulesTransformer;
 use App\Modules\Shared\Actions\GetAdminIndex;
 use App\Modules\Shared\Actions\PasswordValidationRules;
 use App\Modules\Shared\DTOs\AdminIndexQueryData;
-use App\Modules\Users\Actions\CreateNewUser;
 use App\Modules\Users\Actions\CreateUser;
 use App\Modules\Users\Actions\DeleteUser;
 use App\Modules\Users\Actions\GetEditableRoles;
@@ -83,6 +85,7 @@ use App\Modules\Users\Actions\GetUserFilterOptions;
 use App\Modules\Users\Actions\GetUserIndexItems;
 use App\Modules\Users\Actions\IndexUsers;
 use App\Modules\Users\Actions\ProfileValidationRules;
+use App\Modules\Users\Actions\RegisterUser;
 use App\Modules\Users\Actions\ResetUserPassword;
 use App\Modules\Users\Actions\SyncUserRoles;
 use App\Modules\Users\Actions\UpdateUser;
@@ -98,6 +101,7 @@ use App\Modules\Users\DTOs\UpdateUserData;
 use App\Modules\Users\DTOs\UserIndexFilterOptionsData;
 use App\Modules\Users\DTOs\UserListItemData;
 use App\Modules\Users\Exceptions\UnknownRolesSelected;
+use App\Modules\Users\Models\User;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use Spatie\LaravelData\Data;
@@ -156,7 +160,7 @@ dataset('settings_guarded_form_requests', [
 ]);
 
 dataset('fortify_action_adapters', [
-    [CreateNewUser::class, CreatesNewUsers::class, 'create'],
+    [RegisterUser::class, CreatesNewUsers::class, 'create'],
     [ResetUserPassword::class, ResetsUserPasswords::class, 'reset'],
 ]);
 
@@ -268,6 +272,29 @@ dataset('slice_transport_classes', [
     [PasswordUpdateRequest::class, 'App\\Http\\Requests\\Settings'],
     [TwoFactorAuthenticationController::class, 'App\\Http\\Controllers\\Settings'],
     [TwoFactorAuthenticationRequest::class, 'App\\Http\\Requests\\Settings'],
+]);
+
+dataset('eloquent_metadata_models', [
+    [
+        User::class,
+        ['#[UseFactory(UserFactory::class)]', '#[Fillable([', '#[Hidden(['],
+        ['protected $fillable', 'protected $hidden', 'protected static function newFactory'],
+    ],
+    [
+        AuditLog::class,
+        ['#[WithoutTimestamps]', '#[Fillable(['],
+        ['public $timestamps', 'protected $fillable'],
+    ],
+    [
+        Permission::class,
+        ['#[Fillable(['],
+        ['protected $fillable'],
+    ],
+    [
+        PermissionGroup::class,
+        ['#[Fillable(['],
+        ['protected $fillable'],
+    ],
 ]);
 
 it('keeps internal write orchestration on action classes with a public static handle entrypoint', function (string $actionClass): void {
@@ -408,6 +435,23 @@ it('keeps admin and settings transport classes in slice-oriented http namespaces
 
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
 })->with('slice_transport_classes');
+
+it('keeps concrete eloquent models on native laravel metadata attributes', function (
+    string $className,
+    array $requiredSnippets,
+    array $legacySnippets,
+): void {
+    $reflection = new ReflectionClass($className);
+    $contents = file_get_contents($reflection->getFileName());
+
+    foreach ($requiredSnippets as $requiredSnippet) {
+        expect($contents)->toContain($requiredSnippet);
+    }
+
+    foreach ($legacySnippets as $legacySnippet) {
+        expect($contents)->not->toContain($legacySnippet);
+    }
+})->with('eloquent_metadata_models');
 
 it('keeps the audit logger on a flat module action with a static handle entrypoint', function (): void {
     $reflection = new ReflectionClass(RecordAuditLog::class);

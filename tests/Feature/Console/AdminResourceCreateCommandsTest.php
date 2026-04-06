@@ -61,6 +61,40 @@ it('does not prompt for super-admin designation when one already exists', functi
     expect($user->hasRole('super-admin'))->toBeFalse();
 });
 
+it('restores and re-syncs the super-admin role before assigning the first console admin user', function () {
+    /** @var TestCase $this */
+    $this->seed(AdminAclSeeder::class);
+
+    $superAdminRole = Role::query()
+        ->where('name', 'super-admin')
+        ->firstOrFail();
+    $superAdminRole->syncPermissions([]);
+    $superAdminRole->delete();
+
+    $this->artisan('create:user')
+        ->expectsPromptsIntro('Create an admin user')
+        ->expectsQuestion('Name', 'Restored Console User')
+        ->expectsQuestion('Email address', 'restored-console@example.com')
+        ->expectsQuestion('Password', 'password123')
+        ->expectsQuestion('Confirm password', 'password123')
+        ->expectsConfirmation('No active super-admin users exist. Should this user be the designated super-admin?', 'yes')
+        ->expectsConfirmation('Create this user?', 'yes')
+        ->expectsPromptsOutro('User created.')
+        ->assertSuccessful();
+
+    $user = User::query()
+        ->where('email', 'restored-console@example.com')
+        ->firstOrFail();
+    $restoredRole = Role::query()
+        ->where('name', 'super-admin')
+        ->firstOrFail();
+
+    expect($restoredRole->trashed())->toBeFalse();
+    expect($user->hasRole($restoredRole))->toBeTrue();
+    expect($restoredRole->permissions()->pluck('name')->sort()->values()->all())
+        ->toEqual(Permission::query()->orderBy('name')->pluck('name')->all());
+});
+
 it('creates a role through the interactive console command', function () {
     /** @var TestCase $this */
     $user = User::factory()->create([

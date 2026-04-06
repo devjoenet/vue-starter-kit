@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
+import { surfaceSectionClassNames } from '@/components/ui/surface/variants';
 
 const props = defineProps<{
   class?: HTMLAttributes['class'];
@@ -9,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <section data-slot="admin-editor-shell" :class="cn('surface-editor-shell relative overflow-hidden rounded-[1.75rem] px-4 py-6 sm:px-6', props.class)">
+  <section data-slot="admin-editor-shell" :class="cn(surfaceSectionClassNames.editorShell, 'rounded-[1.75rem] px-4 py-6 sm:px-6', props.class)">
     <div :class="cn('relative space-y-6', props.contentClass)">
       <slot />
     </div>

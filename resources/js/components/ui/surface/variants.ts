@@ -1,0 +1,9 @@
+export const surfaceSectionClassNames = {
+  editorShell:
+    'relative isolate overflow-hidden border border-border shadow-(--elevation-2) bg-[radial-gradient(circle_at_86%_10%,color-mix(in_oklab,var(--secondary)_24%,transparent)_0%,transparent_24%),radial-gradient(circle_at_10%_0%,color-mix(in_oklab,var(--primary)_18%,transparent)_0%,transparent_20%),linear-gradient(145deg,color-mix(in_oklab,var(--surface-panel)_84%,var(--surface-shell)_16%)_0%,color-mix(in_oklab,var(--background)_84%,var(--surface-panel-secondary)_16%)_100%)]',
+  settingsShell: 'relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_left,var(--secondary-glow)_0%,var(--secondary-glow-clear)_34%),linear-gradient(180deg,var(--surface-panel)_0%,var(--background)_100%)]',
+  workspacePanel:
+    'relative isolate border border-border shadow-(--elevation-1) bg-[linear-gradient(135deg,color-mix(in_oklab,var(--surface-shell-strong)_72%,var(--primary)_28%)_0%,color-mix(in_oklab,var(--surface-shell)_90%,var(--background)_10%)_100%)]',
+  workspaceShell:
+    'relative isolate bg-[radial-gradient(circle_at_100%_0%,color-mix(in_oklab,var(--secondary)_12%,transparent)_0%,transparent_24%),radial-gradient(circle_at_0%_100%,color-mix(in_oklab,var(--primary)_10%,transparent)_0%,transparent_28%),linear-gradient(180deg,color-mix(in_oklab,var(--surface-shell)_90%,var(--background)_10%)_0%,color-mix(in_oklab,var(--surface-shell-strong)_86%,var(--background)_14%)_100%)] dark:bg-[radial-gradient(circle_at_100%_0%,color-mix(in_oklab,var(--secondary)_14%,transparent)_0%,transparent_24%),radial-gradient(circle_at_0%_100%,color-mix(in_oklab,var(--primary)_16%,transparent)_0%,transparent_28%),linear-gradient(180deg,color-mix(in_oklab,var(--background)_74%,black_26%)_0%,color-mix(in_oklab,var(--surface-shell-strong)_72%,black_28%)_100%)]',
+} as const;

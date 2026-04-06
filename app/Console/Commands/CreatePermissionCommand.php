@@ -9,15 +9,11 @@ use App\Modules\Permissions\Actions\PermissionNormalizer;
 use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\Permissions\DTOs\CreatePermissionData;
 use App\Modules\Permissions\Models\PermissionGroup;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Validation\Rule;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\text;
-use function Laravel\Prompts\warning;
 
 final class CreatePermissionCommand extends BaseInteractiveCreateCommand
 {
@@ -32,6 +28,7 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
         intro('Create a permission');
 
         $knownGroups = PermissionGroup::query()
+            ->withTrashed()
             ->orderBy('label')
             ->get()
             ->keyBy('slug');
@@ -103,9 +100,7 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
                             'string',
                             'max:255',
                             'regex:/^[a-z0-9_]+(?:\.[A-Za-z][A-Za-z0-9]*)+$/',
-                            Rule::unique('permissions', 'name')->where(
-                                fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
-                            ),
+                            $this->activeUniqueRule('permissions', 'name'),
                         ],
                     ],
                     'name',
@@ -158,15 +153,13 @@ final class CreatePermissionCommand extends BaseInteractiveCreateCommand
         $this->table(['Field', 'Value'], [
             ['Group slug', $normalizedPermission['group']],
             ['Group label', $normalizedPermission['group_label']],
-            ['Group description', $normalizedPermission['group_description'] ?? '—'],
+            ['Group description', $this->presentValue($normalizedPermission['group_description'], '—')],
             ['Permission key', $normalizedPermission['name']],
             ['Permission label', $normalizedPermission['label']],
-            ['Permission description', $normalizedPermission['description'] ?? '—'],
+            ['Permission description', $this->presentValue($normalizedPermission['description'], '—')],
         ]);
 
-        if (! confirm(label: 'Create this permission?', default: true)) {
-            warning('Permission creation cancelled.');
-
+        if (! $this->confirmsOrCancels('Create this permission?', 'Permission creation cancelled.')) {
             return SymfonyCommand::SUCCESS;
         }
 

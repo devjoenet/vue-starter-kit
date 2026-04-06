@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { cn } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
 import { computed } from 'vue';
-import { cn } from 'tailwind-variants';
 import { useAbility } from '@/composables/useAbility';
-import { resolveDashboardWidgets } from '@/lib/admin-dashboard';
+import { resolveDashboardWidgets } from '@/components/admin/dashboard/dashboard-board.resolve';
 import type { AdminDashboardSources, DashboardWidgetSchema } from '@/types/admin/dashboard';
 
 const props = defineProps<{

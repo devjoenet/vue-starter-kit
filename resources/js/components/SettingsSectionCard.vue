@@ -5,24 +5,27 @@ import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
+import type { CardAppearance, CardVariantName } from '@/components/ui/card/variants';
 
 withDefaults(
   defineProps<{
+    appearance?: CardAppearance;
     contentClass?: HTMLAttributes['class'];
     description?: string;
     footerClass?: HTMLAttributes['class'];
     headerClass?: HTMLAttributes['class'];
     title: string;
-    variant?: 'default' | 'destructive' | 'info' | 'warning' | 'success';
+    variant?: CardVariantName;
   }>(),
   {
-    variant: 'default',
+    appearance: 'filled',
+    variant: 'neutral',
   },
 );
 </script>
 
 <template>
-  <Card :variant="variant" class="overflow-hidden">
+  <Card :appearance="appearance" :variant="variant" class="overflow-hidden">
     <CardHeader :class="cn('gap-2 px-6 pb-0', headerClass)">
       <h2 class="text-lg font-semibold tracking-tight">
         {{ title }}

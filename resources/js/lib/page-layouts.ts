@@ -10,6 +10,7 @@ export const settingsPageLayout = [AppLayout, SettingsLayout];
 export const setBreadcrumbs = (...breadcrumbs: BreadcrumbItem[]): void => {
   setLayoutProps({
     breadcrumbs,
+    surfaceVariant: 'dashboard',
   });
 };
 

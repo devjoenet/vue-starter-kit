@@ -1,4 +1,5 @@
 import type { Component } from 'vue';
+import type { CardAppearance, CardVariantName } from '@/components/ui/card/variants';
 import type { DashboardMetricSourceData, DashboardOverviewSourceData, DashboardSourcesData } from '@/types/wayfinder-generated';
 
 export type AdminDashboardMetricSource = DashboardMetricSourceData;
@@ -6,22 +7,23 @@ export type AdminDashboardOverviewSource = DashboardOverviewSourceData;
 export type AdminDashboardSources = DashboardSourcesData;
 
 export type DashboardWidgetType = 'action' | 'anchor' | 'chart' | 'stat' | 'support';
-export type DashboardWidgetTone = 'neutral' | 'permissions' | 'roles' | 'users';
+export type DashboardWidgetAppearance = CardAppearance;
+export type DashboardWidgetVariant = CardVariantName;
 export type DashboardWidgetSize = 'full' | 'half' | 'hero' | 'third';
 export type DashboardSourceKey = keyof AdminDashboardSources;
 export type DashboardActionSourceKey = Exclude<DashboardSourceKey, 'overview'>;
 
 type DashboardWidgetSchemaBase<TWidget extends DashboardWidgetType> = {
+  appearance: DashboardWidgetAppearance;
   id: string;
   size: DashboardWidgetSize;
-  tone?: DashboardWidgetTone;
+  variant: DashboardWidgetVariant;
   widget: TWidget;
 };
 
 export type DashboardAnchorWidgetSchema = DashboardWidgetSchemaBase<'anchor'> & {
   description: string;
   eyebrow: string;
-  points: string[];
   source: 'overview';
   title: string;
 };
