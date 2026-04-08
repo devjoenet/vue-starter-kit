@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Modules\Users\Actions\RegisterUser;
-use App\Modules\Users\Actions\ResetUserPassword;
+use App\Modules\IAM\Actions\RegisterUser;
+use App\Modules\IAM\Actions\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;

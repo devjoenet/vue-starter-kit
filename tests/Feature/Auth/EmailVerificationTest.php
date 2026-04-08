@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Users\Models\User;
+use App\Modules\Shared\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;

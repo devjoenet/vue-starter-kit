@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2042e06c7e683c6b97ae049bcafc5ae0",
+    "content-hash": "2794c247134ba80f81c82b74ec12c904",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -10484,6 +10484,77 @@
             "time": "2026-04-04T21:29:22+00:00"
         },
         {
+            "name": "onelearningcommunity/laravel-model-explorer",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/One-Learning-Community/laravel-model-explorer.git",
+                "reference": "f0faa3b99b363824697edaa634e6cb53980d090e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/One-Learning-Community/laravel-model-explorer/zipball/f0faa3b99b363824697edaa634e6cb53980d090e",
+                "reference": "f0faa3b99b363824697edaa634e6cb53980d090e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^11.0||^12.0||^13.0",
+                "php": "^8.3",
+                "spatie/laravel-model-info": "^2.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.8",
+                "orchestra/testbench": "^10.0.0||^9.0.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-arch": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "spatie/laravel-ray": "^1.35"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "ModelExplorer": "OneLearningCommunity\\LaravelModelExplorer\\Facades\\ModelExplorer"
+                    },
+                    "providers": [
+                        "OneLearningCommunity\\LaravelModelExplorer\\LaravelModelExplorerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OneLearningCommunity\\LaravelModelExplorer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dan Krieger",
+                    "email": "dan@onelearning.xyz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Developer tools to explore your Laravel models.",
+            "homepage": "https://github.com/one-learning-community/laravel-model-explorer",
+            "keywords": [
+                "Developer tools",
+                "eloquent",
+                "laravel",
+                "models"
+            ],
+            "support": {
+                "issues": "https://github.com/One-Learning-Community/laravel-model-explorer/issues",
+                "source": "https://github.com/One-Learning-Community/laravel-model-explorer/tree/v0.2.1"
+            },
+            "time": "2026-03-25T06:04:19+00:00"
+        },
+        {
             "name": "pestphp/pest",
             "version": "v4.4.5",
             "source": {
@@ -12790,6 +12861,63 @@
                 "source": "https://github.com/spatie/boost-spatie-guidelines/tree/1.1.0"
             },
             "time": "2026-03-06T08:25:49+00:00"
+        },
+        {
+            "name": "spatie/laravel-model-info",
+            "version": "2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-model-info.git",
+                "reference": "e0576eaa13dcdc6aef35c28d0637a21eea70bbb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-model-info/zipball/e0576eaa13dcdc6aef35c28d0637a21eea70bbb8",
+                "reference": "e0576eaa13dcdc6aef35c28d0637a21eea70bbb8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^11.0|^12.0|^13.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.13.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.34|^3.7|^4.4",
+                "pestphp/pest-plugin-laravel": "^2.3|^3.1|^4.1",
+                "spatie/pest-plugin-snapshots": "^2.1",
+                "symfony/serializer": "^6.0|^7.0|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ModelInfo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Get information about the models in your Laravel app",
+            "homepage": "https://github.com/spatie/laravel-model-info",
+            "keywords": [
+                "laravel",
+                "laravel-model-info",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/laravel-model-info/tree/2.0.5"
+            },
+            "time": "2026-02-27T14:51:45+00:00"
         },
         {
             "name": "staabm/side-effects-detector",

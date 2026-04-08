@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-use App\Modules\Permissions\Actions\CreatePermission;
-use App\Modules\Permissions\Actions\DeletePermission;
-use App\Modules\Permissions\Actions\UpdatePermission;
-use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
-use App\Modules\Permissions\DTOs\CreatePermissionData;
-use App\Modules\Permissions\DTOs\UpdatePermissionData;
-use App\Modules\Permissions\Models\Permission;
-use App\Modules\Permissions\Models\PermissionGroup;
-use App\Modules\Roles\Actions\CreateRole;
-use App\Modules\Roles\Actions\DeleteRole;
-use App\Modules\Roles\Actions\SyncRolePermissions;
-use App\Modules\Roles\Actions\UpdateRole;
-use App\Modules\Roles\DTOs\CreateRoleData;
-use App\Modules\Roles\DTOs\SyncRolePermissionsData;
-use App\Modules\Roles\DTOs\UpdateRoleData;
-use App\Modules\Roles\Exceptions\UnknownPermissionsSelected;
-use App\Modules\Roles\Models\Role;
-use App\Modules\Users\Models\User;
+use App\Modules\IAM\Actions\CreatePermission;
+use App\Modules\IAM\Actions\CreateRole;
+use App\Modules\IAM\Actions\DeletePermission;
+use App\Modules\IAM\Actions\DeleteRole;
+use App\Modules\IAM\Actions\SyncRolePermissions;
+use App\Modules\IAM\Actions\UpdatePermission;
+use App\Modules\IAM\Actions\UpdateRole;
+use App\Modules\IAM\Contracts\PermissionGroupCatalogContract;
+use App\Modules\IAM\DTOs\CreatePermissionData;
+use App\Modules\IAM\DTOs\CreateRoleData;
+use App\Modules\IAM\DTOs\SyncRolePermissionsData;
+use App\Modules\IAM\DTOs\UpdatePermissionData;
+use App\Modules\IAM\DTOs\UpdateRoleData;
+use App\Modules\IAM\Exceptions\UnknownPermissionsSelected;
+use App\Modules\IAM\Models\Permission;
+use App\Modules\IAM\Models\PermissionGroup;
+use App\Modules\IAM\Models\Role;
+use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\DB;
 
 test('create role action persists a role and syncs users', function (): void {

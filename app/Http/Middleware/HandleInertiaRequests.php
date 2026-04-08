@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Modules\Users\DTOs\SharedAuthData;
+use App\Modules\IAM\DTOs\SharedAuthData;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;

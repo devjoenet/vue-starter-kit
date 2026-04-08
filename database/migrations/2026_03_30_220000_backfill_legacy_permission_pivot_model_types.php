@@ -10,7 +10,7 @@ return new class extends Migration
 {
     private const string LegacyUserModelType = 'App\\Models\\User';
 
-    private const string CurrentUserModelType = App\Modules\Users\Models\User::class;
+    private const string CurrentUserModelType = App\Modules\Shared\Models\User::class;
 
     public function up(): void
     {

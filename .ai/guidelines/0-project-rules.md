@@ -1,7 +1,6 @@
 ## PROJECT CODING RULES
 
-### **IMPORTANT**: The rules under this `PROJECT CODING RULES` heading overrides **ANY** other rules within `AGENTS.md` or other guideline and skill files used to build it.
-### Any rules in this listing (between this line and `### END OF PROJECT GUIDELINE OVERRIDES -`) SUPERSEDE ANY AND ALL OTHER GUIDELINES, SKILLS OR RULES. 
+### **IMPORTANT**: The rules under this `PROJECT CODING RULES` heading overrides **ANY** other rules within `AGENTS.md` or other guideline and skill files used to build it. Any rules in this listing (between this line and `### END OF PROJECT GUIDELINE OVERRIDES -`) SUPERSEDE ALL OTHER GUIDELINES, SKILLS AND RULES. 
 
 1. Docblock format: When a docblock is encountered or written, it should be formatted/replaced with one that to follows these rules.
   - If it is a text only comment/note, it should be a single line.\
@@ -30,16 +29,23 @@
     - Commands
     - Contracts
     - DTOs
+    - Events
     - Exceptions
+    - Listeners
     - Models
+    - Requests
+    - Responses
+    - Tests
   - Creating directories beyond these need to clarify with the user first.
   - Modules should be relatively self-sufficient with the exception of calling any shared classes.
-  - Classes in `Support` and `Queries` should be refactored to be in `Actions`.
-  - With the exception of the `App`/`Transport` classes, classes that are directly related to module should be moved there.
+  - Classes in `Support` and `Queries`: Support classes should be refactored to one or more `Actions` and querries should bevcome an action or applied as a function within a model.
+  - With the exception of the `App`/`Transport` classes, classes that are directly related to a module should be moved there.
   - Modules should only be one directory deep under `app/Modules` and not grouped beyond this. 
 3. When completing any task provide a Markdown summary to the user formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).
-4. Do not yet generate any GitHub workflows or CI.yml file in this project. We have not yet set it up, and it will consistantly fail as of the moment.
-5. Backend code has no further opportunity for refactors/changes that move code that isn't a route, controller or middleware into a module. Requests, DTO's, actions, responses, models and module specific traits/concerns/contracts should all be located in an appropriate directory within a module.
-6. There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model allowing any DB calls to be removed.
-7. As many exceptions as possible are not generic, but rather are named logically and allow a developer to find a module->class->method->line and context to track down the cause of the exception.
+4. Backend code has no further opportunity for refactors/changes that move code that isn't a route, controller or middleware into a module. Requests, DTO's, actions, responses, models and module specific traits/concerns/contracts should all be located in an appropriate directory within a module.
+5. There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model allowing any DB calls to be removed.
+6. As many exceptions as possible are not generic, but rather are named logically and allow a developer to find a module->class->method->line and context to track down the cause of the exception.
+7. When a Spatie Laravel Data class already represents a payload, return the DTO or a typed collection/paginator of DTOs instead of flattening it with `->all()`. Only convert to arrays when a framework or third-party API explicitly requires an array, and update contracts and callers to expect the DTO object or collection directly.
+8. Before generating any GitHub workflows or CI code, Ask the user that they are or aren't required. If they have not setup their CI/deployment tools, this could cause failures in their pipeline. This rule may be replaced with one based on that user response if they would like.
+
 ### END OF PROJECT GUIDELINE OVERRIDES - CONTINUE EVALUATING BEYOND THIS POINT AS NORMAL

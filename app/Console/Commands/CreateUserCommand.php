@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Modules\Roles\Actions\EnsureSuperAdminRole;
-use App\Modules\Roles\Actions\HasActiveSuperAdminUser;
+use App\Modules\IAM\Actions\CreateUser;
+use App\Modules\IAM\Actions\EnsureSuperAdminRole;
+use App\Modules\IAM\Actions\HasActiveSuperAdminUser;
+use App\Modules\IAM\Actions\ProfileValidationRules;
+use App\Modules\IAM\DTOs\CreateUserData;
 use App\Modules\Shared\Actions\PasswordValidationRules;
-use App\Modules\Users\Actions\CreateUser;
-use App\Modules\Users\Actions\ProfileValidationRules;
-use App\Modules\Users\DTOs\CreateUserData;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;

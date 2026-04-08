@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\ProfileDeleteRequest;
-use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Modules\Settings\Actions\DeleteProfile;
 use App\Modules\Settings\Actions\UpdateProfile;
 use App\Modules\Settings\DTOs\UpdateProfileData;
+use App\Modules\Settings\Requests\ProfileDeleteRequest;
+use App\Modules\Settings\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
