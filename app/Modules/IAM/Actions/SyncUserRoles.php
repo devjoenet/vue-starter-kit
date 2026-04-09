@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 final class SyncUserRoles
 {
-    public static function handle(User $user, SyncUserRolesData $data): User
+    public static function handle(User $user, SyncUserRolesData $data): void
     {
         $roleNames = self::resolveRoleNames($data);
         $before = $user->getRoleNames()->sort()->values()->all();
@@ -23,8 +23,6 @@ final class SyncUserRoles
 
             event(new UserRolesSynced($user, $before, $roleNames));
         });
-
-        return $user;
     }
 
     /** @return list<string> */

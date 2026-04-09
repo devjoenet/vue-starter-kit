@@ -150,15 +150,16 @@ test('permissions index uses a flat listing contract and exact-match filters', f
         ['label' => 'Billing'],
     );
 
-    Permission::query()->create([
+    Permission::query()->firstOrCreate([
         'name' => 'audit_logs.view',
+        'guard_name' => 'web',
+    ], [
         'label' => 'View Audit Logs',
         'permission_group_id' => $auditLogsGroup->id,
-        'guard_name' => 'web',
     ]);
     Permission::query()->create([
-        'name' => 'audit_logs.update',
-        'label' => 'Update Audit Logs',
+        'name' => 'audit_logs.export',
+        'label' => 'Export Audit Logs',
         'permission_group_id' => $auditLogsGroup->id,
         'guard_name' => 'web',
     ]);
@@ -174,7 +175,7 @@ test('permissions index uses a flat listing contract and exact-match filters', f
         'direction' => 'asc',
         'filters' => [
             'group' => ['audit_logs'],
-            'permission' => ['Update Audit Logs', 'View Audit Logs'],
+            'permission' => ['Export Audit Logs', 'View Audit Logs'],
         ],
     ]))
         ->assertOk()
@@ -185,9 +186,9 @@ test('permissions index uses a flat listing contract and exact-match filters', f
             ->where('query.sort', 'permission_check')
             ->where('query.direction', 'asc')
             ->where('query.filters.group', ['audit_logs'])
-            ->where('query.filters.permission', ['Update Audit Logs', 'View Audit Logs'])
+            ->where('query.filters.permission', ['Export Audit Logs', 'View Audit Logs'])
             ->where('permissions', fn ($permissions): bool => collect($permissions)->pluck('name')->all() === [
-                'audit_logs.update',
+                'audit_logs.export',
                 'audit_logs.view',
             ])
         );

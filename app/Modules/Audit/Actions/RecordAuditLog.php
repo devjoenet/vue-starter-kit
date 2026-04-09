@@ -6,18 +6,21 @@ namespace App\Modules\Audit\Actions;
 
 use App\Modules\Audit\DTOs\AuditLogData;
 use App\Modules\Audit\Models\AuditLog;
+use App\Modules\Shared\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
 final class RecordAuditLog
 {
-    public static function handle(AuditLogData $data, ?Request $request = null): AuditLog
+    public static function handle(AuditLogData $data, ?Request $request = null): void
     {
         $request ??= request();
         $actor = $request->user();
 
-        return AuditLog::query()->create([
+        AuditLog::query()->create([
             'actor_type' => is_object($actor) ? $actor::class : null,
             'actor_id' => is_object($actor) ? $actor->getAuthIdentifier() : null,
+            'actor_label' => self::resolveActorLabel($actor),
             'event' => $data->event,
             'subject_type' => $data->subjectType,
             'subject_id' => $data->subjectId,
@@ -30,5 +33,18 @@ final class RecordAuditLog
             'url' => $request->fullUrl(),
             'method' => $request->method(),
         ]);
+    }
+
+    private static function resolveActorLabel(?Authenticatable $actor): ?string
+    {
+        if (! $actor instanceof Authenticatable) {
+            return null;
+        }
+
+        if ($actor instanceof User) {
+            return $actor->email;
+        }
+
+        return (string) $actor->getAuthIdentifier();
     }
 }

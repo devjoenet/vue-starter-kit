@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Modules\Audit\Actions\IndexAuditLogs;
 use App\Modules\IAM\Actions\CreatePermission;
 use App\Modules\IAM\Actions\CreateRole;
 use App\Modules\IAM\Actions\CreateUser;
@@ -25,12 +27,14 @@ use App\Modules\IAM\Contracts\GroupedPermissionsProvider;
 use Illuminate\Http\RedirectResponse;
 
 dataset('admin_controller_classes', [
+    [AuditLogsController::class, ['index']],
     [UsersController::class, ['create', 'destroy', 'edit', 'index', 'store', 'syncRoles', 'update']],
     [RolesController::class, ['create', 'destroy', 'edit', 'index', 'store', 'syncPermissions', 'update']],
     [PermissionsController::class, ['__construct', 'create', 'destroy', 'edit', 'index', 'store', 'update']],
 ]);
 
 dataset('admin_controller_endpoint_methods', [
+    [AuditLogsController::class, 'index'],
     [UsersController::class, 'index'],
     [UsersController::class, 'create'],
     [UsersController::class, 'store'],
@@ -68,6 +72,7 @@ dataset('admin_controller_write_endpoints', [
 ]);
 
 dataset('admin_controller_read_action_endpoints', [
+    [AuditLogsController::class, 'index', IndexAuditLogs::class],
     [UsersController::class, 'index', IndexUsers::class],
     [UsersController::class, 'edit', GetEditableRoles::class],
     [RolesController::class, 'index', IndexRoles::class],

@@ -156,6 +156,16 @@ final class PermissionsSeeder extends Seeder
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
             ],
+            [
+                'name' => 'audit_logs.view',
+                'label' => 'View Audit Logs',
+                'description' => 'Review the durable operator activity trail for administrative changes.',
+                'permission_group_id' => $groupIds->get('audit_logs'),
+                'guard_name' => 'web',
+                'deleted_at' => null,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
         ], ['name', 'guard_name'], [
             'label',
             'description',

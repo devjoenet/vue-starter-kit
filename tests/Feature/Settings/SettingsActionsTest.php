@@ -6,7 +6,9 @@ use App\Modules\Settings\Actions\DeleteProfile;
 use App\Modules\Settings\Actions\UpdatePassword;
 use App\Modules\Settings\Actions\UpdateProfile;
 use App\Modules\Settings\DTOs\UpdateProfileData;
+use App\Modules\Settings\Events\ProfileUpdated;
 use App\Modules\Shared\Models\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 
 test('update profile action updates user details and clears verification when email changes', function (): void {
@@ -20,6 +22,20 @@ test('update profile action updates user details and clears verification when em
     expect($user->fresh()?->name)->toBe('Updated User');
     expect($user->fresh()?->email)->toBe('updated@example.com');
     expect($user->fresh()?->email_verified_at)->toBeNull();
+});
+
+test('update profile action dispatches an auditable updated event', function (): void {
+    Event::fake([ProfileUpdated::class]);
+
+    $user = User::factory()->create();
+
+    UpdateProfile::handle($user, new UpdateProfileData(
+        name: 'Updated User',
+        email: 'updated@example.com',
+    ));
+
+    Event::assertDispatched(ProfileUpdated::class, fn (ProfileUpdated $event): bool => $event->auditEvent() === 'settings.profile_updated'
+        && $event->auditSubjectId() === $user->id);
 });
 
 test('update password action hashes the new password', function (): void {

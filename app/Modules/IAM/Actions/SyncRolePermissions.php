@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 final class SyncRolePermissions
 {
-    public static function handle(Role $role, SyncRolePermissionsData $data): Role
+    public static function handle(Role $role, SyncRolePermissionsData $data): void
     {
         $permissionNames = self::resolvePermissionNames($data);
         $before = $role->permissions()->pluck('name')->sort()->values()->all();
@@ -23,8 +23,6 @@ final class SyncRolePermissions
 
             event(new RolePermissionsSynced($role, $before, $permissionNames));
         });
-
-        return $role;
     }
 
     /** @return list<string> */

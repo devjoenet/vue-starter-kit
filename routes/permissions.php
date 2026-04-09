@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
@@ -17,6 +18,10 @@ Route::middleware(['auth', 'verified'])
         Route::get('/', fn (DashboardMetricsProvider $dashboardMetricsProvider) => Inertia::render('admin/Dashboard', [
             'sources' => GetDashboardSources::handle($dashboardMetricsProvider),
         ]))->name('dashboard');
+
+        Route::get('/audit-logs', [AuditLogsController::class, 'index'])
+            ->middleware('can:audit_logs.view')
+            ->name('audit-logs.index');
 
         Route::prefix('users')
             ->name('users.')

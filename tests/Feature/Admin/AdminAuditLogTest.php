@@ -37,6 +37,7 @@ test('admin user deletions create durable audit logs', function (): void {
     expect($auditLog->event)->toBe('users.deleted');
     expect($auditLog->actor_type)->toBe(User::class);
     expect($auditLog->actor_id)->toBe(auth()->id());
+    expect($auditLog->actor_label)->toBe(auth()->user()?->email);
     expect($auditLog->subject_type)->toBe(User::class);
     expect($auditLog->subject_id)->toBe($target->id);
     expect($auditLog->subject_label)->toBe('delete-me@example.test');
@@ -72,6 +73,7 @@ test('admin role permission sync writes an audit trail', function (): void {
     $changes = $auditLog->changes ?? [];
 
     expect($auditLog->event)->toBe('roles.permissions_synced');
+    expect($auditLog->actor_label)->toBe(auth()->user()?->email);
     expect($auditLog->subject_type)->toBe(Role::class);
     expect($auditLog->subject_id)->toBe($role->id);
     expect($changes)->toBe([
@@ -110,6 +112,7 @@ test('admin permission updates capture before and after catalog state', function
     $changes = $auditLog->changes ?? [];
 
     expect($auditLog->event)->toBe('permissions.updated');
+    expect($auditLog->actor_label)->toBe(auth()->user()?->email);
     expect($auditLog->subject_type)->toBe(Permission::class);
     expect($auditLog->subject_id)->toBe($permission->id);
     expect($changes['before'])->toMatchArray([

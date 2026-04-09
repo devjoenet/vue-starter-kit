@@ -17,18 +17,14 @@ final class UpdatePermission
         Permission $permission,
         UpdatePermissionData $data,
         PermissionGroupCatalogContract $permissionGroupCatalog,
-    ): Permission {
+    ): void {
         $before = self::auditState($permission->loadMissing('permissionGroup'));
-        $permission = DB::transaction(function () use ($permission, $data, $permissionGroupCatalog, $before): Permission {
+        DB::transaction(function () use ($permission, $data, $permissionGroupCatalog, $before): void {
             $group = self::upsertGroup($data, $permissionGroupCatalog);
             $permission = self::persistPermission($permission, $data, $group);
 
             event(new PermissionUpdated($permission->load('permissionGroup'), $before));
-
-            return $permission;
         });
-
-        return $permission->load('permissionGroup');
     }
 
     private static function upsertGroup(
