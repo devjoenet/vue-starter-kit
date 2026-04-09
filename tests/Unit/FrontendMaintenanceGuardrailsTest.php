@@ -157,6 +157,30 @@ it('reuses the shared permission editor component across admin permission pages'
     expect($editorContents)->toContain('PermissionGroupSelect');
 });
 
+it('places deferred audit history at the bottom of admin record editors', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $editorPages = [
+        'resources/js/pages/admin/Users/Edit.vue',
+        'resources/js/pages/admin/Roles/Edit.vue',
+        'resources/js/pages/admin/Permissions/Edit.vue',
+    ];
+
+    foreach ($editorPages as $editorPage) {
+        $contents = file_get_contents($projectRoot.'/'.$editorPage);
+
+        expect($contents)->toContain("from '@/components/admin/AuditHistoryTable.vue'");
+        expect($contents)->toContain('<Deferred data="auditHistory">');
+        expect($contents)->toContain('<AuditHistoryTable :items="auditHistory ?? []" />');
+    }
+
+    $tableContents = file_get_contents($projectRoot.'/resources/js/components/admin/AuditHistoryTable.vue');
+
+    expect($tableContents)->toContain('id="admin-audit-history-table"');
+    expect($tableContents)->toContain('md:hidden');
+    expect($tableContents)->toContain('id="admin-audit-history-table-desktop"');
+    expect($tableContents)->toContain('props.loading');
+});
+
 it('reuses the shared frontend permission normalization helper across admin permission forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [

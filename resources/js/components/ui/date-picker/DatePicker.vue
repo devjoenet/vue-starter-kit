@@ -134,7 +134,7 @@ const formattedValue = computed(() => {
   const date = selectedDate.value;
 
   if (!date) {
-    return props.placeholder;
+    return hasLabel.value ? '' : props.placeholder;
   }
 
   return new Intl.DateTimeFormat(props.locale, {

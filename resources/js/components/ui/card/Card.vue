@@ -14,8 +14,8 @@ const props = withDefaults(
   {
     appearance: 'filled',
     borderEffect: 'none',
-    variant: 'neutral'
-  }
+    variant: 'neutral',
+  },
 );
 </script>
 

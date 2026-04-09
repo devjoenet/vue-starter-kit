@@ -1,4 +1,5 @@
 import type { PermissionGroupOptionData, PermissionIndexFilterOptionsData, PermissionIndexItemData, PermissionItemData } from '@/types/wayfinder-generated';
+import type { AuditHistoryItem } from '@/types/admin/audit';
 import type { AdminIndexQuery } from '@/types/admin/shared';
 
 export type PermissionGroupOption = Omit<PermissionGroupOptionData, 'description'> & {
@@ -35,5 +36,6 @@ export type AdminPermissionsCreatePageProps = {
 
 export type AdminPermissionsEditPageProps = {
   permission: PermissionItem;
+  auditHistory?: AuditHistoryItem[];
   groups: PermissionGroupOption[];
 };

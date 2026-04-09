@@ -47,5 +47,6 @@
 6. As many exceptions as possible are not generic, but rather are named logically and allow a developer to find a module->class->method->line and context to track down the cause of the exception.
 7. When a Spatie Laravel Data class already represents a payload, return the DTO or a typed collection/paginator of DTOs instead of flattening it with `->all()`. Only convert to arrays when a framework or third-party API explicitly requires an array, and update contracts and callers to expect the DTO object or collection directly.
 8. Before generating any GitHub workflows or CI code, Ask the user that they are or aren't required. If they have not setup their CI/deployment tools, this could cause failures in their pipeline. This rule may be replaced with one based on that user response if they would like.
+9. Input-like form controls with floating labels should use the label as the resting placeholder until the control is active, open, focused, or filled. Do not render a separate visible placeholder that competes with the label in the empty state. This applies to standard inputs, selects, date pickers, comboboxes, and any custom field component following the shared input pattern.
 
 ### END OF PROJECT GUIDELINE OVERRIDES - CONTINUE EVALUATING BEYOND THIS POINT AS NORMAL

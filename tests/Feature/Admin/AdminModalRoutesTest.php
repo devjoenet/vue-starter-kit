@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\Audit\Models\AuditLog;
 use App\Modules\IAM\Models\Permission;
 use App\Modules\IAM\Models\PermissionGroup;
 use App\Modules\IAM\Models\Role;
@@ -44,6 +45,17 @@ test('users index route includes roles for each user row', function () {
 
 test('users edit route renders edit page', function () {
     $target = User::factory()->create();
+    AuditLog::query()->create([
+        'event' => 'users.updated',
+        'subject_type' => User::class,
+        'subject_id' => $target->id,
+        'subject_label' => $target->email,
+        'summary' => 'Updated user audit history.',
+        'changes' => [
+            'before' => ['email' => 'previous@example.test'],
+            'after' => ['email' => $target->email],
+        ],
+    ]);
 
     $this->get(route('admin.users.edit', $target))
         ->assertOk()
@@ -54,8 +66,11 @@ test('users edit route renders edit page', function () {
             ->where('user.email', $target->email)
             ->has('userRoles')
             ->missing('roles')
+            ->missing('auditHistory')
             ->loadDeferredProps(fn (Assert $reload) => $reload
                 ->has('roles')
+                ->where('auditHistory.0.event', 'users.updated')
+                ->where('auditHistory.0.changes.0.field', 'email')
                 ->missing('user')
                 ->missing('userRoles')
             )
@@ -77,12 +92,14 @@ test('users edit route supports partial reloads for user edit state', function (
                 ->has('auth.user')
                 ->has('flash')
                 ->missing('roles')
+                ->missing('auditHistory')
                 ->missing('userRoles')
             )
             ->reloadOnly(['userRoles', 'flash'], fn (Assert $reload) => $reload
                 ->has('userRoles')
                 ->has('flash')
                 ->missing('user')
+                ->missing('auditHistory')
                 ->missing('roles')
             )
         );
@@ -121,6 +138,17 @@ test('roles edit route renders edit page', function () {
         'name' => 'editor',
         'guard_name' => 'web',
     ]);
+    AuditLog::query()->create([
+        'event' => 'roles.updated',
+        'subject_type' => Role::class,
+        'subject_id' => $role->id,
+        'subject_label' => $role->name,
+        'summary' => 'Updated role audit history.',
+        'changes' => [
+            'before' => ['name' => 'reviewer'],
+            'after' => ['name' => $role->name],
+        ],
+    ]);
 
     $this->get(route('admin.roles.edit', $role))
         ->assertOk()
@@ -130,8 +158,11 @@ test('roles edit route renders edit page', function () {
             ->where('role.name', $role->name)
             ->has('rolePermissions')
             ->missing('permissionsByGroup')
+            ->missing('auditHistory')
             ->loadDeferredProps(fn (Assert $reload) => $reload
                 ->has('permissionsByGroup')
+                ->where('auditHistory.0.event', 'roles.updated')
+                ->where('auditHistory.0.changes.0.field', 'name')
                 ->missing('role')
                 ->missing('rolePermissions')
             )
@@ -152,12 +183,14 @@ test('roles edit route supports partial reloads for role edit state', function (
                 ->has('role')
                 ->has('flash')
                 ->missing('permissionsByGroup')
+                ->missing('auditHistory')
                 ->missing('rolePermissions')
             )
             ->reloadOnly(['rolePermissions', 'flash'], fn (Assert $reload) => $reload
                 ->has('rolePermissions')
                 ->has('flash')
                 ->missing('role')
+                ->missing('auditHistory')
                 ->missing('permissionsByGroup')
             )
         );
@@ -205,6 +238,17 @@ test('permissions edit route renders edit page', function () {
         'permission_group_id' => $usersGroup->id,
         'guard_name' => 'web',
     ]);
+    AuditLog::query()->create([
+        'event' => 'permissions.updated',
+        'subject_type' => Permission::class,
+        'subject_id' => $permission->id,
+        'subject_label' => $permission->name,
+        'summary' => 'Updated permission audit history.',
+        'changes' => [
+            'before' => ['label' => 'View Records'],
+            'after' => ['label' => $permission->label],
+        ],
+    ]);
 
     $this->get(route('admin.permissions.edit', $permission))
         ->assertOk()
@@ -216,5 +260,12 @@ test('permissions edit route renders edit page', function () {
             ->where('permission.group', $permission->group)
             ->where('permission.group_label', 'User Administration')
             ->has('groups')
+            ->missing('auditHistory')
+            ->loadDeferredProps(fn (Assert $reload) => $reload
+                ->where('auditHistory.0.event', 'permissions.updated')
+                ->where('auditHistory.0.changes.0.field', 'label')
+                ->missing('permission')
+                ->missing('groups')
+            )
         );
 });

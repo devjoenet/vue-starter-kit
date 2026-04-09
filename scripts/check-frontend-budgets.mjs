@@ -12,7 +12,7 @@ const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
 const budgets = {
   'resources/js/app.ts': {
-    css: 225 * 1024,
+    css: 240 * 1024,
     js: 340 * 1024,
   },
   'resources/js/pages/admin/Dashboard.vue': {

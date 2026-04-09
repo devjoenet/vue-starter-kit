@@ -1,4 +1,5 @@
 import type { AssignableUserData, EditableRoleData, PermissionItemData, RoleIndexFilterOptionsData, RoleListItemData } from '@/types/wayfinder-generated';
+import type { AuditHistoryItem } from '@/types/admin/audit';
 import type { AdminIndexQuery } from '@/types/admin/shared';
 
 export type RoleListItem = RoleListItemData;
@@ -26,6 +27,7 @@ export type AdminRolesCreatePageProps = {
 
 export type AdminRolesEditPageProps = {
   role: EditableRole;
+  auditHistory?: AuditHistoryItem[];
   permissionsByGroup?: PermissionsByGroup;
   rolePermissions: string[];
 };

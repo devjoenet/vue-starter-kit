@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Audit\Actions\GetAuditHistoryItems;
 use App\Modules\IAM\Actions\CreateRole;
 use App\Modules\IAM\Actions\DeleteRole;
 use App\Modules\IAM\Actions\GetAssignableUsers;
@@ -53,6 +54,7 @@ final class RolesController extends Controller
         return Inertia::render('admin/Roles/Edit', [
             'role' => fn (): EditableRoleData => EditableRoleData::fromModel($role),
             'permissionsByGroup' => Inertia::defer(fn (): Collection => $groupedPermissions->allData()),
+            'auditHistory' => Inertia::defer(fn (): Collection => GetAuditHistoryItems::handle($role)),
             'rolePermissions' => fn (): array => $role->permissions()->pluck('name')->values()->all(),
         ]);
     }

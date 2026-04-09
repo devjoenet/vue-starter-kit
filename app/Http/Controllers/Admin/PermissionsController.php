@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Audit\Actions\GetAuditHistoryItems;
 use App\Modules\IAM\Actions\CreatePermission;
 use App\Modules\IAM\Actions\DeletePermission;
 use App\Modules\IAM\Actions\IndexPermissions;
@@ -19,6 +20,7 @@ use App\Modules\IAM\Requests\StorePermissionRequest;
 use App\Modules\IAM\Requests\UpdatePermissionRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -55,6 +57,7 @@ final class PermissionsController extends Controller
 
         return Inertia::render('admin/Permissions/Edit', [
             'permission' => PermissionItemData::fromModel($permission),
+            'auditHistory' => Inertia::defer(fn (): Collection => GetAuditHistoryItems::handle($permission)),
             'groups' => $this->catalog->options(),
         ]);
     }

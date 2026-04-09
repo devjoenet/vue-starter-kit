@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { KeyRound, LayoutGrid, Shield, Users } from 'lucide-vue-next';
+import { KeyRound, LayoutGrid, ScrollText, Shield, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -14,6 +14,7 @@ import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue';
 import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue';
 import { useAbility } from '@/composables/useAbility';
 import { dashboard } from '@/routes';
+import { index as adminAuditLogsIndex } from '@/routes/admin/audit-logs';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
@@ -57,6 +58,15 @@ const adminNavItems = computed<NavItem[]>(() => {
             title: 'Permissions',
             href: adminPermissionsIndex(),
             icon: KeyRound,
+          },
+        ]
+      : []),
+    ...(can(adminPermissions.auditLogsView)
+      ? [
+          {
+            title: 'Audit Logs',
+            href: adminAuditLogsIndex(),
+            icon: ScrollText,
           },
         ]
       : []),

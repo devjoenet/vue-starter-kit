@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Modules\Audit\Actions\GetAuditHistoryItems;
 use App\Modules\Audit\Actions\IndexAuditLogs;
 use App\Modules\IAM\Actions\CreatePermission;
 use App\Modules\IAM\Actions\CreateRole;
@@ -75,9 +76,12 @@ dataset('admin_controller_read_action_endpoints', [
     [AuditLogsController::class, 'index', IndexAuditLogs::class],
     [UsersController::class, 'index', IndexUsers::class],
     [UsersController::class, 'edit', GetEditableRoles::class],
+    [UsersController::class, 'edit', GetAuditHistoryItems::class],
     [RolesController::class, 'index', IndexRoles::class],
     [RolesController::class, 'create', GetAssignableUsers::class],
+    [RolesController::class, 'edit', GetAuditHistoryItems::class],
     [PermissionsController::class, 'index', IndexPermissions::class],
+    [PermissionsController::class, 'edit', GetAuditHistoryItems::class],
 ]);
 
 dataset('admin_controller_injected_read_endpoints', [

@@ -8,6 +8,47 @@ id: number;
 name: string;
 email: string;
 };
+export type AuditHistoryChangeData = {
+field: string;
+before?: string;
+after?: string;
+};
+export type AuditHistoryItemData = {
+id: number;
+created_at: string;
+event: string;
+summary: string;
+actor_label?: string;
+changes: Array<AuditHistoryChangeData>;
+};
+export type AuditLogIndexFilterOptionsData = {
+actors: Array<any>;
+events: Array<any>;
+subject_types: Array<any>;
+};
+export type AuditLogIndexItemData = {
+id: number;
+created_at: string;
+event: string;
+summary: string;
+actor_label?: string;
+subject_type?: string;
+subject_id?: number;
+subject_label?: string;
+method?: string;
+url?: string;
+ip_address?: string;
+};
+export type AuditLogIndexQueryData = {
+sort: string;
+direction: string;
+actors: Array<any>;
+events: Array<any>;
+subject_types: Array<any>;
+search?: string;
+from?: string;
+until?: string;
+};
 export type AuthenticatedUserData = {
 id: number;
 name: string;
@@ -36,6 +77,17 @@ export type EditableUserData = {
 id: number;
 name: string;
 email: string;
+};
+export type IndexAuditLogsRequest = {
+    sort?: '"created_at"' | '"event"' | '"actor"' | '"subject"';
+    direction?: '"asc"' | '"desc"';
+    actors?: Array<string>;
+    events?: Array<string>;
+    subject_types?: Array<string>;
+    search?: string;
+    from?: string;
+    until?: string;
+    page?: number;
 };
 export type PasswordUpdateRequest = {
     current_password: string;
