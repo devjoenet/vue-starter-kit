@@ -38,6 +38,14 @@ final class PermissionGroupsSeeder extends Seeder
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
             ],
+            [
+                'slug' => 'audit_logs',
+                'label' => 'Audit Logs',
+                'description' => 'Read-only traceability access for the operator audit trail.',
+                'deleted_at' => null,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],
         ], ['slug'], ['label', 'description', 'deleted_at', 'updated_at']);
     }
 }

@@ -11,13 +11,16 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Override;
 
 /**
+ * @property string|null $actor_label
  * @property array<string, mixed>|null $changes
  * @property array<string, mixed>|null $context
+ * @property \Carbon\CarbonImmutable|null $created_at
  */
 #[WithoutTimestamps]
 #[Fillable([
     'actor_type',
     'actor_id',
+    'actor_label',
     'event',
     'subject_type',
     'subject_id',

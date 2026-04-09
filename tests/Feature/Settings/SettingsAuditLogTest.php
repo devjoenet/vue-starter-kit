@@ -23,6 +23,7 @@ test('password updates create self-service audit logs', function (): void {
     expect($auditLog?->event)->toBe('settings.password_updated');
     expect($auditLog?->actor_type)->toBe(User::class);
     expect($auditLog?->actor_id)->toBe($user->id);
+    expect($auditLog?->actor_label)->toBe($user->email);
     expect($auditLog?->subject_type)->toBe(User::class);
     expect($auditLog?->subject_id)->toBe($user->id);
     expect($auditLog?->context)->toBe(['password_updated' => true]);

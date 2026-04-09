@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Modules\Audit\Actions\GetAuditLogFilterOptions;
+use App\Modules\Audit\Actions\GetAuditLogIndexItems;
+use App\Modules\Audit\Actions\IndexAuditLogs;
 use App\Modules\Audit\Actions\RecordAuditLog;
+use App\Modules\Audit\DTOs\AuditLogIndexFilterOptionsData;
+use App\Modules\Audit\DTOs\AuditLogIndexItemData;
+use App\Modules\Audit\DTOs\AuditLogIndexQueryData;
 use App\Modules\Audit\Listeners\RecordAuditableDomainEvent;
 use App\Modules\Audit\Models\AuditLog;
+use App\Modules\Audit\Requests\IndexAuditLogsRequest;
 use App\Modules\Dashboard\Actions\GetDashboardMetrics;
 use App\Modules\Dashboard\Actions\GetDashboardSources;
 use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
@@ -144,6 +152,9 @@ dataset('project_write_action_classes', [
 dataset('project_read_action_classes', [
     GetDashboardMetrics::class,
     GetDashboardSources::class,
+    IndexAuditLogs::class,
+    GetAuditLogIndexItems::class,
+    GetAuditLogFilterOptions::class,
     GetAdminIndex::class,
     IndexUsers::class,
     GetUserIndexItems::class,
@@ -203,6 +214,9 @@ dataset('backend_data_classes', [
     DashboardMetricSourceData::class,
     DashboardOverviewSourceData::class,
     DashboardSourcesData::class,
+    AuditLogIndexFilterOptionsData::class,
+    AuditLogIndexItemData::class,
+    AuditLogIndexQueryData::class,
     CreateUserData::class,
     UpdateUserData::class,
     EditableUserData::class,
@@ -229,6 +243,10 @@ dataset('backend_data_classes', [
 ]);
 
 dataset('typescript_contract_classes', [
+    IndexAuditLogsRequest::class,
+    AuditLogIndexFilterOptionsData::class,
+    AuditLogIndexItemData::class,
+    AuditLogIndexQueryData::class,
     StoreUserRequest::class,
     UpdateUserRequest::class,
     SyncUserRolesRequest::class,
@@ -288,6 +306,7 @@ dataset('module_contract_classes', [
 ]);
 
 dataset('slice_transport_classes', [
+    [AuditLogsController::class, 'App\\Http\\Controllers\\Admin'],
     [UsersController::class, 'App\\Http\\Controllers\\Admin'],
     [RolesController::class, 'App\\Http\\Controllers\\Admin'],
     [PermissionsController::class, 'App\\Http\\Controllers\\Admin'],
@@ -297,6 +316,7 @@ dataset('slice_transport_classes', [
 ]);
 
 dataset('module_request_classes', [
+    [IndexAuditLogsRequest::class, 'App\\Modules\\Audit\\Requests'],
     [StoreUserRequest::class, 'App\\Modules\\IAM\\Requests'],
     [UpdateUserRequest::class, 'App\\Modules\\IAM\\Requests'],
     [SyncUserRolesRequest::class, 'App\\Modules\\IAM\\Requests'],
@@ -528,6 +548,14 @@ it('keeps audit recording behind an interface-driven listener', function (): voi
     expect($reflection->isFinal())->toBeTrue();
     expect($contents)->toContain('AuditableDomainEvent $event');
     expect($contents)->toContain('RecordAuditLog::handle');
+});
+
+it('keeps module listener discovery configured in bootstrap for module-local listeners', function (): void {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/bootstrap/app.php');
+
+    expect($contents)->toContain('->withEvents([');
+    expect($contents)->toContain("app_path('Listeners')");
+    expect($contents)->toContain("app_path('Modules/*/Listeners')");
 });
 
 it('prevents non-audit modules from importing audit actions or models directly', function (): void {

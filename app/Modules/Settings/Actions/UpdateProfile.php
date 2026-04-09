@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 final class UpdateProfile
 {
-    public static function handle(User $user, UpdateProfileData $data): User
+    public static function handle(User $user, UpdateProfileData $data): void
     {
-        return DB::transaction(function () use ($user, $data): User {
+        DB::transaction(function () use ($user, $data): void {
             $before = self::auditState($user);
             $user->fill($data->all());
 
@@ -24,8 +24,6 @@ final class UpdateProfile
             $user->save();
 
             event(new ProfileUpdated($user, $before));
-
-            return $user;
         });
     }
 

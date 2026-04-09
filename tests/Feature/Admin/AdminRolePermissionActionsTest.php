@@ -15,12 +15,15 @@ use App\Modules\IAM\DTOs\CreateRoleData;
 use App\Modules\IAM\DTOs\SyncRolePermissionsData;
 use App\Modules\IAM\DTOs\UpdatePermissionData;
 use App\Modules\IAM\DTOs\UpdateRoleData;
+use App\Modules\IAM\Events\PermissionUpdated;
+use App\Modules\IAM\Events\RolePermissionsSynced;
 use App\Modules\IAM\Exceptions\UnknownPermissionsSelected;
 use App\Modules\IAM\Models\Permission;
 use App\Modules\IAM\Models\PermissionGroup;
 use App\Modules\IAM\Models\Role;
 use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();
@@ -131,6 +134,32 @@ test('sync role permissions action syncs the selected permissions by name', func
     ]);
 });
 
+test('sync role permissions action dispatches an auditable sync event', function (): void {
+    Event::fake([RolePermissionsSynced::class]);
+
+    $role = Role::query()->create([
+        'name' => 'editor',
+        'guard_name' => 'web',
+    ]);
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
+    Permission::query()->create([
+        'name' => 'users.viewReports',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    SyncRolePermissions::handle($role, new SyncRolePermissionsData(
+        permissions: ['users.viewReports'],
+    ));
+
+    Event::assertDispatched(RolePermissionsSynced::class, fn (RolePermissionsSynced $event): bool => $event->auditEvent() === 'roles.permissions_synced'
+        && $event->auditSubjectId() === $role->id);
+});
+
 test('sync role permissions action throws a domain exception when permissions are missing', function (): void {
     $role = Role::query()->create([
         'name' => 'editor',
@@ -223,6 +252,34 @@ test('update permission action keeps the key stable while updating catalog metad
     expect($permission->fresh()?->description)->toBe('Review and maintain report visibility across teams.');
     expect($permission->fresh()?->group)->toBe('roles');
     expect($permission->fresh()?->permissionGroup?->label)->toBe('Role Management');
+});
+
+test('update permission action dispatches an auditable updated event', function (): void {
+    Event::fake([PermissionUpdated::class]);
+
+    $permissionGroup = PermissionGroup::query()->create([
+        'slug' => 'users',
+        'label' => 'User Administration',
+        'description' => 'Identity and account lifecycle controls.',
+    ]);
+
+    $permission = Permission::query()->create([
+        'name' => 'users.viewReports',
+        'label' => 'View Reports',
+        'permission_group_id' => $permissionGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    UpdatePermission::handle($permission, new UpdatePermissionData(
+        label: 'Manage Report Access',
+        description: 'Review and maintain report visibility across teams.',
+        group: 'roles',
+        groupLabel: 'Role Management',
+        groupDescription: 'Role creation, maintenance, and permission-footprint controls.',
+    ), app(PermissionGroupCatalogContract::class));
+
+    Event::assertDispatched(PermissionUpdated::class, fn (PermissionUpdated $event): bool => $event->auditEvent() === 'permissions.updated'
+        && $event->auditSubjectId() === $permission->id);
 });
 
 test('delete permission action soft deletes the permission', function (): void {

@@ -11,15 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 final class UpdateRole
 {
-    public static function handle(Role $role, UpdateRoleData $data): Role
+    public static function handle(Role $role, UpdateRoleData $data): void
     {
-        return DB::transaction(function () use ($role, $data): Role {
+        DB::transaction(function () use ($role, $data): void {
             $before = self::auditState($role);
             $role->forceFill(['name' => $data->name])->save();
 
             event(new RoleUpdated($role, $before));
-
-            return $role;
         });
     }
 

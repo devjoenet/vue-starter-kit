@@ -10,14 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 final class UpdatePassword
 {
-    public static function handle(User $user, string $password): User
+    public static function handle(User $user, string $password): void
     {
-        return DB::transaction(function () use ($user, $password): User {
+        DB::transaction(function () use ($user, $password): void {
             $user->update(['password' => $password]);
 
             event(new PasswordUpdated($user));
-
-            return $user;
         });
     }
 }

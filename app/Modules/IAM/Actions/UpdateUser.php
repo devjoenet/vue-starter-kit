@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Hash;
 
 final class UpdateUser
 {
-    public static function handle(User $user, UpdateUserData $data): User
+    public static function handle(User $user, UpdateUserData $data): void
     {
-        return DB::transaction(function () use ($user, $data): User {
+        DB::transaction(function () use ($user, $data): void {
             $before = self::auditState($user);
             $passwordUpdated = $data->passwordWasProvided();
 
@@ -27,8 +27,6 @@ final class UpdateUser
             $user->save();
 
             event(new UserUpdated($user, $before, $passwordUpdated));
-
-            return $user;
         });
     }
 
