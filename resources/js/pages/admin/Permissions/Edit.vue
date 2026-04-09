@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Deferred, Head, router, useForm } from '@inertiajs/vue3';
 import { computed, watch } from 'vue';
 import AdminEditorAsideCard from '@/components/admin/AdminEditorAsideCard.vue';
 import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
+import AuditHistoryTable from '@/components/admin/AuditHistoryTable.vue';
 import PermissionEditorForm from '@/components/admin/PermissionEditorForm.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
 import { useAbility } from '@/composables/useAbility';
@@ -179,6 +180,16 @@ const destroyPermission = () => {
             shown.
           </p>
         </AdminEditorAsideCard>
+      </div>
+
+      <div class="motion-step" style="--motion-order: 3">
+        <Deferred data="auditHistory">
+          <template #fallback>
+            <AuditHistoryTable :items="[]" loading />
+          </template>
+
+          <AuditHistoryTable :items="auditHistory ?? []" />
+        </Deferred>
       </div>
     </AdminEditorShell>
   </div>

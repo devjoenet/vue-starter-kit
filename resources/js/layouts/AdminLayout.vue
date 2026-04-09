@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { useAbility } from '@/composables/useAbility';
 import { dashboard } from '@/routes/admin';
+import { index as adminAuditLogsIndex } from '@/routes/admin/audit-logs';
 import { index as adminPermissionsIndex } from '@/routes/admin/permissions';
 import { index as adminRolesIndex } from '@/routes/admin/roles';
 import { index as adminUsersIndex } from '@/routes/admin/users';
@@ -16,6 +17,7 @@ const { can } = useAbility();
 const nav = computed(() => {
   return [
     { label: 'Dashboard', href: dashboard.url() },
+    ...(can(adminPermissions.auditLogsView) ? [{ label: 'Audit Logs', href: adminAuditLogsIndex.url() }] : []),
     ...(can(adminPermissions.usersView) ? [{ label: 'Users', href: adminUsersIndex.url() }] : []),
     ...(can(adminPermissions.rolesView) ? [{ label: 'Roles', href: adminRolesIndex.url() }] : []),
     ...(can(adminPermissions.permissionsView) ? [{ label: 'Permissions', href: adminPermissionsIndex.url() }] : []),

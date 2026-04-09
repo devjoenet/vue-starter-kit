@@ -4,6 +4,7 @@ import { computed, watch } from 'vue';
 import AdminEditorShell from '@/components/admin/AdminEditorShell.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
 import AssignmentTableCard from '@/components/admin/AssignmentTableCard.vue';
+import AuditHistoryTable from '@/components/admin/AuditHistoryTable.vue';
 import EditPageActionRow from '@/components/admin/EditPageActionRow.vue';
 import UserDetailsForm from '@/components/admin/UserDetailsForm.vue';
 import UserRoleAssignmentTable from '@/components/admin/UserRoleAssignmentTable.vue';
@@ -233,6 +234,16 @@ const destroyUser = () => {
             @save="saveAndClose"
           />
         </aside>
+      </div>
+
+      <div class="motion-step" style="--motion-order: 4">
+        <Deferred data="auditHistory">
+          <template #fallback>
+            <AuditHistoryTable :items="[]" loading />
+          </template>
+
+          <AuditHistoryTable :items="auditHistory ?? []" />
+        </Deferred>
       </div>
     </AdminEditorShell>
   </div>

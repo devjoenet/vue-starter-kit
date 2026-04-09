@@ -9,10 +9,13 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Modules\Audit\Actions\GetAuditHistoryItems;
 use App\Modules\Audit\Actions\GetAuditLogFilterOptions;
 use App\Modules\Audit\Actions\GetAuditLogIndexItems;
 use App\Modules\Audit\Actions\IndexAuditLogs;
 use App\Modules\Audit\Actions\RecordAuditLog;
+use App\Modules\Audit\DTOs\AuditHistoryChangeData;
+use App\Modules\Audit\DTOs\AuditHistoryItemData;
 use App\Modules\Audit\DTOs\AuditLogIndexFilterOptionsData;
 use App\Modules\Audit\DTOs\AuditLogIndexItemData;
 use App\Modules\Audit\DTOs\AuditLogIndexQueryData;
@@ -153,6 +156,7 @@ dataset('project_read_action_classes', [
     GetDashboardMetrics::class,
     GetDashboardSources::class,
     IndexAuditLogs::class,
+    GetAuditHistoryItems::class,
     GetAuditLogIndexItems::class,
     GetAuditLogFilterOptions::class,
     GetAdminIndex::class,
@@ -214,6 +218,8 @@ dataset('backend_data_classes', [
     DashboardMetricSourceData::class,
     DashboardOverviewSourceData::class,
     DashboardSourcesData::class,
+    AuditHistoryChangeData::class,
+    AuditHistoryItemData::class,
     AuditLogIndexFilterOptionsData::class,
     AuditLogIndexItemData::class,
     AuditLogIndexQueryData::class,
@@ -244,6 +250,8 @@ dataset('backend_data_classes', [
 
 dataset('typescript_contract_classes', [
     IndexAuditLogsRequest::class,
+    AuditHistoryChangeData::class,
+    AuditHistoryItemData::class,
     AuditLogIndexFilterOptionsData::class,
     AuditLogIndexItemData::class,
     AuditLogIndexQueryData::class,

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Modules\Audit\Actions\GetAuditHistoryItems;
+use App\Modules\Audit\DTOs\AuditHistoryChangeData;
 use App\Modules\Audit\Models\AuditLog;
 use App\Modules\IAM\Models\Permission;
 use App\Modules\IAM\Models\PermissionGroup;
@@ -127,4 +129,40 @@ test('admin permission updates capture before and after catalog state', function
         'group' => 'roles',
         'group_label' => 'Role Management',
     ]);
+});
+
+test('record audit history redacts sensitive change fields', function (): void {
+    $target = User::factory()->create([
+        'email' => 'audited-user@example.test',
+    ]);
+    AuditLog::query()->create([
+        'event' => 'users.updated',
+        'subject_type' => User::class,
+        'subject_id' => $target->id,
+        'subject_label' => $target->email,
+        'summary' => 'Updated user with sensitive fields.',
+        'changes' => [
+            'before' => [
+                'email' => 'old-user@example.test',
+                'password' => 'old-password',
+            ],
+            'after' => [
+                'email' => $target->email,
+                'password' => 'new-password',
+            ],
+        ],
+    ]);
+
+    $auditHistory = GetAuditHistoryItems::handle($target);
+    $auditHistoryItem = $auditHistory->first();
+    assert($auditHistoryItem !== null);
+    $changes = $auditHistoryItem->changes->keyBy('field');
+    $emailChange = $changes->get('email');
+    $passwordChange = $changes->get('password');
+    assert($emailChange instanceof AuditHistoryChangeData);
+    assert($passwordChange instanceof AuditHistoryChangeData);
+
+    expect($emailChange->after)->toBe('audited-user@example.test');
+    expect($passwordChange->before)->toBe('Redacted');
+    expect($passwordChange->after)->toBe('Redacted');
 });

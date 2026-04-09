@@ -1,4 +1,5 @@
 import type { EditableUserData, RoleOptionData, UserIndexFilterOptionsData, UserListItemData } from '@/types/wayfinder-generated';
+import type { AuditHistoryItem } from '@/types/admin/audit';
 import type { AdminIndexQuery, PaginatedCollection } from '@/types/admin/shared';
 
 export type UserListItem = UserListItemData & {
@@ -24,6 +25,7 @@ export type AdminUsersCreatePageProps = {};
 
 export type AdminUsersEditPageProps = {
   user: EditableUser;
+  auditHistory?: AuditHistoryItem[];
   roles?: RoleOption[];
   userRoles: string[];
 };

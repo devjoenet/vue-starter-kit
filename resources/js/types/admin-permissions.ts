@@ -1,4 +1,5 @@
 export const adminPermissions = {
+  auditLogsView: 'audit_logs.view',
   usersView: 'users.view',
   usersCreate: 'users.create',
   usersUpdate: 'users.update',

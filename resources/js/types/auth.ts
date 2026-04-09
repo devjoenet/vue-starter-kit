@@ -5,10 +5,18 @@ export type User = AuthenticatedUserData & {
   [key: string]: unknown;
 };
 
+export type NamedPermissionGrant = {
+  name?: string | null;
+  permission?: string | null;
+};
+
+export type PermissionGrant = string | NamedPermissionGrant | null | undefined;
+export type AuthPermissions = PermissionGrant[] | Record<string, boolean>;
+
 export type Auth = Omit<SharedAuthData, 'user'> & {
   user: User | null;
   roles: string[];
-  permissions: string[];
+  permissions: AuthPermissions;
 };
 
 export type TwoFactorConfigContent = {

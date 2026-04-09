@@ -7,12 +7,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Modules\Audit\Actions\IndexAuditLogs;
 use App\Modules\Audit\Requests\IndexAuditLogsRequest;
-use Illuminate\Http\JsonResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 final class AuditLogsController extends Controller
 {
-    public function index(IndexAuditLogsRequest $request): JsonResponse
+    public function index(IndexAuditLogsRequest $request): Response
     {
-        return response()->json(IndexAuditLogs::handle($request));
+        return Inertia::render('admin/AuditLogs/Index', IndexAuditLogs::handle($request));
     }
 }
