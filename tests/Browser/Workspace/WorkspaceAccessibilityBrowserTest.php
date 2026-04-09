@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Permissions\Models\Permission;
-use App\Modules\Permissions\Models\PermissionGroup;
-use App\Modules\Users\Models\User;
+use App\Modules\IAM\Models\Permission;
+use App\Modules\IAM\Models\PermissionGroup;
+use App\Modules\Shared\Models\User;
 use Spatie\Permission\PermissionRegistrar;
 
 test('dashboard, admin, and settings pages stay inside the sidebar workspace shell', function () {

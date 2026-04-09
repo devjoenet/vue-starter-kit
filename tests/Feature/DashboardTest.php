@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Modules\Permissions\Models\Permission;
-use App\Modules\Permissions\Models\PermissionGroup;
-use App\Modules\Roles\Models\Role;
-use App\Modules\Users\Models\User;
+use App\Modules\IAM\Models\Permission;
+use App\Modules\IAM\Models\PermissionGroup;
+use App\Modules\IAM\Models\Role;
+use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
 

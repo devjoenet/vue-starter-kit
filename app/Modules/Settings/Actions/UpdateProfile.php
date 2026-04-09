@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Settings\Actions;
 
-use App\Modules\Audit\Actions\RecordAuditLog;
-use App\Modules\Audit\DTOs\AuditLogData;
-use App\Modules\Audit\Models\AuditLog;
 use App\Modules\Settings\DTOs\UpdateProfileData;
-use App\Modules\Users\Models\User;
+use App\Modules\Settings\Events\ProfileUpdated;
+use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\DB;
 
 final class UpdateProfile
@@ -25,14 +23,7 @@ final class UpdateProfile
 
             $user->save();
 
-            DB::afterCommit(fn (): AuditLog => RecordAuditLog::handle(new AuditLogData(
-                event: 'settings.profile_updated',
-                summary: sprintf('Updated profile for %s.', $user->email),
-                subjectType: User::class,
-                subjectId: (int) $user->getKey(),
-                subjectLabel: $user->email,
-                changes: ['before' => $before, 'after' => self::auditState($user)],
-            )));
+            event(new ProfileUpdated($user, $before));
 
             return $user;
         });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Users\Models\User;
+use App\Modules\Shared\Models\User;
 use Laravel\Fortify\Features;
 use PragmaRX\Google2FA\Google2FA;
 

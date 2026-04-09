@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Modules\Audit\Models\AuditLog;
-use App\Modules\Users\Models\User;
+use App\Modules\Shared\Models\User;
 
 test('password updates create self-service audit logs', function (): void {
     $user = User::factory()->create();

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Modules\Permissions\Actions\CreatePermission;
-use App\Modules\Permissions\Actions\PermissionNormalizer;
-use App\Modules\Permissions\Contracts\PermissionGroupCatalogContract;
-use App\Modules\Permissions\DTOs\CreatePermissionData;
-use App\Modules\Permissions\Models\PermissionGroup;
+use App\Modules\IAM\Actions\CreatePermission;
+use App\Modules\IAM\Actions\PermissionNormalizer;
+use App\Modules\IAM\Contracts\PermissionGroupCatalogContract;
+use App\Modules\IAM\DTOs\CreatePermissionData;
+use App\Modules\IAM\Models\PermissionGroup;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\intro;

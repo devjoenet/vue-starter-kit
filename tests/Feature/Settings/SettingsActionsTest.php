@@ -6,7 +6,7 @@ use App\Modules\Settings\Actions\DeleteProfile;
 use App\Modules\Settings\Actions\UpdatePassword;
 use App\Modules\Settings\Actions\UpdateProfile;
 use App\Modules\Settings\DTOs\UpdateProfileData;
-use App\Modules\Users\Models\User;
+use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 test('update profile action updates user details and clears verification when email changes', function (): void {

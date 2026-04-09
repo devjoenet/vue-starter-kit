@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Modules\Roles\Actions\CreateRole;
-use App\Modules\Roles\Actions\GetAssignableUsers;
-use App\Modules\Roles\Actions\RoleNameNormalizer;
-use App\Modules\Roles\DTOs\CreateRoleData;
+use App\Modules\IAM\Actions\CreateRole;
+use App\Modules\IAM\Actions\GetAssignableUsers;
+use App\Modules\IAM\Actions\RoleNameNormalizer;
+use App\Modules\IAM\DTOs\AssignableUserData;
+use App\Modules\IAM\DTOs\CreateRoleData;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -48,10 +49,10 @@ final class CreateRoleCommand extends BaseInteractiveCreateCommand
         );
 
         $normalizedRoleName = $roleNameNormalizer->normalize($roleNameInput);
-        $assignableUserOptions = collect(GetAssignableUsers::handle())
+        $assignableUserOptions = GetAssignableUsers::handle()
             ->mapWithKeys(
-                static fn (array $user): array => [
-                    $user['id'] => sprintf('%s <%s>', $user['name'], $user['email']),
+                static fn (AssignableUserData $user): array => [
+                    $user->id => sprintf('%s <%s>', $user->name, $user->email),
                 ],
             )
             ->all();
