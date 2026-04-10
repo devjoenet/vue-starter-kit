@@ -77,6 +77,10 @@ test('login page keeps its primary controls keyboard reachable', function () {
     $page->click('#password');
     $page->keys('#password', 'Tab');
 
+    expect($activeElementId($page))->toBe('auth-login-forgot-password-link');
+
+    $page->keys('#auth-login-forgot-password-link', 'Tab');
+
     // Assert
 
     expect($activeElementId($page))->toBe('remember');
@@ -84,6 +88,50 @@ test('login page keeps its primary controls keyboard reachable', function () {
     $page->keys('#remember', 'Tab');
 
     expect($activeElementId($page))->toBe('auth-login-submit-button');
+
+    $page->assertNoJavaScriptErrors();
+});
+
+test('register page keeps its primary controls keyboard reachable', function () {
+    if (! Features::enabled(Features::registration())) {
+        $this->markTestSkipped('Registration is not enabled.');
+    }
+
+    // Arrange
+
+    $page = visit(route('register', absolute: false));
+
+    $activeElementId = static fn ($browserPage): string => (string) $browserPage->script(
+        "document.activeElement?.id ?? ''",
+    );
+
+    // Act
+
+    $page->click('#name');
+
+    expect($activeElementId($page))->toBe('name');
+
+    $page->keys('#name', 'Tab');
+
+    expect($activeElementId($page))->toBe('email');
+
+    $page->keys('#email', 'Tab');
+
+    expect($activeElementId($page))->toBe('password');
+
+    $page->keys('#password', 'Tab');
+
+    expect($activeElementId($page))->toBe('password_confirmation');
+
+    $page->keys('#password_confirmation', 'Tab');
+
+    expect($activeElementId($page))->toBe('auth-register-submit-button');
+
+    $page->keys('#auth-register-submit-button', 'Tab');
+
+    // Assert
+
+    expect($activeElementId($page))->toBe('auth-register-login-link');
 
     $page->assertNoJavaScriptErrors();
 });

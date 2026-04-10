@@ -506,6 +506,44 @@ it('keeps auth forms in native DOM focus order without positive tabindex values'
     expect($textLinkContents)->not->toContain(':tabindex="tabindex"');
 });
 
+it('keeps high-identity floating-label forms free of competing placeholders', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $files = [
+        'resources/js/pages/auth/Login.vue',
+        'resources/js/pages/auth/Register.vue',
+        'resources/js/pages/settings/Profile.vue',
+        'resources/js/pages/settings/Password.vue',
+        'resources/js/components/UserIdentityFields.vue',
+        'resources/js/components/DeleteUser.vue',
+        'resources/js/components/admin/UserDetailsForm.vue',
+    ];
+
+    foreach ($files as $file) {
+        $contents = file_get_contents($projectRoot.'/'.$file);
+
+        expect($contents)->not->toContain('placeholder=');
+    }
+});
+
+it('keeps the delete-account dialog on stable focus targets and component-level focus recovery', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/DeleteUser.vue');
+
+    expect($contents)->toContain("import { nextTick, useTemplateRef } from 'vue';");
+    expect($contents)->toContain("useTemplateRef<{ focus: () => void }>('passwordInput')");
+    expect($contents)->toContain('const focusPasswordInput = async (): Promise<void> => {');
+    expect($contents)->toContain('await nextTick();');
+    expect($contents)->toContain('passwordInput.value?.focus();');
+    expect($contents)->toContain('@error="focusPasswordInput"');
+    expect($contents)->not->toContain('$el?.focus()');
+    expect($contents)->toContain('id="settings-profile-delete-account-trigger-button"');
+    expect($contents)->toContain('id="settings-profile-delete-account-dialog"');
+    expect($contents)->toContain('id="settings-profile-delete-account-form"');
+    expect($contents)->toContain('id="settings-profile-delete-account-password"');
+    expect($contents)->toContain('id="settings-profile-delete-account-cancel-button"');
+    expect($contents)->toContain('id="settings-profile-delete-account-confirm-button"');
+    expect($contents)->toContain('data-test="cancel-delete-user-button"');
+});
+
 it('keeps the Southeast Code mark visible in the welcome-page header', function () {
     $welcomeContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Welcome.vue');
     $authLayoutContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/auth/AuthSimpleLayout.vue');
@@ -762,6 +800,7 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="admin-users-create-page"',
             'id="admin-users-create-form"',
             'id="admin-users-create-submit-button"',
+            'id="admin-users-create-close-button"',
         ],
         'resources/js/pages/admin/Users/Edit.vue' => [
             'id="admin-users-edit-page"',
@@ -812,6 +851,11 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="settings-profile-page"',
             'id="settings-profile-information-form"',
             'id="settings-profile-delete-account-card"',
+        ],
+        'resources/js/components/DeleteUser.vue' => [
+            'id="settings-profile-delete-account-trigger-button"',
+            'id="settings-profile-delete-account-dialog"',
+            'id="settings-profile-delete-account-confirm-button"',
         ],
         'resources/js/pages/settings/Password.vue' => [
             'id="settings-password-page"',
