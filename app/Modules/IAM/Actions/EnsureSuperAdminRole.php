@@ -41,8 +41,13 @@ final class EnsureSuperAdminRole
         return self::GUARD_NAME;
     }
 
+    public static function is(Role $role): bool
+    {
+        return $role->name === self::name() && $role->guard_name === self::guardName();
+    }
+
     /** @return list<string> */
-    private static function permissionNames(): array
+    public static function permissionNames(): array
     {
         return Permission::query()
             ->orderBy('name')

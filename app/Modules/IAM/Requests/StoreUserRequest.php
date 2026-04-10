@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\IAM\Requests;
 
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use App\Modules\Shared\Actions\UserIdentityValidationRules;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -22,15 +21,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('users', 'email')->where(
-                    fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
-                ),
-            ],
+            ...UserIdentityValidationRules::identity(),
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8'],
         ];

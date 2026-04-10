@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\IAM\Actions;
+namespace App\Modules\Shared\Actions;
 
 use App\Modules\Shared\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -10,7 +10,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Validation\Rule;
 use Stringable;
 
-final class ProfileValidationRules
+final class UserIdentityValidationRules
 {
     /** @return array<int, Stringable|ValidationRule|array|string> */
     public static function email(?int $userId = null): array
@@ -38,7 +38,7 @@ final class ProfileValidationRules
     }
 
     /** @return array<string, array<int, Stringable|ValidationRule|array|string>> */
-    public static function profile(?int $userId = null): array
+    public static function identity(?int $userId = null): array
     {
         return [
             'name' => self::name(),

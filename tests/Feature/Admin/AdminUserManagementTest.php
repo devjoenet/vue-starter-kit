@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\IAM\Actions\EnsureSuperAdminRole;
 use App\Modules\IAM\Models\Role;
 use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
@@ -112,4 +113,39 @@ test('admin can recreate a soft deleted user email by restoring the existing rec
     expect(Hash::check('new-password-123', $restoredUser->password))->toBeTrue();
 
     $response->assertRedirect(route('admin.users.edit', $restoredUser));
+});
+
+test('admin cannot delete the last super-admin user', function (): void {
+    /** @var User $admin */
+    $admin = auth()->user();
+
+    $response = $this->from(route('admin.users.edit', $admin))
+        ->delete(route('admin.users.destroy', $admin));
+
+    $response->assertRedirect(route('admin.users.edit', $admin));
+    $response->assertSessionHasErrors(['user']);
+
+    expect($admin->fresh())->not->toBeNull();
+    expect($admin->fresh()?->hasRole(EnsureSuperAdminRole::name()))->toBeTrue();
+});
+
+test('admin cannot remove the last super-admin role assignment from a user', function (): void {
+    /** @var User $admin */
+    $admin = auth()->user();
+
+    $role = Role::query()->create([
+        'name' => 'support_specialist',
+        'guard_name' => 'web',
+    ]);
+
+    $response = $this->from(route('admin.users.edit', $admin))
+        ->put(route('admin.users.roles.sync', $admin), [
+            'roles' => [$role->name],
+        ]);
+
+    $response->assertRedirect(route('admin.users.edit', $admin));
+    $response->assertSessionHasErrors(['roles']);
+
+    expect($admin->fresh()?->hasRole(EnsureSuperAdminRole::name()))->toBeTrue();
+    expect($admin->fresh()?->hasRole($role))->toBeFalse();
 });

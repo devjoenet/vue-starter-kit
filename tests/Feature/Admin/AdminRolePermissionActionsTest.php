@@ -6,6 +6,7 @@ use App\Modules\IAM\Actions\CreatePermission;
 use App\Modules\IAM\Actions\CreateRole;
 use App\Modules\IAM\Actions\DeletePermission;
 use App\Modules\IAM\Actions\DeleteRole;
+use App\Modules\IAM\Actions\EnsureSuperAdminRole;
 use App\Modules\IAM\Actions\SyncRolePermissions;
 use App\Modules\IAM\Actions\UpdatePermission;
 use App\Modules\IAM\Actions\UpdateRole;
@@ -17,6 +18,9 @@ use App\Modules\IAM\DTOs\UpdatePermissionData;
 use App\Modules\IAM\DTOs\UpdateRoleData;
 use App\Modules\IAM\Events\PermissionUpdated;
 use App\Modules\IAM\Events\RolePermissionsSynced;
+use App\Modules\IAM\Exceptions\CannotDeleteProtectedSuperAdminRole;
+use App\Modules\IAM\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
+use App\Modules\IAM\Exceptions\CannotRenameProtectedSuperAdminRole;
 use App\Modules\IAM\Exceptions\UnknownPermissionsSelected;
 use App\Modules\IAM\Models\Permission;
 use App\Modules\IAM\Models\PermissionGroup;
@@ -87,6 +91,29 @@ test('update role action updates the role name', function (): void {
     expect($role->fresh()?->name)->toBe('new-role');
 });
 
+test('update role action blocks renaming the protected super-admin role', function (): void {
+    $role = EnsureSuperAdminRole::handle();
+
+    try {
+        UpdateRole::handle($role, new UpdateRoleData(
+            name: 'chief-admin',
+        ));
+
+        $this->fail('Expected protected super-admin role rename exception was not thrown.');
+    } catch (CannotRenameProtectedSuperAdminRole $exception) {
+        expect($exception->roleId)->toBe($role->id);
+        expect($exception->currentName)->toBe('super-admin');
+        expect($exception->requestedName)->toBe('chief-admin');
+        expect($exception->errors())->toBe([
+            'name' => ['The protected super-admin role name is reserved and cannot be reassigned.'],
+        ]);
+        expect($exception->context()['role_id'])->toBe($role->id);
+        expect($exception->context()['current_name'])->toBe('super-admin');
+        expect($exception->context()['requested_name'])->toBe('chief-admin');
+        expect($exception->context()['error_fields'])->toBe(['name']);
+    }
+});
+
 test('delete role action soft deletes the role', function (): void {
     $role = Role::query()->create([
         'name' => 'temporary-role',
@@ -97,6 +124,25 @@ test('delete role action soft deletes the role', function (): void {
 
     expect(Role::query()->find($role->id))->toBeNull();
     expect(Role::withTrashed()->find($role->id)?->trashed())->toBeTrue();
+});
+
+test('delete role action blocks deleting the protected super-admin role', function (): void {
+    $role = EnsureSuperAdminRole::handle();
+
+    try {
+        DeleteRole::handle($role);
+
+        $this->fail('Expected protected super-admin role deletion exception was not thrown.');
+    } catch (CannotDeleteProtectedSuperAdminRole $exception) {
+        expect($exception->roleId)->toBe($role->id);
+        expect($exception->roleName)->toBe('super-admin');
+        expect($exception->errors())->toBe([
+            'role' => ['The protected super-admin role cannot be deleted.'],
+        ]);
+        expect($exception->context()['role_id'])->toBe($role->id);
+        expect($exception->context()['role_name'])->toBe('super-admin');
+        expect($exception->context()['error_fields'])->toBe(['role']);
+    }
 });
 
 test('sync role permissions action syncs the selected permissions by name', function (): void {
@@ -177,6 +223,55 @@ test('sync role permissions action throws a domain exception when permissions ar
         expect($exception->errors())->toBe([
             'permissions' => ['One or more selected permissions are invalid.'],
         ]);
+        expect($exception->context()['permission_names'])->toBe(['users.missingPermission']);
+        expect($exception->context()['error_fields'])->toBe(['permissions']);
+    }
+});
+
+test('sync role permissions action blocks narrowing the protected super-admin role', function (): void {
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
+    Permission::query()->create([
+        'name' => 'users.viewReports',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    Permission::query()->create([
+        'name' => 'users.manageMembers',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    $role = EnsureSuperAdminRole::handle();
+
+    try {
+        SyncRolePermissions::handle($role, new SyncRolePermissionsData(
+            permissions: ['users.viewReports'],
+        ));
+
+        $this->fail('Expected protected super-admin permission exception was not thrown.');
+    } catch (CannotRemoveRequiredSuperAdminPermissions $exception) {
+        expect($exception->roleId)->toBe($role->id);
+        expect($exception->roleName)->toBe('super-admin');
+        expect($exception->permissionNames)->toBe(['users.viewReports']);
+        expect($exception->requiredPermissionNames)->toBe([
+            'users.manageMembers',
+            'users.viewReports',
+        ]);
+        expect($exception->errors())->toBe([
+            'permissions' => ['The protected super-admin role must keep every permission.'],
+        ]);
+        expect($exception->context()['role_id'])->toBe($role->id);
+        expect($exception->context()['permission_names'])->toBe(['users.viewReports']);
+        expect($exception->context()['required_permission_names'])->toBe([
+            'users.manageMembers',
+            'users.viewReports',
+        ]);
+        expect($exception->context()['error_fields'])->toBe(['permissions']);
     }
 });
 
@@ -223,6 +318,24 @@ test('create permission action restores a soft deleted permission with the same 
     expect($restoredPermission->id)->toBe($permission->id);
     expect($restoredPermission->trashed())->toBeFalse();
     expect($restoredPermission->label)->toBe('Manage Team Members');
+});
+
+test('create permission action re-syncs the protected super-admin role to the live permission catalog', function (): void {
+    $role = EnsureSuperAdminRole::handle();
+    $role->syncPermissions([]);
+
+    $permission = CreatePermission::handle(new CreatePermissionData(
+        name: 'users.manageMembers',
+        label: 'Manage Members',
+        description: 'Create, update, and remove member relationships.',
+        group: 'users',
+        groupLabel: 'User Administration',
+        groupDescription: 'Identity, lifecycle, and role assignment controls.',
+    ), app(PermissionGroupCatalogContract::class));
+
+    expect($permission->exists)->toBeTrue();
+    expect($role->fresh()?->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(Permission::query()->orderBy('name')->pluck('name')->all());
 });
 
 test('update permission action keeps the key stable while updating catalog metadata', function (): void {
@@ -298,4 +411,32 @@ test('delete permission action soft deletes the permission', function (): void {
 
     expect(Permission::query()->find($permission->id))->toBeNull();
     expect(Permission::withTrashed()->find($permission->id)?->trashed())->toBeTrue();
+});
+
+test('delete permission action re-syncs the protected super-admin role to the remaining permission catalog', function (): void {
+    $usersGroup = PermissionGroup::query()->firstOrCreate(
+        ['slug' => 'users'],
+        ['label' => 'Users'],
+    );
+
+    $role = EnsureSuperAdminRole::handle();
+
+    Permission::query()->create([
+        'name' => 'users.viewReports',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    $permission = Permission::query()->create([
+        'name' => 'users.removeMembers',
+        'permission_group_id' => $usersGroup->id,
+        'guard_name' => 'web',
+    ]);
+
+    $role->syncPermissions([]);
+
+    DeletePermission::handle($permission);
+
+    expect($role->fresh()?->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(Permission::query()->orderBy('name')->pluck('name')->all());
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AdminIndexPageHeader from '@/components/admin/AdminIndexPageHeader.vue';
 import PermissionIndexTable from '@/components/admin/PermissionIndexTable.vue';
@@ -23,6 +23,8 @@ const canUpdate = computed(() => can(adminPermissions.permissionsUpdate));
 </script>
 
 <template>
+  <Head title="Permissions" />
+
   <div id="admin-permissions-index-page" class="motion-stage space-y-6 px-4">
     <AdminIndexPageHeader id="admin-permissions-index-page-header" title="Permissions" style="--motion-order: 0">
       <template #actions>

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\IAM\Requests;
 
+use App\Modules\Shared\Actions\UserIdentityValidationRules;
 use App\Modules\Shared\Models\User;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Override;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -32,17 +31,9 @@ class UpdateUserRequest extends FormRequest
     {
         /** @var User|null $user */
         $user = $this->route('user');
-        $emailUniqueRule = Rule::unique('users', 'email')->where(
-            fn (QueryBuilder $query) => $query->whereNull('deleted_at'),
-        );
-
-        if ($user !== null) {
-            $emailUniqueRule->ignore($user->getKey());
-        }
 
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', $emailUniqueRule],
+            ...UserIdentityValidationRules::identity($user?->id),
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['nullable', 'string', 'min:8', 'required_with:password'],
         ];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Modules\IAM\Actions\CreateUser;
 use App\Modules\IAM\Actions\DeleteUser;
+use App\Modules\IAM\Actions\EnsureSuperAdminRole;
 use App\Modules\IAM\Actions\SyncUserRoles;
 use App\Modules\IAM\Actions\UpdateUser;
 use App\Modules\IAM\DTOs\CreateUserData;
@@ -11,6 +12,8 @@ use App\Modules\IAM\DTOs\SyncUserRolesData;
 use App\Modules\IAM\DTOs\UpdateUserData;
 use App\Modules\IAM\Events\UserCreated;
 use App\Modules\IAM\Events\UserRolesSynced;
+use App\Modules\IAM\Exceptions\CannotDeleteLastSuperAdminUser;
+use App\Modules\IAM\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
 use App\Modules\IAM\Exceptions\UnknownRolesSelected;
 use App\Modules\IAM\Models\Role;
 use App\Modules\Shared\Models\User;
@@ -96,6 +99,27 @@ test('delete user action soft deletes the user', function (): void {
     expect(User::withTrashed()->find($user->id)?->trashed())->toBeTrue();
 });
 
+test('delete user action blocks deleting the last super-admin user', function (): void {
+    $user = User::factory()->create();
+    $user->assignRole(EnsureSuperAdminRole::handle());
+
+    try {
+        DeleteUser::handle($user);
+
+        $this->fail('Expected last super-admin user exception was not thrown.');
+    } catch (CannotDeleteLastSuperAdminUser $exception) {
+        expect($exception->userId)->toBe($user->id);
+        expect($exception->email)->toBe($user->email);
+        expect($exception->errors())->toBe([
+            'user' => ['The last active super-admin user cannot be deleted.'],
+        ]);
+        expect($exception->context()['user_id'])->toBe($user->id);
+        expect($exception->context()['email'])->toBe($user->email);
+        expect($exception->context()['protected_role'])->toBe('super-admin');
+        expect($exception->context()['error_fields'])->toBe(['user']);
+    }
+});
+
 test('sync user roles action syncs the selected roles by name', function (): void {
     $user = User::factory()->create();
 
@@ -148,5 +172,37 @@ test('sync user roles action throws a domain exception when roles are missing', 
         expect($exception->errors())->toBe([
             'roles' => ['One or more selected roles are invalid.'],
         ]);
+        expect($exception->context()['role_names'])->toBe(['missing-role']);
+        expect($exception->context()['error_fields'])->toBe(['roles']);
+    }
+});
+
+test('sync user roles action blocks removing the last super-admin role assignment', function (): void {
+    $user = User::factory()->create();
+    $user->assignRole(EnsureSuperAdminRole::handle());
+
+    Role::query()->create([
+        'name' => 'reviewer',
+        'guard_name' => 'web',
+    ]);
+
+    try {
+        SyncUserRoles::handle($user, new SyncUserRolesData(
+            roles: ['reviewer'],
+        ));
+
+        $this->fail('Expected last super-admin role assignment exception was not thrown.');
+    } catch (CannotRemoveLastSuperAdminRoleAssignment $exception) {
+        expect($exception->userId)->toBe($user->id);
+        expect($exception->email)->toBe($user->email);
+        expect($exception->nextRoleNames)->toBe(['reviewer']);
+        expect($exception->errors())->toBe([
+            'roles' => ['The last active super-admin user must keep the super-admin role.'],
+        ]);
+        expect($exception->context()['user_id'])->toBe($user->id);
+        expect($exception->context()['email'])->toBe($user->email);
+        expect($exception->context()['next_role_names'])->toBe(['reviewer']);
+        expect($exception->context()['protected_role'])->toBe('super-admin');
+        expect($exception->context()['error_fields'])->toBe(['roles']);
     }
 });
