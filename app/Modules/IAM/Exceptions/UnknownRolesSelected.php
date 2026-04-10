@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Modules\IAM\Exceptions;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-
-final class UnknownRolesSelected extends ValidationException
+final class UnknownRolesSelected extends AbstractIamValidationException
 {
     /** @param  list<string>  $roleNames */
     private function __construct(
         public readonly array $roleNames,
     ) {
-        $validator = Validator::make([], []);
-        $validator->errors()->add('roles', $this->validationMessage());
-
-        parent::__construct($validator);
+        parent::__construct(
+            errors: ['roles' => [$this->validationMessage()]],
+            context: ['role_names' => $this->roleNames],
+        );
     }
 
     /** @param  list<string>  $roleNames */

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Settings\Requests;
 
-use App\Modules\IAM\Actions\ProfileValidationRules;
+use App\Modules\Shared\Actions\UserIdentityValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -20,6 +20,6 @@ class ProfileUpdateRequest extends FormRequest
     /** @return array<string, ValidationRule|array<mixed>|string> */
     public function rules(): array
     {
-        return ProfileValidationRules::profile($this->user()->id);
+        return UserIdentityValidationRules::identity($this->user()->id);
     }
 }

@@ -7,9 +7,9 @@ namespace App\Console\Commands;
 use App\Modules\IAM\Actions\CreateUser;
 use App\Modules\IAM\Actions\EnsureSuperAdminRole;
 use App\Modules\IAM\Actions\HasActiveSuperAdminUser;
-use App\Modules\IAM\Actions\ProfileValidationRules;
 use App\Modules\IAM\DTOs\CreateUserData;
 use App\Modules\Shared\Actions\PasswordValidationRules;
+use App\Modules\Shared\Actions\UserIdentityValidationRules;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -33,7 +33,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             placeholder: 'Jane Doe',
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['name' => $value],
-                ['name' => ProfileValidationRules::name()],
+                ['name' => UserIdentityValidationRules::name()],
                 'name',
             ),
         );
@@ -43,7 +43,7 @@ final class CreateUserCommand extends BaseInteractiveCreateCommand
             placeholder: 'jane@example.com',
             validate: fn (string $value): ?string => $this->validationMessage(
                 ['email' => $value],
-                ['email' => ProfileValidationRules::email()],
+                ['email' => UserIdentityValidationRules::email()],
                 'email',
                 ['email.unique' => 'A user with this email address already exists.'],
             ),

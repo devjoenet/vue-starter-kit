@@ -59,6 +59,10 @@ final class CreateRole
 
     private static function restoreOrCreateRole(CreateRoleData $data): Role
     {
+        if ($data->name === EnsureSuperAdminRole::name()) {
+            return EnsureSuperAdminRole::handle();
+        }
+
         $role = Role::withTrashed()->firstOrNew([
             'name' => $data->name,
             'guard_name' => 'web',

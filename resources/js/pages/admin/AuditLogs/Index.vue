@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
-import { Search, Sparkles, Telescope } from 'lucide-vue-next';
 import { computed, reactive, watch } from 'vue';
+import AuditLogFiltersCard from '@/components/admin/AuditLogFiltersCard.vue';
 import AuditLogIndexTable from '@/components/admin/AuditLogIndexTable.vue';
 import AdminPageIntro from '@/components/admin/AdminPageIntro.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
-import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import { getCardInsetPanelClassNames } from '@/components/ui/card/variants';
-import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import DatePicker from '@/components/ui/date-picker/DatePicker.vue';
-import Input from '@/components/ui/input/Input.vue';
 import { cn, toTitleCase } from '@/lib/utils';
 import { adminPageLayout, setAdminBreadcrumbs } from '@/lib/page-layouts';
 import { index } from '@/routes/admin/audit-logs';
@@ -254,94 +250,17 @@ const visitUrl = (url: string) => {
     <section id="admin-audit-logs-content" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-start">
       <AuditLogIndexTable class="motion-step" :audit-logs="props.auditLogs" :query="props.query" @toggle-sort="toggleSort" @visit-url="visitUrl" />
 
-      <Card id="admin-audit-logs-filters-card" appearance="glow" variant="secondary" class="motion-step gap-5 px-5 py-5 xl:sticky xl:top-6 xl:self-start">
-        <div class="space-y-2">
-          <div class="flex items-center gap-2">
-            <Telescope class="size-4 text-secondary" />
-            <p class="section-kicker">Refine the ledger</p>
-          </div>
-          <p class="text-sm leading-6 text-muted-foreground">Filter by actor, event family, subject class, free-text summary search, or date window. Nothing clever. Just useful.</p>
-        </div>
-
-        <div class="space-y-4">
-          <Input
-            id="admin-audit-logs-search"
-            v-model.trim="filterDraft.search"
-            label="Search timeline"
-            placeholder="Search summary, actor, event, or subject"
-            variant="outlined"
-            clearable
-            :leading-icon="Search"
-            @keydown.enter.prevent="applyFilters"
-          />
-
-          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-            <DatePicker id="admin-audit-logs-from" v-model="filterDraft.from" label="From date" placeholder="Start date" variant="outlined" clearable />
-            <DatePicker id="admin-audit-logs-until" v-model="filterDraft.until" label="Until date" placeholder="End date" variant="outlined" clearable />
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <section :class="cn(getCardInsetPanelClassNames({ appearance: 'outline', variant: 'neutral' }), 'space-y-3 px-4 py-4')">
-            <div class="flex items-start gap-3">
-              <Sparkles class="mt-0.5 size-4 text-primary" />
-              <div>
-                <p class="text-sm font-semibold">Actors</p>
-                <p class="text-xs leading-5 text-muted-foreground">Who triggered the entry.</p>
-              </div>
-            </div>
-
-            <div class="max-h-44 space-y-2 overflow-y-auto pr-1">
-              <label v-for="actor in props.filterOptions.actors" :key="actor" class="flex cursor-pointer items-start gap-3 py-1.5">
-                <Checkbox :model-value="filterDraft.actors.includes(actor)" @update:model-value="(value) => toggleFilterValue('actors', actor, value)" />
-                <span class="min-w-0 text-sm leading-5">{{ actor }}</span>
-              </label>
-              <p v-if="props.filterOptions.actors.length === 0" class="text-sm leading-6 text-muted-foreground">No actor labels have been captured yet.</p>
-            </div>
-          </section>
-
-          <section :class="cn(getCardInsetPanelClassNames({ appearance: 'outline', variant: 'neutral' }), 'space-y-3 px-4 py-4')">
-            <div>
-              <p class="text-sm font-semibold">Events</p>
-              <p class="text-xs leading-5 text-muted-foreground">The recorded action family.</p>
-            </div>
-
-            <div class="max-h-44 space-y-2 overflow-y-auto pr-1">
-              <label v-for="event in props.filterOptions.events" :key="event" class="flex cursor-pointer items-start gap-3 py-1.5">
-                <Checkbox :model-value="filterDraft.events.includes(event)" @update:model-value="(value) => toggleFilterValue('events', event, value)" />
-                <span class="min-w-0">
-                  <span class="block text-sm leading-5">{{ toTitleCase(event) }}</span>
-                  <span class="block text-xs leading-5 text-muted-foreground">{{ event }}</span>
-                </span>
-              </label>
-              <p v-if="props.filterOptions.events.length === 0" class="text-sm leading-6 text-muted-foreground">No event families have been recorded yet.</p>
-            </div>
-          </section>
-
-          <section :class="cn(getCardInsetPanelClassNames({ appearance: 'outline', variant: 'neutral' }), 'space-y-3 px-4 py-4')">
-            <div>
-              <p class="text-sm font-semibold">Subject types</p>
-              <p class="text-xs leading-5 text-muted-foreground">The model or entity class touched by the entry.</p>
-            </div>
-
-            <div class="max-h-44 space-y-2 overflow-y-auto pr-1">
-              <label v-for="subjectType in props.filterOptions.subject_types" :key="subjectType" class="flex cursor-pointer items-start gap-3 py-1.5">
-                <Checkbox :model-value="filterDraft.subject_types.includes(subjectType)" @update:model-value="(value) => toggleFilterValue('subject_types', subjectType, value)" />
-                <span class="min-w-0">
-                  <span class="block text-sm leading-5">{{ formatSubjectType(subjectType) }}</span>
-                  <span class="block text-xs leading-5 break-all text-muted-foreground">{{ subjectType }}</span>
-                </span>
-              </label>
-              <p v-if="props.filterOptions.subject_types.length === 0" class="text-sm leading-6 text-muted-foreground">No subject classes have been captured yet.</p>
-            </div>
-          </section>
-        </div>
-
-        <div id="admin-audit-logs-actions" class="flex flex-wrap gap-3">
-          <Button appearance="filled" variant="primary" rounded="full" @click="applyFilters">Apply filters</Button>
-          <Button appearance="outline" variant="muted" rounded="full" :disabled="activeFilterCount === 0" @click="clearFilters">Reset</Button>
-        </div>
-      </Card>
+      <AuditLogFiltersCard
+        id="admin-audit-logs-filters-card"
+        class="motion-step xl:sticky xl:top-6 xl:self-start"
+        :active-filter-count="activeFilterCount"
+        :filter-draft="filterDraft"
+        :filter-options="props.filterOptions"
+        :format-subject-type="formatSubjectType"
+        @apply-filters="applyFilters"
+        @clear-filters="clearFilters"
+        @toggle-filter-value="toggleFilterValue"
+      />
     </section>
   </div>
 </template>

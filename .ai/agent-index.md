@@ -25,11 +25,12 @@ This indexes the actual `.ai/` and `.agents/` directories in this repository. Wh
 | --- | --- | --- |
 | `.ai/guidelines/0-project-rules.md` | Hard override | Pushes work toward strict docblock formatting, module-local PHP classes under `app/Modules/*`, Eloquent over avoidable `DB::` calls, named exceptions, no GitHub workflows yet, and a required markdown close-out format. |
 | `.ai/guidelines/00-standards.blade.php` | Assembler | Builds the authoritative runtime standards from the local stub files. It does not scaffold code directly; it turns the stubs into the rules that govern edits and finalization. |
+| `.ai/guidelines/development-plan.md` | Roadmap | Defines the live architecture baseline, records completed phases against the actual repo shape, and sets the next approved implementation phases. |
 | `.ai/guidelines/design-context.md` | Design baseline | Pushes UI decisions toward the Southeast Code visual system: `Welcome.vue` as the shell baseline, tinted neutrals, restrained glow, brand teal plus action cyan, and explicit avoidance of generic admin/dashboard furniture. |
 | `.ai/guidelines/laravel/core.blade.php` | Laravel override | Forces Form Requests for validation, forbids database queries inside API Resources, and reinforces event-driven, DTO/action-based architecture. |
 | `.ai/guidelines/phpunit/core.blade.php` | Testing override | Pushes tests toward mirrored directory structure, `UnitTestCase` and `FunctionalTestCase`, strict AAA+A formatting, `CoversClass`, `resolve()`-based DI, and HTTP-level controller coverage. |
 | `.ai/guidelines/pint/core.blade.php` | Formatter override | Steers finalization toward `composer style:fix` rather than ad hoc Pint commands. |
-| `.ai/guidelines/reports/system-audit.md` | Audit ledger | Influences prioritization by recording resolved and open findings, especially dashboard drift and missing CI parity. |
+| `.ai/guidelines/reports/system-audit.md` | Audit ledger | Influences prioritization by recording resolved and open findings, especially CI parity and remaining accessibility follow-through. |
 
 ### Guideline Stubs
 

@@ -408,18 +408,35 @@ it('uses a full-width initial assignee table in the role create page', function 
 
 it('uses shared index header controls and linked name cells on admin index pages', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $indexPages = [
-        'resources/js/pages/admin/Users/Index.vue',
-        'resources/js/pages/admin/Roles/Index.vue',
+    $indexSurfaces = [
+        [
+            'page' => 'resources/js/pages/admin/Users/Index.vue',
+            'surface' => 'resources/js/components/admin/UserIndexSurface.vue',
+            'import' => "from '@/components/admin/UserIndexSurface.vue'",
+            'head' => '<Head title="Users" />',
+        ],
+        [
+            'page' => 'resources/js/pages/admin/Roles/Index.vue',
+            'surface' => 'resources/js/components/admin/RoleIndexSurface.vue',
+            'import' => "from '@/components/admin/RoleIndexSurface.vue'",
+            'head' => '<Head title="Roles" />',
+        ],
     ];
 
-    foreach ($indexPages as $indexPage) {
-        $contents = file_get_contents($projectRoot.'/'.$indexPage);
+    foreach ($indexSurfaces as $indexSurface) {
+        $pageContents = file_get_contents($projectRoot.'/'.$indexSurface['page']);
+        $surfaceContents = file_get_contents($projectRoot.'/'.$indexSurface['surface']);
 
-        expect($contents)->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
-        expect($contents)->not->toContain('Actions</TableHead>');
-        expect($contents)->not->toContain('TrashIcon');
-        expect($contents)->toContain('font-semibold text-primary underline');
+        expect($pageContents)->toContain($indexSurface['import']);
+        expect($pageContents)->toContain($indexSurface['head']);
+        expect($pageContents)->toContain("from '@/composables/useAdminIndexTableQuery'");
+        expect($pageContents)->not->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
+        expect($pageContents)->not->toContain("from '@/components/ui/table/Table.vue'");
+
+        expect($surfaceContents)->toContain("from '@/components/admin/AdminIndexHeaderCell.vue'");
+        expect($surfaceContents)->not->toContain('Actions</TableHead>');
+        expect($surfaceContents)->not->toContain('TrashIcon');
+        expect($surfaceContents)->toContain('font-semibold text-primary underline');
     }
 
     $permissionPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Permissions/Index.vue');
@@ -452,6 +469,27 @@ it('uses shared index header controls and linked name cells on admin index pages
     expect(
         mb_strpos($permissionTableContents, "label: 'Permission'"),
     )->toBeLessThan(mb_strpos($permissionTableContents, "label: 'Group'"));
+});
+
+it('keeps audit log query wiring in the page and filter markup in an extracted surface', function () {
+    $projectRoot = dirname(__DIR__, 2);
+    $pageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/AuditLogs/Index.vue');
+    $filterContents = file_get_contents($projectRoot.'/resources/js/components/admin/AuditLogFiltersCard.vue');
+
+    expect($pageContents)->toContain("from '@/components/admin/AuditLogFiltersCard.vue'");
+    expect($pageContents)->toContain('const buildVisitQuery =');
+    expect($pageContents)->toContain('const applyFilters = () => {');
+    expect($pageContents)->toContain('const toggleFilterValue =');
+    expect($pageContents)->not->toContain("from '@/components/ui/input/Input.vue'");
+    expect($pageContents)->not->toContain("from '@/components/ui/date-picker/DatePicker.vue'");
+    expect($pageContents)->not->toContain("from '@/components/ui/checkbox/Checkbox.vue'");
+
+    expect($filterContents)->toContain("from '@/components/ui/input/Input.vue'");
+    expect($filterContents)->toContain("from '@/components/ui/date-picker/DatePicker.vue'");
+    expect($filterContents)->toContain("from '@/components/ui/checkbox/Checkbox.vue'");
+    expect($filterContents)->toContain('id="admin-audit-logs-search"');
+    expect($filterContents)->toContain('id="admin-audit-logs-actions"');
+    expect($filterContents)->not->toContain('placeholder=');
 });
 
 it('keeps auth forms in native DOM focus order without positive tabindex values', function () {
@@ -713,6 +751,11 @@ it('assigns meaningful dom ids to every page surface', function () {
         'resources/js/pages/admin/Users/Index.vue' => [
             'id="admin-users-index-page"',
             'id="admin-users-index-page-header"',
+            'id="admin-users-index-create-button"',
+        ],
+        'resources/js/components/admin/UserIndexSurface.vue' => [
+            'id="admin-users-index-mobile-controls"',
+            'id="admin-users-index-mobile-list"',
             'id="admin-users-index-table"',
         ],
         'resources/js/pages/admin/Users/Create.vue' => [
@@ -728,6 +771,11 @@ it('assigns meaningful dom ids to every page surface', function () {
         'resources/js/pages/admin/Roles/Index.vue' => [
             'id="admin-roles-index-page"',
             'id="admin-roles-index-page-header"',
+            'id="admin-roles-index-create-button"',
+        ],
+        'resources/js/components/admin/RoleIndexSurface.vue' => [
+            'id="admin-roles-index-mobile-controls"',
+            'id="admin-roles-index-mobile-list"',
             'id="admin-roles-index-table"',
         ],
         'resources/js/pages/admin/Roles/Create.vue' => [
@@ -754,6 +802,11 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="admin-permissions-edit-page"',
             'id="admin-permissions-edit-page-header"',
             'id="admin-permissions-edit-form-card"',
+        ],
+        'resources/js/components/admin/AuditLogFiltersCard.vue' => [
+            'id="admin-audit-logs-search"',
+            'id="admin-audit-logs-from"',
+            'id="admin-audit-logs-actions"',
         ],
         'resources/js/pages/settings/Profile.vue' => [
             'id="settings-profile-page"',
@@ -1068,15 +1121,19 @@ it('keeps dashboard anchor focused on summary content instead of trailing explai
 
 it('keeps admin index surfaces readable on narrow screens with dedicated mobile controls', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $usersContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
-    $rolesContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
+    $usersPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
+    $usersContents = file_get_contents($projectRoot.'/resources/js/components/admin/UserIndexSurface.vue');
+    $rolesPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
+    $rolesContents = file_get_contents($projectRoot.'/resources/js/components/admin/RoleIndexSurface.vue');
     $permissionsContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionIndexTable.vue');
     $tableCardContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminIndexTableCard.vue');
 
+    expect($usersPageContents)->toContain("from '@/components/admin/UserIndexSurface.vue'");
     expect($usersContents)->toContain('id="admin-users-index-mobile-controls"');
     expect($usersContents)->toContain('id="admin-users-index-mobile-list"');
     expect($usersContents)->toContain('as="toolbar"');
 
+    expect($rolesPageContents)->toContain("from '@/components/admin/RoleIndexSurface.vue'");
     expect($rolesContents)->toContain('id="admin-roles-index-mobile-controls"');
     expect($rolesContents)->toContain('id="admin-roles-index-mobile-list"');
     expect($rolesContents)->toContain('as="toolbar"');

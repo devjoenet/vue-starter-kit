@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Modules\IAM\Exceptions;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-
-final class UnknownPermissionsSelected extends ValidationException
+final class UnknownPermissionsSelected extends AbstractIamValidationException
 {
     /** @param  list<string>  $permissionNames */
     private function __construct(
         public readonly array $permissionNames,
     ) {
-        $validator = Validator::make([], []);
-        $validator->errors()->add('permissions', $this->validationMessage());
-
-        parent::__construct($validator);
+        parent::__construct(
+            errors: ['permissions' => [$this->validationMessage()]],
+            context: ['permission_names' => $this->permissionNames],
+        );
     }
 
     /** @param  list<string>  $permissionNames */

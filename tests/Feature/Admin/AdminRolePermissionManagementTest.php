@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\IAM\Actions\EnsureSuperAdminRole;
 use App\Modules\IAM\Models\Permission;
 use App\Modules\IAM\Models\PermissionGroup;
 use App\Modules\IAM\Models\Role;
@@ -169,6 +170,33 @@ test('admin permission keys are normalized on create while updates keep the key 
     $updateResponse->assertRedirect();
 });
 
+test('admin cannot rename the protected super-admin role', function () {
+    $role = EnsureSuperAdminRole::handle();
+
+    $response = $this->from(route('admin.roles.edit', $role))
+        ->put(route('admin.roles.update', $role), [
+            'name' => 'chief-admin',
+        ]);
+
+    $response->assertRedirect(route('admin.roles.edit', $role));
+    $response->assertSessionHasErrors(['name']);
+
+    expect($role->fresh()?->name)->toBe('super-admin');
+});
+
+test('admin cannot delete the protected super-admin role', function () {
+    $role = EnsureSuperAdminRole::handle();
+
+    $response = $this->from(route('admin.roles.edit', $role))
+        ->delete(route('admin.roles.destroy', $role));
+
+    $response->assertRedirect(route('admin.roles.edit', $role));
+    $response->assertSessionHasErrors(['role']);
+
+    expect($role->fresh())->not->toBeNull();
+    expect($role->fresh()?->name)->toBe('super-admin');
+});
+
 test('admin can create permissions with a new custom group', function () {
     $response = $this->post(route('admin.permissions.store'), [
         'name' => 'Issue Refund',
@@ -234,6 +262,21 @@ test('admin sees a validation error when syncing missing role permissions', func
     $response->assertSessionHasErrors(['permissions']);
 
     expect($role->fresh()?->permissions)->toHaveCount(0);
+});
+
+test('admin cannot narrow the protected super-admin role permission set', function () {
+    $role = EnsureSuperAdminRole::handle();
+
+    $response = $this->from(route('admin.roles.edit', $role))
+        ->put(route('admin.roles.permissions.sync', $role), [
+            'permissions' => [],
+        ]);
+
+    $response->assertRedirect(route('admin.roles.edit', $role));
+    $response->assertSessionHasErrors(['permissions']);
+
+    expect($role->fresh()?->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(Permission::query()->orderBy('name')->pluck('name')->all());
 });
 
 test('quiet success role edit requests do not flash duplicate success messages', function () {
@@ -308,4 +351,46 @@ test('quiet success permission edit requests do not flash duplicate success mess
 
     expect($permission->fresh()?->name)->toBe('users.exportData');
     expect($permission->fresh()?->label)->toBe('Export Reports');
+});
+
+test('admin permission creation keeps the protected super-admin role synced to all permissions', function () {
+    $role = EnsureSuperAdminRole::handle();
+
+    $response = $this->post(route('admin.permissions.store'), [
+        'name' => 'view billing',
+        'group' => 'billing',
+    ]);
+
+    $permission = Permission::query()->where('name', 'billing.viewBilling')->first();
+
+    expect($permission)->not->toBeNull();
+    expect($role->fresh()?->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(Permission::query()->orderBy('name')->pluck('name')->all());
+
+    $response->assertRedirect(route('admin.permissions.edit', $permission));
+});
+
+test('admin permission deletion keeps the protected super-admin role synced to the remaining permissions', function () {
+    $role = EnsureSuperAdminRole::handle();
+
+    $permission = Permission::query()->create([
+        'name' => 'users.archiveMembers',
+        'label' => 'Archive Members',
+        'permission_group_id' => PermissionGroup::query()->firstOrCreate(
+            ['slug' => 'users'],
+            ['label' => 'Users'],
+        )->id,
+        'guard_name' => 'web',
+    ]);
+
+    $response = $this->from(route('admin.permissions.edit', $permission))
+        ->delete(route('admin.permissions.destroy', $permission));
+
+    $response->assertRedirect(route('admin.permissions.index'));
+    $response->assertSessionHasNoErrors();
+
+    expect(Permission::query()->find($permission->getKey()))->toBeNull();
+    expect(Permission::query()->withTrashed()->find($permission->getKey())?->trashed())->toBeTrue();
+    expect($role->fresh()?->permissions->pluck('name')->sort()->values()->all())
+        ->toBe(Permission::query()->orderBy('name')->pluck('name')->all());
 });

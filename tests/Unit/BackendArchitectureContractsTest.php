@@ -50,7 +50,6 @@ use App\Modules\IAM\Actions\IndexUsers;
 use App\Modules\IAM\Actions\PermissionFilterOptionsCatalog;
 use App\Modules\IAM\Actions\PermissionGroupCatalog;
 use App\Modules\IAM\Actions\PermissionNormalizer;
-use App\Modules\IAM\Actions\ProfileValidationRules;
 use App\Modules\IAM\Actions\RegisterUser;
 use App\Modules\IAM\Actions\ResetUserPassword;
 use App\Modules\IAM\Actions\RoleFilterOptionsCatalog;
@@ -99,6 +98,11 @@ use App\Modules\IAM\Events\UserCreated;
 use App\Modules\IAM\Events\UserDeleted;
 use App\Modules\IAM\Events\UserRolesSynced;
 use App\Modules\IAM\Events\UserUpdated;
+use App\Modules\IAM\Exceptions\CannotDeleteLastSuperAdminUser;
+use App\Modules\IAM\Exceptions\CannotDeleteProtectedSuperAdminRole;
+use App\Modules\IAM\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
+use App\Modules\IAM\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
+use App\Modules\IAM\Exceptions\CannotRenameProtectedSuperAdminRole;
 use App\Modules\IAM\Exceptions\UnknownPermissionsSelected;
 use App\Modules\IAM\Exceptions\UnknownRolesSelected;
 use App\Modules\IAM\Models\Permission;
@@ -126,6 +130,7 @@ use App\Modules\Shared\Actions\AdminIndexQuery;
 use App\Modules\Shared\Actions\FormRequestRulesTransformer;
 use App\Modules\Shared\Actions\GetAdminIndex;
 use App\Modules\Shared\Actions\PasswordValidationRules;
+use App\Modules\Shared\Actions\UserIdentityValidationRules;
 use App\Modules\Shared\Contracts\AuditableDomainEvent;
 use App\Modules\Shared\DTOs\AdminIndexQueryData;
 use App\Modules\Shared\Models\User;
@@ -299,7 +304,12 @@ dataset('module_collaborator_classes', [
     [RoleFilterOptionsCatalog::class, 'App\\Modules\\IAM\\Actions'],
     [RoleNameNormalizer::class, 'App\\Modules\\IAM\\Actions'],
     [UserFilterOptionsCatalog::class, 'App\\Modules\\IAM\\Actions'],
-    [ProfileValidationRules::class, 'App\\Modules\\IAM\\Actions'],
+    [UserIdentityValidationRules::class, 'App\\Modules\\Shared\\Actions'],
+    [CannotRenameProtectedSuperAdminRole::class, 'App\\Modules\\IAM\\Exceptions'],
+    [CannotDeleteProtectedSuperAdminRole::class, 'App\\Modules\\IAM\\Exceptions'],
+    [CannotRemoveRequiredSuperAdminPermissions::class, 'App\\Modules\\IAM\\Exceptions'],
+    [CannotDeleteLastSuperAdminUser::class, 'App\\Modules\\IAM\\Exceptions'],
+    [CannotRemoveLastSuperAdminRoleAssignment::class, 'App\\Modules\\IAM\\Exceptions'],
     [UnknownPermissionsSelected::class, 'App\\Modules\\IAM\\Exceptions'],
     [UnknownRolesSelected::class, 'App\\Modules\\IAM\\Exceptions'],
 ]);
@@ -597,6 +607,34 @@ it('prevents non-audit modules from importing audit actions or models directly',
     }
 });
 
+it('limits cross-module imports to shared namespaces or explicit contracts', function (): void {
+    $projectRoot = dirname(__DIR__, 2);
+    $moduleDirectories = glob($projectRoot.'/app/Modules/*', GLOB_ONLYDIR) ?: [];
+
+    foreach ($moduleDirectories as $moduleDirectory) {
+        $currentModule = basename($moduleDirectory);
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDirectory));
+
+        foreach ($iterator as $fileInfo) {
+            if (! $fileInfo->isFile() || $fileInfo->getExtension() !== 'php') {
+                continue;
+            }
+
+            $contents = file_get_contents($fileInfo->getPathname());
+
+            preg_match_all('/^use App\\\\Modules\\\\([^\\\\]+)\\\\([^;]+);$/m', $contents, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as [, $targetModule, $targetPath]) {
+                if ($targetModule === $currentModule || $targetModule === 'Shared') {
+                    continue;
+                }
+
+                expect($targetPath)->toStartWith('Contracts\\');
+            }
+        }
+    }
+});
+
 it('keeps privileged admin form requests behind explicit permission checks', function (
     string $className,
     string $expectedAbilitySnippet,
@@ -623,6 +661,26 @@ it('marks frontend-bound form requests and dto payloads for TypeScript generatio
 
     expect($reflection->getAttributes(TypeScript::class))->toHaveCount(1);
 })->with('typescript_contract_classes');
+
+it('reuses the shared user identity validation collaborator across settings, auth, console, and admin user flows', function (): void {
+    $projectRoot = dirname(__DIR__, 2);
+
+    expect($projectRoot.'/app/Modules/IAM/Actions/ProfileValidationRules.php')->not->toBeFile();
+    expect($projectRoot.'/app/Modules/Shared/Actions/UserIdentityValidationRules.php')->toBeFile();
+
+    foreach ([
+        '/app/Console/Commands/CreateUserCommand.php',
+        '/app/Modules/IAM/Actions/ValidateRegistrationInput.php',
+        '/app/Modules/IAM/Requests/StoreUserRequest.php',
+        '/app/Modules/IAM/Requests/UpdateUserRequest.php',
+        '/app/Modules/Settings/Requests/ProfileUpdateRequest.php',
+    ] as $path) {
+        $contents = file_get_contents($projectRoot.$path);
+
+        expect($contents)->toContain('UserIdentityValidationRules');
+        expect($contents)->not->toContain('ProfileValidationRules');
+    }
+});
 
 it('keeps frontend page prop contracts split by domain instead of a monolithic page props file', function (): void {
     $projectRoot = dirname(__DIR__, 2);
