@@ -103,7 +103,6 @@ test('admin and settings forms keep a predictable keyboard order', function () {
     $activeElementId = static fn ($browserPage): string => (string) $browserPage->script(
         "document.activeElement?.id ?? ''",
     );
-
     // Act
 
     $adminPage = visit(route('admin.users.create', absolute: false));
@@ -145,4 +144,58 @@ test('admin and settings forms keep a predictable keyboard order', function () {
     expect($activeElementId($settingsPage))->toBe('settings-password-save-button');
 
     $settingsPage->assertNoJavaScriptErrors();
+});
+
+test('profile delete dialog keeps focus on destructive controls and returns attention to the trigger', function () {
+    // Arrange
+
+    $user = User::factory()->create([
+        'email' => 'browser-profile-delete@example.com',
+    ]);
+
+    $this->actingAs($user);
+
+    $waitForActiveElementAttribute = static fn ($browserPage, string $attribute, string $expectedValue): string => (string) $browserPage->script(<<<JS
+        (async () => {
+            for (let attempt = 0; attempt < 30; attempt += 1) {
+                if (document.activeElement?.getAttribute('{$attribute}') === '{$expectedValue}') {
+                    return document.activeElement.getAttribute('{$attribute}');
+                }
+
+                await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+
+            return document.activeElement?.getAttribute('{$attribute}') ?? '';
+        })()
+    JS);
+    $focusLivesInsideDialog = static fn ($browserPage): bool => (bool) $browserPage->script(
+        "document.activeElement?.closest('[data-slot=\"dialog-content\"]') !== null",
+    );
+
+    // Act
+
+    $page = visit(route('profile.edit', absolute: false));
+
+    $page->click('[data-test="delete-user-button"]');
+
+    // Assert
+
+    $page->assertVisible('[data-slot="dialog-content"]');
+
+    expect($focusLivesInsideDialog($page))->toBeTrue();
+
+    $page->script("document.querySelector('#settings-profile-delete-account-form')?.requestSubmit();");
+
+    expect($waitForActiveElementAttribute($page, 'name', 'password'))->toBe('password');
+    expect($focusLivesInsideDialog($page))->toBeTrue();
+
+    $page->script(<<<'JS'
+        Array.from(document.querySelectorAll('[data-slot="dialog-content"] button'))
+            .find((button) => button.textContent?.trim() === 'Cancel')
+            ?.click();
+    JS);
+
+    expect($waitForActiveElementAttribute($page, 'data-test', 'delete-user-button'))->toBe('delete-user-button');
+
+    $page->assertNoJavaScriptErrors();
 });

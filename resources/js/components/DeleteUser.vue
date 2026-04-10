@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
-import { useTemplateRef } from 'vue';
+import { nextTick, useTemplateRef } from 'vue';
 import SettingsActionRow from '@/components/SettingsActionRow.vue';
 import SettingsSectionCard from '@/components/SettingsSectionCard.vue';
 import Button from '@/components/ui/button/Button.vue';
@@ -14,7 +14,14 @@ import DialogTitle from '@/components/ui/dialog/DialogTitle.vue';
 import DialogTrigger from '@/components/ui/dialog/DialogTrigger.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { destroy } from '@/routes/profile';
-const passwordInput = useTemplateRef('passwordInput');
+
+const passwordInput = useTemplateRef<{ focus: () => void }>('passwordInput');
+
+const focusPasswordInput = async (): Promise<void> => {
+  await nextTick();
+
+  passwordInput.value?.focus();
+};
 </script>
 
 <template>
@@ -25,14 +32,15 @@ const passwordInput = useTemplateRef('passwordInput');
       <SettingsActionRow status="This action cannot be undone." status-tone="destructive">
         <Dialog>
           <DialogTrigger as-child>
-            <Button appearance="filled" variant="destructive" data-test="delete-user-button">Delete account</Button>
+            <Button id="settings-profile-delete-account-trigger-button" appearance="filled" variant="destructive" data-test="delete-user-button">Delete account</Button>
           </DialogTrigger>
 
-          <DialogContent>
+          <DialogContent id="settings-profile-delete-account-dialog">
             <Form
+              id="settings-profile-delete-account-form"
               v-bind="destroy.form()"
               reset-on-success
-              @error="() => passwordInput?.$el?.focus()"
+              @error="focusPasswordInput"
               :options="{
                 preserveScroll: true,
               }"
@@ -46,13 +54,15 @@ const passwordInput = useTemplateRef('passwordInput');
 
               <div class="rounded-[1rem] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm leading-6 text-muted-foreground">This action takes effect immediately after confirmation and cannot be recovered from this workspace.</div>
 
-              <Input id="password" ref="passwordInput" type="password" name="password" label="Password" variant="outlined" placeholder="Password" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
+              <Input id="settings-profile-delete-account-password" ref="passwordInput" type="password" name="password" label="Password" variant="outlined" :state="errors.password ? 'error' : 'default'" :message="errors.password" />
 
               <DialogFooter class="gap-2">
                 <DialogClose as-child>
                   <Button
+                    id="settings-profile-delete-account-cancel-button"
                     appearance="outline"
                     variant="muted"
+                    data-test="cancel-delete-user-button"
                     @click="
                       () => {
                         clearErrors();
@@ -64,7 +74,7 @@ const passwordInput = useTemplateRef('passwordInput');
                   </Button>
                 </DialogClose>
 
-                <Button type="submit" appearance="filled" variant="destructive" :disabled="processing" data-test="confirm-delete-user-button"> Delete account </Button>
+                <Button id="settings-profile-delete-account-confirm-button" type="submit" appearance="filled" variant="destructive" :disabled="processing" data-test="confirm-delete-user-button"> Delete account </Button>
               </DialogFooter>
             </Form>
           </DialogContent>

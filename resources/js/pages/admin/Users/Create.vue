@@ -81,6 +81,7 @@ const closeToIndex = () => {
           <EditPageActionRow
             id="admin-users-create-actions"
             class="motion-step"
+            close-id="admin-users-create-close-button"
             close-label="Back to users"
             description="Create the account when the details look correct, or return to the users index without saving."
             heading="Create this account"
