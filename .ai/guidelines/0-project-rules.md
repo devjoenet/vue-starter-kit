@@ -38,9 +38,10 @@
     - Tests
   - Creating directories beyond these need to clarify with the user first.
   - Modules should be relatively self-sufficient with the exception of calling any shared classes.
-  - Classes in `Support` and `Queries`: Support classes should be refactored to one or more `Actions` and querries should bevcome an action or applied as a function within a model.
+  - Classes in `Support` and `Queries`: Support classes should be refactored to one or more `Actions` and queries should become an action or applied as a function within a model.
   - With the exception of the `App`/`Transport` classes, classes that are directly related to a module should be moved there.
-  - Modules should only be one directory deep under `app/Modules` and not grouped beyond this. 
+  - Modules should only be one to two directories deep under `app/Modules` and not grouped beyond this.
+    - An example of a module that should have subdirectories is `app/Modules/IAM`. The members have a singular functional goal, but there are a large number of files that have enough independent properties to justify additional grouping.   
 3. When completing any task provide a Markdown summary to the user formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).
 4. Backend code has no further opportunity for refactors/changes that move code that isn't a route, controller or middleware into a module. Requests, DTO's, actions, responses, models and module specific traits/concerns/contracts should all be located in an appropriate directory within a module.
 5. There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model allowing any DB calls to be removed.
