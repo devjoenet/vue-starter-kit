@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withEvents([
         app_path('Listeners'),
         app_path('Modules/*/Listeners'),
+        app_path('Modules/*/*/Listeners'),
+    ])
+    ->withCommands([
+        ...(glob(app_path('Modules/*/Commands')) ?: []),
+        ...(glob(app_path('Modules/*/*/Commands')) ?: []),
     ])
     ->withRouting(
         web: __DIR__.'/../routes/web.php',

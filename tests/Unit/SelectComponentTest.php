@@ -20,7 +20,8 @@ it('matches the enhanced select variants structure', function () {
         ->toContain('handleTriggerKeydown')
         ->toContain('openChange')
         ->toContain('DropdownMenuRadioGroup')
-        ->toContain('role="combobox"');
+        ->toContain('role="combobox"')
+        ->toContain("if (hasLabel.value) {\n    return '';\n  }");
 
     expect($stylesContents)
         ->toContain('selectLabelVariants')

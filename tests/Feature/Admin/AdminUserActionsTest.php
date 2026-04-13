@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Actions\CreateUser;
-use App\Modules\IAM\Actions\DeleteUser;
-use App\Modules\IAM\Actions\EnsureSuperAdminRole;
-use App\Modules\IAM\Actions\SyncUserRoles;
-use App\Modules\IAM\Actions\UpdateUser;
-use App\Modules\IAM\DTOs\CreateUserData;
-use App\Modules\IAM\DTOs\SyncUserRolesData;
-use App\Modules\IAM\DTOs\UpdateUserData;
-use App\Modules\IAM\Events\UserCreated;
-use App\Modules\IAM\Events\UserRolesSynced;
-use App\Modules\IAM\Exceptions\CannotDeleteLastSuperAdminUser;
-use App\Modules\IAM\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
-use App\Modules\IAM\Exceptions\UnknownRolesSelected;
-use App\Modules\IAM\Models\Role;
+use App\Modules\IAM\Roles\Actions\EnsureSuperAdminRole;
+use App\Modules\IAM\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
+use App\Modules\IAM\Roles\Exceptions\UnknownRolesSelected;
+use App\Modules\IAM\Roles\Models\Role;
+use App\Modules\IAM\Users\Actions\CreateUser;
+use App\Modules\IAM\Users\Actions\DeleteUser;
+use App\Modules\IAM\Users\Actions\SyncUserRoles;
+use App\Modules\IAM\Users\Actions\UpdateUser;
+use App\Modules\IAM\Users\DTOs\CreateUserData;
+use App\Modules\IAM\Users\DTOs\SyncUserRolesData;
+use App\Modules\IAM\Users\DTOs\UpdateUserData;
+use App\Modules\IAM\Users\Events\UserCreated;
+use App\Modules\IAM\Users\Events\UserRolesSynced;
+use App\Modules\IAM\Users\Exceptions\CannotDeleteLastSuperAdminUser;
 use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;

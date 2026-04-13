@@ -17,13 +17,13 @@ final class GetDashboardSources
 
         return new DashboardSourcesData(
             overview: new DashboardOverviewSourceData(
-                users: $counts['users'],
-                roles: $counts['roles'],
-                permissions: $counts['permissions'],
+                users: $counts->users(),
+                roles: $counts->roles(),
+                permissions: $counts->permissions(),
             ),
-            users: new DashboardMetricSourceData(count: $counts['users']),
-            roles: new DashboardMetricSourceData(count: $counts['roles']),
-            permissions: new DashboardMetricSourceData(count: $counts['permissions']),
+            users: new DashboardMetricSourceData(count: $counts->users()),
+            roles: new DashboardMetricSourceData(count: $counts->roles()),
+            permissions: new DashboardMetricSourceData(count: $counts->permissions()),
         );
     }
 }

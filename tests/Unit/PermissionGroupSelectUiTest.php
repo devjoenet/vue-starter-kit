@@ -28,3 +28,9 @@ it('passes through input styling props', function () {
         ->not->toContain('<DropdownMenu')
         ->not->toContain('<DropdownMenuRadioItem');
 });
+
+it('keeps the group combobox free of competing floating-label placeholders', function () {
+    $contents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionGroupSelect.vue');
+
+    expect($contents)->not->toContain('placeholder=');
+});

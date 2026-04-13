@@ -133,7 +133,6 @@ watch(
       :error-text="error"
       :label="label"
       :variant="variant"
-      placeholder="Select or type a group"
       autocomplete="off"
       @focus="openSuggestions"
       @blur="closeSuggestions"

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Modules\Audit\Models\AuditLog;
-use App\Modules\IAM\Models\Permission;
-use App\Modules\IAM\Models\Role;
+use App\Modules\IAM\Permissions\Models\Permission;
+use App\Modules\IAM\Roles\Models\Role;
 use App\Modules\Shared\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Seeders\AdminAclSeeder;

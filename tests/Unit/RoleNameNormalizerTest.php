@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Actions\RoleNameNormalizer;
+use App\Modules\IAM\Roles\Actions\RoleNameNormalizer;
 
 it('normalizes role names to kebab-case', function (): void {
     $normalizer = app(RoleNameNormalizer::class);

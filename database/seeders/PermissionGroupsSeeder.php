@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Modules\IAM\Models\PermissionGroup;
+use App\Modules\IAM\Permissions\Models\PermissionGroup;
 use Illuminate\Database\Seeder;
 
 final class PermissionGroupsSeeder extends Seeder

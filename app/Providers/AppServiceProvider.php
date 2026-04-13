@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
-use App\Modules\IAM\Actions\DashboardMetrics;
-use App\Modules\IAM\Actions\GroupedPermissions;
-use App\Modules\IAM\Actions\PermissionFilterOptionsCatalog;
-use App\Modules\IAM\Actions\PermissionGroupCatalog;
-use App\Modules\IAM\Actions\RoleFilterOptionsCatalog;
-use App\Modules\IAM\Actions\UserFilterOptionsCatalog;
-use App\Modules\IAM\Contracts\GroupedPermissionsProvider;
-use App\Modules\IAM\Contracts\PermissionFilterOptionsProvider;
-use App\Modules\IAM\Contracts\PermissionGroupCatalogContract;
-use App\Modules\IAM\Contracts\RoleFilterOptionsProvider;
-use App\Modules\IAM\Contracts\UserFilterOptionsProvider;
+use App\Modules\IAM\Auth\Actions\GetAuthCounts;
+use App\Modules\IAM\Permissions\Actions\PermissionFilterOptionsCatalog;
+use App\Modules\IAM\Permissions\Actions\PermissionGroupCatalog;
+use App\Modules\IAM\Permissions\Contracts\PermissionFilterOptionsProvider;
+use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
+use App\Modules\IAM\Roles\Actions\GroupedPermissions;
+use App\Modules\IAM\Roles\Actions\RoleFilterOptionsCatalog;
+use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
+use App\Modules\IAM\Roles\Contracts\RoleFilterOptionsProvider;
+use App\Modules\IAM\Users\Actions\UserFilterOptionsCatalog;
+use App\Modules\IAM\Users\Contracts\UserFilterOptionsProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Events\QueryExecuted;
@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->singleton(DashboardMetricsProvider::class, DashboardMetrics::class);
+        $this->app->singleton(DashboardMetricsProvider::class, GetAuthCounts::class);
         $this->app->singleton(PermissionGroupCatalogContract::class, PermissionGroupCatalog::class);
         $this->app->singleton(PermissionFilterOptionsProvider::class, PermissionFilterOptionsCatalog::class);
         $this->app->singleton(GroupedPermissionsProvider::class, GroupedPermissions::class);

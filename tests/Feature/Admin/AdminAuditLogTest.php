@@ -5,9 +5,9 @@ declare(strict_types=1);
 use App\Modules\Audit\Actions\GetAuditHistoryItems;
 use App\Modules\Audit\DTOs\AuditHistoryChangeData;
 use App\Modules\Audit\Models\AuditLog;
-use App\Modules\IAM\Models\Permission;
-use App\Modules\IAM\Models\PermissionGroup;
-use App\Modules\IAM\Models\Role;
+use App\Modules\IAM\Permissions\Models\Permission;
+use App\Modules\IAM\Permissions\Models\PermissionGroup;
+use App\Modules\IAM\Roles\Models\Role;
 use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
 
