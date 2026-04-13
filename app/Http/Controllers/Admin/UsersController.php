@@ -23,22 +23,26 @@ use App\Modules\IAM\Users\Requests\UpdateUserRequest;
 use App\Modules\Shared\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class UsersController extends Controller
 {
+    #[Authorize('users.view')]
     public function index(Request $request, UserFilterOptionsProvider $filters): Response
     {
         return Inertia::render('admin/Users/Index', IndexUsers::handle($request, $filters));
     }
 
+    #[Authorize('users.create')]
     public function create(): Response
     {
         return Inertia::render('admin/Users/Create');
     }
 
+    #[Authorize('users.create')]
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $user = CreateUser::handle(
@@ -48,6 +52,7 @@ final class UsersController extends Controller
         return $this->redirectRouteWithSuccess('admin.users.edit', $user, 'User '.$user->name.' created.');
     }
 
+    #[Authorize('users.update')]
     public function edit(User $user): Response
     {
         return Inertia::render('admin/Users/Edit', [
@@ -58,6 +63,7 @@ final class UsersController extends Controller
         ]);
     }
 
+    #[Authorize('users.update')]
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         UpdateUser::handle($user, UpdateUserData::fromInput($request->safe()->only(['name', 'email', 'password'])));
@@ -65,6 +71,7 @@ final class UsersController extends Controller
         return $request->boolean('quiet_success') ? back() : $this->backWithSuccess('User updated.');
     }
 
+    #[Authorize('users.delete')]
     public function destroy(User $user): RedirectResponse
     {
         DeleteUser::handle($user);
@@ -72,6 +79,7 @@ final class UsersController extends Controller
         return $this->redirectRouteWithSuccess('admin.users.index', [], 'User deleted.');
     }
 
+    #[Authorize('users.assignRoles')]
     public function syncRoles(SyncUserRolesRequest $request, User $user): RedirectResponse
     {
         SyncUserRoles::handle($user,

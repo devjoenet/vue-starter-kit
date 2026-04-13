@@ -24,17 +24,20 @@ use App\Modules\IAM\Roles\Requests\UpdateRoleRequest;
 use App\Modules\IAM\Users\Actions\GetAssignableUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
 final class RolesController extends Controller
 {
+    #[Authorize('roles.view')]
     public function index(Request $request, RoleFilterOptionsProvider $filters): Response
     {
         return Inertia::render('admin/Roles/Index', IndexRoles::handle($request, $filters));
     }
 
+    #[Authorize('roles.create')]
     public function create(): Response
     {
         return Inertia::render('admin/Roles/Create', [
@@ -42,6 +45,7 @@ final class RolesController extends Controller
         ]);
     }
 
+    #[Authorize('roles.create')]
     public function store(StoreRoleRequest $request): RedirectResponse
     {
         $role = CreateRole::handle(CreateRoleData::fromRequest($request));
@@ -49,6 +53,7 @@ final class RolesController extends Controller
         return $this->redirectRouteWithSuccess('admin.roles.edit', $role, 'Role '.$role->name.' created.');
     }
 
+    #[Authorize('roles.update')]
     public function edit(Role $role, GroupedPermissionsProvider $groupedPermissions): Response
     {
         return Inertia::render('admin/Roles/Edit', [
@@ -59,6 +64,7 @@ final class RolesController extends Controller
         ]);
     }
 
+    #[Authorize('roles.update')]
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
         UpdateRole::handle($role, UpdateRoleData::fromRequest($request));
@@ -66,6 +72,7 @@ final class RolesController extends Controller
         return $request->boolean('quiet_success') ? back() : $this->backWithSuccess('Role '.$role->name.' updated.');
     }
 
+    #[Authorize('roles.delete')]
     public function destroy(Role $role): RedirectResponse
     {
         DeleteRole::handle($role);
@@ -73,6 +80,7 @@ final class RolesController extends Controller
         return $this->redirectRouteWithSuccess('admin.roles.index', [], 'Role '.$role->name.' deleted.');
     }
 
+    #[Authorize('roles.assignPermissions')]
     public function syncPermissions(SyncRolePermissionsRequest $request, Role $role): RedirectResponse
     {
         SyncRolePermissions::handle($role, SyncRolePermissionsData::fromRequest($request));

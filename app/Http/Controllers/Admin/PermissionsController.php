@@ -20,6 +20,7 @@ use App\Modules\IAM\Permissions\Requests\StorePermissionRequest;
 use App\Modules\IAM\Permissions\Requests\UpdatePermissionRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,11 +29,13 @@ final class PermissionsController extends Controller
 {
     public function __construct(private readonly PermissionGroupCatalogContract $catalog) {}
 
+    #[Authorize('permissions.view')]
     public function index(Request $request, PermissionFilterOptionsProvider $filters): Response
     {
         return Inertia::render('admin/Permissions/Index', IndexPermissions::handle($request, $this->catalog, $filters));
     }
 
+    #[Authorize('permissions.create')]
     public function create(): Response
     {
         return Inertia::render('admin/Permissions/Create', [
@@ -40,6 +43,7 @@ final class PermissionsController extends Controller
         ]);
     }
 
+    #[Authorize('permissions.create')]
     public function store(StorePermissionRequest $request): RedirectResponse
     {
         $permission = CreatePermission::handle(CreatePermissionData::fromRequest($request), $this->catalog);
@@ -51,6 +55,7 @@ final class PermissionsController extends Controller
         );
     }
 
+    #[Authorize('permissions.update')]
     public function edit(Permission $permission): Response
     {
         $permission->load('permissionGroup');
@@ -62,6 +67,7 @@ final class PermissionsController extends Controller
         ]);
     }
 
+    #[Authorize('permissions.update')]
     public function update(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
     {
         UpdatePermission::handle($permission, UpdatePermissionData::fromRequest($request), $this->catalog);
@@ -69,6 +75,7 @@ final class PermissionsController extends Controller
         return $request->boolean('quiet_success') ? back() : $this->backWithSuccess('Permission '.$permission->label.'  updated.');
     }
 
+    #[Authorize('permissions.delete')]
     public function destroy(Permission $permission): RedirectResponse
     {
         DeletePermission::handle($permission);

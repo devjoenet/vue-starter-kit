@@ -45,6 +45,7 @@ use App\Modules\IAM\Permissions\Actions\PermissionFilterOptionsCatalog;
 use App\Modules\IAM\Permissions\Actions\PermissionGroupCatalog;
 use App\Modules\IAM\Permissions\Actions\PermissionNormalizer;
 use App\Modules\IAM\Permissions\Actions\UpdatePermission;
+use App\Modules\IAM\Permissions\Commands\CreatePermissionCommand;
 use App\Modules\IAM\Permissions\Contracts\PermissionFilterOptionsProvider;
 use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\IAM\Permissions\DTOs\CreatePermissionData;
@@ -74,6 +75,7 @@ use App\Modules\IAM\Roles\Actions\RoleFilterOptionsCatalog;
 use App\Modules\IAM\Roles\Actions\RoleNameNormalizer;
 use App\Modules\IAM\Roles\Actions\SyncRolePermissions;
 use App\Modules\IAM\Roles\Actions\UpdateRole;
+use App\Modules\IAM\Roles\Commands\CreateRoleCommand;
 use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
 use App\Modules\IAM\Roles\Contracts\RoleFilterOptionsProvider;
 use App\Modules\IAM\Roles\DTOs\CreateRoleData;
@@ -91,6 +93,7 @@ use App\Modules\IAM\Roles\Exceptions\CannotDeleteProtectedSuperAdminRole;
 use App\Modules\IAM\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
 use App\Modules\IAM\Roles\Exceptions\CannotRenameProtectedSuperAdminRole;
 use App\Modules\IAM\Roles\Exceptions\UnknownRolesSelected;
+use App\Modules\IAM\Roles\Models\Role;
 use App\Modules\IAM\Roles\Requests\StoreRoleRequest;
 use App\Modules\IAM\Roles\Requests\SyncRolePermissionsRequest;
 use App\Modules\IAM\Roles\Requests\UpdateRoleRequest;
@@ -104,6 +107,7 @@ use App\Modules\IAM\Users\Actions\IndexUsers;
 use App\Modules\IAM\Users\Actions\SyncUserRoles;
 use App\Modules\IAM\Users\Actions\UpdateUser;
 use App\Modules\IAM\Users\Actions\UserFilterOptionsCatalog;
+use App\Modules\IAM\Users\Commands\CreateUserCommand;
 use App\Modules\IAM\Users\Contracts\UserFilterOptionsProvider;
 use App\Modules\IAM\Users\DTOs\AssignableUserData;
 use App\Modules\IAM\Users\DTOs\CreateUserData;
@@ -362,24 +366,81 @@ dataset('module_request_classes', [
 dataset('eloquent_metadata_models', [
     [
         User::class,
-        ['#[UseFactory(UserFactory::class)]', '#[Fillable([', '#[Hidden(['],
+        ['#[Table(name: \'users\')]', '#[UseFactory(UserFactory::class)]', '#[Fillable([', '#[Hidden(['],
         ['protected $fillable', 'protected $hidden', 'protected static function newFactory'],
     ],
     [
         AuditLog::class,
-        ['#[WithoutTimestamps]', '#[Fillable(['],
-        ['public $timestamps', 'protected $fillable'],
+        ['#[Table(name: \'audit_logs\', timestamps: false)]', '#[Fillable(['],
+        ['#[WithoutTimestamps]', 'public $timestamps', 'protected $fillable'],
     ],
     [
         Permission::class,
-        ['#[Fillable(['],
+        ['#[Table(name: \'permissions\')]', '#[Fillable(['],
         ['protected $fillable'],
     ],
     [
         PermissionGroup::class,
-        ['#[Fillable(['],
+        ['#[Table(name: \'permission_groups\')]', '#[Fillable(['],
         ['protected $fillable'],
     ],
+    [
+        Role::class,
+        ['#[Table(name: \'roles\')]', '#[Fillable(['],
+        ['protected $fillable'],
+    ],
+]);
+
+dataset('artisan_attribute_commands', [
+    [
+        CreateUserCommand::class,
+        ['#[Signature(\'create:user\')]', '#[Description(\'Interactively create a user via the CreateUser action.\')]'],
+        ['protected $signature', 'protected $description'],
+    ],
+    [
+        CreateRoleCommand::class,
+        ['#[Signature(\'create:role\')]', '#[Description(\'Interactively create a role via the CreateRole action.\')]'],
+        ['protected $signature', 'protected $description'],
+    ],
+    [
+        CreatePermissionCommand::class,
+        ['#[Signature(\'create:permission\')]', '#[Description(\'Interactively create a permission via the CreatePermission action.\')]'],
+        ['protected $signature', 'protected $description'],
+    ],
+]);
+
+dataset('controller_attribute_metadata', [
+    [AuditLogsController::class, ['#[Authorize(\'audit_logs.view\')]']],
+    [
+        UsersController::class,
+        [
+            '#[Authorize(\'users.view\')]',
+            '#[Authorize(\'users.create\')]',
+            '#[Authorize(\'users.update\')]',
+            '#[Authorize(\'users.delete\')]',
+            '#[Authorize(\'users.assignRoles\')]',
+        ],
+    ],
+    [
+        RolesController::class,
+        [
+            '#[Authorize(\'roles.view\')]',
+            '#[Authorize(\'roles.create\')]',
+            '#[Authorize(\'roles.update\')]',
+            '#[Authorize(\'roles.delete\')]',
+            '#[Authorize(\'roles.assignPermissions\')]',
+        ],
+    ],
+    [
+        PermissionsController::class,
+        [
+            '#[Authorize(\'permissions.view\')]',
+            '#[Authorize(\'permissions.create\')]',
+            '#[Authorize(\'permissions.update\')]',
+            '#[Authorize(\'permissions.delete\')]',
+        ],
+    ],
+    [PasswordController::class, ['#[Middleware(\'throttle:6,1\')]']],
 ]);
 
 it('keeps internal write orchestration on action classes with a public static handle entrypoint', function (string $actionClass): void {
@@ -550,6 +611,43 @@ it('keeps concrete eloquent models on native laravel metadata attributes', funct
         expect($contents)->not->toContain($legacySnippet);
     }
 })->with('eloquent_metadata_models');
+
+it('keeps artisan command metadata on native laravel command attributes', function (
+    string $className,
+    array $requiredSnippets,
+    array $legacySnippets,
+): void {
+    $reflection = new ReflectionClass($className);
+    $contents = file_get_contents($reflection->getFileName());
+
+    foreach ($requiredSnippets as $requiredSnippet) {
+        expect($contents)->toContain($requiredSnippet);
+    }
+
+    foreach ($legacySnippets as $legacySnippet) {
+        expect($contents)->not->toContain($legacySnippet);
+    }
+})->with('artisan_attribute_commands');
+
+it('keeps controller authorization and route-specific middleware on controller attributes', function (
+    string $className,
+    array $requiredSnippets,
+): void {
+    $reflection = new ReflectionClass($className);
+    $contents = file_get_contents($reflection->getFileName());
+
+    foreach ($requiredSnippets as $requiredSnippet) {
+        expect($contents)->toContain($requiredSnippet);
+    }
+})->with('controller_attribute_metadata');
+
+it('keeps route-specific authorization and throttling middleware out of the route files', function (): void {
+    $permissionsRoutes = file_get_contents(dirname(__DIR__, 2).'/routes/permissions.php');
+    $settingsRoutes = file_get_contents(dirname(__DIR__, 2).'/routes/settings.php');
+
+    expect($permissionsRoutes)->not->toContain("->middleware('can:");
+    expect($settingsRoutes)->not->toContain("->middleware('throttle:6,1')");
+});
 
 it('keeps the audit logger on a flat module action with a static handle entrypoint', function (): void {
     $reflection = new ReflectionClass(RecordAuditLog::class);

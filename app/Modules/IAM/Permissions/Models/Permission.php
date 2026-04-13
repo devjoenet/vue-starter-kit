@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\IAM\Permissions\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +26,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @property-read string $display_label
  * @property-read PermissionGroup|null $permissionGroup
  */
+#[Table(name: 'permissions')]
 #[Fillable([
     'permission_group_id',
     'name',

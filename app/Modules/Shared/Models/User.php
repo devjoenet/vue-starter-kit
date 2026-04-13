@@ -9,6 +9,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,6 +20,7 @@ use Override;
 use Spatie\Permission\Traits\HasRoles;
 
 /** @property CarbonInterface|null $email_verified_at */
+#[Table(name: 'users')]
 #[UseFactory(UserFactory::class)]
 #[Fillable([
     'name',

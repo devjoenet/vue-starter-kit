@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\IAM\Permissions\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $permissions_count
  * @property Carbon|null $deleted_at
  */
+#[Table(name: 'permission_groups')]
 #[Fillable([
     'slug',
     'label',

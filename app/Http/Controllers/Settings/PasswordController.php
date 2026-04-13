@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Settings\Actions\UpdatePassword;
 use App\Modules\Settings\Requests\PasswordUpdateRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,6 +19,7 @@ class PasswordController extends Controller
         return Inertia::render('settings/Password');
     }
 
+    #[Middleware('throttle:6,1')]
     public function update(
         PasswordUpdateRequest $request,
     ): RedirectResponse {

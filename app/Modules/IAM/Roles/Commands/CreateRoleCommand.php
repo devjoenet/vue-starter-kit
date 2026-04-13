@@ -10,6 +10,8 @@ use App\Modules\IAM\Roles\Actions\RoleNameNormalizer;
 use App\Modules\IAM\Roles\DTOs\CreateRoleData;
 use App\Modules\IAM\Users\Actions\GetAssignableUsers;
 use App\Modules\IAM\Users\DTOs\AssignableUserData;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -19,12 +21,10 @@ use function Laravel\Prompts\outro;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\warning;
 
+#[Signature('create:role')]
+#[Description('Interactively create a role via the CreateRole action.')]
 final class CreateRoleCommand extends BaseInteractiveCreateCommand
 {
-    protected $signature = 'create:role';
-
-    protected $description = 'Interactively create a role via the CreateRole action.';
-
     public function handle(RoleNameNormalizer $roleNameNormalizer): int
     {
         intro('Create a role');

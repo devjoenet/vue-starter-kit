@@ -10,18 +10,18 @@ use App\Modules\IAM\Permissions\Actions\PermissionNormalizer;
 use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
 use App\Modules\IAM\Permissions\DTOs\CreatePermissionData;
 use App\Modules\IAM\Permissions\Models\PermissionGroup;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\text;
 
+#[Signature('create:permission')]
+#[Description('Interactively create a permission via the CreatePermission action.')]
 final class CreatePermissionCommand extends BaseInteractiveCreateCommand
 {
-    protected $signature = 'create:permission';
-
-    protected $description = 'Interactively create a permission via the CreatePermission action.';
-
     public function handle(
         PermissionNormalizer $permissionNormalizer,
         PermissionGroupCatalogContract $permissionGroupCatalog,

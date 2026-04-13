@@ -11,6 +11,8 @@ use App\Modules\IAM\Users\Actions\CreateUser;
 use App\Modules\IAM\Users\DTOs\CreateUserData;
 use App\Modules\Shared\Actions\PasswordValidationRules;
 use App\Modules\Shared\Actions\UserIdentityValidationRules;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 use function Laravel\Prompts\confirm;
@@ -19,12 +21,10 @@ use function Laravel\Prompts\outro;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
 
+#[Signature('create:user')]
+#[Description('Interactively create a user via the CreateUser action.')]
 final class CreateUserCommand extends BaseInteractiveCreateCommand
 {
-    protected $signature = 'create:user';
-
-    protected $description = 'Interactively create a user via the CreateUser action.';
-
     public function handle(): int
     {
         intro('Create an admin user');
