@@ -31,7 +31,7 @@ const emphasisClassNames: Record<DashboardSurfaceEmphasis, string> = {
 
 <template>
   <Card data-slot="dashboard-surface-card" :appearance="props.appearance" :border-effect="props.borderEffect" :variant="props.variant" :class="cn(emphasisClassNames[props.emphasis], 'rounded-3xl', props.class)">
-    <div class="pointer-events-none absolute inset-px rounded-[calc(1.65rem-1px)] bg-linear-to-b from-white/10 via-transparent to-transparent dark:from-white/6" />
+    <div class="pointer-events-none absolute inset-px rounded-[calc(1.5rem-1px)] bg-linear-to-b from-white/10 via-transparent to-transparent dark:from-white/6" />
     <div class="relative flex h-full flex-col">
       <slot />
     </div>

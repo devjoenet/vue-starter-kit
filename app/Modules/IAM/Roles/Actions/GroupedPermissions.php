@@ -14,7 +14,8 @@ final class GroupedPermissions implements GroupedPermissionsProvider
     /** @return Collection<string, Collection<int, Permission>> */
     public function all(): Collection
     {
-        return Permission::query()
+        /** @var Collection<string, Collection<int, Permission>> $permissions */
+        $permissions = Permission::query()
             ->with('permissionGroup')
             ->select(['id', 'permission_group_id', 'name', 'label', 'description'])
             ->get()
@@ -25,8 +26,14 @@ final class GroupedPermissions implements GroupedPermissionsProvider
             ])
             ->groupBy(fn (Permission $permission): string => $permission->group)
             ->map(
-                fn (Collection $items): Collection => collect($items->all())->values(),
+                /**
+                 * @param  Collection<int, Permission>  $items
+                 * @return Collection<int, Permission>
+                 */
+                fn (Collection $items): Collection => $items->values(),
             );
+
+        return $permissions;
     }
 
     /** @return Collection<string, Collection<int, PermissionItemData>> */

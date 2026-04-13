@@ -1247,14 +1247,14 @@ it('keeps dashboard widget appearances and variants aligned to the shared card p
     expect($actionContents)->toContain('getCardButtonVariant');
     expect($cardComponentContents)->toContain('data-card-border-effect');
     expect($cardComponentContents)->toContain("props.borderEffect === 'trace' && 'group/card'");
-    expect($cardComponentContents)->toContain('rounded-[inherit] border opacity-0');
+    expect($cardComponentContents)->toContain('rounded-[inherit] border border-2 opacity-0');
     expect($cardComponentContents)->toContain('group-hover/card:opacity-100');
     expect($cardComponentContents)->toContain('group-hover/card:scale-x-100');
     expect($cardComponentContents)->toContain('group-focus-within/card:scale-x-100');
     expect($surfaceCardContents)->toContain("borderEffect: 'trace'");
     expect($surfaceCardContents)->toContain(':border-effect="props.borderEffect"');
     expect($surfaceCardContents)->toContain('absolute inset-px');
-    expect($surfaceCardContents)->toContain('rounded-[calc(1.65rem-1px)]');
+    expect($surfaceCardContents)->toContain('rounded-[calc(1.5rem-1px)]');
     expect($buttonContents)->toContain("type ButtonVariantName = 'muted' | 'primary' | 'secondary' | 'accent' | 'info' | 'warning' | 'success' | 'destructive';");
 });
 

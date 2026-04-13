@@ -32,7 +32,7 @@ const props = withDefaults(
         aria-hidden="true"
         :class="
           cn(
-            'pointer-events-none absolute inset-0 z-1 rounded-[inherit] border opacity-0 transition-opacity duration-700 ease-(--motion-ease-out-quart) group-focus-within/card:opacity-100 group-hover/card:opacity-100 motion-reduce:transition-none',
+            'pointer-events-none absolute inset-0 z-1 rounded-[inherit] border border-2 opacity-0 transition-opacity duration-700 ease-(--motion-ease-out-quart) group-focus-within/card:opacity-100 group-hover/card:opacity-100 motion-reduce:transition-none',
             getCardBorderTraceOverlayClassNames(props.variant),
           )
         "
