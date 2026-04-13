@@ -20,7 +20,8 @@ it('matches the enhanced date picker structure', function () {
         ->toContain('goToNextMonth')
         ->toContain('DropdownMenuContent')
         ->toContain('role="combobox"')
-        ->toContain('weekStartsOn?: 0 | 1');
+        ->toContain('weekStartsOn?: 0 | 1')
+        ->toContain("return hasLabel.value ? '' : props.placeholder;");
 
     expect($stylesContents)
         ->toContain('datePickerDayVariants')

@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
-use App\Modules\IAM\Actions\DashboardMetrics;
-use App\Modules\IAM\Actions\GroupedPermissions;
-use App\Modules\IAM\Actions\PermissionFilterOptionsCatalog;
-use App\Modules\IAM\Actions\PermissionGroupCatalog;
-use App\Modules\IAM\Actions\RoleFilterOptionsCatalog;
-use App\Modules\IAM\Actions\UserFilterOptionsCatalog;
-use App\Modules\IAM\Contracts\GroupedPermissionsProvider;
-use App\Modules\IAM\Contracts\PermissionFilterOptionsProvider;
-use App\Modules\IAM\Contracts\PermissionGroupCatalogContract;
-use App\Modules\IAM\Contracts\RoleFilterOptionsProvider;
-use App\Modules\IAM\Contracts\UserFilterOptionsProvider;
+use App\Modules\IAM\Auth\Actions\GetAuthCounts;
+use App\Modules\IAM\Permissions\Actions\PermissionFilterOptionsCatalog;
+use App\Modules\IAM\Permissions\Actions\PermissionGroupCatalog;
+use App\Modules\IAM\Permissions\Contracts\PermissionFilterOptionsProvider;
+use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
+use App\Modules\IAM\Roles\Actions\GroupedPermissions;
+use App\Modules\IAM\Roles\Actions\RoleFilterOptionsCatalog;
+use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
+use App\Modules\IAM\Roles\Contracts\RoleFilterOptionsProvider;
+use App\Modules\IAM\Users\Actions\UserFilterOptionsCatalog;
+use App\Modules\IAM\Users\Contracts\UserFilterOptionsProvider;
 
 dataset('bound_module_contracts', [
-    [DashboardMetricsProvider::class, DashboardMetrics::class],
+    [DashboardMetricsProvider::class, GetAuthCounts::class],
     [PermissionGroupCatalogContract::class, PermissionGroupCatalog::class],
     [PermissionFilterOptionsProvider::class, PermissionFilterOptionsCatalog::class],
     [GroupedPermissionsProvider::class, GroupedPermissions::class],
