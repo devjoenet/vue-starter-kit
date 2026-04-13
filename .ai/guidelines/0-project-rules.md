@@ -56,5 +56,27 @@
 8. When a Spatie Laravel Data class already represents a payload, return the DTO or a typed collection/paginator of DTOs instead of flattening it with `->all()`. Only convert to arrays when a framework or third-party API explicitly requires an array, and update contracts and callers to expect the DTO object or collection directly.
 9. Before generating any GitHub workflows or CI code, Ask the user that they are or aren't required. If they have not setup their CI/deployment tools, this could cause failures in their pipeline. This rule may be replaced with one based on that user response if they would like.
 10. Input-like form controls with floating labels should use the label as the resting placeholder until the control is active, open, focused, or filled. Do not render a separate visible placeholder that competes with the label in the empty state. This applies to standard inputs, selects, date pickers, comboboxes, and any custom field component following the shared input pattern.
+11. All classes within the project should leverage Laravel 13's expanded attribute support. This includes:
+   - Eloquent Models
+    `#[Table]: Defines the table name, primary key, and timestamp status.`
+    `#[Fillable]: Replaces the $fillable protected property for mass assignment.`
+    `#[Visible] / #[Hidden]: Controls which data is included in JSON serialization.`
+    `#[ObservedBy]: Connects an Observer class directly to the model.`
+    `#[ScopedBy]: Automatically applies a Global Scope.`
+   - Queue & Background Jobs
+    `#[Tries]: Sets the maximum number of attempts for a job.`
+    `#[Timeout]: Defines the maximum execution time in seconds.`
+    `#[Connection] / #[Queue]: Specifies the driver (Redis, Database) and queue name.`
+    `#[FailOnTimeout]: Forces a failure state if the job exceeds its time limit.`
+   - Artisan Console Commands
+    `#[Signature]: Defines the command name and arguments (e.g., app:sync {user}).`
+    `#[Description]: Provides the help text shown in the Artisan list.`
+    `#[Scheduled]: Defines the cron or human-readable schedule (e.g., daily).`
+    `#[OnOneServer]: Ensures a task only runs on a single node in a cluster.`
+   - Routing & Controllers
+    `#[Middleware]: Applies middleware to specific methods or the entire controller.`
+    `#[Authorize]: Performs a policy check before the method executes.`
+    `#[Validate]: Handles inline request validation logic.`
+    `#[MapWith]: Maps route parameters directly to specific model attributes.`
 
 ### END OF PROJECT GUIDELINE OVERRIDES - CONTINUE EVALUATING BEYOND THIS POINT AS NORMAL
