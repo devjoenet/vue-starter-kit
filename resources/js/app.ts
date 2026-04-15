@@ -2,8 +2,9 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { Fragment, createApp, h } from 'vue';
 import AppToasts from './components/AppToasts.vue';
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog.vue';
-import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
+import { resolveInertiaPage } from './lib/resolve-page-component';
+import '../css/app.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Southeast Code';
 const fallbackProgressColor = 'var(--primary)';
@@ -17,7 +18,7 @@ const resolveProgressColor = () => {
 };
 
 createInertiaApp({
-  pages: './pages',
+  resolve: resolveInertiaPage,
   title: (title) => (title ? `${title} - ${appName}` : appName),
   setup({ el, App, props, plugin }) {
     createApp({

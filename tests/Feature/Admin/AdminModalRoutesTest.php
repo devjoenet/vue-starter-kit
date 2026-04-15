@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Modules\Audit\Models\AuditLog;
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Audit\Models\AuditLog;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Models\Role;
 
 beforeEach(function () {
     $this->seed(AdminAclSeeder::class);
@@ -23,7 +23,7 @@ test('users create route renders create page', function () {
     $this->get(route('admin.users.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Create')
+            ->component('Users/Create')
         );
 });
 
@@ -34,7 +34,7 @@ test('users index route includes roles for each user row', function () {
     $this->get(route('admin.users.index'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Index')
+            ->component('Users/Index')
             ->has('users.data')
             ->has('filterOptions.roles')
             ->where('query.sort', 'id')
@@ -60,7 +60,7 @@ test('users edit route renders edit page', function () {
     $this->get(route('admin.users.edit', $target))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Edit')
+            ->component('Users/Edit')
             ->where('user.id', $target->id)
             ->where('user.name', $target->name)
             ->where('user.email', $target->email)
@@ -86,7 +86,7 @@ test('users edit route supports partial reloads for user edit state', function (
     $this->get(route('admin.users.edit', $target))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Edit')
+            ->component('Users/Edit')
             ->reloadOnly(['user', 'auth', 'flash'], fn (Assert $reload) => $reload
                 ->has('user')
                 ->has('auth.user')
@@ -109,7 +109,7 @@ test('roles create route renders create page', function () {
     $this->get(route('admin.roles.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Roles/Create')
+            ->component('Roles/Create')
         );
 });
 
@@ -124,7 +124,7 @@ test('roles index route includes user counts for each role row', function () {
     $this->get(route('admin.roles.index'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Roles/Index')
+            ->component('Roles/Index')
             ->has('roles')
             ->has('filterOptions.users')
             ->where('query.sort', 'id')
@@ -153,7 +153,7 @@ test('roles edit route renders edit page', function () {
     $this->get(route('admin.roles.edit', $role))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Roles/Edit')
+            ->component('Roles/Edit')
             ->where('role.id', $role->id)
             ->where('role.name', $role->name)
             ->has('rolePermissions')
@@ -178,7 +178,7 @@ test('roles edit route supports partial reloads for role edit state', function (
     $this->get(route('admin.roles.edit', $role))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Roles/Edit')
+            ->component('Roles/Edit')
             ->reloadOnly(['role', 'flash'], fn (Assert $reload) => $reload
                 ->has('role')
                 ->has('flash')
@@ -200,7 +200,7 @@ test('permissions create route renders create page', function () {
     $this->get(route('admin.permissions.create'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Permissions/Create')
+            ->component('Permissions/Create')
             ->has('groups')
             ->has('groups.0.slug')
             ->has('groups.0.label')
@@ -211,7 +211,7 @@ test('permissions index route supports partial reloads for permission table stat
     $this->get(route('admin.permissions.index'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Permissions/Index')
+            ->component('Permissions/Index')
             ->has('permissions')
             ->has('groups')
             ->has('filterOptions.group')
@@ -253,7 +253,7 @@ test('permissions edit route renders edit page', function () {
     $this->get(route('admin.permissions.edit', $permission))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Permissions/Edit')
+            ->component('Permissions/Edit')
             ->where('permission.id', $permission->id)
             ->where('permission.name', $permission->name)
             ->where('permission.label', 'View Custom Records')

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Modules\Core\Models\User;
 
 test('email verification screen can be rendered', function () {
     $user = User::factory()->unverified()->create();

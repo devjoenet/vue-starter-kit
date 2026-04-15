@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Modules\Audit\Actions\GetAuditHistoryItems;
-use App\Modules\Audit\DTOs\AuditHistoryChangeData;
-use App\Modules\Audit\Models\AuditLog;
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
+use Modules\Audit\Actions\GetAuditHistoryItems;
+use Modules\Audit\DTOs\AuditHistoryChangeData;
+use Modules\Audit\Models\AuditLog;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Models\Role;
 
 use function Pest\Laravel\delete;
 use function Pest\Laravel\put;

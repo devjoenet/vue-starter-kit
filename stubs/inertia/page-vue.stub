@@ -1,0 +1,9 @@
+<script setup lang="ts">
+import { Head } from '@inertiajs/vue3';
+</script>
+
+<template>
+    <div class="space-y-6">
+        <Head title="$STUDLY_NAME$ $PAGE_NAME$" />
+    </div>
+</template>

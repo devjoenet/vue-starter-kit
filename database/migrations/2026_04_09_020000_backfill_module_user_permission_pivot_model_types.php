@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Models\User;
 use Spatie\Permission\PermissionRegistrar;
 
 return new class extends Migration

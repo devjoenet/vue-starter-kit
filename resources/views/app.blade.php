@@ -67,7 +67,7 @@
       href="https://fonts.bunny.net/css?family=league-spartan:600|open-sans:300,400,600"
       rel="stylesheet" />
 
-    @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
+    @vite('resources/js/app.ts')
     @inertiaHead
   </head>
   <body class="bg-background text-foreground font-sans antialiased">

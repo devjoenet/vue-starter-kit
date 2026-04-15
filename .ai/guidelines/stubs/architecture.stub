@@ -5,14 +5,14 @@ The application is incrementally moving toward **Modules** representing distinct
 
 ### MODULE BOUNDARIES
 - **Modules must be isolated**. No direct use of another module's Models/Actions.
-- **Communication via Contracts**: Use interfaces in `app/Modules/Domain/Contracts`.
+- **Communication via Contracts**: Use interfaces in `Modules/{Domain}/app/Contracts` when an explicit boundary improves clarity or reuse.
 - **Prefer Events for Decoupling**.
 - **No Cross-Module Database Joins**.
 
 ### DIRECTORY STRUCTURE
 *(Procedure: Refer to Skill: 'scaffold-module')*
 
-- **Preferred Logic Target**: `app/Modules/{Domain}/`
+- **Preferred Logic Target**: `Modules/{Domain}/app/`
     - `Actions/`: Single-method business logic classes.
     - `Models/`: Domain-specific Eloquent models.
     - `DTOs/`: Data transfer objects for grouped inputs and outputs.
@@ -28,7 +28,7 @@ The application is incrementally moving toward **Modules** representing distinct
 - **Migration Reality**: When working in an area that has not been moved yet, follow the existing directory structure for that slice until the migration is intentional and cohesive.
 
 ### SHARED COMPONENTS
-- **Definition**: Components that represent genuinely shared platform concerns. As the modular structure grows, prefer placing them in `app/Modules/Shared/`.
+- **Definition**: Components that represent genuinely shared platform concerns. As the modular structure grows, prefer placing them in `Modules/Core/app/`.
 - **Status**: Shared models are considered **Global Contracts**. They may be used directly across module boundaries without additional interfaces.
 - **Limit**: Only truly universal domain concepts should reside in the Shared module.
 ### SERVICES

@@ -10,6 +10,7 @@ return [
 
     'auto_discover_types' => [
         app_path(),
+        base_path('Modules'),
     ],
 
     /*
@@ -30,7 +31,7 @@ return [
 
     'transformers' => [
         Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,
-        App\Modules\Shared\Actions\FormRequestRulesTransformer::class,
+        Modules\Core\Actions\FormRequestRulesTransformer::class,
         Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
         // Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class,
         Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class,

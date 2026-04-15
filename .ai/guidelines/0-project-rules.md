@@ -30,7 +30,7 @@
      */
     ```
 3. Modules
-  - Module directories should be kept within the app directory.
+  - Module directories should live under the top-level `Modules` directory.
   - Each module may contain the following directories
     - Actions
     - Commands
@@ -47,8 +47,8 @@
   - Modules should be relatively self-sufficient with the exception of calling any shared classes.
   - Classes in `Support` and `Queries`: Support classes should be refactored to one or more `Actions` and queries should become an action or applied as a function within a model.
   - With the exception of the `App`/`Transport` classes, classes that are directly related to a module should be moved there.
-  - Modules should only be one to two directories deep under `app/Modules` and not grouped beyond this.
-    - An example of a module that should have subdirectories is `app/Modules/IAM`. The members have a singular functional goal, but there are a large number of files that have enough independent properties to justify additional grouping.   
+  - Package-native modules live under top-level `Modules/{Domain}` and own their internal `app/`, `routes/`, `resources/`, and `tests/` directories.
+  - Keep module logic within `Modules/{Domain}/app/**` and avoid recreating the old `app/Modules` tree.
 4. When completing any task provide a Markdown summary to the user formatted as shown in [this example](./.ai/guidelines/stubs/code-change-summary.stub).
 5. Backend code has no further opportunity for refactors/changes that move code that isn't a route, controller or middleware into a module. Requests, DTO's, actions, responses, models and module specific traits/concerns/contracts should all be located in an appropriate directory within a module.
 6. There are no `DB::` class calls in the code that can be accomplished using Eloquent, or can have code added to a model allowing any DB calls to be removed.

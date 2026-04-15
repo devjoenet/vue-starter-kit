@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Carbon\CarbonInterface;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 test('login page includes shared flash props', function () {
@@ -17,7 +17,7 @@ test('login page includes shared flash props', function () {
         ->assertOk()
         ->assertHeader('X-Request-Id')
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/Login')
+            ->component('Auth/Login')
             ->where('name', config('app.name'))
             ->where('auth', [
                 'user' => null,
@@ -39,7 +39,7 @@ test('shared flash success is available to inertia pages', function () {
         ->get(route('login'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/Login')
+            ->component('Auth/Login')
             ->where('flash.success', 'Everything saved.')
         );
 });
@@ -52,7 +52,7 @@ test('shared flash warning and info are available to inertia pages', function ()
         ->get(route('login'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/Login')
+            ->component('Auth/Login')
             ->where('flash.warning', 'Double-check this action.')
             ->where('flash.info', 'Background sync started.')
         );
@@ -91,7 +91,7 @@ test('authenticated inertia pages include shared auth props and sidebar cookie s
         ->assertOk()
         ->assertHeader('X-Request-Id')
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Dashboard')
+            ->component('Dashboard/Index')
             ->where('name', config('app.name'))
             ->where('sidebarOpen', false)
             ->where('requestContext.id', fn (?string $requestId): bool => is_string($requestId) && $requestId !== '')

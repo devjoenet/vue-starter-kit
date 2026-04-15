@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Database\Seeders\PermissionGroupsSeeder;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Roles\Models\Role;
 use Tests\TestCase;
 
 it('creates a user through the interactive console command', function () {

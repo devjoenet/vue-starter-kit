@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2794c247134ba80f81c82b74ec12c904",
+    "content-hash": "a9f5fe18a44ed1d250877b4299398198",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3157,6 +3157,95 @@
                 }
             ],
             "time": "2026-02-16T23:10:27+00:00"
+        },
+        {
+            "name": "nwidart/laravel-modules",
+            "version": "v13.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nWidart/laravel-modules.git",
+                "reference": "6aa5461e57ac89d0dc8377cdda074c10487f92f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nWidart/laravel-modules/zipball/6aa5461e57ac89d0dc8377cdda074c10487f92f9",
+                "reference": "6aa5461e57ac89d0dc8377cdda074c10487f92f9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "php": "^8.3",
+                "wikimedia/composer-merge-plugin": "^2.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^v3.52",
+                "laravel/framework": "^13.0",
+                "laravel/pint": "^1.16",
+                "mockery/mockery": "^1.6",
+                "orchestra/testbench": "^11.0",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^12.0.",
+                "spatie/phpunit-snapshot-assertions": "^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Module": "Nwidart\\Modules\\Facades\\Module"
+                    },
+                    "providers": [
+                        "Nwidart\\Modules\\LaravelModulesServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "13.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Nwidart\\Modules\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Widart",
+                    "email": "n.widart@gmail.com",
+                    "homepage": "https://nicolaswidart.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Module management",
+            "keywords": [
+                "laravel",
+                "module",
+                "modules",
+                "nwidart",
+                "rad"
+            ],
+            "support": {
+                "issues": "https://github.com/nWidart/laravel-modules/issues",
+                "source": "https://github.com/nWidart/laravel-modules/tree/v13.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dcblogdev",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nwidart",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-19T19:16:52+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -7509,6 +7598,62 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.12.1"
             },
             "time": "2025-10-29T15:56:20+00:00"
+        },
+        {
+            "name": "wikimedia/composer-merge-plugin",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+                "reference": "a03d426c8e9fb2c9c569d9deeb31a083292788bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/a03d426c8e9fb2c9c569d9deeb31a083292788bc",
+                "reference": "a03d426c8e9fb2c9c569d9deeb31a083292788bc",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1||^2.0",
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.1||^2.0",
+                "ext-json": "*",
+                "mediawiki/mediawiki-phan-config": "0.11.1",
+                "php-parallel-lint/php-parallel-lint": "~1.3.1",
+                "phpspec/prophecy": "~1.15.0",
+                "phpunit/phpunit": "^8.5||^9.0",
+                "squizlabs/php_codesniffer": "~3.7.1"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Wikimedia\\Composer\\Merge\\V2\\MergePlugin",
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wikimedia\\Composer\\Merge\\V2\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Davis",
+                    "email": "bd808@wikimedia.org"
+                }
+            ],
+            "description": "Composer plugin to merge multiple composer.json files",
+            "support": {
+                "issues": "https://github.com/wikimedia/composer-merge-plugin/issues",
+                "source": "https://github.com/wikimedia/composer-merge-plugin/tree/v2.1.0"
+            },
+            "time": "2023-04-15T19:07:00+00:00"
         }
     ],
     "packages-dev": [
@@ -9582,16 +9727,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v3.9.4",
+            "version": "v3.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "41db11d7d6417e7164482252c380bdc03fc41397"
+                "reference": "aa637ef3c9102490e0fa9a7ea4fbdbbce4471f34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/41db11d7d6417e7164482252c380bdc03fc41397",
-                "reference": "41db11d7d6417e7164482252c380bdc03fc41397",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/aa637ef3c9102490e0fa9a7ea4fbdbbce4471f34",
+                "reference": "aa637ef3c9102490e0fa9a7ea4fbdbbce4471f34",
                 "shasum": ""
             },
             "require": {
@@ -9660,7 +9805,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v3.9.4"
+                "source": "https://github.com/larastan/larastan/tree/v3.9.5"
             },
             "funding": [
                 {
@@ -9668,7 +9813,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-02T07:08:56+00:00"
+            "time": "2026-04-11T20:10:30+00:00"
         },
         {
             "name": "laravel/boost",
@@ -11289,11 +11434,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.46",
+            "version": "2.1.47",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
-                "reference": "a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/79015445d8bd79e62b29140f12e5bfced1dcca65",
+                "reference": "79015445d8bd79e62b29140f12e5bfced1dcca65",
                 "shasum": ""
             },
             "require": {
@@ -11338,20 +11483,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-01T09:25:14+00:00"
+            "time": "2026-04-13T15:49:08+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.5.4",
+            "version": "12.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "e70f9f8870918ec31991d69133385964834f9c5a"
+                "reference": "a25bde1f8f83849f441ef5713c6466e470872a71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/e70f9f8870918ec31991d69133385964834f9c5a",
-                "reference": "e70f9f8870918ec31991d69133385964834f9c5a",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/a25bde1f8f83849f441ef5713c6466e470872a71",
+                "reference": "a25bde1f8f83849f441ef5713c6466e470872a71",
                 "shasum": ""
             },
             "require": {
@@ -11406,7 +11551,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.4"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.5.5"
             },
             "funding": [
                 {
@@ -11426,7 +11571,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-12T05:05:15+00:00"
+            "time": "2026-04-13T04:53:32+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",

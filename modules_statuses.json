@@ -1,0 +1,11 @@
+{
+    "Core": true,
+    "Marketing": true,
+    "Auth": true,
+    "Dashboard": true,
+    "Users": true,
+    "Roles": true,
+    "Permissions": true,
+    "Audit": true,
+    "Settings": true
+}

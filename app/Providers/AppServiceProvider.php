@@ -4,19 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
-use App\Modules\IAM\Auth\Actions\GetAuthCounts;
-use App\Modules\IAM\Permissions\Actions\PermissionFilterOptionsCatalog;
-use App\Modules\IAM\Permissions\Actions\PermissionGroupCatalog;
-use App\Modules\IAM\Permissions\Contracts\PermissionFilterOptionsProvider;
-use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
-use App\Modules\IAM\Roles\Actions\GroupedPermissions;
-use App\Modules\IAM\Roles\Actions\RoleFilterOptionsCatalog;
-use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
-use App\Modules\IAM\Roles\Contracts\RoleFilterOptionsProvider;
-use App\Modules\IAM\Users\Actions\UserFilterOptionsCatalog;
-use App\Modules\IAM\Users\Contracts\UserFilterOptionsProvider;
+use App\Inertia\ModulePageFinder;
 use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\Date;
@@ -31,12 +21,11 @@ class AppServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->singleton(DashboardMetricsProvider::class, GetAuthCounts::class);
-        $this->app->singleton(PermissionGroupCatalogContract::class, PermissionGroupCatalog::class);
-        $this->app->singleton(PermissionFilterOptionsProvider::class, PermissionFilterOptionsCatalog::class);
-        $this->app->singleton(GroupedPermissionsProvider::class, GroupedPermissions::class);
-        $this->app->singleton(RoleFilterOptionsProvider::class, RoleFilterOptionsCatalog::class);
-        $this->app->singleton(UserFilterOptionsProvider::class, UserFilterOptionsCatalog::class);
+        $this->app->bind('inertia.view-finder', fn (Application $app): ModulePageFinder => new ModulePageFinder(
+            $app['files'],
+            $app['config']->get('inertia.pages.paths'),
+            $app['config']->get('inertia.pages.extensions'),
+        ));
     }
 
     public function boot(): void

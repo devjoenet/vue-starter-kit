@@ -10,7 +10,7 @@ test('welcome page can be rendered', function () {
     $response->assertOk();
 
     $response->assertInertia(fn (Assert $page) => $page
-        ->component('Welcome')
+        ->component('Marketing/Welcome')
         ->has('canRegister')
     );
 });

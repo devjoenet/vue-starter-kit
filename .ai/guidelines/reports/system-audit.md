@@ -19,7 +19,7 @@ Audit owner: `platform`
 ## Positive Baseline Signals
 
 - Admin writes are consistently permission-gated at the route and request layers in `routes/permissions.php` plus the admin/settings request classes.
-- Shared identity validation now lives in `app/Modules/Shared/Actions/UserIdentityValidationRules.php`, so settings, registration, and console user creation no longer leak through an IAM-local helper.
+- Shared identity validation now lives in `Modules/Core/app/Actions/UserIdentityValidationRules.php`, so settings, registration, and console user creation no longer leak through an auth-local helper.
 - Protected `super-admin` mutations now fail through explicit IAM validation exceptions with structured context, and permission lifecycle events keep the protected role synced to the live catalog.
 - Frontend admin page layering now follows the intended shell-plus-surface split for users, roles, permissions, and audit-log filters, with maintenance tests guarding the extracted surfaces.
 
@@ -28,7 +28,7 @@ Audit owner: `platform`
 | ID | Severity | Owner | Target phase | Area | Finding | Evidence | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | A-001 | High | backend | Phase 9 | Backend architecture conformance | The codebase did not previously match several “completed” structural claims in the development plan, which made the roadmap unreliable as an architectural control. | Closed by restoring `.ai/guidelines/development-plan.md` with the live flat module and transport layout, then extending architecture tests to reject non-contract cross-module imports. | Closed |
-| A-002 | High | backend | Phase 9 | Security and compliance posture | Sensitive admin mutations previously lacked an explicit audit trail or traceability layer for role, permission, or destructive user changes. | Closed by `app/Modules/Audit/**`, the `audit_logs` table, post-commit audit writes inside sensitive admin/settings actions, and representative feature coverage in `tests/Feature/Admin/**` and `tests/Feature/Settings/**`. | Closed |
+| A-002 | High | backend | Phase 9 | Security and compliance posture | Sensitive admin mutations previously lacked an explicit audit trail or traceability layer for role, permission, or destructive user changes. | Closed by `Modules/Audit/**`, the `audit_logs` table, post-commit audit writes inside sensitive admin/settings actions, and representative feature coverage in `tests/Feature/Admin/**` and `tests/Feature/Settings/**`. | Closed |
 | A-003 | High | platform | Phase 12 | Tooling and delivery integrity | Verification is defined locally, but CI parity is still missing, so release discipline still depends on whoever remembers to run the commands that day. A flawless system. | The workspace still does not include a `.github/` workflow directory, and CI remains intentionally deferred until deployment tooling and runners are confirmed. | Open |
 | A-004 | Medium | backend | Phase 9 | Data and query efficiency | Admin filter and sort paths relied on columns that were not backed by obvious follow-up indexes for the current read patterns. | Closed by `database/migrations/2026_04_03_014922_add_admin_index_support_indexes_to_acl_tables.php`, which adds dedicated non-unique indexes for the current soft-delete-aware sort and filter paths. | Closed |
 | A-005 | Medium | frontend | Phase 12 | UX coherence and architecture hygiene | The old dashboard-drift finding no longer matched the accepted product baseline and had become stale documentation rather than an actionable defect. | Closed by adopting the current dashboard composition as the live baseline in `.ai/guidelines/development-plan.md`, extracting the remaining page-heavy admin index and audit filter surfaces, and updating frontend guardrails to enforce the page-shell versus feature-surface split. | Closed |
@@ -94,7 +94,7 @@ This is the current regression baseline after the Phase 12 hardening pass. Futur
 
 ## Phase 12 Follow-Through
 
-- moved shared user identity validation rules into `app/Modules/Shared/Actions/UserIdentityValidationRules.php`
+- moved shared user identity validation rules into `Modules/Core/app/Actions/UserIdentityValidationRules.php`
 - added structured IAM validation exceptions for unknown selections and protected super-admin mutations
 - enforced protected `super-admin` invariants for rename, delete, permission sync, last-user deletion, and last-role-removal paths
 - added the permission lifecycle listener that keeps the protected `super-admin` role synced with the full permission catalog

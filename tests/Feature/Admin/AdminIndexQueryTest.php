@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Models\Role;
 
 beforeEach(function (): void {
     $this->seed(AdminAclSeeder::class);
@@ -55,7 +55,7 @@ test('users index applies OR-within-column and AND-across-column filters', funct
     ]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Index')
+            ->component('Users/Index')
             ->where('query.sort', 'email')
             ->where('query.direction', 'desc')
             ->where('query.filters.name', ['Avery Stone', 'Blake Hart'])
@@ -88,7 +88,7 @@ test('users pagination preserves active sort and filter query state', function (
     ]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Users/Index')
+            ->component('Users/Index')
             ->where('users.next_page_url', function (?string $nextPageUrl): bool {
                 if ($nextPageUrl === null) {
                     return false;
@@ -129,7 +129,7 @@ test('roles index sorts filtered rows by a single active column', function (): v
     ]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Roles/Index')
+            ->component('Roles/Index')
             ->where('query.sort', 'users')
             ->where('query.direction', 'desc')
             ->where('query.filters.users', ['1', '3'])
@@ -180,7 +180,7 @@ test('permissions index uses a flat listing contract and exact-match filters', f
     ]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Permissions/Index')
+            ->component('Permissions/Index')
             ->missing('permissionsByGroup')
             ->has('groups')
             ->where('query.sort', 'permission_check')

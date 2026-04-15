@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Models\User;
 
 beforeEach(function (): void {
     // Arrange

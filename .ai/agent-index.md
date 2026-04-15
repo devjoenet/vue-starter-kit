@@ -23,7 +23,7 @@ This indexes the actual `.ai/` and `.agents/` directories in this repository. Wh
 
 | Path | Kind | What It Yields or Steers |
 | --- | --- | --- |
-| `.ai/guidelines/0-project-rules.md` | Hard override | Pushes work toward strict docblock formatting, module-local PHP classes under `app/Modules/*`, Eloquent over avoidable `DB::` calls, named exceptions, no GitHub workflows yet, and a required markdown close-out format. |
+| `.ai/guidelines/0-project-rules.md` | Hard override | Pushes work toward strict docblock formatting, package-native module-local PHP classes under `Modules/*/app/*`, Eloquent over avoidable `DB::` calls, named exceptions, no GitHub workflows yet, and a required markdown close-out format. |
 | `.ai/guidelines/00-standards.blade.php` | Assembler | Builds the authoritative runtime standards from the local stub files. It does not scaffold code directly; it turns the stubs into the rules that govern edits and finalization. |
 | `.ai/guidelines/development-plan.md` | Roadmap | Defines the live architecture baseline, records completed phases against the actual repo shape, and sets the next approved implementation phases. |
 | `.ai/guidelines/design-context.md` | Design baseline | Pushes UI decisions toward the Southeast Code visual system: `Welcome.vue` as the shell baseline, tinted neutrals, restrained glow, brand teal plus action cyan, and explicit avoidance of generic admin/dashboard furniture. |
@@ -52,7 +52,7 @@ This indexes the actual `.ai/` and `.agents/` directories in this repository. Wh
 | `.ai/skills/format-phpunit-tests/SKILL.md` | Skill | Yields mirrored test locations, base-class choices, AAA+A comments, generator-based data providers, and `CoversClass`. |
 | `.ai/skills/format-phpunit-tests/examples/FunctionalTest.php` | Example | Demonstrates the expected functional-test structure and spacing. |
 | `.ai/skills/format-phpunit-tests/examples/IntegrationTest.php` | Example | Demonstrates the expected integration-test structure, including `test_it_integrates()`. |
-| `.ai/skills/scaffold-module/SKILL.md` | Skill | Yields `app/Modules/{Domain}` plus the corresponding HTTP transport layer and nudges route registration plus cross-module isolation checks. |
+| `.ai/skills/scaffold-module/SKILL.md` | Skill | Yields package-native `Modules/{Domain}` structure plus module-local transport, routes, and boundary checks. |
 | `.ai/skills/scaffold-module/examples/directory-tree.txt` | Example | Shows the target module and transport directory tree. |
 | `.ai/skills/task-finalization/SKILL.md` | Skill | Steers end-of-task verification toward `composer style:fix`, `composer phpstan`, `composer rector`, `composer test:type-coverage`, and the test suite. |
 

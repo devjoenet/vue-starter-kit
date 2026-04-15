@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Modules\Audit\Models\AuditLog;
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Seeders\AdminAclSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Audit\Models\AuditLog;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Roles\Models\Role;
 
 use function Pest\Laravel\get;
 
@@ -89,7 +89,7 @@ test('audit log index renders paginated filtered audit data', function (): void 
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/AuditLogs/Index')
+            ->component('Audit/Index')
             ->where('query.sort', 'event')
             ->where('query.direction', 'asc')
             ->where('query.actors', ['casey@example.test'])
@@ -114,9 +114,9 @@ test('audit log index renders paginated filtered audit data', function (): void 
                 'users.deleted',
             ])
             ->where('filterOptions.subject_types', [
+                User::class,
                 Permission::class,
                 Role::class,
-                User::class,
             ])
             ->reloadOnly(['auditLogs', 'filterOptions', 'query'], fn (Assert $reload) => $reload
                 ->has('auditLogs.data')

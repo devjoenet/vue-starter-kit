@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Laravel\Fortify\Features;
+use Modules\Core\Models\User;
 use PragmaRX\Google2FA\Google2FA;
 
 test('users can enable, confirm, use recovery codes for, and disable two factor authentication through the browser', function () {

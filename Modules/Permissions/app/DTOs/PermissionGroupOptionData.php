@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Modules\Permissions\DTOs;
+
+use Modules\Permissions\Models\PermissionGroup;
+use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
+#[TypeScript]
+final class PermissionGroupOptionData extends Data
+{
+    public function __construct(
+        public string $slug,
+        public string $label,
+        public ?string $description,
+        public int $permissions_count,
+    ) {}
+
+    public static function fromModel(PermissionGroup $group): self
+    {
+        return new self(
+            slug: $group->slug,
+            label: $group->label,
+            description: $group->description,
+            permissions_count: (int) $group->permissions_count,
+        );
+    }
+}

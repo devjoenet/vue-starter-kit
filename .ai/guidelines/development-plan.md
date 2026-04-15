@@ -5,9 +5,9 @@ Owner: `platform`
 
 ## Live Architecture Baseline
 
-- Domain modules live in `app/Modules/{Audit,Dashboard,IAM,Settings,Shared}`.
-- HTTP transport currently lives in `app/Http/Controllers/{Admin,Settings}` and `app/Http/Requests/{Admin,Settings}`.
-- Cross-module reuse is restricted to `Shared` collaborators and explicit `Contracts`; direct non-contract module imports are treated as architecture drift.
+- Domain modules live in `Modules/{Audit,Auth,Core,Dashboard,Marketing,Permissions,Roles,Settings,Users}`.
+- HTTP transport for feature-owned slices now lives inside each module under `Modules/{Domain}/app/Http/**`.
+- Cross-module reuse is allowed when it stays coherent and feature-owned; contract indirection is still useful, but it is no longer the only approved path.
 - Admin page shells own layout, breadcrumbs, document titles, and query wiring. Feature surfaces own table, mobile-list, and filter-panel markup.
 - The current admin dashboard board composition is the accepted baseline. The old dashboard-drift note is retired as stale documentation, not a standing redesign requirement.
 

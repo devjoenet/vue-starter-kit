@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
+use Modules\Core\Models\User;
 
 test('sends verification notification', function () {
     Notification::fake();

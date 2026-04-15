@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Core\Models\User;
 
 test('confirm password screen can be rendered', function () {
     $user = User::factory()->create();
@@ -13,7 +13,7 @@ test('confirm password screen can be rendered', function () {
     $response->assertOk();
 
     $response->assertInertia(fn (Assert $page) => $page
-        ->component('auth/ConfirmPassword')
+        ->component('Auth/ConfirmPassword')
     );
 });
 

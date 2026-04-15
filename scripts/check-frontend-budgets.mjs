@@ -15,16 +15,16 @@ const budgets = {
     css: 240 * 1024,
     js: 340 * 1024,
   },
-  'resources/js/pages/admin/Dashboard.vue': {
+  'Modules/Dashboard/resources/js/Pages/Index.vue': {
     js: 520 * 1024,
   },
-  'resources/js/pages/admin/Users/Index.vue': {
+  'Modules/Users/resources/js/Pages/Index.vue': {
     js: 520 * 1024,
   },
-  'resources/js/pages/admin/Roles/Index.vue': {
+  'Modules/Roles/resources/js/Pages/Index.vue': {
     js: 520 * 1024,
   },
-  'resources/js/pages/admin/Permissions/Index.vue': {
+  'Modules/Permissions/resources/js/Pages/Index.vue': {
     js: 520 * 1024,
   },
 };

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Laravel\Fortify\Features;
+use Modules\Core\Models\User;
 
 test('public auth pages render without javascript errors', function () {
     // Arrange

@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Roles\Actions\EnsureSuperAdminRole;
-use App\Modules\IAM\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
-use App\Modules\IAM\Roles\Exceptions\UnknownRolesSelected;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\IAM\Users\Actions\CreateUser;
-use App\Modules\IAM\Users\Actions\DeleteUser;
-use App\Modules\IAM\Users\Actions\SyncUserRoles;
-use App\Modules\IAM\Users\Actions\UpdateUser;
-use App\Modules\IAM\Users\DTOs\CreateUserData;
-use App\Modules\IAM\Users\DTOs\SyncUserRolesData;
-use App\Modules\IAM\Users\DTOs\UpdateUserData;
-use App\Modules\IAM\Users\Events\UserCreated;
-use App\Modules\IAM\Users\Events\UserRolesSynced;
-use App\Modules\IAM\Users\Exceptions\CannotDeleteLastSuperAdminUser;
-use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\Models\User;
+use Modules\Roles\Actions\EnsureSuperAdminRole;
+use Modules\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
+use Modules\Roles\Exceptions\UnknownRolesSelected;
+use Modules\Roles\Models\Role;
+use Modules\Users\Actions\CreateUser;
+use Modules\Users\Actions\DeleteUser;
+use Modules\Users\Actions\SyncUserRoles;
+use Modules\Users\Actions\UpdateUser;
+use Modules\Users\DTOs\CreateUserData;
+use Modules\Users\DTOs\SyncUserRolesData;
+use Modules\Users\DTOs\UpdateUserData;
+use Modules\Users\Events\UserCreated;
+use Modules\Users\Events\UserRolesSynced;
+use Modules\Users\Exceptions\CannotDeleteLastSuperAdminUser;
 
 test('create user action persists a user with a hashed password', function (): void {
     $user = CreateUser::handle(new CreateUserData(

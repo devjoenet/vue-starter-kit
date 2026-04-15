@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
+use Modules\Core\Models\User;
 
 test('reset password link screen can be rendered', function () {
     $response = $this->get(route('password.request'));

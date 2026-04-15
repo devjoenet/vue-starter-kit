@@ -2,150 +2,150 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
-use App\Modules\Audit\Actions\GetAuditHistoryItems;
-use App\Modules\Audit\Actions\GetAuditLogFilterOptions;
-use App\Modules\Audit\Actions\GetAuditLogIndexItems;
-use App\Modules\Audit\Actions\IndexAuditLogs;
-use App\Modules\Audit\Actions\RecordAuditLog;
-use App\Modules\Audit\DTOs\AuditHistoryChangeData;
-use App\Modules\Audit\DTOs\AuditHistoryItemData;
-use App\Modules\Audit\DTOs\AuditLogIndexFilterOptionsData;
-use App\Modules\Audit\DTOs\AuditLogIndexItemData;
-use App\Modules\Audit\DTOs\AuditLogIndexQueryData;
-use App\Modules\Audit\Listeners\RecordAuditableDomainEvent;
-use App\Modules\Audit\Models\AuditLog;
-use App\Modules\Audit\Requests\IndexAuditLogsRequest;
-use App\Modules\Dashboard\Actions\GetDashboardMetrics;
-use App\Modules\Dashboard\Actions\GetDashboardSources;
-use App\Modules\Dashboard\Contracts\DashboardMetricCounts;
-use App\Modules\Dashboard\Contracts\DashboardMetricsProvider;
-use App\Modules\Dashboard\DTOs\DashboardMetricSourceData;
-use App\Modules\Dashboard\DTOs\DashboardOverviewSourceData;
-use App\Modules\Dashboard\DTOs\DashboardSourcesData;
-use App\Modules\IAM\Auth\Actions\GetAuthCounts;
-use App\Modules\IAM\Auth\Actions\RegisterUser;
-use App\Modules\IAM\Auth\Actions\ResetUserPassword;
-use App\Modules\IAM\Auth\DTOs\AuthCountsData;
-use App\Modules\IAM\DTOs\AuthenticatedUserData;
-use App\Modules\IAM\DTOs\SharedAuthData;
-use App\Modules\IAM\Permissions\Actions\CountPermissions;
-use App\Modules\IAM\Permissions\Actions\CreatePermission;
-use App\Modules\IAM\Permissions\Actions\DeletePermission;
-use App\Modules\IAM\Permissions\Actions\GetPermissionFilterOptions;
-use App\Modules\IAM\Permissions\Actions\GetPermissionIndexItems;
-use App\Modules\IAM\Permissions\Actions\IndexPermissions;
-use App\Modules\IAM\Permissions\Actions\PermissionFilterOptionsCatalog;
-use App\Modules\IAM\Permissions\Actions\PermissionGroupCatalog;
-use App\Modules\IAM\Permissions\Actions\PermissionNormalizer;
-use App\Modules\IAM\Permissions\Actions\UpdatePermission;
-use App\Modules\IAM\Permissions\Commands\CreatePermissionCommand;
-use App\Modules\IAM\Permissions\Contracts\PermissionFilterOptionsProvider;
-use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
-use App\Modules\IAM\Permissions\DTOs\CreatePermissionData;
-use App\Modules\IAM\Permissions\DTOs\PermissionGroupOptionData;
-use App\Modules\IAM\Permissions\DTOs\PermissionIndexFilterOptionsData;
-use App\Modules\IAM\Permissions\DTOs\PermissionIndexItemData;
-use App\Modules\IAM\Permissions\DTOs\PermissionItemData;
-use App\Modules\IAM\Permissions\DTOs\UpdatePermissionData;
-use App\Modules\IAM\Permissions\Events\PermissionCreated;
-use App\Modules\IAM\Permissions\Events\PermissionDeleted;
-use App\Modules\IAM\Permissions\Events\PermissionUpdated;
-use App\Modules\IAM\Permissions\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
-use App\Modules\IAM\Permissions\Exceptions\UnknownPermissionsSelected;
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Permissions\Requests\StorePermissionRequest;
-use App\Modules\IAM\Permissions\Requests\UpdatePermissionRequest;
-use App\Modules\IAM\Roles\Actions\CountRoles;
-use App\Modules\IAM\Roles\Actions\CreateRole;
-use App\Modules\IAM\Roles\Actions\DeleteRole;
-use App\Modules\IAM\Roles\Actions\GetEditableRoles;
-use App\Modules\IAM\Roles\Actions\GetRoleFilterOptions;
-use App\Modules\IAM\Roles\Actions\GetRoleIndexItems;
-use App\Modules\IAM\Roles\Actions\GroupedPermissions;
-use App\Modules\IAM\Roles\Actions\IndexRoles;
-use App\Modules\IAM\Roles\Actions\RoleFilterOptionsCatalog;
-use App\Modules\IAM\Roles\Actions\RoleNameNormalizer;
-use App\Modules\IAM\Roles\Actions\SyncRolePermissions;
-use App\Modules\IAM\Roles\Actions\UpdateRole;
-use App\Modules\IAM\Roles\Commands\CreateRoleCommand;
-use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
-use App\Modules\IAM\Roles\Contracts\RoleFilterOptionsProvider;
-use App\Modules\IAM\Roles\DTOs\CreateRoleData;
-use App\Modules\IAM\Roles\DTOs\EditableRoleData;
-use App\Modules\IAM\Roles\DTOs\RoleIndexFilterOptionsData;
-use App\Modules\IAM\Roles\DTOs\RoleListItemData;
-use App\Modules\IAM\Roles\DTOs\RoleOptionData;
-use App\Modules\IAM\Roles\DTOs\SyncRolePermissionsData;
-use App\Modules\IAM\Roles\DTOs\UpdateRoleData;
-use App\Modules\IAM\Roles\Events\RoleCreated;
-use App\Modules\IAM\Roles\Events\RoleDeleted;
-use App\Modules\IAM\Roles\Events\RolePermissionsSynced;
-use App\Modules\IAM\Roles\Events\RoleUpdated;
-use App\Modules\IAM\Roles\Exceptions\CannotDeleteProtectedSuperAdminRole;
-use App\Modules\IAM\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
-use App\Modules\IAM\Roles\Exceptions\CannotRenameProtectedSuperAdminRole;
-use App\Modules\IAM\Roles\Exceptions\UnknownRolesSelected;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\IAM\Roles\Requests\StoreRoleRequest;
-use App\Modules\IAM\Roles\Requests\SyncRolePermissionsRequest;
-use App\Modules\IAM\Roles\Requests\UpdateRoleRequest;
-use App\Modules\IAM\Users\Actions\CountUsers;
-use App\Modules\IAM\Users\Actions\CreateUser;
-use App\Modules\IAM\Users\Actions\DeleteUser;
-use App\Modules\IAM\Users\Actions\GetAssignableUsers;
-use App\Modules\IAM\Users\Actions\GetUserFilterOptions;
-use App\Modules\IAM\Users\Actions\GetUserIndexItems;
-use App\Modules\IAM\Users\Actions\IndexUsers;
-use App\Modules\IAM\Users\Actions\SyncUserRoles;
-use App\Modules\IAM\Users\Actions\UpdateUser;
-use App\Modules\IAM\Users\Actions\UserFilterOptionsCatalog;
-use App\Modules\IAM\Users\Commands\CreateUserCommand;
-use App\Modules\IAM\Users\Contracts\UserFilterOptionsProvider;
-use App\Modules\IAM\Users\DTOs\AssignableUserData;
-use App\Modules\IAM\Users\DTOs\CreateUserData;
-use App\Modules\IAM\Users\DTOs\EditableUserData;
-use App\Modules\IAM\Users\DTOs\SyncUserRolesData;
-use App\Modules\IAM\Users\DTOs\UpdateUserData;
-use App\Modules\IAM\Users\DTOs\UserIndexFilterOptionsData;
-use App\Modules\IAM\Users\DTOs\UserListItemData;
-use App\Modules\IAM\Users\Events\UserCreated;
-use App\Modules\IAM\Users\Events\UserDeleted;
-use App\Modules\IAM\Users\Events\UserRolesSynced;
-use App\Modules\IAM\Users\Events\UserUpdated;
-use App\Modules\IAM\Users\Exceptions\CannotDeleteLastSuperAdminUser;
-use App\Modules\IAM\Users\Requests\StoreUserRequest;
-use App\Modules\IAM\Users\Requests\SyncUserRolesRequest;
-use App\Modules\IAM\Users\Requests\UpdateUserRequest;
-use App\Modules\Settings\Actions\DeleteProfile;
-use App\Modules\Settings\Actions\UpdatePassword;
-use App\Modules\Settings\Actions\UpdateProfile;
-use App\Modules\Settings\DTOs\UpdateProfileData;
-use App\Modules\Settings\Events\PasswordUpdated;
-use App\Modules\Settings\Events\ProfileDeleted;
-use App\Modules\Settings\Events\ProfileUpdated;
-use App\Modules\Settings\Requests\PasswordUpdateRequest;
-use App\Modules\Settings\Requests\ProfileDeleteRequest;
-use App\Modules\Settings\Requests\ProfileUpdateRequest;
-use App\Modules\Settings\Requests\TwoFactorAuthenticationRequest;
-use App\Modules\Shared\Actions\AdminIndexQuery;
-use App\Modules\Shared\Actions\FormRequestRulesTransformer;
-use App\Modules\Shared\Actions\GetAdminIndex;
-use App\Modules\Shared\Actions\PasswordValidationRules;
-use App\Modules\Shared\Actions\UserIdentityValidationRules;
-use App\Modules\Shared\Contracts\AuditableDomainEvent;
-use App\Modules\Shared\DTOs\AdminIndexQueryData;
-use App\Modules\Shared\Models\User;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
+use Modules\Audit\Actions\GetAuditHistoryItems;
+use Modules\Audit\Actions\GetAuditLogFilterOptions;
+use Modules\Audit\Actions\GetAuditLogIndexItems;
+use Modules\Audit\Actions\IndexAuditLogs;
+use Modules\Audit\Actions\RecordAuditLog;
+use Modules\Audit\DTOs\AuditHistoryChangeData;
+use Modules\Audit\DTOs\AuditHistoryItemData;
+use Modules\Audit\DTOs\AuditLogIndexFilterOptionsData;
+use Modules\Audit\DTOs\AuditLogIndexItemData;
+use Modules\Audit\DTOs\AuditLogIndexQueryData;
+use Modules\Audit\Http\Controllers\AuditLogsController;
+use Modules\Audit\Http\Requests\IndexAuditLogsRequest;
+use Modules\Audit\Listeners\RecordAuditableDomainEvent;
+use Modules\Audit\Models\AuditLog;
+use Modules\Auth\Actions\GetAuthCounts;
+use Modules\Auth\Actions\RegisterUser;
+use Modules\Auth\Actions\ResetUserPassword;
+use Modules\Auth\DTOs\AuthCountsData;
+use Modules\Core\Actions\AdminIndexQuery;
+use Modules\Core\Actions\FormRequestRulesTransformer;
+use Modules\Core\Actions\GetAdminIndex;
+use Modules\Core\Actions\PasswordValidationRules;
+use Modules\Core\Actions\UserIdentityValidationRules;
+use Modules\Core\Contracts\AuditableDomainEvent;
+use Modules\Core\DTOs\AdminIndexQueryData;
+use Modules\Core\DTOs\AuthenticatedUserData;
+use Modules\Core\DTOs\SharedAuthData;
+use Modules\Core\Models\User;
+use Modules\Dashboard\Actions\GetDashboardMetrics;
+use Modules\Dashboard\Actions\GetDashboardSources;
+use Modules\Dashboard\Contracts\DashboardMetricCounts;
+use Modules\Dashboard\Contracts\DashboardMetricsProvider;
+use Modules\Dashboard\DTOs\DashboardMetricSourceData;
+use Modules\Dashboard\DTOs\DashboardOverviewSourceData;
+use Modules\Dashboard\DTOs\DashboardSourcesData;
+use Modules\Permissions\Actions\CountPermissions;
+use Modules\Permissions\Actions\CreatePermission;
+use Modules\Permissions\Actions\DeletePermission;
+use Modules\Permissions\Actions\GetPermissionFilterOptions;
+use Modules\Permissions\Actions\GetPermissionIndexItems;
+use Modules\Permissions\Actions\IndexPermissions;
+use Modules\Permissions\Actions\PermissionFilterOptionsCatalog;
+use Modules\Permissions\Actions\PermissionGroupCatalog;
+use Modules\Permissions\Actions\PermissionNormalizer;
+use Modules\Permissions\Actions\UpdatePermission;
+use Modules\Permissions\Console\CreatePermissionCommand;
+use Modules\Permissions\Contracts\PermissionFilterOptionsProvider;
+use Modules\Permissions\Contracts\PermissionGroupCatalogContract;
+use Modules\Permissions\DTOs\CreatePermissionData;
+use Modules\Permissions\DTOs\PermissionGroupOptionData;
+use Modules\Permissions\DTOs\PermissionIndexFilterOptionsData;
+use Modules\Permissions\DTOs\PermissionIndexItemData;
+use Modules\Permissions\DTOs\PermissionItemData;
+use Modules\Permissions\DTOs\UpdatePermissionData;
+use Modules\Permissions\Events\PermissionCreated;
+use Modules\Permissions\Events\PermissionDeleted;
+use Modules\Permissions\Events\PermissionUpdated;
+use Modules\Permissions\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
+use Modules\Permissions\Exceptions\UnknownPermissionsSelected;
+use Modules\Permissions\Http\Controllers\PermissionsController;
+use Modules\Permissions\Http\Requests\StorePermissionRequest;
+use Modules\Permissions\Http\Requests\UpdatePermissionRequest;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Actions\CountRoles;
+use Modules\Roles\Actions\CreateRole;
+use Modules\Roles\Actions\DeleteRole;
+use Modules\Roles\Actions\GetEditableRoles;
+use Modules\Roles\Actions\GetRoleFilterOptions;
+use Modules\Roles\Actions\GetRoleIndexItems;
+use Modules\Roles\Actions\GroupedPermissions;
+use Modules\Roles\Actions\IndexRoles;
+use Modules\Roles\Actions\RoleFilterOptionsCatalog;
+use Modules\Roles\Actions\RoleNameNormalizer;
+use Modules\Roles\Actions\SyncRolePermissions;
+use Modules\Roles\Actions\UpdateRole;
+use Modules\Roles\Console\CreateRoleCommand;
+use Modules\Roles\Contracts\GroupedPermissionsProvider;
+use Modules\Roles\Contracts\RoleFilterOptionsProvider;
+use Modules\Roles\DTOs\CreateRoleData;
+use Modules\Roles\DTOs\EditableRoleData;
+use Modules\Roles\DTOs\RoleIndexFilterOptionsData;
+use Modules\Roles\DTOs\RoleListItemData;
+use Modules\Roles\DTOs\RoleOptionData;
+use Modules\Roles\DTOs\SyncRolePermissionsData;
+use Modules\Roles\DTOs\UpdateRoleData;
+use Modules\Roles\Events\RoleCreated;
+use Modules\Roles\Events\RoleDeleted;
+use Modules\Roles\Events\RolePermissionsSynced;
+use Modules\Roles\Events\RoleUpdated;
+use Modules\Roles\Exceptions\CannotDeleteProtectedSuperAdminRole;
+use Modules\Roles\Exceptions\CannotRemoveLastSuperAdminRoleAssignment;
+use Modules\Roles\Exceptions\CannotRenameProtectedSuperAdminRole;
+use Modules\Roles\Exceptions\UnknownRolesSelected;
+use Modules\Roles\Http\Controllers\RolesController;
+use Modules\Roles\Http\Requests\StoreRoleRequest;
+use Modules\Roles\Http\Requests\SyncRolePermissionsRequest;
+use Modules\Roles\Http\Requests\UpdateRoleRequest;
+use Modules\Roles\Models\Role;
+use Modules\Settings\Actions\DeleteProfile;
+use Modules\Settings\Actions\UpdatePassword;
+use Modules\Settings\Actions\UpdateProfile;
+use Modules\Settings\DTOs\UpdateProfileData;
+use Modules\Settings\Events\PasswordUpdated;
+use Modules\Settings\Events\ProfileDeleted;
+use Modules\Settings\Events\ProfileUpdated;
+use Modules\Settings\Http\Controllers\PasswordController;
+use Modules\Settings\Http\Controllers\ProfileController;
+use Modules\Settings\Http\Controllers\TwoFactorAuthenticationController;
+use Modules\Settings\Http\Requests\PasswordUpdateRequest;
+use Modules\Settings\Http\Requests\ProfileDeleteRequest;
+use Modules\Settings\Http\Requests\ProfileUpdateRequest;
+use Modules\Settings\Http\Requests\TwoFactorAuthenticationRequest;
+use Modules\Users\Actions\CountUsers;
+use Modules\Users\Actions\CreateUser;
+use Modules\Users\Actions\DeleteUser;
+use Modules\Users\Actions\GetAssignableUsers;
+use Modules\Users\Actions\GetUserFilterOptions;
+use Modules\Users\Actions\GetUserIndexItems;
+use Modules\Users\Actions\IndexUsers;
+use Modules\Users\Actions\SyncUserRoles;
+use Modules\Users\Actions\UpdateUser;
+use Modules\Users\Actions\UserFilterOptionsCatalog;
+use Modules\Users\Console\CreateUserCommand;
+use Modules\Users\Contracts\UserFilterOptionsProvider;
+use Modules\Users\DTOs\AssignableUserData;
+use Modules\Users\DTOs\CreateUserData;
+use Modules\Users\DTOs\EditableUserData;
+use Modules\Users\DTOs\SyncUserRolesData;
+use Modules\Users\DTOs\UpdateUserData;
+use Modules\Users\DTOs\UserIndexFilterOptionsData;
+use Modules\Users\DTOs\UserListItemData;
+use Modules\Users\Events\UserCreated;
+use Modules\Users\Events\UserDeleted;
+use Modules\Users\Events\UserRolesSynced;
+use Modules\Users\Events\UserUpdated;
+use Modules\Users\Exceptions\CannotDeleteLastSuperAdminUser;
+use Modules\Users\Http\Controllers\UsersController;
+use Modules\Users\Http\Requests\StoreUserRequest;
+use Modules\Users\Http\Requests\SyncUserRolesRequest;
+use Modules\Users\Http\Requests\UpdateUserRequest;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -306,61 +306,61 @@ dataset('typescript_contract_classes', [
 ]);
 
 dataset('module_collaborator_classes', [
-    [AdminIndexQuery::class, 'App\\Modules\\Shared\\Actions'],
-    [FormRequestRulesTransformer::class, 'App\\Modules\\Shared\\Actions'],
-    [PasswordValidationRules::class, 'App\\Modules\\Shared\\Actions'],
-    [GetAuthCounts::class, 'App\\Modules\\IAM\\Auth\\Actions'],
-    [PermissionFilterOptionsCatalog::class, 'App\\Modules\\IAM\\Permissions\\Actions'],
-    [PermissionGroupCatalog::class, 'App\\Modules\\IAM\\Permissions\\Actions'],
-    [PermissionNormalizer::class, 'App\\Modules\\IAM\\Permissions\\Actions'],
-    [GroupedPermissions::class, 'App\\Modules\\IAM\\Roles\\Actions'],
-    [RoleFilterOptionsCatalog::class, 'App\\Modules\\IAM\\Roles\\Actions'],
-    [RoleNameNormalizer::class, 'App\\Modules\\IAM\\Roles\\Actions'],
-    [UserFilterOptionsCatalog::class, 'App\\Modules\\IAM\\Users\\Actions'],
-    [UserIdentityValidationRules::class, 'App\\Modules\\Shared\\Actions'],
-    [CannotRenameProtectedSuperAdminRole::class, 'App\\Modules\\IAM\\Roles\\Exceptions'],
-    [CannotDeleteProtectedSuperAdminRole::class, 'App\\Modules\\IAM\\Roles\\Exceptions'],
-    [CannotRemoveRequiredSuperAdminPermissions::class, 'App\\Modules\\IAM\\Permissions\\Exceptions'],
-    [CannotDeleteLastSuperAdminUser::class, 'App\\Modules\\IAM\\Users\\Exceptions'],
-    [CannotRemoveLastSuperAdminRoleAssignment::class, 'App\\Modules\\IAM\\Roles\\Exceptions'],
-    [UnknownPermissionsSelected::class, 'App\\Modules\\IAM\\Permissions\\Exceptions'],
-    [UnknownRolesSelected::class, 'App\\Modules\\IAM\\Roles\\Exceptions'],
+    [AdminIndexQuery::class, 'Modules\\Core\\Actions'],
+    [FormRequestRulesTransformer::class, 'Modules\\Core\\Actions'],
+    [PasswordValidationRules::class, 'Modules\\Core\\Actions'],
+    [GetAuthCounts::class, 'Modules\\Auth\\Actions'],
+    [PermissionFilterOptionsCatalog::class, 'Modules\\Permissions\\Actions'],
+    [PermissionGroupCatalog::class, 'Modules\\Permissions\\Actions'],
+    [PermissionNormalizer::class, 'Modules\\Permissions\\Actions'],
+    [GroupedPermissions::class, 'Modules\\Roles\\Actions'],
+    [RoleFilterOptionsCatalog::class, 'Modules\\Roles\\Actions'],
+    [RoleNameNormalizer::class, 'Modules\\Roles\\Actions'],
+    [UserFilterOptionsCatalog::class, 'Modules\\Users\\Actions'],
+    [UserIdentityValidationRules::class, 'Modules\\Core\\Actions'],
+    [CannotRenameProtectedSuperAdminRole::class, 'Modules\\Roles\\Exceptions'],
+    [CannotDeleteProtectedSuperAdminRole::class, 'Modules\\Roles\\Exceptions'],
+    [CannotRemoveRequiredSuperAdminPermissions::class, 'Modules\\Permissions\\Exceptions'],
+    [CannotDeleteLastSuperAdminUser::class, 'Modules\\Users\\Exceptions'],
+    [CannotRemoveLastSuperAdminRoleAssignment::class, 'Modules\\Roles\\Exceptions'],
+    [UnknownPermissionsSelected::class, 'Modules\\Permissions\\Exceptions'],
+    [UnknownRolesSelected::class, 'Modules\\Roles\\Exceptions'],
 ]);
 
 dataset('module_contract_classes', [
-    [DashboardMetricCounts::class, 'App\\Modules\\Dashboard\\Contracts'],
-    [DashboardMetricsProvider::class, 'App\\Modules\\Dashboard\\Contracts'],
-    [PermissionGroupCatalogContract::class, 'App\\Modules\\IAM\\Permissions\\Contracts'],
-    [PermissionFilterOptionsProvider::class, 'App\\Modules\\IAM\\Permissions\\Contracts'],
-    [GroupedPermissionsProvider::class, 'App\\Modules\\IAM\\Roles\\Contracts'],
-    [RoleFilterOptionsProvider::class, 'App\\Modules\\IAM\\Roles\\Contracts'],
-    [UserFilterOptionsProvider::class, 'App\\Modules\\IAM\\Users\\Contracts'],
+    [DashboardMetricCounts::class, 'Modules\\Dashboard\\Contracts'],
+    [DashboardMetricsProvider::class, 'Modules\\Dashboard\\Contracts'],
+    [PermissionGroupCatalogContract::class, 'Modules\\Permissions\\Contracts'],
+    [PermissionFilterOptionsProvider::class, 'Modules\\Permissions\\Contracts'],
+    [GroupedPermissionsProvider::class, 'Modules\\Roles\\Contracts'],
+    [RoleFilterOptionsProvider::class, 'Modules\\Roles\\Contracts'],
+    [UserFilterOptionsProvider::class, 'Modules\\Users\\Contracts'],
 ]);
 
 dataset('slice_transport_classes', [
-    [AuditLogsController::class, 'App\\Http\\Controllers\\Admin'],
-    [UsersController::class, 'App\\Http\\Controllers\\Admin'],
-    [RolesController::class, 'App\\Http\\Controllers\\Admin'],
-    [PermissionsController::class, 'App\\Http\\Controllers\\Admin'],
-    [ProfileController::class, 'App\\Http\\Controllers\\Settings'],
-    [PasswordController::class, 'App\\Http\\Controllers\\Settings'],
-    [TwoFactorAuthenticationController::class, 'App\\Http\\Controllers\\Settings'],
+    [AuditLogsController::class, 'Modules\\Audit\\Http\\Controllers'],
+    [UsersController::class, 'Modules\\Users\\Http\\Controllers'],
+    [RolesController::class, 'Modules\\Roles\\Http\\Controllers'],
+    [PermissionsController::class, 'Modules\\Permissions\\Http\\Controllers'],
+    [ProfileController::class, 'Modules\\Settings\\Http\\Controllers'],
+    [PasswordController::class, 'Modules\\Settings\\Http\\Controllers'],
+    [TwoFactorAuthenticationController::class, 'Modules\\Settings\\Http\\Controllers'],
 ]);
 
 dataset('module_request_classes', [
-    [IndexAuditLogsRequest::class, 'App\\Modules\\Audit\\Requests'],
-    [StoreUserRequest::class, 'App\\Modules\\IAM\\Users\\Requests'],
-    [UpdateUserRequest::class, 'App\\Modules\\IAM\\Users\\Requests'],
-    [SyncUserRolesRequest::class, 'App\\Modules\\IAM\\Users\\Requests'],
-    [StoreRoleRequest::class, 'App\\Modules\\IAM\\Roles\\Requests'],
-    [UpdateRoleRequest::class, 'App\\Modules\\IAM\\Roles\\Requests'],
-    [SyncRolePermissionsRequest::class, 'App\\Modules\\IAM\\Roles\\Requests'],
-    [StorePermissionRequest::class, 'App\\Modules\\IAM\\Permissions\\Requests'],
-    [UpdatePermissionRequest::class, 'App\\Modules\\IAM\\Permissions\\Requests'],
-    [ProfileUpdateRequest::class, 'App\\Modules\\Settings\\Requests'],
-    [ProfileDeleteRequest::class, 'App\\Modules\\Settings\\Requests'],
-    [PasswordUpdateRequest::class, 'App\\Modules\\Settings\\Requests'],
-    [TwoFactorAuthenticationRequest::class, 'App\\Modules\\Settings\\Requests'],
+    [IndexAuditLogsRequest::class, 'Modules\\Audit\\Http\\Requests'],
+    [StoreUserRequest::class, 'Modules\\Users\\Http\\Requests'],
+    [UpdateUserRequest::class, 'Modules\\Users\\Http\\Requests'],
+    [SyncUserRolesRequest::class, 'Modules\\Users\\Http\\Requests'],
+    [StoreRoleRequest::class, 'Modules\\Roles\\Http\\Requests'],
+    [UpdateRoleRequest::class, 'Modules\\Roles\\Http\\Requests'],
+    [SyncRolePermissionsRequest::class, 'Modules\\Roles\\Http\\Requests'],
+    [StorePermissionRequest::class, 'Modules\\Permissions\\Http\\Requests'],
+    [UpdatePermissionRequest::class, 'Modules\\Permissions\\Http\\Requests'],
+    [ProfileUpdateRequest::class, 'Modules\\Settings\\Http\\Requests'],
+    [ProfileDeleteRequest::class, 'Modules\\Settings\\Http\\Requests'],
+    [PasswordUpdateRequest::class, 'Modules\\Settings\\Http\\Requests'],
+    [TwoFactorAuthenticationRequest::class, 'Modules\\Settings\\Http\\Requests'],
 ]);
 
 dataset('eloquent_metadata_models', [
@@ -446,7 +446,7 @@ dataset('controller_attribute_metadata', [
 it('keeps internal write orchestration on action classes with a public static handle entrypoint', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
 
-    expect($reflection->getNamespaceName())->toStartWith('App\\Modules\\');
+    expect($reflection->getNamespaceName())->toStartWith('Modules\\');
     expect($reflection->getNamespaceName())->toContain('\\Actions');
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
     expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
@@ -474,7 +474,7 @@ it('keeps write actions transactional and dispatches auditable domain events ins
 it('keeps read-side collaborators on action classes with a public static handle entrypoint', function (string $actionClass): void {
     $reflection = new ReflectionClass($actionClass);
 
-    expect($reflection->getNamespaceName())->toStartWith('App\\Modules\\');
+    expect($reflection->getNamespaceName())->toStartWith('Modules\\');
     expect($reflection->getNamespaceName())->toContain('\\Actions');
     expect($reflection->hasMethod('__invoke'))->toBeFalse();
     expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
@@ -496,7 +496,7 @@ it('keeps Fortify adapter actions on their vendor contract methods instead of th
 ): void {
     $reflection = new ReflectionClass($actionClass);
 
-    expect($reflection->getNamespaceName())->toBe('App\\Modules\\IAM\\Auth\\Actions');
+    expect($reflection->getNamespaceName())->toBe('Modules\\Auth\\Actions');
     expect($reflection->isFinal())->toBeTrue();
     expect($reflection->implementsInterface($contract))->toBeTrue();
     expect($reflection->hasMethod($contractMethod))->toBeTrue();
@@ -510,7 +510,7 @@ it('keeps Fortify adapter actions on their vendor contract methods instead of th
 it('uses spatie data objects for non-trivial admin and shared payload contracts', function (string $dataClass): void {
     $reflection = new ReflectionClass($dataClass);
 
-    expect($reflection->getNamespaceName())->toStartWith('App\\Modules\\');
+    expect($reflection->getNamespaceName())->toStartWith('Modules\\');
     expect($reflection->getNamespaceName())->toContain('\\DTOs');
     expect($reflection->isFinal())->toBeTrue();
     expect($reflection->isSubclassOf(Data::class))->toBeTrue();
@@ -525,21 +525,17 @@ it('keeps module collaborators in approved module namespaces', function (
     expect($reflection->getNamespaceName())->toBe($expectedNamespace);
 })->with('module_collaborator_classes');
 
-it('keeps module directories flat and limited to approved directory names', function (): void {
-    $allowedDirectories = ['Actions', 'Commands', 'Contracts', 'DTOs', 'Events', 'Exceptions', 'Listeners', 'Models', 'Requests', 'Responses', 'Tests'];
-    $moduleDirectories = glob(dirname(__DIR__, 2).'/app/Modules/*', GLOB_ONLYDIR) ?: [];
+it('keeps feature modules in the package-native Modules root', function (): void {
+    $projectRoot = dirname(__DIR__, 2);
+    $moduleDirectories = glob($projectRoot.'/Modules/*', GLOB_ONLYDIR) ?: [];
 
     expect($moduleDirectories)->not->toBeEmpty();
+    expect($projectRoot.'/app/Modules')->not->toBeDirectory();
 
-    foreach ($moduleDirectories as $moduleDirectory) {
-        $allowedDirectoriesForModule = basename($moduleDirectory) === 'IAM'
-            ? [...$allowedDirectories, 'Auth', 'Permissions', 'Roles', 'Users']
-            : $allowedDirectories;
-        $childDirectories = glob($moduleDirectory.'/*', GLOB_ONLYDIR) ?: [];
-
-        foreach ($childDirectories as $childDirectory) {
-            expect(basename($childDirectory))->toBeIn($allowedDirectoriesForModule);
-        }
+    foreach (['Audit', 'Auth', 'Core', 'Dashboard', 'Marketing', 'Permissions', 'Roles', 'Settings', 'Users'] as $moduleName) {
+        expect($projectRoot."/Modules/{$moduleName}/app")->toBeDirectory();
+        expect($projectRoot."/Modules/{$moduleName}/routes/web.php")->toBeFile();
+        expect($projectRoot."/Modules/{$moduleName}/composer.json")->toBeFile();
     }
 });
 
@@ -552,6 +548,8 @@ it('keeps legacy php classes out of app support and concerns roots', function ()
 
     foreach ($legacyRoots as $legacyRoot) {
         if (! is_dir($legacyRoot)) {
+            expect($legacyRoot)->not->toBeDirectory();
+
             continue;
         }
 
@@ -642,8 +640,8 @@ it('keeps controller authorization and route-specific middleware on controller a
 })->with('controller_attribute_metadata');
 
 it('keeps route-specific authorization and throttling middleware out of the route files', function (): void {
-    $permissionsRoutes = file_get_contents(dirname(__DIR__, 2).'/routes/permissions.php');
-    $settingsRoutes = file_get_contents(dirname(__DIR__, 2).'/routes/settings.php');
+    $permissionsRoutes = file_get_contents(dirname(__DIR__, 2).'/Modules/Permissions/routes/web.php');
+    $settingsRoutes = file_get_contents(dirname(__DIR__, 2).'/Modules/Settings/routes/web.php');
 
     expect($permissionsRoutes)->not->toContain("->middleware('can:");
     expect($settingsRoutes)->not->toContain("->middleware('throttle:6,1')");
@@ -652,7 +650,7 @@ it('keeps route-specific authorization and throttling middleware out of the rout
 it('keeps the audit logger on a flat module action with a static handle entrypoint', function (): void {
     $reflection = new ReflectionClass(RecordAuditLog::class);
 
-    expect($reflection->getNamespaceName())->toBe('App\\Modules\\Audit\\Actions');
+    expect($reflection->getNamespaceName())->toBe('Modules\\Audit\\Actions');
     expect($reflection->isFinal())->toBeTrue();
     expect(backendArchitectureDeclaredPublicMethodNames($reflection))->toContain('handle');
 
@@ -662,7 +660,7 @@ it('keeps the audit logger on a flat module action with a static handle entrypoi
 it('keeps auditable domain events after-commit and behind shared contracts', function (string $eventClass): void {
     $reflection = new ReflectionClass($eventClass);
 
-    expect($reflection->getNamespaceName())->toStartWith('App\\Modules\\');
+    expect($reflection->getNamespaceName())->toStartWith('Modules\\');
     expect($reflection->getNamespaceName())->toContain('\\Events');
     expect($reflection->isFinal())->toBeTrue();
     expect($reflection->implementsInterface(AuditableDomainEvent::class))->toBeTrue();
@@ -673,37 +671,34 @@ it('keeps audit recording behind an interface-driven listener', function (): voi
     $reflection = new ReflectionClass(RecordAuditableDomainEvent::class);
     $contents = file_get_contents($reflection->getFileName());
 
-    expect($reflection->getNamespaceName())->toBe('App\\Modules\\Audit\\Listeners');
+    expect($reflection->getNamespaceName())->toBe('Modules\\Audit\\Listeners');
     expect($reflection->isFinal())->toBeTrue();
     expect($contents)->toContain('AuditableDomainEvent $event');
     expect($contents)->toContain('RecordAuditLog::handle');
 });
 
-it('keeps module listener discovery configured in bootstrap for module-local listeners', function (): void {
+it('uses package-native module providers instead of custom bootstrap discovery globs', function (): void {
     $contents = file_get_contents(dirname(__DIR__, 2).'/bootstrap/app.php');
 
-    expect($contents)->toContain('->withEvents([');
-    expect($contents)->toContain("app_path('Listeners')");
-    expect($contents)->toContain("app_path('Modules/*/Listeners')");
-    expect($contents)->toContain("app_path('Modules/*/*/Listeners')");
+    expect($contents)->not->toContain('->withEvents([');
+    expect($contents)->not->toContain('->withCommands([');
+    expect($contents)->not->toContain("app_path('Modules");
 });
 
-it('prevents non-audit modules from importing audit actions or models directly', function (): void {
+it('keeps audit writes centralized behind domain events instead of direct recorders', function (): void {
     $projectRoot = dirname(__DIR__, 2);
     $forbiddenSnippets = [
-        'use App\\Modules\\Audit\\Actions\\',
-        'use App\\Modules\\Audit\\Models\\',
         'RecordAuditLog::handle',
         'ScheduleAuditLog::handle',
     ];
-    $moduleDirectories = glob($projectRoot.'/app/Modules/*', GLOB_ONLYDIR) ?: [];
+    $moduleDirectories = glob($projectRoot.'/Modules/*', GLOB_ONLYDIR) ?: [];
 
     foreach ($moduleDirectories as $moduleDirectory) {
         if (basename($moduleDirectory) === 'Audit') {
             continue;
         }
 
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDirectory));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDirectory.'/app'));
 
         foreach ($iterator as $fileInfo) {
             if (! $fileInfo->isFile() || $fileInfo->getExtension() !== 'php') {
@@ -719,13 +714,12 @@ it('prevents non-audit modules from importing audit actions or models directly',
     }
 });
 
-it('limits cross-module imports to shared namespaces or explicit contracts', function (): void {
+it('uses package-native module namespaces rather than legacy app module namespaces', function (): void {
     $projectRoot = dirname(__DIR__, 2);
-    $moduleDirectories = glob($projectRoot.'/app/Modules/*', GLOB_ONLYDIR) ?: [];
+    $moduleDirectories = glob($projectRoot.'/Modules/*', GLOB_ONLYDIR) ?: [];
 
     foreach ($moduleDirectories as $moduleDirectory) {
-        $currentModule = basename($moduleDirectory);
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDirectory));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDirectory.'/app'));
 
         foreach ($iterator as $fileInfo) {
             if (! $fileInfo->isFile() || $fileInfo->getExtension() !== 'php') {
@@ -734,15 +728,7 @@ it('limits cross-module imports to shared namespaces or explicit contracts', fun
 
             $contents = file_get_contents($fileInfo->getPathname());
 
-            preg_match_all('/^use App\\\\Modules\\\\([^\\\\]+)\\\\([^;]+);$/m', $contents, $matches, PREG_SET_ORDER);
-
-            foreach ($matches as [, $targetModule, $targetPath]) {
-                if ($targetModule === $currentModule || $targetModule === 'Shared') {
-                    continue;
-                }
-
-                expect($targetPath)->toStartWith('Contracts\\');
-            }
+            expect($contents)->not->toContain('App\\Modules\\');
         }
     }
 });
@@ -777,15 +763,15 @@ it('marks frontend-bound form requests and dto payloads for TypeScript generatio
 it('reuses the shared user identity validation collaborator across settings, auth, console, and admin user flows', function (): void {
     $projectRoot = dirname(__DIR__, 2);
 
-    expect($projectRoot.'/app/Modules/IAM/Actions/ProfileValidationRules.php')->not->toBeFile();
-    expect($projectRoot.'/app/Modules/Shared/Actions/UserIdentityValidationRules.php')->toBeFile();
+    expect($projectRoot.'/Modules/Auth/app/Actions/ProfileValidationRules.php')->not->toBeFile();
+    expect($projectRoot.'/Modules/Core/app/Actions/UserIdentityValidationRules.php')->toBeFile();
 
     foreach ([
-        '/app/Modules/IAM/Users/Commands/CreateUserCommand.php',
-        '/app/Modules/IAM/Auth/Actions/ValidateRegistrationInput.php',
-        '/app/Modules/IAM/Users/Requests/StoreUserRequest.php',
-        '/app/Modules/IAM/Users/Requests/UpdateUserRequest.php',
-        '/app/Modules/Settings/Requests/ProfileUpdateRequest.php',
+        '/Modules/Users/app/Console/CreateUserCommand.php',
+        '/Modules/Auth/app/Actions/ValidateRegistrationInput.php',
+        '/Modules/Users/app/Http/Requests/StoreUserRequest.php',
+        '/Modules/Users/app/Http/Requests/UpdateUserRequest.php',
+        '/Modules/Settings/app/Http/Requests/ProfileUpdateRequest.php',
     ] as $path) {
         $contents = file_get_contents($projectRoot.$path);
 
@@ -794,14 +780,14 @@ it('reuses the shared user identity validation collaborator across settings, aut
     }
 });
 
-it('keeps iam interactive artisan commands inside the iam module', function (): void {
+it('keeps interactive artisan commands inside package-native modules', function (): void {
     $projectRoot = dirname(__DIR__, 2);
 
     foreach ([
-        '/app/Modules/IAM/Commands/BaseInteractiveCreateCommand.php',
-        '/app/Modules/IAM/Permissions/Commands/CreatePermissionCommand.php',
-        '/app/Modules/IAM/Roles/Commands/CreateRoleCommand.php',
-        '/app/Modules/IAM/Users/Commands/CreateUserCommand.php',
+        '/Modules/Core/app/Console/BaseInteractiveCreateCommand.php',
+        '/Modules/Permissions/app/Console/CreatePermissionCommand.php',
+        '/Modules/Roles/app/Console/CreateRoleCommand.php',
+        '/Modules/Users/app/Console/CreateUserCommand.php',
     ] as $path) {
         expect($projectRoot.$path)->toBeFile();
     }
@@ -811,18 +797,17 @@ it('keeps iam interactive artisan commands inside the iam module', function (): 
         '/app/Console/Commands/CreatePermissionCommand.php',
         '/app/Console/Commands/CreateRoleCommand.php',
         '/app/Console/Commands/CreateUserCommand.php',
-        '/app/Modules/IAM/Commands/Create/CreatePermissionCommand.php',
-        '/app/Modules/IAM/Commands/Create/CreateRoleCommand.php',
-        '/app/Modules/IAM/Commands/Create/CreateUserCommand.php',
+        '/app/Modules/IAM/Commands/BaseInteractiveCreateCommand.php',
+        '/app/Modules/IAM/Permissions/Commands/CreatePermissionCommand.php',
+        '/app/Modules/IAM/Roles/Commands/CreateRoleCommand.php',
+        '/app/Modules/IAM/Users/Commands/CreateUserCommand.php',
     ] as $path) {
         expect($projectRoot.$path)->not->toBeFile();
     }
 
     $bootstrapContents = file_get_contents($projectRoot.'/bootstrap/app.php');
 
-    expect($bootstrapContents)->toContain('->withCommands([');
-    expect($bootstrapContents)->toContain("glob(app_path('Modules/*/Commands'))");
-    expect($bootstrapContents)->toContain("glob(app_path('Modules/*/*/Commands'))");
+    expect($bootstrapContents)->not->toContain('->withCommands([');
 });
 
 it('keeps frontend page prop contracts split by domain instead of a monolithic page props file', function (): void {

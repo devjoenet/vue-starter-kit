@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Actions\EnsureSuperAdminRole;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Database\Seeders\AdminAclSeeder;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Actions\EnsureSuperAdminRole;
+use Modules\Roles\Models\Role;
 
 beforeEach(function () {
     $this->seed(AdminAclSeeder::class);

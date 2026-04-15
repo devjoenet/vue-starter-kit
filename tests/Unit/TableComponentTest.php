@@ -32,11 +32,11 @@ it('matches the shared table ui structure', function () {
 });
 
 it('uses shared table ui components in admin role, permission, and user index pages', function () {
-    $rolesIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Index.vue');
+    $rolesIndex = file_get_contents(dirname(__DIR__, 2).'/Modules/Roles/resources/js/Pages/Index.vue');
     $rolesSurface = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RoleIndexSurface.vue');
-    $permissionsIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Index.vue');
+    $permissionsIndex = file_get_contents(dirname(__DIR__, 2).'/Modules/Permissions/resources/js/Pages/Index.vue');
     $permissionsTable = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
-    $usersIndex = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Index.vue');
+    $usersIndex = file_get_contents(dirname(__DIR__, 2).'/Modules/Users/resources/js/Pages/Index.vue');
     $usersSurface = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserIndexSurface.vue');
 
     expect($rolesIndex)

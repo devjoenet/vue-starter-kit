@@ -1,15 +1,20 @@
-app/
-├── Modules/
-│   └── {Domain}/
-│       ├── Actions/          # Business logic entry points
-│       ├── Contracts/        # Interfaces for cross-module communication
-│       ├── DTOs/             # Data Transfer Objects
-│       ├── Enums/            # Domain-specific enums
-│       ├── Models/           # Eloquent models
-│       └── Services/         # Internal helper services
-└── Http/
-    └── {Application}/
-        └── {Domain}/
-            ├── Controllers/  # Route handlers
-            ├── Requests/     # Validation logic
-            └── Resources/    # API transformation logic
+Modules/
+└── {Domain}/
+    ├── app/
+    │   ├── Actions/          # Business logic entry points
+    │   ├── Contracts/        # Interfaces for cross-module communication
+    │   ├── DTOs/             # Data Transfer Objects
+    │   ├── Http/
+    │   │   ├── Controllers/  # Route handlers
+    │   │   └── Requests/     # Validation logic
+    │   ├── Models/           # Eloquent models
+    │   └── Services/         # Internal helper services
+    ├── resources/
+    │   └── js/
+    │       └── Pages/        # Inertia page components
+    ├── routes/
+    │   ├── api.php
+    │   └── web.php
+    └── tests/
+        ├── Feature/
+        └── Unit/

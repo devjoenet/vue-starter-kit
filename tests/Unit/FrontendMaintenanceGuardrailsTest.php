@@ -8,6 +8,7 @@ it('uses destructive base variants instead of legacy error wrappers in app views
         $projectRoot.'/resources/js/components',
         $projectRoot.'/resources/js/layouts',
         $projectRoot.'/resources/js/pages',
+        ...(glob($projectRoot.'/Modules/*/resources/js/Pages', GLOB_ONLYDIR) ?: []),
     ];
 
     foreach ($viewRoots as $viewRoot) {
@@ -46,12 +47,12 @@ it('uses the correct role permission gate in admin layout navigation', function 
 it('uses the canonical wayfinder type surface for admin form contracts', function () {
     $projectRoot = dirname(__DIR__, 2);
     $adminPages = [
-        'resources/js/pages/admin/Users/Create.vue',
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Create.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Create.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Create.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($adminPages as $adminPage) {
@@ -66,8 +67,8 @@ it('uses the canonical wayfinder type surface for admin form contracts', functio
 it('uses route modules rather than controller action imports for settings forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $settingsViews = [
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
         'resources/js/components/DeleteUser.vue',
     ];
 
@@ -135,15 +136,15 @@ it('keeps frontend asset budgets enforced in the build pipeline', function () {
     expect($packageJson)->toContain('npm run budget:frontend');
     expect($viteConfigContents)->toContain('chunkSizeWarningLimit: 340');
     expect($budgetScriptContents)->toContain('resources/js/app.ts');
-    expect($budgetScriptContents)->toContain('resources/js/pages/admin/Dashboard.vue');
+    expect($budgetScriptContents)->toContain('Modules/Dashboard/resources/js/Pages/Index.vue');
     expect($budgetScriptContents)->toContain('Frontend asset budgets passed.');
 });
 
 it('reuses the shared permission editor component across admin permission pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($permissionPages as $permissionPage) {
@@ -160,9 +161,9 @@ it('reuses the shared permission editor component across admin permission pages'
 it('places deferred audit history at the bottom of admin record editors', function () {
     $projectRoot = dirname(__DIR__, 2);
     $editorPages = [
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($editorPages as $editorPage) {
@@ -184,8 +185,8 @@ it('places deferred audit history at the bottom of admin record editors', functi
 it('reuses the shared frontend permission normalization helper across admin permission forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $permissionPages = [
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($permissionPages as $permissionPage) {
@@ -201,9 +202,9 @@ it('reuses the shared frontend permission normalization helper across admin perm
 it('reuses the shared delete confirmation composable across admin destructive actions', function () {
     $projectRoot = dirname(__DIR__, 2);
     $destructivePages = [
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($destructivePages as $destructivePage) {
@@ -227,9 +228,9 @@ it('reuses the shared delete confirmation composable across admin destructive ac
 it('reuses the shared selection-list composable across admin assignment forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $assignmentPages = [
-        'resources/js/pages/admin/Roles/Create.vue',
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Create.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($assignmentPages as $assignmentPage) {
@@ -247,9 +248,9 @@ it('reuses the shared selection-list composable across admin assignment forms', 
 it('uses dedicated create and edit pages for admin CRUD forms', function () {
     $projectRoot = dirname(__DIR__, 2);
     $indexPages = [
-        'resources/js/pages/admin/Users/Index.vue',
-        'resources/js/pages/admin/Roles/Index.vue',
-        'resources/js/pages/admin/Permissions/Index.vue',
+        'Modules/Users/resources/js/Pages/Index.vue',
+        'Modules/Roles/resources/js/Pages/Index.vue',
+        'Modules/Permissions/resources/js/Pages/Index.vue',
     ];
 
     foreach ($indexPages as $indexPage) {
@@ -261,7 +262,7 @@ it('uses dedicated create and edit pages for admin CRUD forms', function () {
 });
 
 it('uses an extracted table-based permission assignment surface in the role management edit page', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Roles/resources/js/Pages/Edit.vue');
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RolePermissionAssignmentTable.vue');
     $shellContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/AssignmentTableCard.vue');
 
@@ -300,7 +301,7 @@ it('uses an extracted table-based permission assignment surface in the role mana
 });
 
 it('uses an extracted permission index table surface in the admin permissions index page', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Index.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Permissions/resources/js/Pages/Index.vue');
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionIndexTable.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/PermissionIndexTable.vue'");
@@ -317,8 +318,8 @@ it('uses an extracted permission index table surface in the admin permissions in
 });
 
 it('prefills the role name in the role management edit page details form', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Edit.vue');
-    $createPageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Create.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Roles/resources/js/Pages/Edit.vue');
+    $createPageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Roles/resources/js/Pages/Create.vue');
     $formContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/RoleDetailsForm.vue');
 
     expect($pageContents)->toContain('name: toTitleCase(props.role.name),');
@@ -338,12 +339,12 @@ it('prefills the role name in the role management edit page details form', funct
 it('uses a consistent fixed-width side rail across admin editor pages', function () {
     $projectRoot = dirname(__DIR__, 2);
     $editorPages = [
-        'resources/js/pages/admin/Users/Create.vue',
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Create.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Create.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Create.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
 
     foreach ($editorPages as $editorPage) {
@@ -356,7 +357,7 @@ it('uses a consistent fixed-width side rail across admin editor pages', function
 });
 
 it('uses extracted details and table-based role assignment surfaces in the user management edit page', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Users/Edit.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Users/resources/js/Pages/Edit.vue');
     $detailsContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserDetailsForm.vue');
     $tableContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/UserRoleAssignmentTable.vue');
 
@@ -392,7 +393,7 @@ it('uses extracted details and table-based role assignment surfaces in the user 
 });
 
 it('uses a full-width initial assignee table in the role create page', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Roles/Create.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Roles/resources/js/Pages/Create.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/RoleDetailsForm.vue'");
     expect($pageContents)->toContain("from '@/components/admin/AssignmentTableCard.vue'");
@@ -410,13 +411,13 @@ it('uses shared index header controls and linked name cells on admin index pages
     $projectRoot = dirname(__DIR__, 2);
     $indexSurfaces = [
         [
-            'page' => 'resources/js/pages/admin/Users/Index.vue',
+            'page' => 'Modules/Users/resources/js/Pages/Index.vue',
             'surface' => 'resources/js/components/admin/UserIndexSurface.vue',
             'import' => "from '@/components/admin/UserIndexSurface.vue'",
             'head' => '<Head title="Users" />',
         ],
         [
-            'page' => 'resources/js/pages/admin/Roles/Index.vue',
+            'page' => 'Modules/Roles/resources/js/Pages/Index.vue',
             'surface' => 'resources/js/components/admin/RoleIndexSurface.vue',
             'import' => "from '@/components/admin/RoleIndexSurface.vue'",
             'head' => '<Head title="Roles" />',
@@ -439,7 +440,7 @@ it('uses shared index header controls and linked name cells on admin index pages
         expect($surfaceContents)->toContain('font-semibold text-primary underline');
     }
 
-    $permissionPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Permissions/Index.vue');
+    $permissionPageContents = file_get_contents($projectRoot.'/Modules/Permissions/resources/js/Pages/Index.vue');
     $headerCellContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminIndexHeaderCell.vue');
     $permissionTableContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionIndexTable.vue');
 
@@ -473,7 +474,7 @@ it('uses shared index header controls and linked name cells on admin index pages
 
 it('keeps audit log query wiring in the page and filter markup in an extracted surface', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $pageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/AuditLogs/Index.vue');
+    $pageContents = file_get_contents($projectRoot.'/Modules/Audit/resources/js/Pages/Index.vue');
     $filterContents = file_get_contents($projectRoot.'/resources/js/components/admin/AuditLogFiltersCard.vue');
 
     expect($pageContents)->toContain("from '@/components/admin/AuditLogFiltersCard.vue'");
@@ -494,8 +495,8 @@ it('keeps audit log query wiring in the page and filter markup in an extracted s
 
 it('keeps auth forms in native DOM focus order without positive tabindex values', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $loginContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Login.vue');
-    $registerContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Register.vue');
+    $loginContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/Login.vue');
+    $registerContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/Register.vue');
     $textLinkContents = file_get_contents($projectRoot.'/resources/js/components/TextLink.vue');
 
     expect($loginContents)->not->toContain(':tabindex=');
@@ -509,10 +510,10 @@ it('keeps auth forms in native DOM focus order without positive tabindex values'
 it('keeps high-identity floating-label forms free of competing placeholders', function () {
     $projectRoot = dirname(__DIR__, 2);
     $files = [
-        'resources/js/pages/auth/Login.vue',
-        'resources/js/pages/auth/Register.vue',
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
+        'Modules/Auth/resources/js/Pages/Login.vue',
+        'Modules/Auth/resources/js/Pages/Register.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
         'resources/js/components/UserIdentityFields.vue',
         'resources/js/components/DeleteUser.vue',
         'resources/js/components/admin/UserDetailsForm.vue',
@@ -545,7 +546,7 @@ it('keeps the delete-account dialog on stable focus targets and component-level 
 });
 
 it('keeps the Southeast Code mark visible in the welcome-page header', function () {
-    $welcomeContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Marketing/resources/js/Pages/Welcome.vue');
     $authLayoutContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/layouts/auth/AuthSimpleLayout.vue');
     $brandLockupContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/SurfaceBrandLockup.vue');
 
@@ -570,7 +571,7 @@ it('keeps the Southeast Code mark visible in the welcome-page header', function 
 
 it('anchors the welcome page around the shared hero illustration and custom systems positioning', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/Modules/Marketing/resources/js/Pages/Welcome.vue');
     $cssContents = file_get_contents($projectRoot.'/resources/css/app.css');
 
     expect($welcomeContents)->toContain("from '@/components/WelcomeHeroIllustration.vue'");
@@ -660,12 +661,12 @@ it('keeps the shared motion primitives and reduced-motion safeguards in the fron
 
 it('uses shared motion choreography across public, auth, dashboard, and admin workspace surfaces', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/Modules/Marketing/resources/js/Pages/Welcome.vue');
     $authLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/auth/AuthSimpleLayout.vue');
-    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
-    $usersIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
-    $rolesIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
-    $permissionsIndexContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Permissions/Index.vue');
+    $dashboardContents = file_get_contents($projectRoot.'/Modules/Dashboard/resources/js/Pages/Index.vue');
+    $usersIndexContents = file_get_contents($projectRoot.'/Modules/Users/resources/js/Pages/Index.vue');
+    $rolesIndexContents = file_get_contents($projectRoot.'/Modules/Roles/resources/js/Pages/Index.vue');
+    $permissionsIndexContents = file_get_contents($projectRoot.'/Modules/Permissions/resources/js/Pages/Index.vue');
 
     expect($welcomeContents)->toContain('motion-stage');
     expect($authLayoutContents)->toContain('motion-stage');
@@ -677,24 +678,24 @@ it('uses shared motion choreography across public, auth, dashboard, and admin wo
 
 it('uses shared breadcrumb helpers for admin and settings pages', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $dashboardPageFile = 'resources/js/pages/admin/Dashboard.vue';
+    $dashboardPageFile = 'Modules/Dashboard/resources/js/Pages/Index.vue';
     $pageLayoutsFile = 'resources/js/lib/page-layouts.ts';
     $adminPageFiles = [
-        'resources/js/pages/admin/Users/Index.vue',
-        'resources/js/pages/admin/Users/Create.vue',
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Index.vue',
-        'resources/js/pages/admin/Roles/Create.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Index.vue',
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Index.vue',
+        'Modules/Users/resources/js/Pages/Create.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Index.vue',
+        'Modules/Roles/resources/js/Pages/Create.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Index.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
     $settingsPageFiles = [
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
-        'resources/js/pages/settings/TwoFactor.vue',
-        'resources/js/pages/settings/Appearance.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
+        'Modules/Settings/resources/js/Pages/TwoFactor.vue',
+        'Modules/Settings/resources/js/Pages/Appearance.vue',
     ];
 
     $layoutContents = file_get_contents($projectRoot.'/resources/js/layouts/AppLayout.vue');
@@ -732,23 +733,23 @@ it('uses shared breadcrumb helpers for admin and settings pages', function () {
 
 it('keeps dashboard, admin, and settings pages on the shared sidebar-based layouts', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
+    $dashboardContents = file_get_contents($projectRoot.'/Modules/Dashboard/resources/js/Pages/Index.vue');
     $adminPageFiles = [
-        'resources/js/pages/admin/Users/Index.vue',
-        'resources/js/pages/admin/Users/Create.vue',
-        'resources/js/pages/admin/Users/Edit.vue',
-        'resources/js/pages/admin/Roles/Index.vue',
-        'resources/js/pages/admin/Roles/Create.vue',
-        'resources/js/pages/admin/Roles/Edit.vue',
-        'resources/js/pages/admin/Permissions/Index.vue',
-        'resources/js/pages/admin/Permissions/Create.vue',
-        'resources/js/pages/admin/Permissions/Edit.vue',
+        'Modules/Users/resources/js/Pages/Index.vue',
+        'Modules/Users/resources/js/Pages/Create.vue',
+        'Modules/Users/resources/js/Pages/Edit.vue',
+        'Modules/Roles/resources/js/Pages/Index.vue',
+        'Modules/Roles/resources/js/Pages/Create.vue',
+        'Modules/Roles/resources/js/Pages/Edit.vue',
+        'Modules/Permissions/resources/js/Pages/Index.vue',
+        'Modules/Permissions/resources/js/Pages/Create.vue',
+        'Modules/Permissions/resources/js/Pages/Edit.vue',
     ];
     $settingsPageFiles = [
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
-        'resources/js/pages/settings/TwoFactor.vue',
-        'resources/js/pages/settings/Appearance.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
+        'Modules/Settings/resources/js/Pages/TwoFactor.vue',
+        'Modules/Settings/resources/js/Pages/Appearance.vue',
     ];
 
     expect($dashboardContents)->toContain('layout: adminPageLayout');
@@ -771,7 +772,7 @@ it('keeps dashboard, admin, and settings pages on the shared sidebar-based layou
 it('assigns meaningful dom ids to every page surface', function () {
     $projectRoot = dirname(__DIR__, 2);
     $pageIdExpectations = [
-        'resources/js/pages/Welcome.vue' => [
+        'Modules/Marketing/resources/js/Pages/Welcome.vue' => [
             'id="welcome-page"',
             'id="welcome-page-hero"',
             'id="welcome-page-proof-panel"',
@@ -781,12 +782,12 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="error-page-card"',
             'id="error-page-actions"',
         ],
-        'resources/js/pages/admin/Dashboard.vue' => [
+        'Modules/Dashboard/resources/js/Pages/Index.vue' => [
             'id="admin-dashboard-page"',
             'id="admin-dashboard-header"',
             'id="admin-dashboard-heading"',
         ],
-        'resources/js/pages/admin/Users/Index.vue' => [
+        'Modules/Users/resources/js/Pages/Index.vue' => [
             'id="admin-users-index-page"',
             'id="admin-users-index-page-header"',
             'id="admin-users-index-create-button"',
@@ -796,18 +797,18 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="admin-users-index-mobile-list"',
             'id="admin-users-index-table"',
         ],
-        'resources/js/pages/admin/Users/Create.vue' => [
+        'Modules/Users/resources/js/Pages/Create.vue' => [
             'id="admin-users-create-page"',
             'id="admin-users-create-form"',
             'id="admin-users-create-submit-button"',
             'id="admin-users-create-close-button"',
         ],
-        'resources/js/pages/admin/Users/Edit.vue' => [
+        'Modules/Users/resources/js/Pages/Edit.vue' => [
             'id="admin-users-edit-page"',
             'id="admin-users-edit-details-card"',
             'id="admin-users-edit-actions"',
         ],
-        'resources/js/pages/admin/Roles/Index.vue' => [
+        'Modules/Roles/resources/js/Pages/Index.vue' => [
             'id="admin-roles-index-page"',
             'id="admin-roles-index-page-header"',
             'id="admin-roles-index-create-button"',
@@ -817,27 +818,27 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="admin-roles-index-mobile-list"',
             'id="admin-roles-index-table"',
         ],
-        'resources/js/pages/admin/Roles/Create.vue' => [
+        'Modules/Roles/resources/js/Pages/Create.vue' => [
             'id="admin-roles-create-page"',
             'id="admin-roles-create-form"',
             'id="admin-roles-create-users-card"',
         ],
-        'resources/js/pages/admin/Roles/Edit.vue' => [
+        'Modules/Roles/resources/js/Pages/Edit.vue' => [
             'id="admin-roles-edit-page"',
             'id="admin-roles-edit-permissions-card"',
             'id="admin-roles-edit-actions"',
         ],
-        'resources/js/pages/admin/Permissions/Index.vue' => [
+        'Modules/Permissions/resources/js/Pages/Index.vue' => [
             'id="admin-permissions-index-page"',
             'id="admin-permissions-index-page-header"',
             'id="admin-permissions-index-table-card"',
         ],
-        'resources/js/pages/admin/Permissions/Create.vue' => [
+        'Modules/Permissions/resources/js/Pages/Create.vue' => [
             'id="admin-permissions-create-page"',
             'id="admin-permissions-create-page-header"',
             'id="admin-permissions-create-form-card"',
         ],
-        'resources/js/pages/admin/Permissions/Edit.vue' => [
+        'Modules/Permissions/resources/js/Pages/Edit.vue' => [
             'id="admin-permissions-edit-page"',
             'id="admin-permissions-edit-page-header"',
             'id="admin-permissions-edit-form-card"',
@@ -847,7 +848,7 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="admin-audit-logs-from"',
             'id="admin-audit-logs-actions"',
         ],
-        'resources/js/pages/settings/Profile.vue' => [
+        'Modules/Settings/resources/js/Pages/Profile.vue' => [
             'id="settings-profile-page"',
             'id="settings-profile-information-form"',
             'id="settings-profile-delete-account-card"',
@@ -857,52 +858,52 @@ it('assigns meaningful dom ids to every page surface', function () {
             'id="settings-profile-delete-account-dialog"',
             'id="settings-profile-delete-account-confirm-button"',
         ],
-        'resources/js/pages/settings/Password.vue' => [
+        'Modules/Settings/resources/js/Pages/Password.vue' => [
             'id="settings-password-page"',
             'id="settings-password-form"',
             'id="settings-password-save-button"',
         ],
-        'resources/js/pages/settings/TwoFactor.vue' => [
+        'Modules/Settings/resources/js/Pages/TwoFactor.vue' => [
             'id="settings-two-factor-page"',
             'id="settings-two-factor-card"',
             'id="settings-two-factor-setup-modal"',
         ],
-        'resources/js/pages/settings/Appearance.vue' => [
+        'Modules/Settings/resources/js/Pages/Appearance.vue' => [
             'id="settings-appearance-page"',
             'id="settings-appearance-card"',
             'id="settings-appearance-tabs"',
         ],
-        'resources/js/pages/auth/Login.vue' => [
+        'Modules/Auth/resources/js/Pages/Login.vue' => [
             'id="auth-login-page"',
             'id="auth-login-form"',
             'id="auth-login-submit-button"',
         ],
-        'resources/js/pages/auth/Register.vue' => [
+        'Modules/Auth/resources/js/Pages/Register.vue' => [
             'id="auth-register-page"',
             'id="auth-register-form"',
             'id="auth-register-submit-button"',
         ],
-        'resources/js/pages/auth/ForgotPassword.vue' => [
+        'Modules/Auth/resources/js/Pages/ForgotPassword.vue' => [
             'id="auth-forgot-password-page"',
             'id="auth-forgot-password-form"',
             'id="auth-forgot-password-submit-button"',
         ],
-        'resources/js/pages/auth/ResetPassword.vue' => [
+        'Modules/Auth/resources/js/Pages/ResetPassword.vue' => [
             'id="auth-reset-password-page"',
             'id="auth-reset-password-form"',
             'id="auth-reset-password-submit-button"',
         ],
-        'resources/js/pages/auth/ConfirmPassword.vue' => [
+        'Modules/Auth/resources/js/Pages/ConfirmPassword.vue' => [
             'id="auth-confirm-password-page"',
             'id="auth-confirm-password-form"',
             'id="auth-confirm-password-submit-button"',
         ],
-        'resources/js/pages/auth/TwoFactorChallenge.vue' => [
+        'Modules/Auth/resources/js/Pages/TwoFactorChallenge.vue' => [
             'id="auth-two-factor-challenge-page"',
             'id="auth-two-factor-code-form"',
             'id="auth-two-factor-recovery-form"',
         ],
-        'resources/js/pages/auth/VerifyEmail.vue' => [
+        'Modules/Auth/resources/js/Pages/VerifyEmail.vue' => [
             'id="auth-verify-email-page"',
             'id="auth-verify-email-form"',
             'id="auth-verify-email-submit-button"',
@@ -943,7 +944,7 @@ it('cycles shared admin index sorting through asc, desc, and none', function () 
 });
 
 it('keeps the admin dashboard free of decorative placeholder surfaces', function () {
-    $dashboardContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Dashboard.vue');
+    $dashboardContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Dashboard/resources/js/Pages/Index.vue');
     $boardContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/DashboardBoard.vue');
     $schemaContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
 
@@ -966,7 +967,7 @@ it('keeps the admin dashboard free of decorative placeholder surfaces', function
 
 it('keeps high-identity surfaces on semantic landmark primitives', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/Modules/Marketing/resources/js/Pages/Welcome.vue');
     $authLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/auth/AuthSimpleLayout.vue');
     $settingsLayoutContents = file_get_contents($projectRoot.'/resources/js/layouts/settings/Layout.vue');
     $appContentContents = file_get_contents($projectRoot.'/resources/js/components/AppContent.vue');
@@ -989,10 +990,10 @@ it('keeps high-identity surfaces on semantic landmark primitives', function () {
 
 it('keeps the admin dashboard aligned to the welcome shell hierarchy', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $dashboardContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Dashboard.vue');
+    $dashboardContents = file_get_contents($projectRoot.'/Modules/Dashboard/resources/js/Pages/Index.vue');
     $boardContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/DashboardBoard.vue');
     $schemaContents = file_get_contents($projectRoot.'/resources/js/components/admin/dashboard/dashboard-board.schema.ts');
-    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/Modules/Marketing/resources/js/Pages/Welcome.vue');
 
     expect($welcomeContents)->toContain('id="welcome-page-build-targets"');
     expect($dashboardContents)->toContain('id="admin-dashboard-heading"');
@@ -1009,7 +1010,7 @@ it('keeps the admin dashboard aligned to the welcome shell hierarchy', function 
 });
 
 it('keeps permission edit delete actions in the shared form footer', function () {
-    $pageContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/admin/Permissions/Edit.vue');
+    $pageContents = file_get_contents(dirname(__DIR__, 2).'/Modules/Permissions/resources/js/Pages/Edit.vue');
     $formContents = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/admin/PermissionEditorForm.vue');
 
     expect($pageContents)->toContain(':can-delete="canDelete"');
@@ -1029,13 +1030,13 @@ it('reuses the shared user identity fields across admin and settings user detail
     $projectRoot = dirname(__DIR__, 2);
     $views = [
         'resources/js/components/admin/UserDetailsForm.vue',
-        'resources/js/pages/admin/Users/Create.vue',
-        'resources/js/pages/settings/Profile.vue',
+        'Modules/Users/resources/js/Pages/Create.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
     ];
 
     $detailsContents = file_get_contents($projectRoot.'/resources/js/components/admin/UserDetailsForm.vue');
-    $createPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Create.vue');
-    $settingsContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Profile.vue');
+    $createPageContents = file_get_contents($projectRoot.'/Modules/Users/resources/js/Pages/Create.vue');
+    $settingsContents = file_get_contents($projectRoot.'/Modules/Settings/resources/js/Pages/Profile.vue');
 
     expect($detailsContents)->toContain("from '@/components/UserIdentityFields.vue'");
     expect($detailsContents)->toContain('UserIdentityFields');
@@ -1047,9 +1048,9 @@ it('reuses the shared user identity fields across admin and settings user detail
 
 it('uses partial reload budgets for settings form submissions', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $profileContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Profile.vue');
-    $passwordContents = file_get_contents($projectRoot.'/resources/js/pages/settings/Password.vue');
-    $twoFactorContents = file_get_contents($projectRoot.'/resources/js/pages/settings/TwoFactor.vue');
+    $profileContents = file_get_contents($projectRoot.'/Modules/Settings/resources/js/Pages/Profile.vue');
+    $passwordContents = file_get_contents($projectRoot.'/Modules/Settings/resources/js/Pages/Password.vue');
+    $twoFactorContents = file_get_contents($projectRoot.'/Modules/Settings/resources/js/Pages/TwoFactor.vue');
     $twoFactorConfirmationContents = file_get_contents($projectRoot.'/resources/js/components/two-factor/TwoFactorConfirmationForm.vue');
 
     expect($profileContents)->toContain("only: ['auth', 'flash']");
@@ -1063,10 +1064,10 @@ it('uses partial reload budgets for settings form submissions', function () {
 it('reuses the shared settings section card across settings surfaces', function () {
     $projectRoot = dirname(__DIR__, 2);
     $settingsViews = [
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
-        'resources/js/pages/settings/TwoFactor.vue',
-        'resources/js/pages/settings/Appearance.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
+        'Modules/Settings/resources/js/Pages/TwoFactor.vue',
+        'Modules/Settings/resources/js/Pages/Appearance.vue',
         'resources/js/components/DeleteUser.vue',
     ];
 
@@ -1081,9 +1082,9 @@ it('reuses the shared settings section card across settings surfaces', function 
 it('reuses the shared settings action row across settings action surfaces', function () {
     $projectRoot = dirname(__DIR__, 2);
     $settingsViews = [
-        'resources/js/pages/settings/Profile.vue',
-        'resources/js/pages/settings/Password.vue',
-        'resources/js/pages/settings/TwoFactor.vue',
+        'Modules/Settings/resources/js/Pages/Profile.vue',
+        'Modules/Settings/resources/js/Pages/Password.vue',
+        'Modules/Settings/resources/js/Pages/TwoFactor.vue',
         'resources/js/components/DeleteUser.vue',
     ];
 
@@ -1165,9 +1166,9 @@ it('keeps dashboard anchor focused on summary content instead of trailing explai
 
 it('keeps admin index surfaces readable on narrow screens with dedicated mobile controls', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $usersPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Users/Index.vue');
+    $usersPageContents = file_get_contents($projectRoot.'/Modules/Users/resources/js/Pages/Index.vue');
     $usersContents = file_get_contents($projectRoot.'/resources/js/components/admin/UserIndexSurface.vue');
-    $rolesPageContents = file_get_contents($projectRoot.'/resources/js/pages/admin/Roles/Index.vue');
+    $rolesPageContents = file_get_contents($projectRoot.'/Modules/Roles/resources/js/Pages/Index.vue');
     $rolesContents = file_get_contents($projectRoot.'/resources/js/components/admin/RoleIndexSurface.vue');
     $permissionsContents = file_get_contents($projectRoot.'/resources/js/components/admin/PermissionIndexTable.vue');
     $tableCardContents = file_get_contents($projectRoot.'/resources/js/components/admin/AdminIndexTableCard.vue');
@@ -1260,7 +1261,7 @@ it('keeps dashboard widget appearances and variants aligned to the shared card p
 
 it('keeps starter-kit copy and fallback branding out of the shared shell', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $welcomeContents = file_get_contents($projectRoot.'/resources/js/pages/Welcome.vue');
+    $welcomeContents = file_get_contents($projectRoot.'/Modules/Marketing/resources/js/Pages/Welcome.vue');
     $headerContents = file_get_contents($projectRoot.'/resources/js/components/AppHeader.vue');
     $sidebarContents = file_get_contents($projectRoot.'/resources/js/components/AppSidebar.vue');
     $appContents = file_get_contents($projectRoot.'/resources/js/app.ts');
@@ -1315,10 +1316,10 @@ it('uses VueUse primitives for the touched appearance and two-factor helper flow
 
 it('keeps auth state guidance calm, specific, and next-step oriented', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $confirmPasswordContents = file_get_contents($projectRoot.'/resources/js/pages/auth/ConfirmPassword.vue');
-    $resetPasswordContents = file_get_contents($projectRoot.'/resources/js/pages/auth/ResetPassword.vue');
-    $registerContents = file_get_contents($projectRoot.'/resources/js/pages/auth/Register.vue');
-    $twoFactorChallengeContents = file_get_contents($projectRoot.'/resources/js/pages/auth/TwoFactorChallenge.vue');
+    $confirmPasswordContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/ConfirmPassword.vue');
+    $resetPasswordContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/ResetPassword.vue');
+    $registerContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/Register.vue');
+    $twoFactorChallengeContents = file_get_contents($projectRoot.'/Modules/Auth/resources/js/Pages/TwoFactorChallenge.vue');
 
     expect($confirmPasswordContents)->toContain('Confirm this action');
     expect($confirmPasswordContents)->toContain('protected step');

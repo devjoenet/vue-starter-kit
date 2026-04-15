@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
+use Modules\Core\Models\User;
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));

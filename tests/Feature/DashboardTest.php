@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Core\Models\User;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Models\Role;
 
 test('guests are redirected to the login page', function () {
     // Act
@@ -64,7 +64,7 @@ test('authenticated users can visit the admin dashboard', function () {
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('admin/Dashboard')
+            ->component('Dashboard/Index')
             ->where('sources.overview.users', 3)
             ->where('sources.overview.roles', 1)
             ->where('sources.overview.permissions', 1)

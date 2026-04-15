@@ -43,6 +43,7 @@ return [
         'ensure_pages_exist' => false,
         'paths' => [
             resource_path('js/pages'),
+            ...(glob(base_path('Modules/*/resources/js/Pages'), GLOB_ONLYDIR) ?: []),
         ],
         'extensions' => [
             'js',

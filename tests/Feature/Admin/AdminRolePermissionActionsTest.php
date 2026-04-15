@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-use App\Modules\IAM\Permissions\Actions\CreatePermission;
-use App\Modules\IAM\Permissions\Actions\DeletePermission;
-use App\Modules\IAM\Permissions\Actions\UpdatePermission;
-use App\Modules\IAM\Permissions\Contracts\PermissionGroupCatalogContract;
-use App\Modules\IAM\Permissions\DTOs\CreatePermissionData;
-use App\Modules\IAM\Permissions\DTOs\UpdatePermissionData;
-use App\Modules\IAM\Permissions\Events\PermissionUpdated;
-use App\Modules\IAM\Permissions\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
-use App\Modules\IAM\Permissions\Exceptions\UnknownPermissionsSelected;
-use App\Modules\IAM\Permissions\Models\Permission;
-use App\Modules\IAM\Permissions\Models\PermissionGroup;
-use App\Modules\IAM\Roles\Actions\CreateRole;
-use App\Modules\IAM\Roles\Actions\DeleteRole;
-use App\Modules\IAM\Roles\Actions\EnsureSuperAdminRole;
-use App\Modules\IAM\Roles\Actions\SyncRolePermissions;
-use App\Modules\IAM\Roles\Actions\UpdateRole;
-use App\Modules\IAM\Roles\DTOs\CreateRoleData;
-use App\Modules\IAM\Roles\DTOs\SyncRolePermissionsData;
-use App\Modules\IAM\Roles\DTOs\UpdateRoleData;
-use App\Modules\IAM\Roles\Events\RolePermissionsSynced;
-use App\Modules\IAM\Roles\Exceptions\CannotDeleteProtectedSuperAdminRole;
-use App\Modules\IAM\Roles\Exceptions\CannotRenameProtectedSuperAdminRole;
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Modules\Core\Models\User;
+use Modules\Permissions\Actions\CreatePermission;
+use Modules\Permissions\Actions\DeletePermission;
+use Modules\Permissions\Actions\UpdatePermission;
+use Modules\Permissions\Contracts\PermissionGroupCatalogContract;
+use Modules\Permissions\DTOs\CreatePermissionData;
+use Modules\Permissions\DTOs\UpdatePermissionData;
+use Modules\Permissions\Events\PermissionUpdated;
+use Modules\Permissions\Exceptions\CannotRemoveRequiredSuperAdminPermissions;
+use Modules\Permissions\Exceptions\UnknownPermissionsSelected;
+use Modules\Permissions\Models\Permission;
+use Modules\Permissions\Models\PermissionGroup;
+use Modules\Roles\Actions\CreateRole;
+use Modules\Roles\Actions\DeleteRole;
+use Modules\Roles\Actions\EnsureSuperAdminRole;
+use Modules\Roles\Actions\SyncRolePermissions;
+use Modules\Roles\Actions\UpdateRole;
+use Modules\Roles\DTOs\CreateRoleData;
+use Modules\Roles\DTOs\SyncRolePermissionsData;
+use Modules\Roles\DTOs\UpdateRoleData;
+use Modules\Roles\Events\RolePermissionsSynced;
+use Modules\Roles\Exceptions\CannotDeleteProtectedSuperAdminRole;
+use Modules\Roles\Exceptions\CannotRenameProtectedSuperAdminRole;
+use Modules\Roles\Models\Role;
 
 test('create role action persists a role and syncs users', function (): void {
     $users = User::factory()->count(2)->create();

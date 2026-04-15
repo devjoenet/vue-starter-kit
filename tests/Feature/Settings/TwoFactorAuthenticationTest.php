@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
+use Modules\Core\Models\User;
 
 test('two factor settings page can be rendered', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
@@ -22,7 +22,7 @@ test('two factor settings page can be rendered', function () {
         ->withSession(['auth.password_confirmed_at' => time()])
         ->get(route('two-factor.show'))
         ->assertInertia(fn (Assert $page) => $page
-            ->component('settings/TwoFactor')
+            ->component('Settings/TwoFactor')
             ->where('twoFactorEnabled', false)
         );
 });
@@ -44,7 +44,7 @@ test('two factor settings page supports partial reloads for enablement state', f
         ->get(route('two-factor.show'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('settings/TwoFactor')
+            ->component('Settings/TwoFactor')
             ->reloadOnly(['twoFactorEnabled', 'flash'], fn (Assert $reload) => $reload
                 ->has('twoFactorEnabled')
                 ->has('flash')
@@ -87,7 +87,7 @@ test('two factor settings page does not requires password confirmation when disa
         ->get(route('two-factor.show'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('settings/TwoFactor')
+            ->component('Settings/TwoFactor')
         );
 });
 

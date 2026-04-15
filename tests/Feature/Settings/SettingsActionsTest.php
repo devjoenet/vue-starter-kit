@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Modules\Settings\Actions\DeleteProfile;
-use App\Modules\Settings\Actions\UpdatePassword;
-use App\Modules\Settings\Actions\UpdateProfile;
-use App\Modules\Settings\DTOs\UpdateProfileData;
-use App\Modules\Settings\Events\ProfileUpdated;
-use App\Modules\Shared\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\Models\User;
+use Modules\Settings\Actions\DeleteProfile;
+use Modules\Settings\Actions\UpdatePassword;
+use Modules\Settings\Actions\UpdateProfile;
+use Modules\Settings\DTOs\UpdateProfileData;
+use Modules\Settings\Events\ProfileUpdated;
 
 test('update profile action updates user details and clears verification when email changes', function (): void {
     $user = User::factory()->create();

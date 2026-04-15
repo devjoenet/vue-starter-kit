@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\UsersController;
-use App\Modules\Audit\Actions\GetAuditHistoryItems;
-use App\Modules\Audit\Actions\IndexAuditLogs;
-use App\Modules\IAM\Permissions\Actions\CreatePermission;
-use App\Modules\IAM\Permissions\Actions\DeletePermission;
-use App\Modules\IAM\Permissions\Actions\IndexPermissions;
-use App\Modules\IAM\Permissions\Actions\UpdatePermission;
-use App\Modules\IAM\Roles\Actions\CreateRole;
-use App\Modules\IAM\Roles\Actions\DeleteRole;
-use App\Modules\IAM\Roles\Actions\GetEditableRoles;
-use App\Modules\IAM\Roles\Actions\IndexRoles;
-use App\Modules\IAM\Roles\Actions\SyncRolePermissions;
-use App\Modules\IAM\Roles\Actions\UpdateRole;
-use App\Modules\IAM\Roles\Contracts\GroupedPermissionsProvider;
-use App\Modules\IAM\Users\Actions\CreateUser;
-use App\Modules\IAM\Users\Actions\DeleteUser;
-use App\Modules\IAM\Users\Actions\GetAssignableUsers;
-use App\Modules\IAM\Users\Actions\IndexUsers;
-use App\Modules\IAM\Users\Actions\SyncUserRoles;
-use App\Modules\IAM\Users\Actions\UpdateUser;
 use Illuminate\Http\RedirectResponse;
+use Modules\Audit\Actions\GetAuditHistoryItems;
+use Modules\Audit\Actions\IndexAuditLogs;
+use Modules\Audit\Http\Controllers\AuditLogsController;
+use Modules\Permissions\Actions\CreatePermission;
+use Modules\Permissions\Actions\DeletePermission;
+use Modules\Permissions\Actions\IndexPermissions;
+use Modules\Permissions\Actions\UpdatePermission;
+use Modules\Permissions\Http\Controllers\PermissionsController;
+use Modules\Roles\Actions\CreateRole;
+use Modules\Roles\Actions\DeleteRole;
+use Modules\Roles\Actions\GetEditableRoles;
+use Modules\Roles\Actions\IndexRoles;
+use Modules\Roles\Actions\SyncRolePermissions;
+use Modules\Roles\Actions\UpdateRole;
+use Modules\Roles\Contracts\GroupedPermissionsProvider;
+use Modules\Roles\Http\Controllers\RolesController;
+use Modules\Users\Actions\CreateUser;
+use Modules\Users\Actions\DeleteUser;
+use Modules\Users\Actions\GetAssignableUsers;
+use Modules\Users\Actions\IndexUsers;
+use Modules\Users\Actions\SyncUserRoles;
+use Modules\Users\Actions\UpdateUser;
+use Modules\Users\Http\Controllers\UsersController;
 
 dataset('admin_controller_classes', [
     [AuditLogsController::class, ['index']],

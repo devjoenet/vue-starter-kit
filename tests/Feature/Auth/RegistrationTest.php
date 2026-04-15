@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
+use Modules\Core\Models\User;
 
 test('registration screen can be rendered', function () {
     $response = $this->get(route('register'));

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Modules\Shared\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
+use Modules\Core\Models\User;
 
 test('login page supports partial reloads for availability and status props', function () {
     // Arrange
@@ -19,7 +19,7 @@ test('login page supports partial reloads for availability and status props', fu
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/Login')
+            ->component('Auth/Login')
             ->where('status', $status)
             ->reloadOnly(['status'], fn (Assert $reload) => $reload
                 ->where('status', $status)
@@ -48,7 +48,7 @@ test('forgot password page supports partial reloads for status messaging', funct
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/ForgotPassword')
+            ->component('Auth/ForgotPassword')
             ->where('status', $status)
             ->reloadOnly(['status'], fn (Assert $reload) => $reload
                 ->where('status', $status)
@@ -72,7 +72,7 @@ test('email verification page supports partial reloads for status messaging', fu
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('auth/VerifyEmail')
+            ->component('Auth/VerifyEmail')
             ->where('status', 'verification-link-sent')
             ->reloadOnly(['status'], fn (Assert $reload) => $reload
                 ->where('status', 'verification-link-sent')

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Modules\IAM\Roles\Models\Role;
-use App\Modules\Shared\Models\User;
 use Illuminate\Database\Seeder;
+use Modules\Core\Models\User;
+use Modules\Roles\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
